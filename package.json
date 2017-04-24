@@ -1,7 +1,7 @@
 {
-  "name": "bm_platform_next",
-  "version": "1.0.0",
-  "description": "",
+  "private": true,
+  "name": "bm-platform-next",
+  "version": "0.1.0",
   "main": "index.js",
   "dependencies": {
     "bunyan": "^1.8.10",
