@@ -1,6 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-
-	const Goal = sequelize.define(
+  const Goal = sequelize.define(
     'Goal',
     {
       a: {
@@ -18,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BIGINT
       },
       fine: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.BIGINT
       },
       is_closed: {
         allowNull: false,
@@ -60,6 +59,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   )
-  
+
   return Goal
 }

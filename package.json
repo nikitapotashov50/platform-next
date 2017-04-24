@@ -16,9 +16,12 @@
     "require-all": "^2.2.0",
     "sequelize": "^3.30.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard --verbose | snazzy"
   },
   "author": "",
   "license": "ISC"

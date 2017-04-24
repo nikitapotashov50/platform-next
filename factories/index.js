@@ -1,4 +1,4 @@
-const require_all = require('require-all');
+const requireAll = require('require-all')
 
 /**
  * @description factory's factory
@@ -6,5 +6,5 @@ const require_all = require('require-all');
  */
 
 module.exports = {
-  messages: require_all(`${__dirname}/messages`)
-};
+  messages: requireAll(`${__dirname}/messages`)
+}

@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
           // Комментарий оставляется пользователем
           Comment.belongsTo(models.User, { foreignKey: 'user_id' })
-          
+
           // Комментарий может являться дочерним комментарием
           Comment.belongsTo(Comment, { foreignKey: 'parent_id' })
 

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   /*
-    Посты с материалами. 
+    Посты с материалами.
     Надо прикрепить к ним планы подписки и прочее.
   */
   const ContentPost = sequelize.define(

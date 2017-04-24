@@ -1,9 +1,9 @@
-const require_all = require('require-all'),
-  Router = require('koa-router'),
-  _ = require('lodash'),
-  bunyan = require('bunyan'),
-  log = bunyan.createLogger({name: "route"}),
-  config = require('../config');
+const requireAll = require('require-all')
+const Router = require('koa-router')
+const _ = require('lodash')
+const bunyan = require('bunyan')
+const log = bunyan.createLogger({name: 'route'})
+const config = require('../config')
 
 /**
  * @description route's factory
@@ -11,39 +11,35 @@ const require_all = require('require-all'),
  */
 
 module.exports = (app) => {
-
-  app.use(async function(ctx, next) {
-    log.info(`${ctx.method} ${ctx.url} - ${new Date()}`);
+  app.use(async function (ctx, next) {
+    log.info(`${ctx.method} ${ctx.url} - ${new Date()}`)
     try {
-      await next();
+      await next()
     } catch (err) {
-      log.error(`${ctx.method} ${ctx.url} - ${new Date()}`);
-      ctx.status = err.status || 500;
-      ctx.body = err.message;
-      ctx.app.emit('error', err, ctx);
+      log.error(`${ctx.method} ${ctx.url} - ${new Date()}`)
+      ctx.status = err.status || 500
+      ctx.body = err.message
+      ctx.app.emit('error', err, ctx)
     }
+  })
 
-  });
-
-  let routes = require_all({
+  let routes = requireAll({
     dirname: __dirname,
     filter: /(.+Route)\.js$/,
-    map:  name=> name.replace('Route', '')
-  });
+    map: name => name.replace('Route', '')
+  })
 
   _.chain(routes)
     .keys()
-    .forEach(route_key => {
+    .forEach(routeKey => {
       let router = new Router({
-        prefix: route_key === 'general' ? '/' :
-          `/${config.api.version}/${route_key}`
-      });
+        prefix: routeKey === 'general' ? '/'
+          : `/${config.api.version}/${routeKey}`
+      })
 
-      routes[route_key](router);
+      routes[routeKey](router)
 
       app.use(router.routes())
-
     })
-    .value();
-
-};
+    .value()
+}

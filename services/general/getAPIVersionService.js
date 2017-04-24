@@ -1,5 +1,5 @@
-const config = require('../../config');
+const config = require('../../config')
 
-module.exports = (ctx, next)=>{
-  ctx.body = {version: config.api.version};
-};
+module.exports = (ctx, next) => {
+  ctx.body = {version: config.api.version}
+}

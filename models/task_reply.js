@@ -6,8 +6,8 @@ module.exports = function (sequelize, DataTypes) {
    * Ответ на задание относится к записи задания
    */
   var TaskReply = sequelize.define(
-    'TaskReply', 
-    {}, 
+    'TaskReply',
+    {},
     {
       tableName: 'tasks_replies',
       createdAt: 'created_at',
@@ -28,6 +28,6 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   )
-  
+
   return TaskReply
 }

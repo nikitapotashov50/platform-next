@@ -1,7 +1,7 @@
-const require_all = require('require-all');
+const requireAll = require('require-all')
 
-module.exports = require_all({
+module.exports = requireAll({
   dirname: __dirname,
   filter: /(.+Service)\.js$/,
-  recursive   : true
-});
+  recursive: true
+})

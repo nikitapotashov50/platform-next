@@ -4,16 +4,16 @@ module.exports = function (sequelize, DataTypes) {
    * С помощью этой модели можно привязывать ответы на задания к определенным "проверяющим" волонтерам и т.д.
    */
   var TaskVerify = sequelize.define(
-    'TaskVerify', 
+    'TaskVerify',
     {
       /**
        * статус проверки
        */
       status: {
-        defaultValue: 'assigned', 
+        defaultValue: 'assigned',
         type: DataTypes.ENUM([ 'assigned', 'pending', 'approved', 'rejected' ])
       }
-    }, 
+    },
     {
       tableName: 'tasks_verifications',
       createdAt: 'created_at',
@@ -31,6 +31,6 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   )
-  
+
   return TaskVerify
 }

@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   /*
     NPS по платформе.
     Вынесена в отдельную модель чтобы не засорять основную модель NPS
-  */  
+  */
   const NPSPlatform = sequelize.define(
     'NPSPlatform',
     {
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
           model: 'nps',
           field: 'id'
         }
-      },
+      }
     },
     {
       tableName: 'nps_platform',

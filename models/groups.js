@@ -49,20 +49,20 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // В группе есть много людей
-          Group.belongsToMany(models.User, { through: 'users_groups', foreignKey: 'group_id', as: 'Users' });
-          
+          Group.belongsToMany(models.User, { through: 'users_groups', foreignKey: 'group_id', as: 'Users' })
+
           // у группы есть лидер
-          Group.belongsTo(models.User, { foreignKey: 'leader_id', as: 'Leader' });
+          Group.belongsTo(models.User, { foreignKey: 'leader_id', as: 'Leader' })
 
           // группа может принадлежать программе, может принадлежать сразу нескольким программам
-          Group.belongsToMany(models.Program, { foreignKey: 'group_id', as: 'Programs', through: 'programs_groups' });
+          Group.belongsToMany(models.Program, { foreignKey: 'group_id', as: 'Programs', through: 'programs_groups' })
 
           // у группы может быть рейтинг
-          Group.belongsToMany(models.NPS, { through: 'nps_group', foreignKey: 'group_id', as: 'Nps' });
+          Group.belongsToMany(models.NPS, { through: 'nps_group', foreignKey: 'group_id', as: 'Nps' })
         }
       }
     }
-  );
+  )
 
   return Group
-};
+}

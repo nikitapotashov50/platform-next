@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
           Program.hasMany(models.TaskEntry, { foreignKey: 'program_id', as: 'Tasks' })
 
           // В программе есть много пользователей со своими пролями
-          Program.hasMany(models.UserProgramRole, { foreignKey: 'program_id' }) 
+          Program.hasMany(models.UserProgramRole, { foreignKey: 'program_id' })
         }
       }
     }

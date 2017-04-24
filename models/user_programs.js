@@ -3,8 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     Модель описывает принадлежность пользователя к программам БМ.
     Каждый пользователь может проходить несколько программ. Как одновременно, так и друг после друга.
   */
-	const UserProgram = sequelize.define(
-    'UserProgram', 
+  const UserProgram = sequelize.define(
+    'UserProgram',
     {
       /*
         Поле для статистики. Отображает цену, за которую пользователь приобрел программу

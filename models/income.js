@@ -25,17 +25,17 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Доход относится к пользователю]
-          Income.belongsTo(models.User, { foreignKey: 'user_id' });
+          Income.belongsTo(models.User, { foreignKey: 'user_id' })
 
           // Доход относится к цели
-          Income.belongsTo(models.Goal, { foreignKey: 'goal_id' });
+          Income.belongsTo(models.Goal, { foreignKey: 'goal_id' })
 
           // Доход привязывается к ответу на задание
-          Income.belongsTo(models.TaskReply, { foreignKey: 'task_reply_id' });
+          Income.belongsTo(models.TaskReply, { foreignKey: 'task_reply_id' })
         }
       }
     }
-  );
+  )
 
-  return Income;
-};
+  return Income
+}

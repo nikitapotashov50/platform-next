@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   /*
-    Модель описывает поведение тренерских групп. 
+    Модель описывает поведение тренерских групп.
     Пока что модель не содержить уникальных полей, но это сделано для будущего расширения (на всякий случай)
   */
   const CoachGroup = sequelize.define(
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     }
-  );
+  )
 
   return CoachGroup
-};
+}

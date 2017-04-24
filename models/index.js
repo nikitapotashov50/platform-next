@@ -1,34 +1,28 @@
-const Sequelize = require('sequelize'),
-  fs = require('fs'),
-  path = require('path'),
-  db_config = require('../config').db;
+const Sequelize = require('sequelize')
+const fs = require('fs')
+const path = require('path')
+const dbConfig = require('../config').db
 
 /**
  * @description model's factory + register manager
  * @type {module}
  */
 
-let sequelize = new Sequelize(db_config.uri);
-let db = [];
+let sequelize = new Sequelize(dbConfig.uri)
+let db = []
 
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
   .forEach(file => {
-    let model = sequelize['import'](path.join(__dirname, file));
-    db[model.name] = model;
-  });
+    let model = sequelize['import'](path.join(__dirname, file))
+    db[model.name] = model
+  })
 
-
-
-
-Object.keys(db).forEach(modelName=> {
+Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) db[modelName].associate(db)
-
-});
-
+})
 
 module.exports = {
   models: db,
   orm: sequelize
-};
-
+}

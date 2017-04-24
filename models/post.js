@@ -4,10 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     Пока что описаны базовые поля поста. Потом будет расширять.
 
     У поста есть два типа
-      1. user - пост пользователя. 
+      1. user - пост пользователя.
       2. content - платные материалы
 
-    Пост может принадлежать нескольким программам сразу. 
+    Пост может принадлежать нескольким программам сразу.
     Посты без программы показываются всем пользователям, независимо от программ, в которых они участвуют.
   */
   const Post = sequelize.define(
@@ -63,8 +63,6 @@ module.exports = (sequelize, DataTypes) => {
 
           // Посту может быть выставлена куча оценок
           Post.belongsToMany(models.NPS, { through: 'nps_posts', foreignKey: 'post_id', as: 'Nps' })
-
-          
 
           // пост может быть постом пользователя
           // Post.hasOne(models.UserPost, { foreignKey: 'post_id' })

@@ -32,17 +32,17 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Группы привязана к родительской записи - к самой группе
-          GameGroup.belongsTo(models.Group, { foreignKey: { field: 'group_id', primaryKey: true, allowNull: false } });
+          GameGroup.belongsTo(models.Group, { foreignKey: { field: 'group_id', primaryKey: true, allowNull: false } })
 
           // Ассоциация для построения структуры предков
-          GameGroup.belongsTo(GameGroup, { foreignKey: 'parent_id', as: 'ParentGroup' });
-          
+          GameGroup.belongsTo(GameGroup, { foreignKey: 'parent_id', as: 'ParentGroup' })
+
           // Ассоциация для построения структуры потомков
-          GameGroup.hasMany(GameGroup, { foreignKey: 'parent_id', as: 'ChildGroups' });
+          GameGroup.hasMany(GameGroup, { foreignKey: 'parent_id', as: 'ChildGroups' })
         }
       }
     }
-  );
+  )
 
   return GameGroup
-};
+}

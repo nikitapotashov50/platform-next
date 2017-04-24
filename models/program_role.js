@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     Например Тренер, Волонтер, Студент и т.д.
 
   */
-	const ProgramRole = sequelize.define(
-    'ProgramRole', 
+  const ProgramRole = sequelize.define(
+    'ProgramRole',
     {
       // имя роли. Кириллицей, но, наверное, надо будет сделать еще и alias
       name: {

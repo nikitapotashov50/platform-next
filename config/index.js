@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 /**
  * root config
@@ -16,4 +16,4 @@ module.exports = {
   api: {
     version: process.env.API_VERSION || 'v1'
   }
-};
+}

@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  /* 
+  /*
    Модель описывает пользователя системы
    */
   const User = sequelize.define(

@@ -56,9 +56,9 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
-      underscored: true,
+      underscored: true
     }
   )
 
-  return GroupMigrations 
+  return GroupMigrations
 }

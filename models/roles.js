@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     Глобальные роли пользователей в системе. Например admin, user, modeerator
 
   */
-	const Role = sequelize.define(
-    'Role', 
+  const Role = sequelize.define(
+    'Role',
     {
       // имя роли. Кириллицей, но, наверное, надо будет сделать еще и alias
       name: {
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
         type: DataTypes.BOOLEAN
       }
-    }, 
+    },
     {
       tableName: 'roles',
       createdAt: 'created_at',
@@ -31,9 +31,8 @@ module.exports = (sequelize, DataTypes) => {
           Role.hasMany(models.User, { foreignKey: 'role_id' })
         }
       }
-	  }
+    }
   )
 
-	return Role
-
+  return Role
 }
