@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     'Income',
     {
       // сумма дохода
-      ammount: {
+      amount: {
         allowNull: false,
         type: DataTypes.BIGINT
       },
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'incomes',
+      tableName: 'incomes_view',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
@@ -25,17 +25,17 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Доход относится к пользователю]
-          Income.belongsTo(models.User, { foreignKey: 'user_id' })
+          Income.belongsTo(models.User, { foreignKey: 'user_id' });
 
           // Доход относится к цели
-          Income.belongsTo(models.Goal, { foreignKey: 'goal_id' })
+          Income.belongsTo(models.Goal, { foreignKey: 'goal_id' });
 
           // Доход привязывается к ответу на задание
-          Income.belongsTo(models.TaskReply, { foreignKey: 'task_reply_id' })
+          Income.belongsTo(models.TaskReply, { foreignKey: 'task_reply_id' });
         }
       }
     }
-  )
+  );
 
-  return Income
-}
+  return Income;
+};

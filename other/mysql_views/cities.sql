@@ -1,0 +1,1 @@
+CREATE VIEW `cities_view` as SELECT name, lat, lng, region_id, id FROM cities;

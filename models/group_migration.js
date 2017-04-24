@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'migrations_groups',
+      tableName: 'migrations_groups_view',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
