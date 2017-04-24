@@ -18,14 +18,19 @@
   },
   "devDependencies": {
     "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
     "snazzy": "^7.0.0",
     "standard": "^10.0.2"
   },
   "scripts": {
+    "lint-staged": "lint-staged",
     "start": "node index.js | bunyan",
-    "test": "standard --verbose | snazzy",
-    "precommit": "npm test",
-    "prepush": "npm test"
+    "lint": "standard --verbose | snazzy",
+    "precommit": "lint-staged",
+    "prepush": "npm run lint"
+  },
+  "lint-staged": {
+    "*.js": "lint"
   },
   "author": "",
   "license": "MIT"
