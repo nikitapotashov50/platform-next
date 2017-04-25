@@ -1,14 +1,16 @@
 # BM Platform
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 Новая версия БМ платформы
 
-# Установка зависимостей
+## Установка зависимостей
 
 ```bash
 yarn
 ```
 
-# Запуск
+## Запуск
 
 Создайте .env файл в корневой директории
 
@@ -22,6 +24,16 @@ API_VERSION=v1
 ```bash
 npm start
 ```
+
+## Проверка
+
+> [JavaScript Standard Style ](https://standardjs.com)
+
+```bash
+npm run lint
+```
+
+Скрипт `lint` так же вызывается перед  каждым `git push` и перед `git commit` для staged файлов.
 
 License
 ----
