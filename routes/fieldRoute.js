@@ -70,6 +70,8 @@ module.exports = router => {
         user.id, user.name, user.first_name, user.last_name
       FROM users AS user
       LEFT JOIN incomes ON incomes.user_id = user.id
+      LEFT JOIN users_programs ON users_programs.user_id = user.id
+      WHERE users_programs.program_id = ${ctx.params.programId}
       GROUP BY user.id
       LIMIT ${offset}, 20
     `, {
