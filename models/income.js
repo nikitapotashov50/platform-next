@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'incomes_view',
+      tableName: 'incomes',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Доход относится к пользователю]
-          Income.belongsTo(models.User, { foreignKey: 'user_id' })
+          Income.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
 
           // Доход относится к цели
           Income.belongsTo(models.Goal, { foreignKey: 'goal_id' })

@@ -12,9 +12,11 @@
     "koa-router": "^7.1.1",
     "koa2-cors": "^2.0.3",
     "mysql": "^2.13.0",
+    "p-map": "^1.1.1",
     "passport": "^0.3.2",
     "require-all": "^2.2.0",
-    "sequelize": "^3.30.4"
+    "sequelize": "^3.30.4",
+    "sql-template-strings": "^2.2.2"
   },
   "devDependencies": {
     "husky": "^0.13.3",
