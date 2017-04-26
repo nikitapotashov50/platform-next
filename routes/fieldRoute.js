@@ -71,7 +71,7 @@ module.exports = router => {
       FROM users AS user
       LEFT JOIN incomes ON incomes.user_id = user.id
       LEFT JOIN users_programs ON users_programs.user_id = user.id
-      WHERE users_programs.program_id = ${ctx.params.programId}
+      WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
       GROUP BY user.id
       LIMIT ${offset}, 20
     `, {
