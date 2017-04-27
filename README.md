@@ -27,15 +27,12 @@ npm start
 
 ## Проверка
 
-> [JavaScript Standard Style ](https://standardjs.com)
-
 ```bash
 npm run lint
 ```
 
 Скрипт `lint` так же вызывается перед  каждым `git push` и перед `git commit` для staged файлов.
 
-License
-----
+## License
 
 MIT
