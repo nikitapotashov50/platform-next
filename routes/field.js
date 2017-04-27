@@ -65,6 +65,9 @@ router.get('/program/:programId/users', async ctx => {
   // смещение для пагинации
   const limit = 10
   const offset = toNumber(ctx.query.offset) || 0
+  // параметры для сортировки
+  const order = ctx.query.order || 'profit'
+  const orderDirection = ctx.query.orderDirection || 'DESC'
 
   // получение пользователей
   const users = await orm.query(sql`
@@ -76,10 +79,14 @@ router.get('/program/:programId/users', async ctx => {
     LEFT JOIN users_programs ON users_programs.user_id = user.id
     WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
     GROUP BY user.id
-    LIMIT ${offset}, ${limit}
-  `, {
-    model: models.User
-  })
+    ORDER BY `
+    .append(`${order} ${orderDirection}`)
+    .append(sql`
+      LIMIT ${offset}, ${limit}
+    `), {
+      model: models.User
+    }
+  )
 
   // получение прибыли за последнюю и предпоследнюю недели
   // для каждого пользователя
