@@ -37,7 +37,7 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "start": "nodemon index.js | bunyan",
+    "start": "nodemon | bunyan",
     "lint": "standard --verbose | snazzy",
     "precommit": "lint-staged",
     "prepush": "npm run lint",

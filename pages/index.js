@@ -1,3 +1,3 @@
 export default () => (
-  <div>Index page!</div>
+  <div>Index page</div>
 )

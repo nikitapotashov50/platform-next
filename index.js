@@ -28,6 +28,10 @@ app.prepare().then(() => {
   server.use(passport.session())
   server.use(cors())
   server.use(mount('/api', apiRoutes))
+  server.use(async (ctx, next) => {
+    ctx.res.statusCode = 200
+    await next()
+  })
   server.use(router.routes())
 
   server.listen(config.server.port, () => {
