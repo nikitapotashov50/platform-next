@@ -69,6 +69,7 @@ router.get('/program/:programId/users', async ctx => {
   const order = ctx.query.order || 'profit'
   const orderDirection = ctx.query.orderDirection || 'DESC'
 
+  // количество строк для пагинации
   const [usersCount] = await orm.query(sql`
     SELECT COUNT(DISTINCT user.id) AS count
     FROM users AS user
