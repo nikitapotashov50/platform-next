@@ -1,19 +1,36 @@
 const Koa = require('koa')
 const config = require('./config')
-const routes = require('./routes')
+const apiRoutes = require('./api')
 const bodyParser = require('koa-bodyparser')
 const passport = require('koa-passport')
 const bunyan = require('bunyan')
-const log = bunyan.createLogger({name: 'platform'})
+const log = bunyan.createLogger({ name: 'platform' })
 const cors = require('koa2-cors')
+const next = require('next')
+const Router = require('koa-router')
+const mount = require('koa-mount')
 
-const app = new Koa()
-app.use(bodyParser())
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(cors())
-app.use(routes)
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
 
-app.listen(config.server.port, () => {
-  log.info(`app is running on port: ${config.server.port}`)
+app.prepare().then(() => {
+  const server = new Koa()
+  const router = new Router()
+
+  router.get('*', async ctx => {
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.use(bodyParser())
+  server.use(passport.initialize())
+  server.use(passport.session())
+  server.use(cors())
+  server.use(mount('/api', apiRoutes))
+  server.use(router.routes())
+
+  server.listen(config.server.port, () => {
+    log.info(`server is running on port: ${config.server.port}`)
+  })
 })
