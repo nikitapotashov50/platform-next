@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HelloWorld component 1`] = `
+<div>
+  Index page!
+</div>
+`;
+
+exports[`Index page 1`] = `
+<div>
+  Index page!
+</div>
+`;
