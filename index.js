@@ -1,10 +1,9 @@
 const Koa = require('koa')
 const helmet = require('koa-helmet')
-const responseTime = require('koa-response-time')
 const Router = require('koa-router')
 const mount = require('koa-mount')
-// const bodyParser = require('koa-bodyparser')
-// const passport = require('koa-passport')
+const bodyParser = require('koa-bodyparser')
+const passport = require('koa-passport')
 // const cors = require('koa2-cors')
 const next = require('next')
 const bunyan = require('bunyan')
@@ -25,11 +24,10 @@ app.prepare().then(() => {
     ctx.respond = false
   })
 
-  server.use(responseTime())
   server.use(helmet())
-  // server.use(bodyParser())
-  // server.use(passport.initialize())
-  // server.use(passport.session())
+  server.use(bodyParser())
+  server.use(passport.initialize())
+  server.use(passport.session())
   // server.use(cors())
   server.use(mount('/api', apiRoutes))
   server.use(async (ctx, next) => {
