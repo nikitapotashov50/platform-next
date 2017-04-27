@@ -144,4 +144,10 @@ router.get('/program/:programId/users', async ctx => {
   }
 })
 
+router.get('/program/:programId/users/time', async ctx => {
+  ctx.body = {
+    ok: true
+  }
+})
+
 module.exports = router
