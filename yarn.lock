@@ -1525,7 +1525,13 @@ koa-bodyparser@^4.2.0:
     co-body "^5.1.0"
     copy-to "^2.0.1"
 
-koa-compose@^3.0.0:
+koa-combine-routers@next:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/koa-combine-routers/-/koa-combine-routers-1.0.0.tgz#d14fd126ede4bd3de6cd9e151bea8cb210b9d106"
+  dependencies:
+    koa-compose "^3.1.0"
+
+koa-compose@^3.0.0, koa-compose@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/koa-compose/-/koa-compose-3.2.1.tgz#a85ccb40b7d986d8e5a345b3a1ace8eabcf54de7"
   dependencies:

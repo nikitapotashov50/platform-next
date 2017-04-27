@@ -12,8 +12,7 @@ app.use(bodyParser())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors())
-
-routes(app)
+app.use(routes)
 
 app.listen(config.server.port, () => {
   log.info(`app is running on port: ${config.server.port}`)
