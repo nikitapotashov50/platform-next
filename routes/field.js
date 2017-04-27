@@ -69,6 +69,16 @@ router.get('/program/:programId/users', async ctx => {
   const order = ctx.query.order || 'profit'
   const orderDirection = ctx.query.orderDirection || 'DESC'
 
+  const [usersCount] = await orm.query(sql`
+    SELECT COUNT(DISTINCT user.id) AS count
+    FROM users AS user
+    LEFT JOIN incomes ON incomes.user_id = user.id
+    LEFT JOIN users_programs ON users_programs.user_id = user.id
+    WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
+  `, {
+    model: models.User
+  })
+
   // получение пользователей
   const users = await orm.query(sql`
     SELECT
@@ -128,6 +138,7 @@ router.get('/program/:programId/users', async ctx => {
   })
 
   ctx.body = {
+    count: JSON.parse(JSON.stringify(usersCount)).count,
     users: data
   }
 })
