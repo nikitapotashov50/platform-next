@@ -1,7 +1,7 @@
 import test from 'ava'
 import render from 'react-test-renderer'
 import React from 'react'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 import IndexPage from '../../pages/index'
 
 test('Index page snapshot', t => {
@@ -10,7 +10,7 @@ test('Index page snapshot', t => {
 })
 
 test('Index page state', t => {
-  const wrapper = mount(<IndexPage />)
+  const wrapper = shallow(<IndexPage />)
   t.deepEqual(wrapper.state(), {})
 
   const changeEvent = {
