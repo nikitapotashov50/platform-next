@@ -27,11 +27,17 @@ npm start
 
 ## Проверка
 
+### Линтер
+
 ```bash
 npm run lint
 ```
 
-Скрипт `lint` так же вызывается перед  каждым `git push` и перед `git commit` для staged файлов.
+### Тесты
+
+```bash
+npm test
+```
 
 ## License
 
