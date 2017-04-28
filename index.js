@@ -5,9 +5,9 @@ const mount = require('koa-mount')
 const bodyParser = require('koa-bodyparser')
 const passport = require('koa-passport')
 const cors = require('koa2-cors')
+const koaBunyanLogger = require('koa-bunyan-logger')
 const next = require('next')
 const bunyan = require('bunyan')
-const log = bunyan.createLogger({name: 'platform'})
 const config = require('./config')
 const apiRoutes = require('./api')
 
@@ -18,12 +18,16 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   const server = new Koa()
   const router = new Router()
+  const log = bunyan.createLogger({
+    name: 'platform'
+  })
 
   router.get('*', async ctx => {
     await handle(ctx.req, ctx.res)
     ctx.respond = false
   })
 
+  server.use(koaBunyanLogger(log))
   server.use(helmet())
   server.use(bodyParser())
   server.use(passport.initialize())
