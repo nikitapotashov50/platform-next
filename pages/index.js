@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 import fetch from 'isomorphic-unfetch'
 
 class IndexPage extends Component {
-  // static async getInitialProps () {
-    // const res = await fetch('https://api.github.com/repos/zeit/next.js')
-    // const json = await res.json()
-    // return { stars: json.stargazers_count }
-  // }
   constructor (props) {
     super(props)
     this.state = {}

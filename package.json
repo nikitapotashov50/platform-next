@@ -37,7 +37,8 @@
     "nodemon": "^1.11.0",
     "react-test-renderer": "^15.5.4",
     "snazzy": "^7.0.0",
-    "standard": "^10.0.2"
+    "standard": "^10.0.2",
+    "supertest": "^3.0.0"
   },
   "scripts": {
     "lint-staged": "lint-staged",
