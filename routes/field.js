@@ -132,7 +132,7 @@ router.get('/program/:programId/users', async ctx => {
         total: user.profit,
         // Абсолютная Δ прибыли
         absDelta,
-        // Абсолютная Δ прибыли
+        // Относительная Δ прибыли
         relDelta
       }
     }
@@ -144,9 +144,67 @@ router.get('/program/:programId/users', async ctx => {
   }
 })
 
+// МЗС показатели по неделям
 router.get('/program/:programId/users/time', async ctx => {
+  // смещение для пагинации
+  const limit = 10
+  const offset = toNumber(ctx.query.offset) || 0
+
+  // недели
+  const [weekRanges] = await orm.query(sql`
+    SELECT start_at, finish_at
+    FROM tasks_entries
+    WHERE start_at IS NOT NULL
+    GROUP BY start_at, finish_at
+    ORDER BY start_at ASC, finish_at ASC
+  `)
+
+  // пользователи
+  const users = await orm.query(sql`
+    SELECT user.id, user.name, user.first_name, user.last_name
+    FROM users AS user
+    LEFT JOIN incomes ON incomes.user_id = user.id
+    LEFT JOIN users_programs ON users_programs.user_id = user.id
+    WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
+    GROUP BY user.id
+    ORDER BY SUM(incomes.amount) DESC
+    LIMIT ${offset}, ${limit}`,
+    {
+      model: models.User
+    }
+  )
+
+  // прибыль по каждому пользователю и по каждой неделе
+  const data = await pMap(users, async user => {
+    const weeks = await pMap(weekRanges, async week => {
+      const [[res]] = await orm.query(sql`
+        SELECT SUM(amount) AS profit
+        FROM incomes
+        WHERE user_id = ${user.id} AND created_at BETWEEN ${week.start_at} AND ${week.finish_at}
+      `)
+
+      return {
+        profit: res.profit || 0, // прибыль
+        startAt: week.start_at, // начало недели
+        finishAt: week.finish_at // конец недели
+      }
+    })
+
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        firstName: user.first_name,
+        lastName: user.last_name
+      },
+      weeks: weeks.map((week, i) => Object.assign({}, week, {
+        relDelta: i === 0 ? 0 : getRelDelta(week.profit, weeks[i - 1].profit)
+      }))
+    }
+  })
+
   ctx.body = {
-    ok: true
+    data
   }
 })
 
