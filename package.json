@@ -64,6 +64,14 @@
     "babel": "inherit"
   },
   "nyc": {
+    "include": [
+      "api/**",
+      "components/**",
+      "controllers/**",
+      "factories/**",
+      "pages/**",
+      "services/**"
+    ],
     "require": [
       "babel-register"
     ],
