@@ -220,7 +220,7 @@ router.get('/program/:programId/users/time', async ctx => {
         lastName: user.last_name
       },
       weeks: weeks.map((week, i) => Object.assign({}, week, {
-        relDelta: i === 0 ? 0 : getRelDelta(week.profit, weeks[i - 1].profit)
+        relDelta: i === 0 ? (week.profit > 0 ? 100 : 0) : getRelDelta(week.profit, weeks[i - 1].profit)
       }))
     }
   })
