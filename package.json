@@ -34,6 +34,8 @@
     "ava": "^0.19.1",
     "babel-plugin-istanbul": "^4.1.1",
     "babel-preset-es2015": "^6.24.1",
+    "browser-env": "^2.0.30",
+    "enzyme": "^2.8.2",
     "husky": "^0.13.3",
     "lint-staged": "^3.4.0",
     "nodemon": "^1.11.0",
@@ -59,7 +61,8 @@
   },
   "ava": {
     "require": [
-      "babel-register"
+      "babel-register",
+      "./test/helpers/setup-browser-env.js"
     ],
     "babel": "inherit"
   },

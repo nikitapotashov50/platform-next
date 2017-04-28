@@ -17,3 +17,21 @@ exports[`Index page 1`] = `
   </button>
 </div>
 `;
+
+exports[`Index page snapshot 1`] = `
+<div>
+  <h1>
+    Главная
+  </h1>
+  <input
+    onChange={[Function]}
+    placeholder="Логин"
+    type="text"
+  />
+  <button
+    onClick={[Function]}
+  >
+    ВОЙТИ
+  </button>
+</div>
+`;
