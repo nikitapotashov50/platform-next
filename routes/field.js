@@ -150,6 +150,17 @@ router.get('/program/:programId/users/time', async ctx => {
   const limit = 10
   const offset = toNumber(ctx.query.offset) || 0
 
+  // количество строк для пагинации
+  const [usersCount] = await orm.query(sql`
+    SELECT COUNT(DISTINCT user.id) AS count
+    FROM users AS user
+    LEFT JOIN incomes ON incomes.user_id = user.id
+    LEFT JOIN users_programs ON users_programs.user_id = user.id
+    WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
+  `, {
+    model: models.User
+  })
+
   // недели
   const [weekRanges] = await orm.query(sql`
     SELECT start_at, finish_at
@@ -204,6 +215,7 @@ router.get('/program/:programId/users/time', async ctx => {
   })
 
   ctx.body = {
+    count: JSON.parse(JSON.stringify(usersCount)).count,
     data
   }
 })
