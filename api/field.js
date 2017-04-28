@@ -63,7 +63,22 @@ router.get('/program/:programId', async ctx => {
 // МЗС показатели по пользователям
 router.get('/program/:programId/users', async ctx => {
   // смещение для пагинации
+  const limit = 10
   const offset = toNumber(ctx.query.offset) || 0
+  // параметры для сортировки
+  const order = ctx.query.order || 'profit'
+  const orderDirection = ctx.query.orderDirection || 'DESC'
+
+  // количество строк для пагинации
+  const [usersCount] = await orm.query(sql`
+    SELECT COUNT(DISTINCT user.id) AS count
+    FROM users AS user
+    LEFT JOIN incomes ON incomes.user_id = user.id
+    LEFT JOIN users_programs ON users_programs.user_id = user.id
+    WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
+  `, {
+    model: models.User
+  })
 
   // получение пользователей
   const users = await orm.query(sql`
@@ -75,10 +90,14 @@ router.get('/program/:programId/users', async ctx => {
     LEFT JOIN users_programs ON users_programs.user_id = user.id
     WHERE users_programs.program_id = ${ctx.params.programId} AND incomes.amount IS NOT NULL
     GROUP BY user.id
-    LIMIT ${offset}, 20
-  `, {
-    model: models.User
-  })
+    ORDER BY `
+    .append(`${order} ${orderDirection}`)
+    .append(sql`
+      LIMIT ${offset}, ${limit}
+    `), {
+      model: models.User
+    }
+  )
 
   // получение прибыли за последнюю и предпоследнюю недели
   // для каждого пользователя
@@ -120,7 +139,14 @@ router.get('/program/:programId/users', async ctx => {
   })
 
   ctx.body = {
+    count: JSON.parse(JSON.stringify(usersCount)).count,
     users: data
+  }
+})
+
+router.get('/program/:programId/users/time', async ctx => {
+  ctx.body = {
+    ok: true
   }
 })
 

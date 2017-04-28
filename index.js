@@ -4,7 +4,7 @@ const Router = require('koa-router')
 const mount = require('koa-mount')
 const bodyParser = require('koa-bodyparser')
 const passport = require('koa-passport')
-// const cors = require('koa2-cors')
+const cors = require('koa2-cors')
 const next = require('next')
 const bunyan = require('bunyan')
 const log = bunyan.createLogger({name: 'platform'})
@@ -28,7 +28,7 @@ app.prepare().then(() => {
   server.use(bodyParser())
   server.use(passport.initialize())
   server.use(passport.session())
-  // server.use(cors())
+  server.use(cors())
   server.use(mount('/api', apiRoutes))
   server.use(async (ctx, next) => {
     ctx.res.statusCode = 200
