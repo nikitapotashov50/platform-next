@@ -25,6 +25,27 @@ API_VERSION=v1
 npm start
 ```
 
+## Структура
+
+  - **/api** - API роуты, файл должен экспортить koa-router instance
+  - **/components** - React-компоненты
+  - **/config** - конфиги
+  - **/controllers** - методы, используемые в API эндпоинтах
+  - **/models** - sequelize-модели
+  - **/pages** - компоненты-страницы, рендерятся на сервере
+
+## Создание новой страницы
+
+Необходимо создать React-компонент в папке `pages`
+
+Например `pages/users.js` ▷ `https://example.com/users`
+
+## Создание нового API эндпоинта
+
+Необходимо создать файл в папке `api`
+
+Например `api/users.js`, затем добавить его в функцию `combineRouters` в `api/index.js` ▷ `https://example.com/api/v1/users`
+
 ## Проверка
 
 ### Линтер
