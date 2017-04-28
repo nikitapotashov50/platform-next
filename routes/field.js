@@ -7,7 +7,18 @@ const pMap = require('p-map')
 const router = new Router({ prefix: '/field' })
 
 // получение относительной дельты
-const getRelDelta = (now, was) => floor((now - was) / was, 2) * 100
+const getRelDelta = (now, was) => {
+  if (was === 0 && now > 0) {
+    return 100
+  }
+  if (was === 0 && now < 0) {
+    return -100
+  }
+  if (was === 0 && now === 0) {
+    return 0
+  }
+  return floor((now - was) / was, 2) * 100
+}
 
 // МЗС показатели
 router.get('/program/:programId', async ctx => {
