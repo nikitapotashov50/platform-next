@@ -7,7 +7,8 @@
       "presets": ["next/babel"]
     },
     "test": {
-      "presets": ["es2015", "next/babel"]
+      "presets": ["es2015", "next/babel"],
+      "plugins": ["istanbul"]
     }
   }
 }
