@@ -8,6 +8,7 @@ const dbConfig = require('../config').db
  * @type {module}
  */
 
+console.log(dbConfig)
 let sequelize = new Sequelize('bm_platform', 'root', null)
 let db = []
 

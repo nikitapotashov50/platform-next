@@ -1,22 +1,21 @@
 const config = require('../config')
 const axios = require('axios')
 
-const getBMAccessTokenCredentialsOnly = async () => {
-  let { status, statusText, data } = await axios.post(
-    'http://api.molodost.bz/oauth/token/',
-    {
-      client_id: config.bmapi.client_id,
-			client_secret: config.bmapi.client_secret,
-			grant_type: 'client_credentials'
-    }
-  )
-	
-  return data
-}
+// const getBMAccessTokenCredentialsOnly = async () => {
+//   let { status, statusText, data } = await axios.post(
+//     'http://api.molodost.bz/oauth/token/',
+//     {
+//        client_id: config.bmapi.client_id,
+//        client_secret: config.bmapi.client_secret,
+//        grant_type: 'client_credentials'
+//     }
+//   )
+//   return data
+// }
 
 const isUserAuthOnBM = async (user, hash, userAgent) => {
   try {
-    let { status, statusText, data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+    let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
       user: user,
       hash: hash,
       user_agent: userAgent,
@@ -33,12 +32,12 @@ const isUserAuthOnBM = async (user, hash, userAgent) => {
 
 const getBMAccessToken = async (username, password) => {
   try {
-    let { status, statusText, data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+    let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
       username: username,
       password: password,
       grant_type: 'password',
       client_id: config.bmapi.client_id,
-      client_secret: config.bmapi.client_secret    
+      client_secret: config.bmapi.client_secret
     })
 
     return data
@@ -48,7 +47,7 @@ const getBMAccessToken = async (username, password) => {
 }
 
 module.exports = {
-  getBMAccessToken,
   isUserAuthOnBM,
-  getBMAccessTokenCredentialsOnly
+  getBMAccessToken
+  // getBMAccessTokenCredentialsOnly
 }
