@@ -3,13 +3,8 @@ const fs = require('fs')
 const path = require('path')
 const dbConfig = require('../config').db
 
-/**
- * @description model's factory + register manager
- * @type {module}
- */
-
 console.log(dbConfig)
-let sequelize = new Sequelize('bm_platform', 'root', null)
+let sequelize = new Sequelize(dbConfig.uri)
 let db = []
 
 fs.readdirSync(__dirname)
