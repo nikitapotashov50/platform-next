@@ -1,6 +1,6 @@
 // const combineRouters = require('koa-combine-routers')
-const fieldRouter = require('./field')
-const generalRouter = require('./general')
+// const fieldRouter = require('./field')
+// const generalRouter = require('./general')
 
 module.exports = router => {
   router.get('/', ctx => {
