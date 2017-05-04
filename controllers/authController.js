@@ -1,5 +1,5 @@
-const config = require('../config')
 const axios = require('axios')
+const config = require('../config')
 
 // const getBMAccessTokenCredentialsOnly = async () => {
 //   let { status, statusText, data } = await axios.post(

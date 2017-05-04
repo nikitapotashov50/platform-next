@@ -1,6 +1,4 @@
 const Router = require('koa-router')
-
-const services = require('../services')
 const { models } = require('../models')
 
 // ctx.cookies.set('hello', 'zxczxczxczxcczczsc2423', { key: config.api.session_key })
@@ -45,7 +43,5 @@ router.get('/login', async (ctx, next) => {
     }
   }
 })
-
-router.get('/version', services.general.getAPIVersionService)
 
 module.exports = router
