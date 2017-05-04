@@ -1,31 +1,14 @@
 import React, { Component } from 'react'
-import fetch from 'isomorphic-unfetch'
+import Link from 'next/link'
+import Page from '../components/hocs/Page'
 
 class IndexPage extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {}
-    this.handler = this.handler.bind(this)
-  }
-
-  async handler () {
-    fetch('/api/login', {
-      method: 'post',
-      body: JSON.stringify({
-        login: this.state.login
-      })
-    })
-  }
-
   render () {
-    return (
-      <div>
-        <h1>Главная</h1>
-        <input type='text' placeholder='Логин' onChange={e => this.setState({ login: e.target.value })} />
-        <button onClick={this.handler}>ВОЙТИ</button>
-      </div>
-    )
+    return <div>
+      Главная
+      <Link href='/posts' prefetch><a>Посты</a></Link>
+    </div>
   }
 }
 
-export default IndexPage
+export default Page(IndexPage)
