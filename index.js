@@ -30,7 +30,7 @@ app.prepare().then(() => {
   server.use(koaBunyanLogger(log))
   server.use(helmet())
   server.use(bodyParser())
-  app.use(session({
+  server.use(session({
     key: config.api.session_key,
     secure: true,
     httpOnly: true,

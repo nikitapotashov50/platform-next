@@ -3,14 +3,13 @@ const fs = require('fs')
 const path = require('path')
 const dbConfig = require('../config').db
 
-console.log(dbConfig)
-let sequelize = new Sequelize(dbConfig.uri)
-let db = []
+const sequelize = new Sequelize(dbConfig.uri)
+const db = []
 
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
   .forEach(file => {
-    let model = sequelize['import'](path.join(__dirname, file))
+    const model = sequelize['import'](path.join(__dirname, file))
     db[model.name] = model
   })
 
