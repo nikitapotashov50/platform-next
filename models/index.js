@@ -8,7 +8,8 @@ const dbConfig = require('../config').db
  * @type {module}
  */
 
-let sequelize = new Sequelize(dbConfig.uri)
+console.log(dbConfig)
+let sequelize = new Sequelize('bm_platform', 'root', null)
 let db = []
 
 fs.readdirSync(__dirname)
