@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const path = require('path')
-const dbConfig = require('../config').db
+const dbConfig = require('../../config').db
 
 /**
  * @description model's factory + register manager

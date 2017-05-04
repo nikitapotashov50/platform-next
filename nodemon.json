@@ -1,7 +1,6 @@
 {
   "watch": [
-    "api/",
-    "controllers/",
-    "models/"
+    "server/",
+    "index.js"
   ]
 }

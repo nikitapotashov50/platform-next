@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import Page from '../components/hocs/Page'
+import Page from '../client/hocs/Page'
 
 class IndexPage extends Component {
   render () {

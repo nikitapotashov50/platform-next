@@ -19,6 +19,7 @@
     "koa-passport": "^3.0.0",
     "koa-response-time": "^2.0.0",
     "koa-router": "^7.1.1",
+    "koa-router-bridge": "^1.0.6",
     "koa2-cors": "^2.0.3",
     "mysql": "^2.13.0",
     "next": "^2.2.0",

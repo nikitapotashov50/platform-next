@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import Page from '../components/hocs/Page'
+import Page from '../client/hocs/Page'
 
 class PostsPage extends Component {
   render () {
+    let { props } = this
     return (
-      <div>Посты</div>
+      <div>Посты {props.url.query.id}</div>
     )
   }
 }

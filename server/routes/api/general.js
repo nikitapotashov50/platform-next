@@ -1,6 +1,6 @@
 const Router = require('koa-router')
-const { messages } = require('../factories')
-const services = require('../services')
+const { messages } = require('../../factories')
+const services = require('../../services')
 
 const router = new Router()
 

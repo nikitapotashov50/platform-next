@@ -1,8 +1,9 @@
+const pMap = require('p-map')
 const Router = require('koa-router')
 const sql = require('sql-template-strings')
-const { models, orm } = require('../models')
 const { floor, toNumber } = require('lodash')
-const pMap = require('p-map')
+
+const { models, orm } = require('../../models')
 
 const router = new Router({ prefix: '/field' })
 

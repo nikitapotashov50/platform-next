@@ -1,31 +1,24 @@
 const Koa = require('koa')
-const helmet = require('koa-helmet')
-const Router = require('koa-router')
-const mount = require('koa-mount')
-const bodyParser = require('koa-bodyparser')
-const passport = require('koa-passport')
-const cors = require('koa2-cors')
-const koaBunyanLogger = require('koa-bunyan-logger')
 const next = require('next')
 const bunyan = require('bunyan')
+const cors = require('koa2-cors')
+const mount = require('koa-mount')
+const helmet = require('koa-helmet')
+const Router = require('koa-router')
+const passport = require('koa-passport')
+const bodyParser = require('koa-bodyparser')
+const koaBunyanLogger = require('koa-bunyan-logger')
+
 const config = require('./config')
-const apiRoutes = require('./api')
+const routes = require('./server/routes')
 
 const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
 
-app.prepare().then(() => {
+const client = next({ dev })
+
+client.prepare().then(() => {
   const server = new Koa()
-  const router = new Router()
-  const log = bunyan.createLogger({
-    name: 'platform'
-  })
-
-  router.get('*', async ctx => {
-    await handle(ctx.req, ctx.res)
-    ctx.respond = false
-  })
+  const log = bunyan.createLogger({ name: 'platform' })
 
   server.use(koaBunyanLogger(log))
   server.use(helmet())
@@ -33,12 +26,14 @@ app.prepare().then(() => {
   server.use(passport.initialize())
   server.use(passport.session())
   server.use(cors())
-  server.use(mount('/api', apiRoutes))
+
   server.use(async (ctx, next) => {
+    ctx.__next = client
     ctx.res.statusCode = 200
     await next()
   })
-  server.use(router.routes())
+
+  server.use(routes.routes())
 
   server.listen(config.server.port, () => {
     log.info(`server is running on port: ${config.server.port}`)
