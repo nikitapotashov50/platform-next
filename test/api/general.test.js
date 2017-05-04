@@ -1,6 +1,6 @@
 import test from 'ava'
 import request from 'supertest'
-import generalRouter from '../../api/general'
+import generalRouter from '../../server/routes/api/general'
 
 const Koa = require('koa')
 const app = new Koa()
