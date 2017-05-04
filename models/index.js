@@ -3,11 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const dbConfig = require('../config').db
 
-/**
- * @description model's factory + register manager
- * @type {module}
- */
-
+console.log(dbConfig)
 let sequelize = new Sequelize(dbConfig.uri)
 let db = []
 

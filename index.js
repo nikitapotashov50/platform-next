@@ -3,7 +3,7 @@ const helmet = require('koa-helmet')
 const Router = require('koa-router')
 const mount = require('koa-mount')
 const bodyParser = require('koa-bodyparser')
-const passport = require('koa-passport')
+const session = require('koa-session2')
 const cors = require('koa2-cors')
 const koaBunyanLogger = require('koa-bunyan-logger')
 const next = require('next')
@@ -30,8 +30,12 @@ app.prepare().then(() => {
   server.use(koaBunyanLogger(log))
   server.use(helmet())
   server.use(bodyParser())
-  server.use(passport.initialize())
-  server.use(passport.session())
+  app.use(session({
+    key: config.api.session_key,
+    secure: true,
+    httpOnly: true,
+    signed: true
+  }))
   server.use(cors())
   server.use(mount('/api', apiRoutes))
   server.use(async (ctx, next) => {
