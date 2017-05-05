@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import clickOutside from 'react-click-outside'
@@ -15,7 +16,9 @@ class UserHeaderMenu extends Component {
     if (this.props.opened && this.props.onClose) this.props.onClose()
   }
 
-  logout () {
+  async logout () {
+    await axios.post('/api/auth/logout')
+
     this.props.dispatch(logout())
     if (this.props.onClose) this.props.onClose()
   }

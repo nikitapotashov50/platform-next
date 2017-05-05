@@ -1,9 +1,13 @@
 const { models } = require('../../models')
 
-// ctx.cookies.set('hello', 'zxczxczxczxcczczsc2423', { key: config.api.session_key })
 const { isUserAuthOnBM, getBMAccessToken } = require('../../controllers/authController')
 
 module.exports = router => {
+  router.post('/logout', async ctx => {
+    delete ctx.session.user
+    ctx.body = {}
+  })
+
   router.post('/login', async (ctx, next) => {
     let isAuth = false
     let { email, password } = ctx.request.body
@@ -29,7 +33,7 @@ module.exports = router => {
       if (!dbUser) throw new Error('No user found in our local database')
 
       ctx.session.user = dbUser.toJSON()
-      console.log(ctx.session)
+      ctx.cookies.set('user', dbUser.toJSON(), { key: '4911b7ef185e44d38d5ba8767034ef67' })
 
       ctx.body = {
         user: {

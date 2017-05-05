@@ -8,8 +8,8 @@ const Modal = ({ width, height, children, isOpened = false, onClose }) => {
   return (
     <div className='vue-modal-portal'>
       <div className='modal__overlay' onClick={onClose} >
-
-        <div className='modal__content' tabIndex='-1' style={contentStyles} onClick={e => e.stopPropagation()}>
+        {/* tabIndex='-1' */}
+        <div className='modal__content' style={contentStyles} onClick={e => e.stopPropagation()}>
           <button className='modal__close' onClick={onClose} />
 
           { children }
