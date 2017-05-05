@@ -23,6 +23,7 @@ class HeaderUnregisteredMenu extends Component {
     this.state = {
       errors: {},
       modal: null,
+      message: null,
       credentials: { ...defaultCredentials }
     }
   }
@@ -145,8 +146,7 @@ class HeaderUnregisteredMenu extends Component {
     try {
       await this.setState(state => {
         state.fetching = false
-        state.modal = null
-        state.credentials = { ...defaultCredentials }
+        state.message = 'Ссылка отправлена вам на почту'
       })
     } catch (error) {
       await this.setState(state => {
@@ -157,7 +157,7 @@ class HeaderUnregisteredMenu extends Component {
   }
 
   render () {
-    let { modal, errors, credentials } = this.state
+    let { modal, errors, credentials, message } = this.state
     let { className } = this.props
 
     return (
@@ -178,7 +178,7 @@ class HeaderUnregisteredMenu extends Component {
             <AuthLogin onInput={this.inputChange.bind(this)} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />
           )}
           { modal === 'recovery' && (
-            <AuthRecovery onInput={this.inputChange.bind(this)} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
+            <AuthRecovery onInput={this.inputChange.bind(this)} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} message={message} />
           )}
         </Modal>
       </div>

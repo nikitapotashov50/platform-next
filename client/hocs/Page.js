@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 
-import Header from '../components/Header/index'
 import { initStore, auth } from '../redux/store'
 
 export default (Page, mapStateToProps, mapDispatchToProps) => {
@@ -24,7 +23,6 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
       render () {
         return (
           <div>
-            <Header />
             <Page {...this.props} />
 
             <style jsx global>{`

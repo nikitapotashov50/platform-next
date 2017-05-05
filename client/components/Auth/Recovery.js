@@ -1,8 +1,8 @@
-const AuthRecovery = ({ loginSwitch, values, onInput, submit, errors }) => (
+const AuthRecovery = ({ loginSwitch, values, onInput, submit, errors, message }) => (
   <div className='login-form'>
     <h3 className='login-form__title'>Восстановление пароля</h3>
 
-    <div className='alert alert_success'>Ссылка отправлена вам на почту</div>
+    { message && <div className='alert alert_success'>{message}</div> }
 
     <form autoComplete='off' method='post'>
 
