@@ -78,7 +78,7 @@
     "lint": "standard --verbose | snazzy",
     "test": "NODE_ENV=test nyc ava",
     "precommit": "lint-staged",
-    "prepush": "npm run lint && npm test",
+    "prepush": "npm run lint",
     "build": "next build",
     "prod": "NODE_ENV=production node index.js",
     "update-snapshots": "NODE_ENV=test ava --update-snapshots"
