@@ -1,6 +1,6 @@
 const test = require('ava')
 const request = require('supertest')
-const generalRouter require('../../server/routes/api/general')
+const generalRouter = require('../../server/routes/api/general')
 
 const Koa = require('koa')
 const app = new Koa()
