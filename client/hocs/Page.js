@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 
-import Header from '../components/Header'
+import Header from '../components/Header/index'
 import { initStore, auth } from '../redux/store'
 
 export default (Page, mapStateToProps, mapDispatchToProps) => {
@@ -840,6 +840,10 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   margin: 0;
                   padding: 0;
                   list-style: none;
+
+                  &__partial {
+                    display: inline-block;
+                  }
 
                   &__item {
                     position: relative;

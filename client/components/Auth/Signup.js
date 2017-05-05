@@ -1,4 +1,4 @@
-const AuthSignup = ({ errors, submit, values, onInput }) => (
+const AuthSignup = ({ errors, submit, values, onInput, loginSwitch }) => (
   <div className='login-form'>
     <h3 className='login-form__title'>Регистрация</h3>
 
@@ -23,6 +23,10 @@ const AuthSignup = ({ errors, submit, values, onInput }) => (
 
       <div className='login-form__row login-form__row_double-margin'>
         <button className='login-form__btn' type='submit' onClick={submit}>Зарегистрироваться</button>
+      </div>
+
+      <div className='login-form__row login-form__row_centered'>
+        <a className='login-form__link' onClick={loginSwitch} href='#'>У меня есть аккаунт</a>
       </div>
     </form>
 

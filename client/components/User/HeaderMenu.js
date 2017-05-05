@@ -3,28 +3,13 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import clickOutside from 'react-click-outside'
 
-import { logout } from '../../redux/store'
-
 class UserHeaderMenu extends Component {
-  constructor (props) {
-    super(props)
-
-    this.logout = this.logout.bind(this)
-  }
-
   handleClickOutside () {
     if (this.props.opened && this.props.onClose) this.props.onClose()
   }
 
-  async logout () {
-    await axios.post('/api/auth/logout')
-
-    this.props.dispatch(logout())
-    if (this.props.onClose) this.props.onClose()
-  }
-
   render () {
-    let { opened } = this.props
+    let { opened, logout } = this.props
     if (!opened) return null
 
     return (
@@ -39,7 +24,7 @@ class UserHeaderMenu extends Component {
           <a className='user-sub-menu__link'>Настройки</a>
         </li>
         <li className='user-sub-menu__item'>
-          <a className='user-sub-menu__link' onClick={this.logout}>Выйти</a>
+          <a className='user-sub-menu__link' onClick={logout}>Выйти</a>
         </li>
       </ul>
     )

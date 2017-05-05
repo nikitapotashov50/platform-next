@@ -1,4 +1,4 @@
-import Menu from './Menu'
+import Menu from '../Menu'
 import HeaderRight from './HeaderRight'
 import { connect } from 'react-redux'
 

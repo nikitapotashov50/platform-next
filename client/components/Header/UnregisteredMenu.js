@@ -3,14 +3,12 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
-import Modal from './Modal'
-import UserImage from './User/Image'
-import AuthLogin from './Auth/Login'
-import AuthSignup from './Auth/Signup'
-import AuthRecovery from './Auth/Recovery'
-import UserHeaderMenu from './User/HeaderMenu'
+import Modal from '../Modal'
+import AuthLogin from '../Auth/Login'
+import AuthSignup from '../Auth/Signup'
+import AuthRecovery from '../Auth/Recovery'
 
-import { auth } from '../redux/store'
+import { auth } from '../../redux/store'
 
 let defaultCredentials = {
   email: '',
@@ -19,17 +17,15 @@ let defaultCredentials = {
   firstName: ''
 }
 
-class HeaderRight extends Component {
+class HeaderUnregisteredMenu extends Component {
   constructor (props) {
     super(props)
+    
     this.state = {
+      errors: {},
       modal: null,
-      menu: false,
-      credentials: { ...defaultCredentials },
-      errors: {}
+      credentials: { ...defaultCredentials }
     }
-
-    this.toggleMenu = this.toggleMenu.bind(this)
   }
 
   async toggleModal (name) {
@@ -41,12 +37,6 @@ class HeaderRight extends Component {
       if (!name) {
         state.credentials = { ...defaultCredentials }
       }
-    })
-  }
-
-  async toggleMenu (flag) {
-    await this.setState(state => {
-      state.menu = flag
     })
   }
 
@@ -93,13 +83,12 @@ class HeaderRight extends Component {
     try {
       let { data } = await axios.post('/api/auth/login', { email, password }, { withCredentials: true })
 
-      this.props.dispatch(auth(data.user))
-
       await this.setState(state => {
         state.fetching = false
         state.modal = null
         state.credentials = { ...defaultCredentials }
       })
+      this.props.dispatch(auth(data.user))
     } catch (error) {
       await this.setState(state => {
         state.fetching = false
@@ -169,40 +158,22 @@ class HeaderRight extends Component {
   }
 
   render () {
-    let { modal, menu, credentials, errors } = this.state
-    let { user } = this.props
+    let { modal, errors, credentials } = this.state
+    let { className } = this.props
 
     return (
-      <ul className='user-menu'>
-        <li className='user-menu__item user-menu__item_no_padding' />
-
-        <li className='user-menu__item user-menu__item_no_padding'>
-          <a className='user-menu__link user-menu__link_icon user-menu__link_icon_search' />
+      <div className={className}>
+        <li className='user-menu__item user-menu__item_hoverable'>
+          <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'signup')}>Регистрация</a>
         </li>
-
-        { user && (
-          <li className='user-menu__item user-menu__item_hoverable'>
-            <UserImage small onClick={this.toggleMenu.bind(this, !menu)} />
-
-            <UserHeaderMenu opened={menu} onClose={this.toggleMenu.bind(this, false)} />
-          </li>
-        )}
-
-        { !user && (
-          <li className='user-menu__item user-menu__item_hoverable'>
-            <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'signup')}>Регистрация</a>
-          </li>
-        )}
-
-        { !user && (
-          <li className='user-menu__item user-menu__item_hoverable'>
-            <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'login')}>Войти</a>
-          </li>
-        )}
+      
+        <li className='user-menu__item user-menu__item_hoverable'>
+          <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'login')}>Войти</a>
+        </li>
 
         <Modal width={400} isOpened={modal} onClose={this.toggleModal.bind(this, null)}>
           { modal === 'signup' && (
-            <AuthSignup onInput={this.inputChange.bind(this)} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} />
+            <AuthSignup onInput={this.inputChange.bind(this)} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
           )}
           { modal === 'login' && (
             <AuthLogin onInput={this.inputChange.bind(this)} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />
@@ -211,13 +182,9 @@ class HeaderRight extends Component {
             <AuthRecovery onInput={this.inputChange.bind(this)} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
           )}
         </Modal>
-      </ul>
+      </div>
     )
   }
 }
 
-let mapStateToProps = state => ({
-  user: state.user
-})
-
-export default connect(mapStateToProps)(HeaderRight)
+export default connect()(HeaderUnregisteredMenu)
