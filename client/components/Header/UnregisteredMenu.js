@@ -20,7 +20,7 @@ let defaultCredentials = {
 class HeaderUnregisteredMenu extends Component {
   constructor (props) {
     super(props)
-    
+
     this.state = {
       errors: {},
       modal: null,
@@ -166,7 +166,7 @@ class HeaderUnregisteredMenu extends Component {
         <li className='user-menu__item user-menu__item_hoverable'>
           <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'signup')}>Регистрация</a>
         </li>
-      
+
         <li className='user-menu__item user-menu__item_hoverable'>
           <a className='user-menu__link' onClick={this.toggleModal.bind(this, 'login')}>Войти</a>
         </li>

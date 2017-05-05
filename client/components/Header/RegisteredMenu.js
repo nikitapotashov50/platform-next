@@ -10,7 +10,7 @@ import { logout } from '../../redux/store'
 class HeaderRegisteredMenu extends Component {
   constructor (props) {
     super(props)
-    
+
     this.state = { menu: false }
   }
 

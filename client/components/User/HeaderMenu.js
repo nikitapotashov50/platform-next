@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import clickOutside from 'react-click-outside'
 
@@ -31,4 +29,4 @@ class UserHeaderMenu extends Component {
   }
 }
 
-export default connect()(clickOutside(UserHeaderMenu))
+export default clickOutside(UserHeaderMenu)
