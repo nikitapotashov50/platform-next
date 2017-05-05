@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import UserImage from '../User/Image'
@@ -42,4 +41,4 @@ class HeaderRegisteredMenu extends Component {
   }
 }
 
-export default connect()(HeaderRegisteredMenu)
+export default HeaderRegisteredMenu

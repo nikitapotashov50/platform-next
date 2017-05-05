@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import axios from 'axios'
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import Modal from '../Modal'
@@ -187,4 +186,4 @@ class HeaderUnregisteredMenu extends Component {
   }
 }
 
-export default connect()(HeaderUnregisteredMenu)
+export default HeaderUnregisteredMenu
