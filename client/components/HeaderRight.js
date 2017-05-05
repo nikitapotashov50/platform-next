@@ -15,8 +15,8 @@ import { auth } from '../redux/store'
 let defaultCredentials = {
   email: '',
   password: '',
-  last_name: '',
-  first_name: ''
+  lastName: '',
+  firstName: ''
 }
 
 class HeaderRight extends Component {
@@ -55,7 +55,7 @@ class HeaderRight extends Component {
 
     let { value } = event.target
     this.setState(state => {
-      state.credentials[field] = value.replace(/(<([^>]+)>)/ig,"")
+      state.credentials[field] = value.replace(/(<([^>]+)>)/ig, '')
     })
   }
 
@@ -69,7 +69,7 @@ class HeaderRight extends Component {
   async pushErrors (errors) {
     await this.setState(state => {
       let errObj = {}
-      errors.map(el => errObj[el.type] = el.value)
+      errors.map(el => { errObj[el.type] = el.value })
 
       state.errors = errObj
     })
@@ -92,7 +92,7 @@ class HeaderRight extends Component {
 
     try {
       let { data } = await axios.post('/api/auth/login', { email, password }, { withCredentials: true })
-      
+
       this.props.dispatch(auth(data.user))
 
       await this.setState(state => {
@@ -111,12 +111,12 @@ class HeaderRight extends Component {
   async signup (e) {
     e.preventDefault()
 
-    let { email, first_name, last_name } = this.state.credentials
+    let { email, firstName, lastName } = this.state.credentials
     let errors = []
 
     if (!email || !email.length) errors.push({ type: 'email', value: 'Не указан email' })
-    if (!first_name || !first_name.length) errors.push({ type: 'first_name', value: 'Не указано имя' })
-    if (!last_name || !last_name.length) errors.push({ type: 'last_name', value: 'Не указана фамилия' })
+    if (!firstName || !firstName.length) errors.push({ type: 'firstName', value: 'Не указано имя' })
+    if (!lastName || !lastName.length) errors.push({ type: 'lastName', value: 'Не указана фамилия' })
 
     if (errors.length) {
       this.pushErrors(errors)
@@ -202,7 +202,7 @@ class HeaderRight extends Component {
 
         <Modal width={400} isOpened={modal} onClose={this.toggleModal.bind(this, null)}>
           { modal === 'signup' && (
-            <AuthSignup onInput={this.inputChange.bind(this)} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'first_name', 'last_name' ])} />
+            <AuthSignup onInput={this.inputChange.bind(this)} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} />
           )}
           { modal === 'login' && (
             <AuthLogin onInput={this.inputChange.bind(this)} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />

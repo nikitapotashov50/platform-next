@@ -11,14 +11,14 @@ const AuthSignup = ({ errors, submit, values, onInput }) => (
 
       <div className='login-form__row'>
         <label className='login-form__label'>Имя</label>
-        <input className='login-form__input' value={values.first_name} onChange={onInput.bind(this, 'first_name')} type='text' />
-        { errors.first_name && (<div>{errors.first_name}</div>)}
+        <input className='login-form__input' value={values.firstName} onChange={onInput.bind(this, 'firstName')} type='text' />
+        { errors.firstName && (<div>{errors.firstName}</div>)}
       </div>
 
       <div className='login-form__row'>
         <label className='login-form__label'>Фамилия</label>
-        <input className='login-form__input' value={values.last_name} onChange={onInput.bind(this, 'last_name')} type='text' />
-        { errors.last_name && (<div>{errors.last_name}</div>)}
+        <input className='login-form__input' value={values.lastName} onChange={onInput.bind(this, 'lastName')} type='text' />
+        { errors.lastName && (<div>{errors.lastName}</div>)}
       </div>
 
       <div className='login-form__row login-form__row_double-margin'>
