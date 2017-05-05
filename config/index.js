@@ -15,5 +15,9 @@ module.exports = {
   },
   api: {
     version: process.env.API_VERSION || 'v1'
+  },
+  bmapi: {
+    client_id: process.env.BM_API_CLIENT_ID,
+    client_secret: process.env.BM_API_CLIENT_SECRET
   }
 }

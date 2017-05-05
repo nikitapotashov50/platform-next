@@ -3,6 +3,7 @@ const next = require('next')
 const bunyan = require('bunyan')
 const cors = require('koa2-cors')
 const helmet = require('koa-helmet')
+const session = require('koa-session2')
 const passport = require('koa-passport')
 const bodyParser = require('koa-bodyparser')
 const koaBunyanLogger = require('koa-bunyan-logger')
@@ -21,6 +22,7 @@ client.prepare().then(() => {
   server.use(koaBunyanLogger(log))
   server.use(helmet())
   server.use(bodyParser())
+  server.use(session({ key: '1231231231' }))
   server.use(passport.initialize())
   server.use(passport.session())
   server.use(cors())
@@ -28,6 +30,7 @@ client.prepare().then(() => {
   server.use(async (ctx, next) => {
     ctx.__next = client
     ctx.res.statusCode = 200
+    ctx.req.session = ctx.session
     await next()
   })
 
