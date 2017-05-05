@@ -1,6 +1,6 @@
-import axios from 'axios'
-import thunk from 'redux-thunk'
-import { createStore, applyMiddleware } from 'redux'
+// import axios from 'axios'
+// import thunk from 'redux-thunk'
+import { createStore } from 'redux'
 
 const exampleInitialState = {
   count: 0

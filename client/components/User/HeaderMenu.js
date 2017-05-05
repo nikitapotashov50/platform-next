@@ -21,22 +21,22 @@ class UserHeaderMenu extends Component {
   }
 
   render () {
-    let { opened, onClose } = this.props
+    let { opened } = this.props
     if (!opened) return null
 
     return (
-      <ul className="user-sub-menu">
-        <li className="user-sub-menu__item">
-          <a className="user-sub-menu__link">Профиль</a>
+      <ul className='user-sub-menu'>
+        <li className='user-sub-menu__item'>
+          <a className='user-sub-menu__link'>Профиль</a>
         </li>
-        <li className="user-sub-menu__item">
-          <a className="user-sub-menu__link" href="#">Ответы</a>
+        <li className='user-sub-menu__item'>
+          <a className='user-sub-menu__link' href='#'>Ответы</a>
         </li>
-        <li className="user-sub-menu__item">
-          <a className="user-sub-menu__link">Настройки</a>
+        <li className='user-sub-menu__item'>
+          <a className='user-sub-menu__link'>Настройки</a>
         </li>
-        <li className="user-sub-menu__item">
-          <a className="user-sub-menu__link" onClick={ this.logout }>Выйти</a>
+        <li className='user-sub-menu__item'>
+          <a className='user-sub-menu__link' onClick={this.logout}>Выйти</a>
         </li>
       </ul>
     )

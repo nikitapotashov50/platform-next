@@ -12,40 +12,39 @@ class AuthSignup extends Component {
 
   submit (e) {
     e.preventDefault()
-
   }
 
   render () {
-    let { message } = this.props
-    let { fetching } = this.state
+    // let { message } = this.props
+    // let { fetching } = this.state
 
     return (
-      <div className="login-form">    
-        <h3 className="login-form__title">Регистрация</h3>
+      <div className='login-form'>
+        <h3 className='login-form__title'>Регистрация</h3>
 
-        <form autoComplete="off" method="post">
-          <div className="login-form__row">
-            <label className="login-form__label">email</label>
-            <input className="login-form__input" type="text" v-model="info.email" />
-          </div>
-
-          <div className="login-form__row">
-            <label className="login-form__label">Имя</label>
-            <input className="login-form__input" type="text" v-model="info.first_name" />
+        <form autoComplete='off' method='post'>
+          <div className='login-form__row'>
+            <label className='login-form__label'>email</label>
+            <input className='login-form__input' type='text' />
           </div>
 
-          <div className="login-form__row">
-            <label className="login-form__label">Фамилия</label>
-            <input className="login-form__input" type="text" v-model="info.last_name" />
+          <div className='login-form__row'>
+            <label className='login-form__label'>Имя</label>
+            <input className='login-form__input' type='text' />
           </div>
-            
-          <div className="login-form__row login-form__row_double-margin">
-            <button  className="login-form__btn" type="submit">Зарегистрироваться</button>
+
+          <div className='login-form__row'>
+            <label className='login-form__label'>Фамилия</label>
+            <input className='login-form__input' type='text' />
           </div>
-          
+
+          <div className='login-form__row login-form__row_double-margin'>
+            <button className='login-form__btn' type='submit'>Зарегистрироваться</button>
+          </div>
+
         </form>
 
-        <div className="login-form__row">Условия и тд</div>
+        <div className='login-form__row'>Условия и тд</div>
       </div>
     )
   }

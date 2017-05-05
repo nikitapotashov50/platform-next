@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 
@@ -16,10 +15,10 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
         if (ctx.req) {
           let { session } = ctx.req
 
-          if (session.user) ctx.store.dispatch(auth(session.user))        
+          if (session.user) ctx.store.dispatch(auth(session.user))
         }
 
-        return Page.getInitialProps && Page.getInitialProps(ctx)        
+        return Page.getInitialProps && Page.getInitialProps(ctx)
       }
 
       render () {

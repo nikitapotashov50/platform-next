@@ -6,11 +6,11 @@ const Modal = ({ width, height, children, isOpened = false, onClose }) => {
 
   if (!isOpened) return null
   return (
-    <div className="vue-modal-portal">
-      <div className="modal__overlay" onClick={ onClose } >
-      
-        <div className="modal__content" tabIndex="-1" style={ contentStyles } onClick={ e => e.stopPropagation() }>
-          <button className="modal__close" onClick={ onClose } />
+    <div className='vue-modal-portal'>
+      <div className='modal__overlay' onClick={onClose} >
+
+        <div className='modal__content' tabIndex='-1' style={contentStyles} onClick={e => e.stopPropagation()}>
+          <button className='modal__close' onClick={onClose} />
 
           { children }
         </div>

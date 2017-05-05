@@ -5,7 +5,7 @@ const UserImage = ({ small, onClick }) => {
   if (!onClick) onClick = () => {}
 
   return (
-    <div className={ classes.join(' ') } onClick={ onClick } src="" alt="" />
+    <div className={classes.join(' ')} onClick={onClick} src='' alt='' />
   )
 }
 

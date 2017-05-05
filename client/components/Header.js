@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Menu from './Menu'
 import HeaderRight from './HeaderRight'
 import { connect } from 'react-redux'
@@ -14,7 +13,7 @@ const Header = ({ user }) => (
     <div className='app-header__wrap'>
 
       <div className='app-header__block app-header__block_menu'>
-        <Menu items={ menu } withLogo />
+        <Menu items={menu} withLogo />
       </div>
 
       <div className='app-header__block app-header__block_menu'>
