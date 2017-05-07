@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
+import { actionStorageMiddleware, createStorageListener } from 'redux-state-sync'
 
 const exampleInitialState = {
   count: 0
@@ -38,7 +39,10 @@ export const logout = () => ({
 
 export const initStore = (initialState = exampleInitialState) => {
   const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
-  return createStore(reducer, initialState, composeEnhancers(
-    applyMiddleware()
+  const middlewares = [actionStorageMiddleware]
+  const store = createStore(reducer, initialState, composeEnhancers(
+    applyMiddleware(...middlewares)
   ))
+  typeof window !== 'undefined' && createStorageListener(store)
+  return store
 }
