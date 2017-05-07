@@ -10,4 +10,6 @@ class PostsPage extends Component {
   }
 }
 
-export default DefaultLayout(PostsPage)
+export default DefaultLayout(PostsPage, {
+  title: 'Посты'
+})

@@ -1,7 +1,7 @@
 import PageHOC from '../hocs/Page'
 import Header from '../components/Header/index'
 
-export default (WrappedComponent) => {
+export default (WrappedComponent, options) => {
   const DefaultLayout = props => (
     <div className='app'>
       <Header />
@@ -12,5 +12,5 @@ export default (WrappedComponent) => {
     </div>
   )
 
-  return PageHOC(DefaultLayout)
+  return PageHOC(DefaultLayout, options)
 }

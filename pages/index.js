@@ -9,4 +9,6 @@ class IndexPage extends Component {
   }
 }
 
-export default DefaultLayout(IndexPage)
+export default DefaultLayout(IndexPage, {
+  title: 'Главная'
+})

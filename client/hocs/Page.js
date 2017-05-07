@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
-
+import Head from 'next/head'
 import { initStore, auth } from '../redux/store'
 
-export default (Page, mapStateToProps, mapDispatchToProps) => {
+export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
   return withRedux(
     initStore,
     mapStateToProps,
@@ -22,6 +22,11 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
       render () {
         return (
           <div>
+            <Head>
+              <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
+              <meta charset='utf-8' />
+              <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+            </Head>
             <Page {...this.props} />
 
             <style jsx global>{`
