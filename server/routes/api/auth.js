@@ -33,7 +33,7 @@ module.exports = router => {
       if (!dbUser) throw new Error('No user found in our local database')
 
       ctx.session.user = dbUser.toJSON()
-      ctx.cookies.set('user', dbUser.toJSON(), { key: '4911b7ef185e44d38d5ba8767034ef67' })
+      // ctx.cookies.set('user', dbUser.toJSON(), { key: '4911b7ef185e44d38d5ba8767034ef67' })
 
       ctx.body = {
         user: {

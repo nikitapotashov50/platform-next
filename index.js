@@ -22,9 +22,9 @@ client.prepare().then(() => {
   server.use(bodyParser())
   server.use(session({
     key: config.api.session_key,
-    secure: true,
-    httpOnly: true,
-    signed: true
+    // secure: true,
+    httpOnly: true
+    // signed: true
   }))
   server.use(cors())
 
