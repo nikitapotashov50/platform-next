@@ -12,8 +12,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req) {
-          let { session } = ctx.req
-
+          const { session } = ctx.req
           if (session.user) ctx.store.dispatch(auth(session.user))
         }
 
@@ -30,8 +29,8 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 @font-face {
                   font-family: museo_sans_cyrl;
-                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format("woff2"), 
-                      url('/static/fonts/museosanscyrl_500-webfont.woff') format("woff"), 
+                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format("woff2"),
+                      url('/static/fonts/museosanscyrl_500-webfont.woff') format("woff"),
                       url('/static/fonts/museosanscyrl_500-webfont.ttf') format("truetype"),
                       url('/static/fonts/museosanscyrl_500-webfont.svg#museo_sans_cyrl500') format("svg");
                   font-weight:500;
@@ -58,7 +57,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 $transition-time: .3s;
 
-                body { 
+                body {
                   color: #1f1f1f;
                   background: #edeeee;
                   @extend museo;
@@ -198,7 +197,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 .panel {
                   border-radius: 3px;
-                  
+
                   margin-bottom: 15px;
 
                   background: #fff;
@@ -214,7 +213,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   &__title {
                     margin-bottom: 0;
                     line-height: 29px;
-                    
+
                     color: #1f1f1f;
                     font-size: 21px;
                     font-weight: 700;
@@ -330,7 +329,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   padding: 10px 0;
 
                   &__input {
-                    transition: border .3s; 
+                    transition: border .3s;
 
                     border-radius: 3px;
                     box-sizing: border-box;
@@ -351,7 +350,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 .panel-form {
                   margin: 0 -20px;
-                  
+
                   &__row {
                     margin-top: 10px;
 
@@ -440,7 +439,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   &__title-block {
                     margin-bottom: 6px;
                   }
-                  
+
                   &__title {
                     margin-right: 10px;
 
@@ -494,11 +493,11 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 .myBtn {
                   box-sizing: border-box;
-                  
+
                   margin: 0 !important;
                   padding: 10px 20px;
                   display: inline-block;
-                  
+
                   color: #fff;
                   font-size: 15px;
                   background: #196aff;
@@ -538,7 +537,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   &__input {
                     border-radius: 3px 3px 3px 3px;
 
-                    height: 50px; 
+                    height: 50px;
                     display: block;
                     padding: 0 15px;
                     line-height: 50px;
@@ -563,7 +562,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     border-radius: 3px 3px 0 0;
 
                     display: block;
-                    padding: 13px 10px 10px 15px;    
+                    padding: 13px 10px 10px 15px;
 
                     font-size: 13px;
 
@@ -581,8 +580,8 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                       border-radius: 3px 3px 3px 3px;
                       resize: none;
 
-                      height: 50px; 
-                      line-height: 50px; 
+                      height: 50px;
+                      line-height: 50px;
                       padding: 0 0 0 45px;
 
                       border: none;
@@ -600,7 +599,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                     color: #333;
                     font-weight: 700;
-                    
+
 
                     &:hover { color: #333; }
                     &:visited, &:active { color: #777; }
@@ -670,13 +669,13 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                       padding-left: 25px;
 
                       background: no-repeat;
-                      background-size: 18px 18px; 
+                      background-size: 18px 18px;
                       background-position: center left;
 
                       &_like { background-image: svg("like", "[fill]: #dadee1;"); }
                       &_comment { background-image: svg("comment", "[fill]: #dadee1;"); }
                     }
-                    
+
                     &:before {
                       content: attr(data-prefix);
                     }
@@ -745,7 +744,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     box-sizing: border-box;
 
                     padding: 5px 0;
-                    min-height: 30px; 
+                    min-height: 30px;
                     line-height: 20px;
                     display: inline-block;
 
@@ -758,14 +757,14 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 .followers-tiles {
                   margin: 8px -2px 0;
-                  
+
                   &__item {
                     aspect-ratio: '1:1';
 
                     margin: 2px;
                     vertical-align: top;
                     display: inline-block;
-                    width: calc(33% - 4px);    
+                    width: calc(33% - 4px);
                   }
 
                   &__image {
@@ -774,7 +773,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                     background: no-repeat #f0f0f0;
                     background-size: contain;
-                    
+
                     &:after {
                       bottom: 0;
                       position: absolute;
@@ -820,7 +819,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                       letter-spacing: 2px;
                       text-transform: uppercase;
 
-                      content: '';        
+                      content: '';
                     }
 
                     &_a {
@@ -872,7 +871,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                     cursor: pointer;
 
-                    &, &:hover, &:active, &:visited { 
+                    &, &:hover, &:active, &:visited {
                       color: #196aff;
                       text-decoration: none;
                     }
@@ -899,10 +898,10 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                         width: 18px;
                         height: 18px;
                         margin: auto;
-                        
+
                         background: no-repeat;
                         background-size: contain;
-                        
+
                         content: '';
                       }
 
@@ -927,10 +926,10 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   background: #fff;
                   border: 1px solid #e1e3e4;
                   box-shadow: 0 6px 6px 0 rgba(42, 51, 69, .16);
-                  
+
                   &__item {
                     transition: background .3s;
-                    
+
                     display: block;
                     min-width: 200px;
 
@@ -941,7 +940,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     display: block;
                     line-height: 22px;
                     padding: 8px 15px !important;
-                    
+
                     &, &:hover, &:active { color: #1f1f1f; }
                   }
                 }
@@ -954,7 +953,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                   width: 100%;
                   height: 60px;
-                  
+
                   background-color: #fefefe;
                   border-bottom: 1px solid #e1e3e4;
 
@@ -976,7 +975,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   width: 100%;
 
                   list-style: none;
-                  
+
                   display: flex;
                   flex-wrap: nowrap;
                   align-items: center;
@@ -1106,7 +1105,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     line-height: 25px;
                     vertical-align: top;
                     display: inline-block;
-                    
+
                     color: #9da5ab;
                     font-size: 12px;
                   }
@@ -1197,7 +1196,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     margin: 15px auto;
                     padding: 35px 15px 0;
 
-                    background-color: #fefefe;    
+                    background-color: #fefefe;
                   }
 
                   &__top {
@@ -1468,11 +1467,11 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     height: 28px;
                     margin: 0 14px;
                     line-height: 28px;
-                    
+
                     vertical-align: top;
                     display: inline-block;
                   }
-                }  
+                }
             `}</style>
           </div>
         )
