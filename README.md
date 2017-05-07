@@ -26,7 +26,6 @@ npm start
 ```
 
 ## Структура
-
   - **/api** - API роуты, файл должен экспортить koa-router instance
   - **/components** - React-компоненты
   - **/config** - конфиги

@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import Page from '../components/hocs/Page'
+import DefaultLayout from '../client/layouts/default'
 
 class PostsPage extends Component {
   render () {
+    let { props } = this
     return (
-      <div>Посты</div>
+      <div>Посты {props.url.query.id}</div>
     )
   }
 }
 
-export default Page(PostsPage)
+export default DefaultLayout(PostsPage)
