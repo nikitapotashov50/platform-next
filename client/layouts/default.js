@@ -3,10 +3,10 @@ import Header from '../components/Header/index'
 
 export default (WrappedComponent) => {
   const DefaultLayout = props => (
-    <div class='app'>
+    <div className='app'>
       <Header />
 
-      <div class='app__content'>
+      <div className='app__content'>
         <WrappedComponent {...props} />
       </div>
     </div>
