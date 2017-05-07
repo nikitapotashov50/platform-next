@@ -1,6 +1,4 @@
-// import axios from 'axios'
-// import thunk from 'redux-thunk'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 
 const exampleInitialState = {
   count: 0
@@ -39,5 +37,8 @@ export const logout = () => ({
 })
 
 export const initStore = (initialState = exampleInitialState) => {
-  return createStore(reducer, initialState)
+  const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+  return createStore(reducer, initialState, composeEnhancers(
+    applyMiddleware()
+  ))
 }
