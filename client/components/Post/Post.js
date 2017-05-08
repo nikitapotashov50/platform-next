@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import Img from 'react-image'
+import HeartIcon from 'react-icons/lib/fa/heart'
+import CommentIcon from 'react-icons/lib/fa/comment'
 import TextWithImages from './TextWithImages'
 
 const Post = ({ id, title, content, user }) => (
@@ -35,8 +37,12 @@ const Post = ({ id, title, content, user }) => (
     <TextWithImages text={content} />
 
     <div className='footer'>
-      <div style={{ marginRight: '15px' }}>Лайки</div>
-      <div>Комментарии</div>
+      <div className='like-button' style={{ marginRight: '15px' }}>
+        <HeartIcon color='#DADEE1' /> Нравится 0
+      </div>
+      <div className='comment-button'>
+        <CommentIcon color='#DADEE1' /> Комментировать
+      </div>
     </div>
 
     <style jsx>{`
@@ -83,6 +89,23 @@ const Post = ({ id, title, content, user }) => (
         margin-top: 15px;
         padding-top: 15px;
         display: flex;
+        font-size: 14px;
+        color: #9da5ab;
+        font-weight: normal;
+      }
+
+      .like-button {
+        margin-right: 15px;
+      }
+
+      .like-button, .comment-button {
+        padding: 5px 6px 6px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .like-button:hover, .comment-button:hover {
+        background: #f5f7fa;
       }
     `}</style>
   </div>
