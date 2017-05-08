@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Img from 'react-image'
 import TextWithImages from './TextWithImages'
 
 const Post = ({ id, title, content, user }) => (
@@ -7,7 +8,17 @@ const Post = ({ id, title, content, user }) => (
     <div className='user-info'>
       <div className='user-photo-container'>
         <Link href={`/@${user.name}`}>
-          <img className='user-photo' src={user.picture_small} />
+          <Img
+            src={[
+              user.picture_small,
+              '/static/img/user.png'
+            ]}
+            alt={`${user.first_name} ${user.last_name}`}
+            style={{
+              width: '50px',
+              borderRadius: '50%',
+              marginRight: '10px'
+            }} />
         </Link>
       </div>
 
@@ -53,12 +64,6 @@ const Post = ({ id, title, content, user }) => (
 
       .user-photo-container {
         cursor: pointer;
-      }
-
-      .user-photo {
-        width: 50px;
-        border-radius: 50%;
-        margin-right: 10px;
       }
 
       .post-title {

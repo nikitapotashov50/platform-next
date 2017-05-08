@@ -1,10 +1,21 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+import config from '../config'
 // import DefaultLayout from '../client/layouts/default'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
 
 class IndexPage extends Component {
+  static async getInitialProps () {
+    const baseURL = `http://${config.server.host}:${config.server.port}`
+    const { data } = await axios.get(`${baseURL}/api/post`)
+
+    return {
+      posts: data
+    }
+  }
+
   render () {
     return (
       <div>
@@ -14,7 +25,7 @@ class IndexPage extends Component {
           </div>
         )}
         <div className='post-list'>
-          <PostList />
+          <PostList posts={this.props.posts} />
         </div>
 
         <style jsx>{`

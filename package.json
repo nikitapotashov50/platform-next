@@ -51,6 +51,7 @@
     "react": "^15.5.4",
     "react-click-outside": "^2.3.0",
     "react-dom": "^15.5.4",
+    "react-image": "^1.0.1",
     "react-onclickoutside": "^5.11.1",
     "react-redux": "^5.0.4",
     "react-string-replace": "^0.4.0",
