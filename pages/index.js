@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import DefaultLayout from '../client/layouts/default'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
-import PostList from '../client/components/PostList'
+import PostList from '../client/components/Post/PostList'
 
 class IndexPage extends Component {
   render () {

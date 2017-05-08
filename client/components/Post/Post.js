@@ -1,7 +1,9 @@
-const Post = ({ title, content }) => (
+import TextWithImages from './TextWithImages'
+
+const Post = ({ id, title, content }) => (
   <div className='post'>
-    <h1>{title}</h1>
-    <p>{content}</p>
+    <h1>#{id} {title}</h1>
+    <TextWithImages text={content} />
 
     <style jsx>{`
       .post {
