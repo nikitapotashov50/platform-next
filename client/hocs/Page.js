@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { initStore, auth } from '../redux/store'
+import Header from '../components/Header/index'
 
 export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
   return withRedux(
@@ -24,10 +25,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
           <div>
             <Head>
               <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
-              <meta charset='utf-8' />
+              <meta charSet='utf-8' />
               <meta name='viewport' content='initial-scale=1.0, width=device-width' />
             </Head>
-            <Page {...this.props} />
+
+            <div className='app'>
+              <Header />
+
+              <div className='app__content'>
+                <Page {...this.props} />
+              </div>
+            </div>
 
             <style jsx global>{`
                 @reset-global pc;

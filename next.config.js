@@ -2,6 +2,7 @@ const path = require('path')
 const glob = require('glob')
 
 module.exports = {
+  poweredByHeader: false,
   webpack: (config, { dev }) => {
     config.module.rules.push(
       {

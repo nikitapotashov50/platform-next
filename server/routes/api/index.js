@@ -2,9 +2,11 @@
 // const fieldRouter = require('./field')
 // const generalRouter = require('./general')
 const authRoutes = require('./auth')
+const postRouter = require('./post')
 
 module.exports = router => {
   router.bridge('/auth', authRoutes)
+  router.bridge('/post', postRouter)
   // router.bridge('/field', fieldRouter)
   // router.bridge('*', generalRouter)
 
