@@ -1099,7 +1099,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                   }
                 }
 
-                .comment {
+                /*.comment {
                   padding-left: 60px;
                   margin-bottom: 20px;
 
@@ -1108,7 +1108,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                   &__footer { margin-top: 5px; }
 
                   &__body {}
-                }
+                }*/
 
                 .share {
                   vertical-align: top;
