@@ -1,14 +1,28 @@
+import reactStringReplace from 'react-string-replace'
+
 const TextWithImages = ({ text }) => {
-  const content = text.replace(
+  const [content, images] = reactStringReplace(
+    text,
     /((https?):\/\/(.*?).(png|jpg))/gi,
-    '<div><img src=\'$1\' width=\'100%\' /></div>'
+    (match, i, offset) => {
+      return (
+        <div>
+          <img key={match + i + offset} src={match} />
+          <style jsx>{`
+            img {
+              width: 100%;
+              margin-top: 15px;
+            }
+          `}</style>
+        </div>
+      )
+    }
   )
 
   return (
-    <div>
-      <div
-        className='display-linebreak'
-        dangerouslySetInnerHTML={{ __html: content }} />
+    <div className='display-linebreak'>
+      {content}
+      {images}
       <style jsx>{`
         .display-linebreak {
           white-space: pre-line;
