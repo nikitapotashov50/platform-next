@@ -34,6 +34,11 @@ const Post = ({ id, title, content, user }) => (
 
     <TextWithImages text={content} />
 
+    <div className='footer'>
+      <div style={{ marginRight: '15px' }}>Лайки</div>
+      <div>Комментарии</div>
+    </div>
+
     <style jsx>{`
       .post {
         padding: 15px;
@@ -71,6 +76,13 @@ const Post = ({ id, title, content, user }) => (
         font-weight: 700;
         font-size: 14px;
         margin: 0 0 5px;
+      }
+
+      .footer {
+        border-top: 1px solid #efeff0;
+        margin-top: 15px;
+        padding-top: 15px;
+        display: flex;
       }
     `}</style>
   </div>

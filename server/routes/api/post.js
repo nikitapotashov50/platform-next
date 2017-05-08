@@ -10,7 +10,8 @@ module.exports = router => {
         attributes: ['name', 'first_name', 'last_name', 'picture_small'],
         as: 'user'
       }],
-      limit: 20
+      limit: 20,
+      order: [['created_at', 'desc']]
     })
     ctx.body = data
   })

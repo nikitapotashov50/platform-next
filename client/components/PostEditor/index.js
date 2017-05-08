@@ -37,13 +37,11 @@ class PostEditor extends Component {
     const { title } = this.state
     const body = Plain.serialize(this.state.body)
 
-    const { data } = await axios.post('/api/post', {
+    await axios.post('/api/post', {
       title,
       body,
       userId: user.id
     })
-
-    console.log('data', data)
   }
 
   expand () {
