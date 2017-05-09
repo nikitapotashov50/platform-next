@@ -37,7 +37,7 @@ class IndexPage extends Component {
 }
 
 export default Page(IndexPage, {
-  title: 'Главная',
+  title: 'Отчеты',
   mapStateToProps: state => ({
     user: state.user,
     posts: state.posts
