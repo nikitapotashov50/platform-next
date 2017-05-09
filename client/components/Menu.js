@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import classNames from 'classnames'
 
-const Menu = ({ items, withLogo = false }) => (
+const Menu = ({ items, withLogo = false, pathname }) => (
   <ul className='menu'>
     { withLogo && (
       <li className='menu__item'>
@@ -13,12 +14,20 @@ const Menu = ({ items, withLogo = false }) => (
     )}
 
     { items.map(el => (
-      <li className='menu__item' key={'menu-' + el.url}>
-        <Link href={el.url}>
+      <li
+        className={classNames('menu__item', { active: pathname === el.url })}
+        key={'menu-' + el.url}>
+        <Link href={el.url} as={el.as} prefetch>
           <a className='menu__link'>{el.title}</a>
         </Link>
       </li>
     ))}
+
+    <style jsx>{`
+      .active {
+        border-bottom: 2px solid #196aff;
+      }
+    `}</style>
   </ul>
 )
 

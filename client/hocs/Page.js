@@ -31,7 +31,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
             </Head>
 
             <div className='app'>
-              <Header />
+              <Header pathname={this.props.url.pathname} />
 
               <div className='app__content'>
                 <Page {...this.props} />
