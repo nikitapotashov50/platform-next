@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Raw, Plain } from 'slate'
 import { connect } from 'react-redux'
 import Form from './Form'
 import { addPost } from '../../redux/store'
@@ -9,20 +8,10 @@ class PostEditor extends Component {
   constructor (props) {
     super(props)
 
-    const editorInitialState = Raw.deserialize({
-      nodes: [
-        {
-          kind: 'block',
-          type: 'paragraph'
-        }
-      ]
-    }, { terse: true })
-
     this.state = {
       expanded: false,
       title: '',
-      content: editorInitialState,
-      money: ''
+      content: ''
     }
 
     this.handleContentChange = this.handleContentChange.bind(this)
@@ -30,12 +19,12 @@ class PostEditor extends Component {
     this.createPost = this.createPost.bind(this)
     this.expand = this.expand.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
+    this.clearForm = this.clearForm.bind(this)
   }
 
   async createPost (e) {
     e.preventDefault()
-    const { title } = this.state
-    const content = Plain.serialize(this.state.content)
+    const { title, content } = this.state
 
     const post = {
       title,
@@ -44,6 +33,15 @@ class PostEditor extends Component {
 
     const { data } = await axios.post('/api/post', post)
     this.props.addPost(data)
+    this.clearForm()
+  }
+
+  clearForm () {
+    this.setState({
+      expanded: false,
+      title: '',
+      content: ''
+    })
   }
 
   expand () {
@@ -52,9 +50,9 @@ class PostEditor extends Component {
     })
   }
 
-  handleContentChange (editorState) {
+  handleContentChange (e) {
     this.setState({
-      content: editorState
+      content: e.target.value
     })
   }
 
