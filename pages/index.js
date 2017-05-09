@@ -5,15 +5,13 @@ import config from '../config'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
+import { loadPosts } from '../client/redux/store'
 
 class IndexPage extends Component {
-  static async getInitialProps () {
+  static async getInitialProps ({ store }) {
     const baseURL = `http://${config.server.host}:${config.server.port}`
     const { data } = await axios.get(`${baseURL}/api/post`)
-
-    return {
-      posts: data
-    }
+    store.dispatch(loadPosts(data))
   }
 
   render () {
@@ -40,5 +38,8 @@ class IndexPage extends Component {
 
 export default Page(IndexPage, {
   title: 'Главная',
-  mapStateToProps: state => ({ user: state.user })
+  mapStateToProps: state => ({
+    user: state.user,
+    posts: state.posts
+  })
 })

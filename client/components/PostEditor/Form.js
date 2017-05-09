@@ -26,8 +26,8 @@ class Form extends Component {
         <div className='editor' onClick={this.focusOnClick}>
           <Editor
             placeholder='Текст отчета'
-            state={this.props.body}
-            onChange={this.props.handleBodyChange}
+            state={this.props.content}
+            onChange={this.props.handleContentChange}
             ref={editor => { this.editor = editor }} />
         </div>
         <Button onClick={this.props.createPost}>

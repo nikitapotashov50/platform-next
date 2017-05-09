@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Raw, Plain } from 'slate'
 import { connect } from 'react-redux'
 import Form from './Form'
+import { addPost } from '../../redux/store'
 
 class PostEditor extends Component {
   constructor (props) {
@@ -20,11 +21,11 @@ class PostEditor extends Component {
     this.state = {
       expanded: false,
       title: '',
-      body: editorInitialState,
+      content: editorInitialState,
       money: ''
     }
 
-    this.handleBodyChange = this.handleBodyChange.bind(this)
+    this.handleContentChange = this.handleContentChange.bind(this)
     this.handleTitleChange = this.handleTitleChange.bind(this)
     this.createPost = this.createPost.bind(this)
     this.expand = this.expand.bind(this)
@@ -33,15 +34,16 @@ class PostEditor extends Component {
 
   async createPost (e) {
     e.preventDefault()
-    const { user } = this.props
     const { title } = this.state
-    const body = Plain.serialize(this.state.body)
+    const content = Plain.serialize(this.state.content)
 
-    await axios.post('/api/post', {
+    const post = {
       title,
-      body,
-      userId: user.id
-    })
+      content
+    }
+
+    const { data } = await axios.post('/api/post', post)
+    this.props.addPost(data)
   }
 
   expand () {
@@ -50,9 +52,9 @@ class PostEditor extends Component {
     })
   }
 
-  handleBodyChange (editorState) {
+  handleContentChange (editorState) {
     this.setState({
-      body: editorState
+      content: editorState
     })
   }
 
@@ -102,8 +104,8 @@ class PostEditor extends Component {
       <Form
         title={this.state.title}
         handleTitleChange={this.handleTitleChange}
-        body={this.state.body}
-        handleBodyChange={this.handleBodyChange}
+        content={this.state.content}
+        handleContentChange={this.handleContentChange}
         handleClickOutside={this.handleClickOutside}
         createPost={this.createPost}
       />
@@ -115,4 +117,8 @@ const mapStateToProps = state => ({
   user: state.user
 })
 
-export default connect(mapStateToProps)(PostEditor)
+const mapDispatchToProps = dispatch => ({
+  addPost: post => dispatch(addPost(post))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostEditor)

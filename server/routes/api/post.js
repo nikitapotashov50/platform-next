@@ -20,11 +20,24 @@ module.exports = router => {
   router.post('/', async ctx => {
     const postData = ctx.request.body
 
-    await models.Post.create({
+    const created = await models.Post.create({
       title: postData.title,
-      content: postData.body,
+      content: postData.content,
       type: 'user',
-      user_id: postData.userId
+      user_id: ctx.session.user.id
     })
+
+    const data = await models.Post.findOne({
+      where: {
+        id: created.id
+      },
+      attributes: ['id', 'title', 'content'],
+      include: [{
+        model: models.User,
+        attributes: ['name', 'first_name', 'last_name', 'picture_small'],
+        as: 'user'
+      }]
+    })
+    ctx.body = data
   })
 }

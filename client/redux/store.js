@@ -2,12 +2,14 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { actionStorageMiddleware, createStorageListener } from 'redux-state-sync'
 
 const exampleInitialState = {
-  count: 0
+  posts: []
 }
 
 export const actionTypes = {
   AUTH: 'AUTH',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+  LOAD_POSTS: 'LOAD_POSTS',
+  ADD_POST: 'ADD_POST'
 }
 
 // REDUCERS
@@ -23,6 +25,16 @@ export const reducer = (state = exampleInitialState, action) => {
         ...state,
         user: null
       }
+    case actionTypes.LOAD_POSTS:
+      return {
+        ...state,
+        posts: action.payload.posts
+      }
+    case actionTypes.ADD_POST:
+      return {
+        ...state,
+        posts: [action.payload.post, ...state.posts]
+      }
     default: return state
   }
 }
@@ -35,6 +47,20 @@ export const auth = user => ({
 
 export const logout = () => ({
   type: actionTypes.LOGOUT
+})
+
+export const loadPosts = posts => ({
+  type: actionTypes.LOAD_POSTS,
+  payload: {
+    posts
+  }
+})
+
+export const addPost = post => ({
+  type: actionTypes.ADD_POST,
+  payload: {
+    post
+  }
 })
 
 export const initStore = (initialState = exampleInitialState) => {
