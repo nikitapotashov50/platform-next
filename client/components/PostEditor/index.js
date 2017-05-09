@@ -63,6 +63,7 @@ class PostEditor extends Component {
   }
 
   handleClickOutside () {
+    if (this.state.title || this.state.content) return
     this.setState({
       expanded: false
     })
