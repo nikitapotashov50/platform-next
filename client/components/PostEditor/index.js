@@ -32,7 +32,7 @@ class PostEditor extends Component {
     }
 
     const { data } = await axios.post('/api/post', post)
-    this.props.addPost(data)
+    this.props.addPost({ ...data, added: true })
     this.clearForm()
   }
 

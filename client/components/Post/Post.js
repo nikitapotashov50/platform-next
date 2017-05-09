@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Img from 'react-image'
 import HeartIcon from 'react-icons/lib/fa/heart'
 import CommentIcon from 'react-icons/lib/fa/comment'
+import classNames from 'classnames'
 import TextWithImages from './TextWithImages'
 
 class Post extends Component {
@@ -22,10 +23,10 @@ class Post extends Component {
   }
 
   render () {
-    const { title, content, user, currentUser } = this.props
+    const { title, content, user, currentUser, added } = this.props
 
     return (
-      <div className='post'>
+      <div className={classNames('post', { 'with-animation': added })}>
 
         <div className='user-info'>
           <div className='user-photo-container'>
@@ -97,6 +98,21 @@ class Post extends Component {
             background: #fff;
             border: 1px solid #e1e3e4;
             border-radius: 3px;
+          }
+
+          .with-animation {
+            animation-duration: 0.5s;
+            animation-name: fadeIn;
+          }
+
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+
+            to {
+              opacity: 100%;
+            }
           }
 
           .user-info {
