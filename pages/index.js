@@ -5,7 +5,7 @@ import config from '../config'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
-import { loadPosts } from '../client/redux/store'
+import { loadPosts } from '../client/redux/actions'
 
 class IndexPage extends Component {
   static async getInitialProps ({ store }) {

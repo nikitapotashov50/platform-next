@@ -7,7 +7,7 @@ import AuthLogin from '../Auth/Login'
 import AuthSignup from '../Auth/Signup'
 import AuthRecovery from '../Auth/Recovery'
 
-import { auth } from '../../redux/store'
+import { auth } from '../../redux/actions'
 
 let defaultCredentials = {
   email: '',

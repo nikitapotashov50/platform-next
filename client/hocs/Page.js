@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
-import { initStore, auth } from '../redux/store'
+import { initStore } from '../redux/store'
+import { auth } from '../redux/actions'
 import Header from '../components/Header/index'
 
 export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {

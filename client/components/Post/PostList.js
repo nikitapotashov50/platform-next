@@ -1,6 +1,6 @@
 import Waypoint from 'react-waypoint'
 import { connect } from 'react-redux'
-import { loadMore } from '../../redux/store'
+import { loadMore } from '../../redux/actions'
 import Post from './Post'
 
 let _offset = 20
