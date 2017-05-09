@@ -3,6 +3,7 @@ const { models } = require('../../models')
 module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
+    const offset = Number(ctx.query.offset) || 0
     const data = await models.Post.findAll({
       attributes: ['id', 'title', 'content'],
       include: [{
@@ -11,6 +12,7 @@ module.exports = router => {
         as: 'user'
       }],
       limit: 20,
+      offset,
       order: [['created_at', 'desc']]
     })
     ctx.body = data

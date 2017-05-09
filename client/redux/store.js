@@ -1,5 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux'
+import { createAction } from 'redux-actions'
 import { actionStorageMiddleware, createStorageListener } from 'redux-state-sync'
+import promiseMiddleware from 'redux-promise'
+import axios from 'axios'
 
 const exampleInitialState = {
   posts: []
@@ -35,6 +38,12 @@ export const reducer = (state = exampleInitialState, action) => {
         ...state,
         posts: [action.payload.post, ...state.posts]
       }
+    case 'LOAD_MORE':
+      console.log('load more', action)
+      return {
+        ...state,
+        posts: [...state.posts, ...action.payload]
+      }
     default: return state
   }
 }
@@ -63,11 +72,19 @@ export const addPost = post => ({
   }
 })
 
+export const loadMore = createAction('LOAD_MORE', async offset => {
+  const { data } = await axios.get('/api/post', {
+    params: {
+      offset
+    }
+  })
+  return data
+})
+
 export const initStore = (initialState = exampleInitialState) => {
   const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
-  const middlewares = [actionStorageMiddleware]
   const store = createStore(reducer, initialState, composeEnhancers(
-    applyMiddleware(...middlewares)
+    applyMiddleware(promiseMiddleware, actionStorageMiddleware)
   ))
   typeof window !== 'undefined' && createStorageListener(store)
   return store
