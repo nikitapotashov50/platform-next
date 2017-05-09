@@ -6,6 +6,7 @@ import HeartIcon from 'react-icons/lib/fa/heart'
 import CommentIcon from 'react-icons/lib/fa/comment'
 import classNames from 'classnames'
 import TextWithImages from './TextWithImages'
+import CommentForm from '../Comment/Form'
 
 class Post extends Component {
   constructor (props) {
@@ -18,7 +19,7 @@ class Post extends Component {
 
   handleCommentButtonClick () {
     this.setState({
-      showCommentForm: !this.state.showCommentForm
+      showCommentForm: true
     })
   }
 
@@ -67,28 +68,13 @@ class Post extends Component {
         </div>
 
         {this.state.showCommentForm && (
-          <div className='comment'>
-            <div className='user-photo-container'>
-              <Link href={`/@${currentUser.name}`}>
-                <Img
-                  src={[
-                    currentUser.picture_small,
-                    '/static/img/user.png'
-                  ]}
-                  alt={`${currentUser.first_name} ${currentUser.last_name}`}
-                  style={{
-                    width: '30px',
-                    borderRadius: '50%',
-                    marginRight: '10px'
-                  }} />
-              </Link>
-            </div>
-            <input
-              autoFocus
-              className='leave-comment'
-              type='text'
-              placeholder='оставить комментарий' />
-          </div>
+          <CommentForm
+            user={currentUser}
+            handleClickOutside={() => {
+              this.setState({
+                showCommentForm: false
+              })
+            }} />
         )}
 
         <style jsx>{`

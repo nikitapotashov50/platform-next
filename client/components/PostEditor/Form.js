@@ -32,7 +32,7 @@ class Form extends Component {
             }} />
         </div>
         <Button onClick={this.props.createPost}>
-          Сохранить
+          Отправить
         </Button>
 
         <style jsx>{`
