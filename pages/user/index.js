@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import Page from '../../client/hocs/Page'
 import UserProfile from '../../client/hocs/UserProfile'
 
@@ -10,7 +8,7 @@ import ReplyForm from '../../client/components/ReplyForm'
 const UserPage = ({ user, ...props }) => (
   <UserLayout user={user}>
     <div className='user-blog'>
-    
+
       <ReplyForm />
 
       <div className='user-blog__content'>
@@ -18,7 +16,7 @@ const UserPage = ({ user, ...props }) => (
         <PostPreview />
 
       </div>
-      
+
     </div>
   </UserLayout>
 )

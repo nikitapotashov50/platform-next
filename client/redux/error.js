@@ -27,7 +27,7 @@ export default (state = defaultState, action) => {
         error: 403,
         message: action.payload.message
       }
-    case ALLOW: 
+    case ALLOW:
       return {
         ...state,
         error: null

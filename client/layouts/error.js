@@ -7,7 +7,7 @@ export default ({ children, code, message, ...props }) => (
       <div className='error-page__message'>{message}</div>
 
       { children && children }
-    </div>    
+    </div>
 
     <style jsx>{`
       .error-page {}

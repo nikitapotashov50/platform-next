@@ -31,7 +31,7 @@ class FeedbackResults extends Component {
       <DefaultLayout>
         <div className='feed'>
           <div className='feed__left'>
-            
+
             <NpsList data={nps} />
 
           </div>

@@ -9,7 +9,7 @@ let defaultGroups = [
 
 export default ({ groups = defaultGroups }) => (
   <div className='user-side-panel'>
-              
+
     <h6 className='user-side-panel__title'>Группы</h6>
     <div className='user-side-panel__body'>
       <div className='user-groups'>

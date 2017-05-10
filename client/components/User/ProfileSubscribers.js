@@ -15,15 +15,15 @@ export default ({ users = defaultUsers }) => (
 
     <div className='user-side-panel__body'>
       <div className='followers-tiles'>
-        
+
         { users && users.map(user => (
           <Link href={'/user?username=' + user.name} as={'/@' + user.name} key={'user-profile-subscribes-' + user.id}>
             <a className='followers-tiles__item'>
               <div className='followers-tiles__image' data-name={user.first_name + ' ' + user.last_name} />
             </a>
           </Link>
-        )) }        
-        
+        )) }
+
       </div>
     </div>
 

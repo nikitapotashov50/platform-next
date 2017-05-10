@@ -21,7 +21,7 @@ class ReplyForm extends Component {
     let { focused } = this.state
     let textareaClasses = [ 'reply-form__textarea' ]
     if (!focused) textareaClasses.push('reply-form__textarea_short')
-    
+
     return (
       <div className='reply-form'>
         { focused && (
@@ -31,12 +31,12 @@ class ReplyForm extends Component {
         )}
 
         <div className='panel panel_margin_small'>
-          <textarea className={textareaClasses.join(' ')}  placeholder='Написать отчет за сегодня' rows={!focused ? 1 : 8} onFocus={this.onFocus} />
+          <textarea className={textareaClasses.join(' ')} placeholder='Написать отчет за сегодня' rows={!focused ? 1 : 8} onFocus={this.onFocus} />
           { focused && (
             <input className='reply-form__input  reply-form__input_text_small reply-form__input_bordered' placeholder='Заработано за день, руб.' type='text' />
           )}
         </div>
-        
+
         { focused && (
           <div className='reply-form__submit-block'>
             <button type='submit' className='myBtn' tabIndex='4'><span title='Запостить как “bm-paperdoll”'>Пост</span></button>

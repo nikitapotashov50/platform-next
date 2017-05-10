@@ -4,7 +4,7 @@ export default ({ children, noPadding, noVerticalPadding, noHorizontalPadding, p
   if (noVerticalPadding) classes.push('panel__body_no_vertical-padding')
   if (noHorizontalPadding) classes.push('panel__body_no_horizontal-padding')
   if (paddingClass) classes.push('panel__body_padding panel__body_padding_' + paddingClass)
-  
+
   return (
     <div className={classes.join(' ')}>
       {children}

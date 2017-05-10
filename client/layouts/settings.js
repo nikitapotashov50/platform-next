@@ -4,7 +4,7 @@ import Panel from '../components/Panel'
 import DefaultLayout from './default'
 
 let tabs = [
-  { path: '/account/settings', title: 'Основные' },,
+  { path: '/account/settings', title: 'Основные' },
   { path: '/account/settings/goal', title: 'Цель' },
   { path: '/account/settings/programs', title: 'Программы' }
 ]

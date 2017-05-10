@@ -17,7 +17,7 @@ export default props => {
 
   return (
     <div className={containerClasses.join(' ')}>
-      
+
       { Header && (
         <PanelHeader {...headerStyles} noBorder={headerStyles.noBorder || (!!SubHeader && !Menu)}>
           <Header />

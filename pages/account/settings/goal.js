@@ -6,7 +6,7 @@ const AccoutSettings = props => {
   return (
     <SettingsLayout {...props}>
       <Panel Footer={() => <button className='btn'>Сохранить</button>} Header={() => <h2>Моя цель</h2>}>
-        
+
         <form className='panel-form'>
           <div className='panel-form__row'>
             <label className='panel-form__label'>Label</label>

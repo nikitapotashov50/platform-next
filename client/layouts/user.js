@@ -7,14 +7,16 @@ import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
 const UserLayout = ({ user, children, ...props }) => {
-  if (!user) return (
-    <DefaultLayout>
-      <Link href='/@bm-paperdoll/settings'>
-        <a>Ссылка</a>
-      </Link>
-      <div className='user-page'>Пользоветель не найден</div>
-    </DefaultLayout>
-  )
+  if (!user) {
+    return (
+      <DefaultLayout>
+        <Link href='/@bm-paperdoll/settings'>
+          <a>Ссылка</a>
+        </Link>
+        <div className='user-page'>Пользоветель не найден</div>
+      </DefaultLayout>
+    )
+  }
 
   let panelBodyStyles = { padding: 'small' }
 
@@ -22,7 +24,7 @@ const UserLayout = ({ user, children, ...props }) => {
     <DefaultLayout>
       <div className='user-page'>
         <div className='user-page__header'>
-          
+
           <div className='up-header'>
             <img className='up-header__image' src='' alt='' />
 
@@ -64,11 +66,9 @@ const UserLayout = ({ user, children, ...props }) => {
             </Panel>
 
             {/* Ищу могу */}
-            <Panel bodyStyles={panelBodyStyles}>
-              
-            </Panel>            
+            <Panel bodyStyles={panelBodyStyles} />
           </div>
-          
+
           <div className='user-page__content-block user-page__content-block_body'>
             {children}
           </div>

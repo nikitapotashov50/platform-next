@@ -27,7 +27,7 @@ export default ({ money, occupation = 'Огонь свет', subscribeButtons = 
           {occupation}
         </div>
       </div>
-      
+
       { subscribeButtons && (
         <div className='user-inline__buttons'>
           <button className='myBtn myBtn_small'>Подписаться</button>

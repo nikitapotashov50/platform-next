@@ -1,6 +1,5 @@
 import Page from '../../client/hocs/Page'
 import Access from '../../client/hocs/Access'
-import { connect } from 'react-redux'
 
 import DefaultLayout from '../../client/layouts/default'
 

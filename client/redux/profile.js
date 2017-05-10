@@ -10,7 +10,7 @@ const NOT_FOUND = 'profile/NOT_FOUND'
 // action creators
 export const getUserInfo = (user) => ({
   type: GET_INFO,
-  payload: { user } 
+  payload: { user }
 })
 
 export const userNotFound = () => ({
