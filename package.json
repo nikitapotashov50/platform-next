@@ -26,6 +26,7 @@
     "koa-router-bridge": "^1.0.6",
     "koa-session2": "^2.2.3",
     "koa2-cors": "^2.0.3",
+    "moment": "^2.18.1",
     "mysql": "^2.13.0",
     "next": "^2.2.0",
     "next-redux-wrapper": "^1.1.2",

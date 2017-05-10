@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 
-import { initStore, auth } from '../redux/store'
+import initStore from '../redux/store'
+import { auth } from '../redux/auth'
 
-export default (Page, mapStateToProps, mapDispatchToProps) => {
+export default (Page, mapStateToProps, mapDispatchToProps, allowAccess) => {
   return withRedux(
     initStore,
     mapStateToProps,
@@ -58,10 +59,18 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                 $transition-time: .3s;
 
+                html {
+                  font-size: 14px;
+                }
+
                 body { 
                   color: #1f1f1f;
                   background: #edeeee;
                   @extend museo;
+                }
+
+                img {
+                  vertical-align: middle;
                 }
 
                 a {
@@ -107,6 +116,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   margin-right: -7.5px;
 
                   &__left, &__right {
+                    box-sizing: border-box;
                     padding: 0 7.5px;
                     vertical-align: top;
                     display: inline-block;
@@ -131,6 +141,8 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   }
 
                   &__content-block {
+                    box-sizing: border-box;
+
                     padding: 0 7.5px;
                     vertical-align: top;
                     display: inline-block;
@@ -536,6 +548,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                   }
 
                   &__input {
+                    box-sizing: border-box;
                     border-radius: 3px 3px 3px 3px;
 
                     height: 50px; 
@@ -560,6 +573,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
 
                   &__textarea {
                     resize: vertical;
+                    box-sizing: border-box;
                     border-radius: 3px 3px 0 0;
 
                     display: block;
@@ -779,7 +793,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                       bottom: 0;
                       position: absolute;
 
-                      width: 100%;
+                      // width: 100%;
                       display: block;
                       line-height: 13px;
                       padding: 15px 5px 4px;
@@ -873,7 +887,7 @@ export default (Page, mapStateToProps, mapDispatchToProps) => {
                     cursor: pointer;
 
                     &, &:hover, &:active, &:visited { 
-                      color: #196aff;
+                      color: rgb(35, 116, 255);
                       text-decoration: none;
                     }
 

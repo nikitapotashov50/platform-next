@@ -1,43 +1,27 @@
-// import axios from 'axios'
 // import thunk from 'redux-thunk'
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 
-const exampleInitialState = {
-  count: 0
-}
+// reducers
+import auth from './auth'
+import access from './error'
+import profile from './profile'
 
-export const actionTypes = {
-  AUTH: 'AUTH',
-  LOGOUT: 'LOGOUT'
-}
-
-// REDUCERS
-export const reducer = (state = exampleInitialState, action) => {
+// default reducer
+const exampleInitialState = {}
+const index = (state = exampleInitialState, action) => {
   switch (action.type) {
-    case actionTypes.AUTH:
-      return {
-        ...state,
-        user: action.payload.user
-      }
-    case actionTypes.LOGOUT:
-      return {
-        ...state,
-        user: null
-      }
     default: return state
   }
 }
 
-// ACTIONS
-export const auth = user => ({
-  type: actionTypes.AUTH,
-  payload: { user }
+// combine reducers
+let combinedReducer = combineReducers({
+  auth,
+  access,
+  profile,
+  index
 })
 
-export const logout = () => ({
-  type: actionTypes.LOGOUT
-})
-
-export const initStore = (initialState = exampleInitialState) => {
-  return createStore(reducer, initialState)
+export default (initialState = exampleInitialState) => {
+  return createStore(combinedReducer, initialState)
 }
