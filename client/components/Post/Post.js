@@ -8,7 +8,7 @@ import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
 import classNames from 'classnames'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
-import { deletePost } from '../../redux/actions'
+import { deletePost } from '../../redux/posts'
 
 class Post extends Component {
   constructor (props) {
@@ -131,6 +131,7 @@ class Post extends Component {
           }
 
           .post-menu {
+            align-self: flex-start;
             cursor: pointer;
           }
 
