@@ -15,6 +15,7 @@ export const loadMore = createAction('posts/LOAD_MORE', async offset => {
   })
   return data
 })
+
 export const deletePost = createAction('posts/DELETE', async id => {
   await axios.delete(`/api/post/${id}`)
   return id
