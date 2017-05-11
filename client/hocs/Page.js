@@ -38,7 +38,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
           <I18nextProvider i18n={this.i18n}>
             <div>
               <Head>
-               <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
+                <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
                 <meta charSet='utf-8' />
                 <meta name='viewport' content='initial-scale=1.0, width=device-width' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
