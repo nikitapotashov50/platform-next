@@ -20,7 +20,7 @@ module.exports = router => {
       router.get('/', async ctx => {
         await ctx.__next.render(ctx.req, ctx.res, '/admin/feedback', Object.assign({}, ctx.params, ctx.query, { type: 'program' }))
       })
-      
+
       router.get('/:type', async ctx => {
         if ([ 'platform', 'coach', 'program' ].indexOf(ctx.params.type) === -1) console.log('404')
 

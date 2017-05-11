@@ -1,7 +1,4 @@
-import axios from 'axios'
 import Link from 'next/link'
-import qs from 'query-string'
-import Router from 'next/router'
 import React, { Component } from 'react'
 
 import NpsRightMenu from '../../client/components/NPS/RightMenu'
@@ -54,7 +51,7 @@ class FeedbackResults extends Component {
 
   async onNavigate (page, e) {
     e.preventDefault()
-    let { pathname, query } = this.props.url
+    let { query } = this.props.url
 
     if ((parseInt(query.page) || 1) !== page) {
       let { limit } = this.props
@@ -64,9 +61,6 @@ class FeedbackResults extends Component {
         state.fetching = true
       })
 
-      // query.page = page
-      // Router.replace({ pathname, query }, pathname + '/' + query.type + '?' + qs.stringify({ page }))
-
       await this.props.dispatch(getNpsEntries({ limit, page }))
       await this.setState(state => { state.fetching = false })
     }
@@ -74,7 +68,7 @@ class FeedbackResults extends Component {
 
   render () {
     let { type } = this.props.url.query
-    
+
     let { fetching, page } = this.state
     let { items, limit, count, cities } = this.props
 
@@ -106,7 +100,7 @@ class FeedbackResults extends Component {
 
     let Pagination = null
     if (count) Pagination = <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} />
-    
+
     return (
       <DefaultLayout>
         <div className='feed'>

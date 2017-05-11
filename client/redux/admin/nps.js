@@ -21,7 +21,7 @@ export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ limi
 })
 
 export const getNpsCities = createAction('admin/nps/GET_CITIES', async () => {
-  let { data, status } = await axios.get('http://localhost:3001/api/feedback/cities')
+  let { data } = await axios.get('http://localhost:3001/api/feedback/cities')
 
   return {
     items: data.cities
@@ -29,7 +29,7 @@ export const getNpsCities = createAction('admin/nps/GET_CITIES', async () => {
 })
 
 export const getNpsTotal = createAction('admin/nps/GET_TOTAL', async () => {
-  let { data, status } = await axios.get('http://localhost:3001/api/feedback/total')
+  let { data } = await axios.get('http://localhost:3001/api/feedback/total')
 
   return {
     items: data.total
