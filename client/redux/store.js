@@ -5,10 +5,18 @@ import reducer from './reducers'
 
 const initStore = initialState => {
   const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+  const middlewares = [promiseMiddleware]
+
+  if (typeof window !== 'undefined') {
+    middlewares.push(actionStorageMiddleware)
+  }
+
   const store = createStore(reducer, initialState, composeEnhancers(
-    applyMiddleware(promiseMiddleware, actionStorageMiddleware)
+    applyMiddleware(promiseMiddleware)
   ))
+
   typeof window !== 'undefined' && createStorageListener(store)
+
   return store
 }
 
