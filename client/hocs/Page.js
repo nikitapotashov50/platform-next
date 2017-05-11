@@ -43,6 +43,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                 <meta name='viewport' content='initial-scale=1.0, width=device-width' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
+
               <Page {...this.props} />
 
               <style jsx global>{`
