@@ -6,6 +6,7 @@ import HeartIcon from 'react-icons/lib/fa/heart'
 import CommentIcon from 'react-icons/lib/fa/comment'
 import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
 import classNames from 'classnames'
+import Menu from './Menu'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
 import { deletePost } from '../../redux/posts'
@@ -71,12 +72,13 @@ class Post extends Component {
             }} />
           </div>
           {this.state.showPostMenu && (
-            <div className='dropdown'>
-              <ul>
-                <li>Редактировать</li>
-                <li onClick={this.handleDeleteButtonClick}>Удалить</li>
-              </ul>
-            </div>
+            <Menu
+              onDelete={this.handleDeleteButtonClick}
+              handleClickOutside={() => {
+                this.setState({
+                  showPostMenu: false
+                })
+              }} />
           )}
         </div>
 
@@ -104,26 +106,6 @@ class Post extends Component {
         )}
 
         <style jsx>{`
-          .dropdown {
-            right: 0;
-            border-radius: 3px;
-            top: 20px;
-            position: absolute;
-            background: #fff;
-            border: 1px solid #e1e3e4;
-          }
-
-          li {
-            padding: 10px;
-            font-size: 14px;
-          }
-
-          li:hover {
-            background: #196aff;
-            color: #fefefe;
-            cursor: pointer;
-          }
-
           .header {
             display: flex;
             justify-content: space-between;
