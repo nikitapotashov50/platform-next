@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import config from '../config'
-// import DefaultLayout from '../client/layouts/default'
+import DefaultLayout from '../client/layouts/default'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
 import { loadPosts } from '../client/redux/actions'
+
 
 class IndexPage extends Component {
   static async getInitialProps ({ store }) {
@@ -16,7 +17,7 @@ class IndexPage extends Component {
 
   render () {
     return (
-      <div>
+      <DefaultLayout>
         {this.props.user && (
           <div className='post-editor'>
             <PostEditor />
@@ -31,7 +32,7 @@ class IndexPage extends Component {
             margin-top: 15px;
           }
         `}</style>
-      </div>
+      </DefaultLayout>
     )
   }
 }

@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import UserImage from '../User/Image'
 import UserHeaderMenu from '../User/HeaderMenu'
 
-import { logout } from '../../redux/actions'
+import { logout } from '../../redux/auth'
 
 class HeaderRegisteredMenu extends Component {
   constructor (props) {

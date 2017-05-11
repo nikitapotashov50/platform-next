@@ -11,8 +11,6 @@ module.exports = router => {
   router.post('/login', async (ctx, next) => {
     let isAuth = false
     let { email, password } = ctx.request.body
-    // todo восстановление куки с molodost.bz
-    // если есть наша сессия - восстанавливать нашу сессию
 
     let user = ctx.cookies.get('molodost_user')
     let hash = ctx.cookies.get('molodost_hash')
@@ -28,27 +26,19 @@ module.exports = router => {
 
       // Проверяем наличие юзера у нас в базе данных
       let dbUser = await models.User.findOne({
-        attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
+        attributes: [ 'id', 'name' ],
         where: { email }
       })
 
       if (!dbUser) throw new Error('No user found in our local database')
 
-      ctx.session.user = {
-        id: dbUser.id,
-        name: dbUser.name,
-        firstName: dbUser.first_name,
-        lastName: dbUser.last_name,
-        picture: dbUser.picture_small
-      }
+      ctx.session.user = dbUser.toJSON()
+      ctx.cookies.set('user', dbUser.toJSON(), { key: '4911b7ef185e44d38d5ba8767034ef67' })
 
       ctx.body = {
         user: {
           id: dbUser.id,
-          name: dbUser.name,
-          firstName: dbUser.first_name,
-          lastName: dbUser.last_name,
-          picture: dbUser.picture_small
+          name: dbUser.name
         }
       }
     } catch (e) {

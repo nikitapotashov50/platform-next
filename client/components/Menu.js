@@ -4,7 +4,7 @@ import classNames from 'classnames'
 const Menu = ({ items, withLogo = false, pathname }) => (
   <ul className='menu'>
     { withLogo && (
-      <li className='menu__item'>
+      <li className='menu__item  menu__item_no_padding-left'>
         <Link href='/'>
           <a className='menu__link'>
             <img src='/static/img/logo.png' alt='Система' style={{ display: 'inline-block', width: '41px', height: '36px' }} />

@@ -1,19 +1,24 @@
-const Router = require('koa-router')
-const { messages } = require('../../factories')
 const services = require('../../services')
+const { models } = require('../../models')
 
-const router = new Router()
+module.exports = router => {
+  router.post('/login', async ctx => {
+    ctx.body = {
+      ok: true
+    }
+  })
 
-router.get('/', (ctx, next) => {
-  ctx.body = messages.generic.success
-})
+  router.get('/version', services.general.getAPIVersionService)
 
-router.post('/login', async ctx => {
-  ctx.body = {
-    ok: true
-  }
-})
+  router.get('/user/:username', async ctx => {
+    let user = await models.User.findOne({
+      where: {
+        name: ctx.params.username
+      }
+    })
 
-router.get('/version', services.general.getAPIVersionService)
-
-module.exports = router
+    ctx.body = {
+      user
+    }
+  })
+}
