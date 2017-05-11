@@ -44,7 +44,6 @@ class IndexPage extends Component {
         />
 
         <PostList posts={this.props.posts} />
-
       </DefaultLayout>
     )
   }

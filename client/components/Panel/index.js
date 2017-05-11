@@ -22,6 +22,13 @@ export default props => {
 
   return (
     <div className={containerClasses.join(' ')}>
+      
+      { Options && (
+        <div className='panel__options'>
+          <EllipsisIcon color='#DADEE1' onClick={toggleOptions} />
+          <Options />
+        </div>
+      )}      
 
       { Options && (
         <div className='panel__options'>
