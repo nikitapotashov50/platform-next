@@ -1,6 +1,6 @@
 const { models, views, orm } = require('../../models')
 
-const getTotalNps = async () => {
+const getCities = async () => {
   let res = await views.NPSCityView.findAll({
     attributes: [
       'city_id',
@@ -23,8 +23,6 @@ module.exports = router => {
   router.post('/', async ctx => {
     let { limit, offset } = ctx.request.body
 
-    let result = await getTotalNps()
-
     let { rows, count } = await models.NPS.findAndCountAll({
       include: [
         {
@@ -40,9 +38,16 @@ module.exports = router => {
     })
 
     ctx.body = {
-      nps: rows,
       count,
-      result
+      nps: rows
+    }
+  })
+
+  router.get('/cities', async ctx => {
+    let result = await getCities()
+
+    ctx.body = {
+      cities: result
     }
   })
 }
