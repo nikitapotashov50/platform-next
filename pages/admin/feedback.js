@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React, { Component } from 'react'
 
+import PanelMenu from '../../client/components/PanelMenu'
 import NpsRightMenu from '../../client/components/NPS/RightMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
@@ -21,9 +22,9 @@ let labels = {
 }
 
 let menu = [
-  { path: '/admin/feedback/platform', code: 'program', title: 'Программы' },
-  { path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
-  { path: '/admin/feedback/platform', code: 'platform', title: 'Платформа' }
+  { href: '/admin/feedback?type=program', path: '/admin/feedback/program', code: 'program', title: 'Программы' },
+  { href: '/admin/feedback?type=coach', path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
+  { href: '/admin/feedback?type=platform', path: '/admin/feedback/platform', code: 'platform', title: 'Платформа' }
 ]
 
 class FeedbackResults extends Component {
@@ -66,37 +67,25 @@ class FeedbackResults extends Component {
     }
   }
 
+  drawCities (items) {
+    let arr = []
+    items.map(el => {
+      arr.push({
+        path: '/',
+        title: (el.name || 'Город не указан') + ' (' + el.count + ')'
+      })
+    })
+
+    return arr
+  }
+
   render () {
     let { type } = this.props.url.query
 
     let { fetching, page } = this.state
     let { items, limit, count, cities } = this.props
 
-    let Menu = (
-      <div className='panel-menu'>
-        { menu && menu.map(el => (
-          <div className='panel-menu__item panel-menu__item_bordered' key={'nps-meny-' + el.title}>
-            <Link href={'/admin/feedback?type=' + el.code} as={el.path}>
-              <a className={[ 'panel-menu__link', type === el.code ? 'panel-menu__link_active' : '' ].join(' ')}>{el.title}</a>
-            </Link>
-          </div>
-        ))}
-      </div>
-    )
-
     let SubHeader = (<div className='' />)
-
-    const citiesLinks = items => {
-      let arr = []
-      items.map(el => {
-        arr.push({
-          path: '/',
-          title: el.name + ' (' + el.count + ')'
-        })
-      })
-
-      return arr
-    }
 
     let Pagination = null
     if (count) Pagination = <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} />
@@ -106,7 +95,7 @@ class FeedbackResults extends Component {
         <div className='feed'>
           <div className='feed__left'>
 
-            <Panel Menu={() => Menu} SubHeader={() => SubHeader}>
+            <Panel Menu={() => <PanelMenu items={menu} selected={type} />} SubHeader={() => SubHeader}>
               <NpsOverall labels={labels} data={{ score_1: 123, score_2: 123, score_3: 123, total: 123 }} />
             </Panel>
 
@@ -122,7 +111,7 @@ class FeedbackResults extends Component {
 
           <div className='feed__right'>
             <Panel>
-              <NpsRightMenu items={citiesLinks(cities)} />
+              <NpsRightMenu items={this.drawCities(cities)} />
             </Panel>
           </div>
         </div>
