@@ -4,17 +4,22 @@ import { connect } from 'react-redux'
 import Img from 'react-image'
 import HeartIcon from 'react-icons/lib/fa/heart'
 import CommentIcon from 'react-icons/lib/fa/comment'
+import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
 import classNames from 'classnames'
+import Menu from './Menu'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
+import { deletePost } from '../../redux/posts'
 
 class Post extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showCommentForm: false
+      showCommentForm: false,
+      showPostMenu: false
     }
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
@@ -23,35 +28,58 @@ class Post extends Component {
     })
   }
 
+  handleDeleteButtonClick () {
+    this.props.deletePost(this.props.id)
+  }
+
   render () {
     const { title, content, user, currentUser, added } = this.props
 
     return (
       <div className={classNames('post', { 'with-animation': added })}>
 
-        <div className='user-info'>
-          <div className='user-photo-container'>
-            <Link href={`/@${user.name}`}>
-              <Img
-                src={[
-                  user.picture_small,
-                  '/static/img/user.png'
-                ]}
-                alt={`${user.first_name} ${user.last_name}`}
-                style={{
-                  width: '50px',
-                  borderRadius: '50%',
-                  marginRight: '10px'
-                }} />
-            </Link>
+        <div className='header'>
+          <div className='user-info'>
+            <div className='user-photo-container'>
+              <Link href={`/@${user.name}`}>
+                <Img
+                  src={[
+                    user.picture_small,
+                    '/static/img/user.png'
+                  ]}
+                  alt={`${user.first_name} ${user.last_name}`}
+                  style={{
+                    width: '50px',
+                    borderRadius: '50%',
+                    marginRight: '10px'
+                  }} />
+              </Link>
+            </div>
+
+            <div>
+              <Link href={`/@${user.name}`}>
+                <a className='user-name'>{user.first_name} {user.last_name}</a>
+              </Link>
+              <div className='user-occupation'>Монтаж охранно-пожарных систем, видеонаблюдения, контроля доступом, локальные сети, автоматизация, продажа оборудования, проектирование и техническое обслуживание систем безопасности.</div>
+            </div>
           </div>
 
-          <div>
-            <Link href={`/@${user.name}`}>
-              <a className='user-name'>{user.first_name} {user.last_name}</a>
-            </Link>
-            <div className='user-occupation'>Монтаж охранно-пожарных систем, видеонаблюдения, контроля доступом, локальные сети, автоматизация, продажа оборудования, проектирование и техническое обслуживание систем безопасности.</div>
+          <div className='post-menu'>
+            <EllipsisIcon color='#DADEE1' onClick={() => {
+              this.setState({
+                showPostMenu: !this.state.showPostMenu
+              })
+            }} />
           </div>
+          {this.state.showPostMenu && (
+            <Menu
+              onDelete={this.handleDeleteButtonClick}
+              handleClickOutside={() => {
+                this.setState({
+                  showPostMenu: false
+                })
+              }} />
+          )}
         </div>
 
         <h1 className='post-title'>{title}</h1>
@@ -78,6 +106,17 @@ class Post extends Component {
         )}
 
         <style jsx>{`
+          .header {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+          }
+
+          .post-menu {
+            align-self: flex-start;
+            cursor: pointer;
+          }
+
           .post {
             padding: 15px;
             margin: 0 0 15px;
@@ -172,6 +211,12 @@ class Post extends Component {
   }
 }
 
-export default connect(state => ({
+const mapStateToProps = state => ({
   currentUser: state.user
-}))(Post)
+})
+
+const mapDispatchToProps = dispatch => ({
+  deletePost: id => dispatch(deletePost(id))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post)

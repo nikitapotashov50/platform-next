@@ -12,7 +12,7 @@ const initStore = initialState => {
   }
 
   const store = createStore(reducer, initialState, composeEnhancers(
-    applyMiddleware(promiseMiddleware)
+    applyMiddleware(...middlewares)
   ))
 
   typeof window !== 'undefined' && createStorageListener(store)

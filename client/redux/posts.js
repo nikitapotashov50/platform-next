@@ -13,8 +13,11 @@ export const loadMore = createAction('posts/LOAD_MORE', async offset => {
       offset
     }
   })
-
   return data
+})
+export const deletePost = createAction('posts/DELETE', async id => {
+  await axios.delete(`/api/post/${id}`)
+  return id
 })
 
 export default handleActions({
@@ -29,5 +32,9 @@ export default handleActions({
   [loadMore]: (state, action) => ({
     ...state,
     posts: [...state.posts, ...action.payload]
+  }),
+  [deletePost]: (state, action) => ({
+    ...state,
+    posts: state.posts.filter(post => post.id !== action.payload)
   })
 }, defaultState)
