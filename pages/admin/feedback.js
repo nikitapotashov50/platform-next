@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React, { Component } from 'react'
 
 import PanelMenu from '../../client/components/PanelMenu'
