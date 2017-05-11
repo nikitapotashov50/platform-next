@@ -28,19 +28,27 @@ module.exports = router => {
 
       // Проверяем наличие юзера у нас в базе данных
       let dbUser = await models.User.findOne({
-        attributes: [ 'id', 'name' ],
+        attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
         where: { email }
       })
 
       if (!dbUser) throw new Error('No user found in our local database')
 
-      ctx.session.user = dbUser.toJSON()
-      ctx.cookies.set('user', dbUser.toJSON(), { key: '4911b7ef185e44d38d5ba8767034ef67' })
+      ctx.session.user = {
+        id: dbUser.id,
+        name: dbUser.name,
+        firstName: dbUser.first_name,
+        lastName: dbUser.last_name,
+        picture: dbUser.picture_small
+      }
 
       ctx.body = {
         user: {
           id: dbUser.id,
-          name: dbUser.name
+          name: dbUser.name,
+          firstName: dbUser.first_name,
+          lastName: dbUser.last_name,
+          picture: dbUser.picture_small
         }
       }
     } catch (e) {

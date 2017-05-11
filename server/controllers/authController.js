@@ -32,7 +32,7 @@ const isUserAuthOnBM = async (user, hash, userAgent) => {
 
 const getBMAccessToken = async (username, password) => {
   try {
-    let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+    const { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
       username: username,
       password: password,
       grant_type: 'password',

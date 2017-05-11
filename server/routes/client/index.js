@@ -1,6 +1,6 @@
 module.exports = router => {
-  router.get('/posts/:id', async ctx => {
-    await ctx.__next.render(ctx.req, ctx.res, '/posts', ctx.params)
+  router.get('/reports', async ctx => {
+    await ctx.__next.render(ctx.req, ctx.res, '/')
   })
 
   router.bridge('/@bm-:username', router => {

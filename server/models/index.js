@@ -12,6 +12,7 @@ let sequelize = new Sequelize(dbConfig.uri)
 let db = []
 let views = {}
 
+
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
   .forEach(file => {
@@ -28,6 +29,7 @@ fs.readdirSync(path.join(__dirname, './views'))
       views[model.name] = model
       views[model.name].associate(db)
     }
+
   })
 
 Object.keys(db).forEach(modelName => {
