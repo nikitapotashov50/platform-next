@@ -13,7 +13,6 @@ export const loadMore = createAction('posts/LOAD_MORE', async offset => {
       offset
     }
   })
-
   return data
 })
 

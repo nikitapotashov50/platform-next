@@ -23,5 +23,5 @@ const UserImage = ({ small, onClick, user }) => {
 }
 
 export default connect(state => ({
-  user: state.user
+  user: state.auth.user
 }))(UserImage)

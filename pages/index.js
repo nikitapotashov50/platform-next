@@ -4,7 +4,7 @@ import config from '../config'
 import DefaultLayout from '../client/layouts/default'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
-// import PostList from '../client/components/Post/PostList'
+import PostList from '../client/components/Post/PostList'
 import { loadPosts } from '../client/redux/posts'
 
 class IndexPage extends Component {
@@ -22,11 +22,10 @@ class IndexPage extends Component {
             <PostEditor />
           </div>
         )}
-        {/*
-          <div className='post-list'>
-            <PostList posts={this.props.posts} />
-          </div>
-        */}
+
+        <div className='post-list'>
+          <PostList posts={this.props.posts} />
+        </div>
 
         <style jsx>{`
           .post-editor, .post-list {
@@ -41,7 +40,7 @@ class IndexPage extends Component {
 export default Page(IndexPage, {
   title: 'Отчеты',
   mapStateToProps: state => ({
-    user: state.user,
-    posts: state.posts
+    user: state.auth.user,
+    posts: state.posts.posts
   })
 })

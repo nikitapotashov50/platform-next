@@ -7,7 +7,7 @@ let defaultState = {
 }
 
 // action creators
-export const auth = createAction('auth/LOGIN', async user => ({ user }))
+export const auth = createAction('auth/LOGIN')
 export const logout = createAction('auth/LOGOUT')
 
 // reducer
