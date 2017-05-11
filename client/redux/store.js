@@ -1,5 +1,7 @@
 // import thunk from 'redux-thunk'
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { actionStorageMiddleware, createStorageListener } from 'redux-state-sync'
+import promiseMiddleware from 'redux-promise'
 
 // reducers
 import auth from './auth'
@@ -23,5 +25,12 @@ let combinedReducer = combineReducers({
 })
 
 export default (initialState = exampleInitialState) => {
-  return createStore(combinedReducer, initialState)
+  const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+  const store = createStore(combinedReducer, initialState, composeEnhancers(
+    applyMiddleware(promiseMiddleware, actionStorageMiddleware)
+  ))
+
+  typeof window !== 'undefined' && createStorageListener(store)
+  return store
+  // return createStore(combinedReducer, initialState)
 }

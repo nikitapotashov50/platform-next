@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 // default state
 let defaultState = {
   user: null
@@ -6,6 +8,17 @@ let defaultState = {
 // actions
 const GET_INFO = 'profile/GET_INFO'
 const NOT_FOUND = 'profile/NOT_FOUND'
+
+export const test = async () => {
+  let { data } = await axios.post('http://localhost:3001/api/feedback', { limit: 10, offset: 1 })
+
+  console.log('async reducer', data.count)
+
+  return {
+    type: GET_INFO,
+    payload: { user: { 123: 123 } }
+  }
+}
 
 // action creators
 export const getUserInfo = (user) => ({

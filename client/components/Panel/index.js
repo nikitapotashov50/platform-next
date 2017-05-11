@@ -26,13 +26,13 @@ export default props => {
 
       { Menu && (
         <div className='panel__menu'>
-          {() => <Menu />}
+          <Menu />
         </div>
       )}
 
       { SubHeader && (
         <PanelSubHeader {...subHeaderStyles}>
-          {() => <SubHeader />}
+          <SubHeader />
         </PanelSubHeader>
       )}
 

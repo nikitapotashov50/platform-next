@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { translate } from 'react-i18next'
 
 import Panel from '../components/Panel'
 import DefaultLayout from './default'
@@ -9,14 +10,14 @@ let tabs = [
   { path: '/account/settings/programs', title: 'Программы' }
 ]
 
-export default ({ children, ...props }) => {
+const SettingsLayout = ({ children, t, ...props }) => {
   let { pathname } = props.url
 
   return (
     <DefaultLayout>
       <div className='user-page'>
         <div className='user-page__header'>
-          <h1>Настройки профиля</h1>
+          <h1>{t('settings.title')}</h1>
         </div>
         <div className='user-page__content'>
           <div className='user-page__content-block user-page__content-block_side'>
@@ -42,3 +43,5 @@ export default ({ children, ...props }) => {
     </DefaultLayout>
   )
 }
+
+export default translate([ 'common' ])(SettingsLayout)
