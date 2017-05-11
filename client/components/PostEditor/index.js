@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import Form from './Form'
-import { addPost } from '../../redux/actions'
+import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
   constructor (props) {

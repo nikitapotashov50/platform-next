@@ -6,10 +6,6 @@ let defaultState = {
   user: null
 }
 
-// actions
-const GET_INFO = 'profile/GET_INFO'
-const NOT_FOUND = 'profile/NOT_FOUND'
-
 // action creators
 export const getUserInfo = createAction('profile/GET_INFO', user => ({ user }))
 export const userNotFound = createAction('profile/NOT_FOUND')
