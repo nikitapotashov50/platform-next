@@ -1,8 +1,6 @@
-import axios from 'axios'
-import Link from 'next/link'
-import Router from 'next/router'
 import React, { Component } from 'react'
 
+import PanelMenu from '../../client/components/PanelMenu'
 import NpsRightMenu from '../../client/components/NPS/RightMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
@@ -13,6 +11,8 @@ import Page from '../../client/hocs/Page'
 import Panel from '../../client/components/Panel'
 import DefaultLayout from '../../client/layouts/default'
 
+import { getNpsEntries, getNpsCities, getNpsTotal } from '../../client/redux/admin/nps'
+
 let labels = {
   score_1: 'Контент',
   score_2: 'Эмоции',
@@ -21,117 +21,96 @@ let labels = {
 }
 
 let menu = [
-  { path: '', title: 'Программы' },
-  { path: '', title: 'Группы' },
-  { path: '', title: 'Платформа' }
+  { href: '/admin/feedback?type=program', path: '/admin/feedback/program', code: 'program', title: 'Программы' },
+  { href: '/admin/feedback?type=coach', path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
+  { href: '/admin/feedback?type=platform', path: '/admin/feedback/platform', code: 'platform', title: 'Платформа' }
 ]
 
 class FeedbackResults extends Component {
   static async getInitialProps (ctx) {
     let { page = 1 } = ctx.query
-    let { data } = await axios.post('http://localhost:3001/api/feedback/', { limit: 40, offset: page })
+    let { nps } = ctx.store.getState()
 
-    return {
-      cities: data.result,
-      limit: 40,
-      nps: data.nps,
-      count: data.count
+    if (ctx.isServer) {
+      await ctx.store.dispatch(getNpsEntries({ limit: nps.limit, page }))
+      await ctx.store.dispatch(getNpsCities())
+      await ctx.store.dispatch(getNpsTotal())
     }
+
+    return { page }
   }
 
   constructor (props) {
     super(props)
 
-    let { page } = props.url.query
-
     this.state = {
-      cities: props.cities,
-      nps: props.nps,
-      page: page || 1,
-      count: props.count,
+      page: props.page || 1,
       fetching: false
     }
   }
 
   async onNavigate (page, e) {
     e.preventDefault()
-    if (this.state.page === page) return false
+    let { query } = this.props.url
 
-    await this.setState(state => {
-      state.fetching = true
+    if ((parseInt(query.page) || 1) !== page) {
+      let { limit } = this.props
+
+      await this.setState(state => {
+        state.page = page
+        state.fetching = true
+      })
+
+      await this.props.dispatch(getNpsEntries({ limit, page }))
+      await this.setState(state => { state.fetching = false })
+    }
+  }
+
+  drawCities (items) {
+    let arr = []
+    items.map(el => {
+      arr.push({
+        path: '/',
+        title: (el.name || 'Город не указан') + ' (' + el.count + ')'
+      })
     })
 
-    Router.push(this.props.url.pathname + '?page=' + page)
-
-    let { data } = await new Promise(async (resolve, reject) => {
-      let { data } = await axios.post('/api/feedback', { limit: this.props.limit, offset: page })
-      setTimeout(() => resolve({ data }), 0)
-    })
-
-    await this.setState(state => {
-      state.nps = data.nps || null
-      state.count = data.count || 0
-      state.cities = data.result
-      state.page = page
-      state.fetching = false
-    })
+    return arr
   }
 
   render () {
-    let { limit } = this.props
-    let { nps, count, page, fetching, cities } = this.state
+    let { type } = this.props.url.query
 
-    let Menu = (
-      <div className='panel-menu'>
-        { menu && menu.map(el => (
-          <div className='panel-menu__item panel-menu__item_bordered' key={'nps-meny-' + el.title}>
-            <Link href={el.path}>
-              <a className={[ 'panel-menu__link' ].join(' ')}>{el.title}</a>
-            </Link>
-          </div>
-        ))}
-      </div>
-    )
+    let { fetching, page } = this.state
+    let { items, limit, count, cities } = this.props
 
-    let SubHeader = (
-      <div className='' />
-    )
+    let SubHeader = (<div className='' />)
 
-    const citiesLinks = items => {
-      let arr = []
-      items.map(el => {
-        arr.push({
-          path: '/',
-          title: el.name + ' (' + el.count + ')'
-        })
-      })
-
-      return arr
-    }
+    let Pagination = null
+    if (count) Pagination = <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} />
 
     return (
       <DefaultLayout>
         <div className='feed'>
           <div className='feed__left'>
 
-            <Panel Menu={() => Menu} SubHeader={() => SubHeader}>
+            <Panel Menu={() => <PanelMenu items={menu} selected={type} />} SubHeader={() => SubHeader}>
               <NpsOverall labels={labels} data={{ score_1: 123, score_2: 123, score_3: 123, total: 123 }} />
             </Panel>
 
-            { count && <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} /> }
+            { count && Pagination }
 
             <OverlayLoader loading={fetching}>
-              <NpsList data={nps} labels={labels} />
+              <NpsList data={items} labels={labels} />
             </OverlayLoader>
 
-            { count && <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} /> }
+            { count && Pagination }
 
           </div>
 
           <div className='feed__right'>
-            {/* города и коучи */}
             <Panel>
-              <NpsRightMenu items={citiesLinks(cities)} />
+              <NpsRightMenu items={this.drawCities(cities)} />
             </Panel>
           </div>
         </div>
@@ -140,4 +119,9 @@ class FeedbackResults extends Component {
   }
 }
 
-export default Page(FeedbackResults)
+let mapStateToProps = ({ nps }) => nps
+
+export default Page(FeedbackResults, {
+  title: 'NPS',
+  mapStateToProps
+})

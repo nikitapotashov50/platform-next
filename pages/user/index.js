@@ -25,4 +25,7 @@ let mapStateToProps = state => ({
   user: state.profile.user
 })
 
-export default Page(UserProfile(UserPage), { mapStateToProps })
+export default Page(UserProfile(UserPage), {
+  title: 'Профиль',
+  mapStateToProps
+})

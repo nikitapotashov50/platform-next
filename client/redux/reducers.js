@@ -5,7 +5,10 @@ import auth from './auth'
 import error from './error'
 import profile from './profile'
 
+import nps from './admin/nps'
+
 export default combineReducers({
+  nps,
   auth,
   error,
   posts,

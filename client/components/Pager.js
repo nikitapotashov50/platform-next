@@ -1,6 +1,7 @@
 let defaultVisible = 7
 
 const Pager = ({ total, limit, current, onNavigate, visible = defaultVisible }) => {
+  current = parseInt(current)
   let pages = Math.round(total / limit)
 
   let middleIndex = Math.round(visible / 2)
@@ -23,11 +24,6 @@ const Pager = ({ total, limit, current, onNavigate, visible = defaultVisible }) 
       <button className='pager__btn pager__btn_control' onClick={onNavigate.bind(this, pages - 1)}>»</button>
     </div>
   )
-}
-
-Pager.shouldComponentUpdate = () => {
-  console.log('12312')
-  return false
 }
 
 export default Pager
