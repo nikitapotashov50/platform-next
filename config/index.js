@@ -1,9 +1,7 @@
-console.log(process.env.PORT, process.env.PORT || 3000)
-
 module.exports = {
   server: {
     host: process.env.HOST || 'localhost',
-    port: process.env.PORT || 3001
+    port: process.env.PORT || 3000
   },
   db: {
     uri: process.env.DB_URI
