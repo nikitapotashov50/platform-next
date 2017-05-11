@@ -1,25 +1,20 @@
+import { combineReducers } from 'redux'
 import { handleActions } from 'redux-actions'
 import {
-  auth,
-  logout,
   loadPosts,
   addPost,
   loadMore
 } from './actions'
 
+import auth from './auth'
+import error from './error'
+import profile from './profile'
+
 export const initialState = {
   posts: []
 }
 
-export default handleActions({
-  [auth]: (state, action) => ({
-    ...state,
-    user: action.payload
-  }),
-  [logout]: (state, action) => ({
-    ...state,
-    user: null
-  }),
+const defaultReducer = handleActions({
   [loadPosts]: (state, action) => ({
     ...state,
     posts: action.payload
@@ -33,3 +28,9 @@ export default handleActions({
     posts: [...state.posts, ...action.payload]
   })
 }, initialState)
+
+export default combineReducers({
+  auth,
+  error,
+  profile
+})

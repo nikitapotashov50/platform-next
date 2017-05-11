@@ -1,38 +1,25 @@
+import { handleActions, createAction } from 'redux-actions'
+
 // default state
 let defaultState = {
   user: null,
   isLogged: false
 }
 
-// actions
-const LOGIN = 'auth/LOGIN'
-const LOGOUT = 'auth/LOGOUT'
-
 // action creators
-export const auth = user => ({
-  type: LOGIN,
-  payload: { user }
-})
-
-export const logout = () => ({
-  type: LOGOUT
-})
+export const auth = createAction('auth/LOGIN', async user => ({ user }))
+export const logout = createAction('auth/LOGOUT')
 
 // reducer
-export default (state = defaultState, action) => {
-  switch (action.type) {
-    case LOGIN:
-      return {
-        ...state,
-        user: action.payload.user,
-        isLogged: true
-      }
-    case LOGOUT:
-      return {
-        ...state,
-        user: null,
-        isLogged: false
-      }
-    default: return state
-  }
-}
+export default handleActions({
+  [auth]: (state, action) => ({
+    ...state,
+    user: action.payload,
+    isLogged: true
+  }),
+  [logout]: (state, action) => ({
+    ...state,
+    user: null,
+    isLogged: false
+  })
+}, defaultState)

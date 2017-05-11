@@ -22,9 +22,9 @@ class IndexPage extends Component {
             <PostEditor />
           </div>
         )}
-        <div className='post-list'>
+        {/*<div className='post-list'>
           <PostList posts={this.props.posts} />
-        </div>
+        </div>*/}
 
         <style jsx>{`
           .post-editor, .post-list {
