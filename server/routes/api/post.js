@@ -42,4 +42,18 @@ module.exports = router => {
     })
     ctx.body = data
   })
+
+  router.delete('/:id', async ctx => {
+    const post = await models.Post.findOne({
+      where: {
+        id: ctx.params.id
+      }
+    })
+
+    if (post) {
+      await post.destroy()
+    }
+
+    ctx.statusCode = 200
+  })
 }
