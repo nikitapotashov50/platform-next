@@ -13,7 +13,6 @@ module.exports = router => {
     let { email, password } = ctx.request.body
     // todo восстановление куки с molodost.bz
     // если есть наша сессия - восстанавливать нашу сессию
-    
 
     let user = ctx.cookies.get('molodost_user')
     let hash = ctx.cookies.get('molodost_hash')

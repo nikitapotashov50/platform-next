@@ -1,6 +1,6 @@
 export default ({ data, labels = {} }) => {
   let items = []
-  for(var i in data) {
+  for (var i in data) {
     items.push(
       <div className='nps-overall__item' key={'nps-overall' + i}>
         <div className='nps-overall__value'>{data[i]}</div>

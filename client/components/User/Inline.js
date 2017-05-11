@@ -30,7 +30,7 @@ export default ({ money, occupation = 'Огонь свет', subscribeButtons = 
 
           { date && (<span className='user-inline__when'>{ moment(date).from(moment()) }</span>)}
         </div>
-        
+
         <div className='user-inline__info'>
           { user ? occupation : '' }
         </div>

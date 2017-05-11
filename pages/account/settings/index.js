@@ -5,11 +5,11 @@ import Page from '../../../client/hocs/Page'
 import Panel from '../../../client/components/Panel'
 import SettingsLayout from '../../../client/layouts/settings'
 
-const AccoutSettings = ({ t, ...props}) => {
+const AccoutSettings = ({ t, ...props }) => {
   return (
     <SettingsLayout {...props}>
       <Panel Footer={() => <button className='myBtn'>{t('common.save')}</button>} Header={() => <h2>{t('settings.main.title')}</h2>}>
-        
+
         <form className='panel-form'>
           <div className='panel-form__row'>
             <label className='panel-form__label'>Label</label>

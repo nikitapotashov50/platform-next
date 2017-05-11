@@ -22,7 +22,10 @@ export default (Page, mapStateToProps, mapDispatchToProps, allowAccess) => {
 
         let translations = await getTranslations('ru')
 
-        return Page.getInitialProps && Page.getInitialProps(ctx)
+        let initialProps = {}
+        if (Page.getInitialProps) initialProps = await Page.getInitialProps(ctx)
+
+        return { translations, ...initialProps }
       }
 
       constructor (props) {

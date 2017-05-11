@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: 'nps_by_city_view',
       classMethods: {
-        associate: (models) => {          
+        associate: (models) => {
           // NPSCityView.belongsToMany(models.ProgramClass, { through: 'nps_classes', foreignKey: 'nps_id' })
           NPSCityView.belongsTo(models.Program, { foreignKey: 'program_id' })
           NPSCityView.belongsTo(models.User, { foreignKey: 'user_id' })

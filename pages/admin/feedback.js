@@ -13,36 +13,27 @@ import Page from '../../client/hocs/Page'
 import Panel from '../../client/components/Panel'
 import DefaultLayout from '../../client/layouts/default'
 
+let labels = {
+  score_1: 'Контент',
+  score_2: 'Эмоции',
+  score_3: 'Организация',
+  total: 'Общий'
+}
+
+let menu = [
+  { path: '', title: 'Программы' },
+  { path: '', title: 'Группы' },
+  { path: '', title: 'Платформа' }
+]
+
 class FeedbackResults extends Component {
-  static limit = 40
-  
-  labels = {
-    score_1: 'Контент',
-    score_2: 'Эмоции',
-    score_3: 'Организация',
-    total: 'Общий'
-  }
-
-  rightLinks = [
-    { path: '', title: 'Москва' },
-    { path: '', title: 'Казань' },
-    { path: '', title: 'Владивосток' },
-    { path: '', title: 'Новороссийск' }
-  ]
-
-  menu = [
-    { path: '', title: 'Программы' },
-    { path: '', title: 'Группы' },
-    { path: '', title: 'Платформа' },
-  ]
-
   static async getInitialProps (ctx) {
     let { page = 1 } = ctx.query
-    let { data } = await axios.post('http://localhost:3001/api/feedback/', { limit: this.limit, offset: page })
+    let { data } = await axios.post('http://localhost:3001/api/feedback/', { limit: 40, offset: page })
 
     return {
       cities: data.result,
-      limit: this.limit,
+      limit: 40,
       nps: data.nps,
       count: data.count
     }
@@ -92,7 +83,7 @@ class FeedbackResults extends Component {
 
     let Menu = (
       <div className='panel-menu'>
-        { this.menu && this.menu.map(el => (
+        { menu && menu.map(el => (
           <div className='panel-menu__item panel-menu__item_bordered' key={'nps-meny-' + el.title}>
             <Link href={el.path}>
               <a className={[ 'panel-menu__link' ].join(' ')}>{el.title}</a>
@@ -103,9 +94,7 @@ class FeedbackResults extends Component {
     )
 
     let SubHeader = (
-      <div className=''>
-        
-      </div>
+      <div className='' />
     )
 
     const citiesLinks = items => {
@@ -114,7 +103,7 @@ class FeedbackResults extends Component {
         arr.push({
           path: '/',
           title: el.name + ' (' + el.count + ')'
-        })        
+        })
       })
 
       return arr
@@ -126,13 +115,13 @@ class FeedbackResults extends Component {
           <div className='feed__left'>
 
             <Panel Menu={() => Menu} SubHeader={() => SubHeader}>
-              <NpsOverall labels={this.labels} data={{ score_1: 123, score_2: 123, score_3: 123, total: 123 }} />
+              <NpsOverall labels={labels} data={{ score_1: 123, score_2: 123, score_3: 123, total: 123 }} />
             </Panel>
 
             { count && <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} /> }
 
             <OverlayLoader loading={fetching}>
-              <NpsList data={nps} labels={this.labels} />
+              <NpsList data={nps} labels={labels} />
             </OverlayLoader>
 
             { count && <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} /> }

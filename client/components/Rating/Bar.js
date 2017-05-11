@@ -6,9 +6,9 @@ export default ({ maxRate = 10, inline = false, rate, ...props }) => {
   for (var i = 0; i < rate; i++) {
     stars.push(<span className='rating-star' key={'star-' + i}>&#9733;</span>)
   }
-  for (var i = 0; i < maxRate - rate; i++) {
-    stars.push(<span className='rating-star' key={'star-' + rate+i}>&#9734;</span>)
-  }  
+  for (var k = 0; k < maxRate - rate; k++) {
+    stars.push(<span className='rating-star' key={'star-' + rate + k}>&#9734;</span>)
+  }
 
   return (
     <div className={classes.join(' ')}>
