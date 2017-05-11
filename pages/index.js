@@ -7,7 +7,6 @@ import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
 import { loadPosts } from '../client/redux/actions'
 
-
 class IndexPage extends Component {
   static async getInitialProps ({ store }) {
     const baseURL = `http://${config.server.host}:${config.server.port}`
