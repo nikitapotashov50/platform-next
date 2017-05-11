@@ -121,7 +121,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                 .app {
                   &__content {
-                    padding-top: 60px;
+                    padding-top: 75px;
 
                     margin: 0 auto;
                     max-width: $container-width;
@@ -229,6 +229,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                 }
 
                 .panel {
+                  position: relative;
                   border-radius: 3px;
 
                   margin-bottom: 15px;
@@ -240,7 +241,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     &_small { margin-bottom: 10px; }
                     &_negative { margin-bottom: -2px; }
                   }
-
+                  &_no_border { border-bottom: none; }
                   &_no_margin { margin-bottom: 0; }
 
                   &__title {
@@ -272,6 +273,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     }
                   }
 
+                  &__options {
+                    top: 10px;
+                    right: 0;
+                    position: absolute;
+
+                    height: 30px;
+                    width: 30px;
+                  }
+
                   &__body {
                     padding: 15px 20px;
                     &_no {
@@ -293,7 +303,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     padding: 10px 20px;
                     border-top: 1px solid #efeff0;
                   }
-                  &__menu { border-bottom: 1px solid #e1e3e4; }
+                  &__menu {
+                    border-bottom: 1px solid #e1e3e4;
+                    &_no_border { border-bottom: none; }
+                  }
                 }
 
                 .task-sub-header {
