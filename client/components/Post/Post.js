@@ -8,7 +8,7 @@ import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
 import classNames from 'classnames'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
-import Dropdown from '../../elements/Dropdown'
+import { deletePost } from '../../redux/actions'
 
 class Post extends Component {
   constructor (props) {
@@ -18,6 +18,7 @@ class Post extends Component {
       showPostMenu: false
     }
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
@@ -26,8 +27,12 @@ class Post extends Component {
     })
   }
 
+  handleDeleteButtonClick () {
+    this.props.deletePost(this.props.id)
+  }
+
   render () {
-    const { id, title, content, user, currentUser, added } = this.props
+    const { title, content, user, currentUser, added } = this.props
 
     return (
       <div className={classNames('post', { 'with-animation': added })}>
@@ -66,12 +71,12 @@ class Post extends Component {
             }} />
           </div>
           {this.state.showPostMenu && (
-            <Dropdown>
+            <div className='dropdown'>
               <ul>
                 <li>Редактировать</li>
-                <li>Удалить</li>
+                <li onClick={this.handleDeleteButtonClick}>Удалить</li>
               </ul>
-            </Dropdown>
+            </div>
           )}
         </div>
 
@@ -99,6 +104,26 @@ class Post extends Component {
         )}
 
         <style jsx>{`
+          .dropdown {
+            right: 0;
+            border-radius: 3px;
+            top: 20px;
+            position: absolute;
+            background: #fff;
+            border: 1px solid #e1e3e4;
+          }
+
+          li {
+            padding: 10px;
+            font-size: 14px;
+          }
+
+          li:hover {
+            background: #196aff;
+            color: #fefefe;
+            cursor: pointer;
+          }
+
           .header {
             display: flex;
             justify-content: space-between;
@@ -203,6 +228,12 @@ class Post extends Component {
   }
 }
 
-export default connect(state => ({
+const mapStateToProps = state => ({
   currentUser: state.user
-}))(Post)
+})
+
+const mapDispatchToProps = dispatch => ({
+  deletePost: id => dispatch(deletePost(id))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post)
