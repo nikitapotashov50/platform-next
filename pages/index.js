@@ -28,7 +28,7 @@ class IndexPage extends Component {
     return (
       <DefaultLayout>
         {this.props.user && (
-          <div className="reply-form">
+          <div className='reply-form'>
             <PostEditor />
           </div>
         )}
@@ -44,7 +44,7 @@ class IndexPage extends Component {
         />
 
         <PostList posts={this.props.posts} />
-        
+
       </DefaultLayout>
     )
   }

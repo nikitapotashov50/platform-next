@@ -74,7 +74,7 @@ class Post extends Component {
       >
         <div className='post-preview'>
           <a className='post-preview__title' href='#'>{title}</a>
-          
+
           <TextWithImages text={content} />
         </div>
 
@@ -86,7 +86,7 @@ class Post extends Component {
             }}
           />
         )}
-      </Panel>      
+      </Panel>
     )
   }
 }

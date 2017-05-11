@@ -1,5 +1,4 @@
 import Img from 'react-image'
-import { connect } from 'react-redux'
 
 const UserImage = ({ small, onClick, user }) => {
   let classes = [ 'user-inline__image' ]
@@ -22,6 +21,4 @@ const UserImage = ({ small, onClick, user }) => {
   )
 }
 
-export default connect(state => ({
-  user: state.auth.user
-}))(UserImage)
+export default UserImage
