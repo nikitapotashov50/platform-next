@@ -1,33 +1,13 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { actionStorageMiddleware, createStorageListener } from 'redux-state-sync'
+import promiseMiddleware from 'redux-promise'
+import reducer from './reducers'
 
-const exampleInitialState = {
-  count: 0
-}
-
-export const actionTypes = {
-  AUTH: 'AUTH'
-}
-
-// REDUCERS
-export const reducer = (state = exampleInitialState, action) => {
-  switch (action.type) {
-    case actionTypes.AUTH:
-      return Object.assign({}, state, {
-        user: {
-          id: 1,
-          admin: false,
-          name: 'Лол'
-        }
-      })
-    default: return state
-  }
-}
-
-// ACTIONS
-export const auth = user => {
-  return { type: actionTypes.AUTH }
-}
-
-export const initStore = (initialState = exampleInitialState) => {
-  return createStore(reducer, initialState)
+export const initStore = initialState => {
+  const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+  const store = createStore(reducer, initialState, composeEnhancers(
+    applyMiddleware(promiseMiddleware, actionStorageMiddleware)
+  ))
+  typeof window !== 'undefined' && createStorageListener(store)
+  return store
 }

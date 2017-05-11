@@ -10,12 +10,26 @@ const dbConfig = require('../../config').db
 
 let sequelize = new Sequelize(dbConfig.uri)
 let db = []
+let views = {}
+
 
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
   .forEach(file => {
-    let model = sequelize['import'](path.join(__dirname, file))
-    db[model.name] = model
+    if (file !== 'views') {
+      let model = sequelize['import'](path.join(__dirname, file))
+      db[model.name] = model
+    }
+  })
+
+fs.readdirSync(path.join(__dirname, './views'))
+  .forEach(file => {
+    if (file !== 'mysql_views') {
+      var model = sequelize.import(path.join(__dirname, './views/' + file))
+      views[model.name] = model
+      views[model.name].associate(db)
+    }
+
   })
 
 Object.keys(db).forEach(modelName => {
@@ -23,6 +37,7 @@ Object.keys(db).forEach(modelName => {
 })
 
 module.exports = {
+  views,
   models: db,
   orm: sequelize
 }

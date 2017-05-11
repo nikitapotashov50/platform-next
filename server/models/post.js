@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Пост отправлаяется пользователем
-          Post.belongsTo(models.User, { foreignKey: 'user_id' })
+          Post.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
 
           // у поста может быть множество тегов
           Post.belongsToMany(models.Tag, { foreignKey: 'post_id', as: 'Tags', through: 'tags_posts' })
