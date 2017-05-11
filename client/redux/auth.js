@@ -14,7 +14,7 @@ export const logout = createAction('auth/LOGOUT')
 export default handleActions({
   [auth]: (state, action) => ({
     ...state,
-    user: action.payload,
+    user: action.payload.user,
     isLogged: true
   }),
   [logout]: (state, action) => ({
