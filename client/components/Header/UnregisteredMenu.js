@@ -24,6 +24,7 @@ class HeaderUnregisteredMenu extends Component {
       errors: {},
       modal: null,
       message: null,
+      fetching: false,
       credentials: { ...defaultCredentials }
     }
   }
@@ -157,7 +158,7 @@ class HeaderUnregisteredMenu extends Component {
   }
 
   render () {
-    let { modal, errors, credentials, message } = this.state
+    let { modal, errors, credentials, message, fetching } = this.state
     let { className } = this.props
 
     return (
@@ -172,13 +173,13 @@ class HeaderUnregisteredMenu extends Component {
 
         <Modal width={400} isOpened={modal} onClose={this.toggleModal.bind(this, null)}>
           { modal === 'signup' && (
-            <AuthSignup onInput={this.inputChange.bind(this)} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
+            <AuthSignup onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
           )}
           { modal === 'login' && (
-            <AuthLogin onInput={this.inputChange.bind(this)} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />
+            <AuthLogin onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />
           )}
           { modal === 'recovery' && (
-            <AuthRecovery onInput={this.inputChange.bind(this)} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} message={message} />
+            <AuthRecovery onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} message={message} />
           )}
         </Modal>
       </div>
