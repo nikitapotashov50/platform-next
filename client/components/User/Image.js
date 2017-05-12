@@ -1,27 +1,25 @@
 import Img from 'react-image'
-import { connect } from 'react-redux'
 
 const UserImage = ({ small, onClick, user }) => {
+  let containerClasses = [ 'user-inline' ]
   let classes = [ 'user-inline__image' ]
-  if (small) classes.push('user-inline__image_small')
+  if (small) {
+    containerClasses.push('user-inline_small')
+    classes.push('user-inline__image_small')
+  }
 
   if (!onClick) onClick = () => {}
 
   return (
-    <Img
-      src={[
-        user.picture,
-        '/static/img/user.png'
-      ]}
-      alt={`${user.firstName} ${user.lastName}`}
-      style={{
-        width: '40px',
-        borderRadius: '50%'
-      }}
-      onClick={onClick} />
+    <div className={containerClasses.join(' ')}>
+      <Img
+        src={[ user.picture, '/static/img/user.png' ]}
+        className={classes.join(' ')}
+        alt={`${user.firstName} ${user.lastName}`}
+        onClick={onClick}
+      />
+    </div>
   )
 }
 
-export default connect(state => ({
-  user: state.auth.user
-}))(UserImage)
+export default UserImage

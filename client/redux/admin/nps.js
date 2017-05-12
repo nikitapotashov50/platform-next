@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'query-string'
 import { handleActions, createAction } from 'redux-actions'
 
 // default state
@@ -10,9 +11,9 @@ let defaultState = {
 }
 
 // action creators
-export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ limit, page }) => {
+export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type }, { limit, page }) => {
   let offset = page - 1
-  let { data } = await axios.post('http://localhost:3001/api/feedback/', { limit, offset })
+  let { data } = await axios.get('http://localhost:3001/api/feedback?' + qs.stringify({ type, limit, offset }))
 
   return {
     items: data.nps,
@@ -20,19 +21,11 @@ export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ limi
   }
 })
 
-export const getNpsCities = createAction('admin/nps/GET_CITIES', async () => {
-  let { data } = await axios.get('http://localhost:3001/api/feedback/cities')
+export const getNpsCities = createAction('admin/nps/GET_CITIES', async ({ type }) => {
+  let { data } = await axios.get('http://localhost:3001/api/feedback/cities?' + qs.stringify({ type }))
 
   return {
     items: data.cities
-  }
-})
-
-export const getNpsTotal = createAction('admin/nps/GET_TOTAL', async () => {
-  let { data } = await axios.get('http://localhost:3001/api/feedback/total')
-
-  return {
-    items: data.total
   }
 })
 

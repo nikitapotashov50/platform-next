@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           NPS.belongsToMany(models.Group, { through: 'nps_group', foreignKey: 'nps_id', as: 'GroupNps' })
 
           // так же есть NPS по платформе
-          NPS.hasMany(models.NPSPlatform, { foreignKey: 'nps_id', as: 'PlatformNps' })
+          NPS.hasMany(models.NPSPlatform, { foreignKey: 'nps_id' })
         }
       }
     }
