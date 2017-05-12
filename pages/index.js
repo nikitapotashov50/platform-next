@@ -44,12 +44,8 @@ class IndexPage extends Component {
         />
 
         <PostList posts={this.props.posts} />
-<<<<<<< HEAD
-      </DefaultLayout>
-=======
 
       </FeedLayout>
->>>>>>> session
     )
   }
 }
