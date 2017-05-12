@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import config from '../config'
-import DefaultLayout from '../client/layouts/default'
+import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
@@ -26,7 +26,7 @@ class IndexPage extends Component {
 
   render () {
     return (
-      <DefaultLayout>
+      <FeedLayout>
         {this.props.user && (
           <div className='reply-form'>
             <PostEditor />
@@ -44,7 +44,12 @@ class IndexPage extends Component {
         />
 
         <PostList posts={this.props.posts} />
+<<<<<<< HEAD
       </DefaultLayout>
+=======
+
+      </FeedLayout>
+>>>>>>> session
     )
   }
 }
