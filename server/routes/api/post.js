@@ -142,4 +142,12 @@ module.exports = router => {
     })
     ctx.body = data
   })
+
+  // поставить лайк посту
+  router.post('/:id/like', async ctx => {
+    await models.Like.create({
+      user_id: ctx.session.user.id
+    })
+    ctx.statusCode = 200
+  })
 }
