@@ -15,6 +15,7 @@ class CommentForm extends Component {
     this.handleContentChange = this.handleContentChange.bind(this)
     this.createComment = this.createComment.bind(this)
     this.clearForm = this.clearForm.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   handleContentChange (e) {
@@ -23,8 +24,13 @@ class CommentForm extends Component {
     })
   }
 
+  handleKeyPress (e) {
+    if (e.key === 'Enter') {
+      this.createComment()
+    }
+  }
+
   async createComment (e) {
-    e.preventDefault()
     const { content } = this.state
     const { postId } = this.props
 
@@ -67,6 +73,7 @@ class CommentForm extends Component {
         </div>
         <input
           onChange={this.handleContentChange}
+          onKeyPress={this.handleKeyPress}
           className='leave-comment'
           type='text'
           placeholder='оставить комментарий'
