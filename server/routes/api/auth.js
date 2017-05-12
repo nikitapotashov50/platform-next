@@ -1,6 +1,6 @@
 const { models } = require('../../models')
 
-const { getBMAccessToken } = require('../../controllers/authController')
+const { getBMAccessToken, getMyInfo } = require('../../controllers/authController')
 
 const getUser = async email => {
   let dbUser = await models.User.findOne({
@@ -21,22 +21,28 @@ const userResponse = user => ({
 
 module.exports = router => {
   router.post('/restore', async ctx => {
-    let { user, hash } = ctx.request.body
+    let { user } = ctx.request.body
     user = unescape(user)
-    hash = unescape(hash)
+    // hash = unescape(hash)
 
-    let isAuth = false
+    // let isAuth = false
 
     // if (user && hash) isAuth = await isUserAuthOnBM(user, hash, ctx.request.header['user-agent'])
-    if (user && hash) isAuth = true
+    // if (user && hash) isAuth = true
 
     let dbUser = await getUser(user)
 
-    let sessionData = userResponse(dbUser)
-    ctx.session.user = sessionData
+    let sessionData = null
+
+    if (dbUser) {
+      sessionData = userResponse(dbUser)
+      ctx.session.user = sessionData
+    } else {
+      // let bmInfo = await getMyInfo()
+      // console.log(bmInfo)
+    }
 
     ctx.body = {
-      isAuth,
       user: sessionData
     }
   })
@@ -58,7 +64,17 @@ module.exports = router => {
       // Проверяем наличие юзера у нас в базе данных
       let dbUser = await getUser(email)
 
-      if (!dbUser) throw new Error('No user found in our local database')
+      if (!dbUser && BMAccess.access_token) {
+        let BMInfo = await getMyInfo(BMAccess.access_token)
+        dbUser = await models.User.create({
+          first_name: BMInfo.firstName,
+          last_name: BMInfo.lastName,
+          birthday: BMInfo.birthDate,
+          email: BMInfo.email,
+          name: BMInfo.userId,
+          picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
+        })
+      } else if (!dbUser) throw new Error('No user found in our local database')
 
       let sessionData = userResponse(dbUser)
       ctx.session.user = sessionData

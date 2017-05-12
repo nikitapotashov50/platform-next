@@ -29,6 +29,17 @@ module.exports = router => {
     })
   })
 
+  let initSettings = async (ctx, next) => {
+    if (!ctx.params.tab) ctx.params.tab = 'main'
+    await next()
+  }
+
+  router.bridge('/account/settings', [ initSettings ], router => {
+    router.get('/:tab', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/account/settings', Object.assign({}, ctx.params, ctx.query))
+    })
+  })
+
   router.get('*', async ctx => {
     await ctx.__next.getRequestHandler()(ctx.req, ctx.res)
   })

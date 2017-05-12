@@ -25,6 +25,12 @@ class HeaderRegisteredMenu extends Component {
     this.props.dispatch(logout())
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (this.props.url.pathname !== nextProps.url.pathname) {
+      this.setState(state => { state.menu = false })
+    }
+  }
+
   render () {
     let { menu } = this.state
     let { className, user } = this.props

@@ -18,6 +18,22 @@ const isUserAuthOnBM = async (user, hash, userAgent) => {
   }
 }
 
+const getMyInfo = async (accessToken) => {
+  try {
+    let { data } = await axios.get('http://api.molodost.bz/api/v3/user/me/', {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
 const getBMAccessToken = async (username, password) => {
   try {
     const { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
@@ -35,6 +51,7 @@ const getBMAccessToken = async (username, password) => {
 }
 
 module.exports = {
+  getMyInfo,
   isUserAuthOnBM,
   getBMAccessToken
   // getBMAccessTokenCredentialsOnly
