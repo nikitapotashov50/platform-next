@@ -30,6 +30,13 @@ export default props => {
         </div>
       )}
 
+      { Options && (
+        <div className='panel__options'>
+          <EllipsisIcon color='#DADEE1' onClick={toggleOptions} />
+          <Options />
+        </div>
+      )}
+
       { Header && (
         <PanelHeader {...headerStyles} noBorder={headerStyles.noBorder || (!!SubHeader && !Menu)}>
           {Header}
