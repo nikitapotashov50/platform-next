@@ -88,7 +88,7 @@ class Post extends Component {
 
         <TextWithImages text={content} />
 
-        <div className='footer'>
+        <div className='post-buttons'>
           <div className='like-button' style={{ marginRight: '15px' }}>
             <HeartIcon color='#DADEE1' /> Нравится 0
           </div>
@@ -97,7 +97,9 @@ class Post extends Component {
           </div>
         </div>
 
-        <CommentList comments={comments} />
+        <div className='post-comments'>
+          <CommentList comments={comments} />
+        </div>
 
         {this.state.showCommentForm && (
           <CommentForm
@@ -175,7 +177,7 @@ class Post extends Component {
             margin: 0 0 5px;
           }
 
-          .footer {
+          .post-buttons {
             border-top: 1px solid #efeff0;
             margin-top: 15px;
             padding-top: 15px;
@@ -183,6 +185,12 @@ class Post extends Component {
             font-size: 14px;
             color: #9da5ab;
             font-weight: normal;
+          }
+
+          .post-comments {
+            border-top: 1px solid #efeff0;
+            margin-top: 15px;
+            padding-top: 15px;
           }
 
           .like-button {
