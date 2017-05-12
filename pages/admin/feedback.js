@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import qs from 'query-string'
 import Router from 'next/router'
 import React, { Component } from 'react'
@@ -37,7 +36,7 @@ class FeedbackResults extends Component {
 
     await Promise.all([
       ctx.store.dispatch(getNpsEntries({ type }, { limit: nps.limit, page })),
-      ctx.store.dispatch(getNpsCities({ type })),
+      ctx.store.dispatch(getNpsCities({ type }))
     ])
 
     return {}
@@ -53,36 +52,31 @@ class FeedbackResults extends Component {
     this.onNavigate = this.onNavigate.bind(this)
   }
 
-  onNavigate = field => async (value, e) => {
-    e.preventDefault()
+  onNavigate (field) {
+    return async (value, e) => {
+      e.preventDefault()
 
-    let { query, pathname } = this.props.url
-    let { limit } = this.props.nps
-    let { type } = query
-    delete query.type
+      let { query, pathname } = this.props.url
+      let { limit } = this.props.nps
+      let { type } = query
+      delete query.type
 
-    let newQuery = {
-      ...query,
-      [field]: value
+      let newQuery = {
+        ...query,
+        [field]: value
+      }
+
+      this.setState(state => { state.fetching = true })
+
+      let href = { pathname, query: { ...newQuery, type } }
+      let asHref = pathname + '/' + type + '?' + qs.stringify(newQuery)
+      Router.replace(href, asHref, { shallow: true })
+
+      await this.props.getNpsEntries({ type, city: newQuery.city || null }, { limit, page: newQuery.page || 1 })
+
+      this.setState(state => { state.fetching = false })
     }
-
-    this.setState(state => { state.fetching = true })
-
-    let href = { pathname, query: { ...newQuery, type } }
-    let asHref = pathname + '/' + type + '?' + qs.stringify(newQuery)
-    Router.replace(href, asHref, { shallow: true })
-
-    await this.props.getNpsEntries({ type, city: newQuery.city || null }, { limit, page: newQuery.page || 1 })
-    
-    this.setState(state => { state.fetching = false })
   }
-
-  drawCities = items => items.map(el => ({  
-    path: '/',
-    code: el.city_id,
-    title: (el.name || 'Город не указан') + ' (' + el.count + ')',
-    onClick: this.onNavigate('city')
-  }))
 
   render () {
     let { type, page = 1 } = this.props.url.query
@@ -124,6 +118,13 @@ class FeedbackResults extends Component {
     )
   }
 }
+
+FeedbackResults.drawCities = items => items.map(el => ({
+  path: '/',
+  code: el.city_id,
+  title: (el.name || 'Город не указан') + ' (' + el.count + ')',
+  onClick: this.onNavigate('city')
+}))
 
 const mapStateToProps = ({ nps }) => ({ nps })
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -32,15 +32,9 @@ let getTypeInclusion = type => {
   return include
 }
 
-const getCities = async () => {
-  
-
-  return res
-}
-
 const calcNPS = (replies, total) => {
-  const total_count = replies.length
-  
+  const totalCount = replies.length
+
   let scores = {}
   let types = [ 'score_1', 'score_2', 'score_3', 'total' ]
 
@@ -50,14 +44,14 @@ const calcNPS = (replies, total) => {
       if (!scores[type]) scores[type] = [ 0, 0 ]
 
       if (el.get(type) >= 9) scores[type][0] = scores[type][0] + 1
-      else if (el.get(type) > 0 && el.get(type) <=6) scores[type][1] = scores[type][1] + 1
-    }    
+      else if (el.get(type) > 0 && el.get(type) <= 6) scores[type][1] = scores[type][1] + 1
+    }
   })
 
   let result = {}
   for (var key in scores) {
     let item = scores[key]
-    result[item, key] = (((item[0] * 100) / total_count) - ((item[1] * 100) / total_count)).toFixed(2)
+    result[item][key] = (((item[0] * 100) / totalCount) - ((item[1] * 100) / totalCount)).toFixed(2)
   }
 
   return result
@@ -65,7 +59,7 @@ const calcNPS = (replies, total) => {
 
 module.exports = router => {
   router.get('/', async ctx => {
-    let { limit = 40, offset = 0, type, city = null } = ctx.request.query
+    let { limit = 40, offset = 0, type } = ctx.request.query
     limit = parseInt(limit)
     offset = parseInt(offset)
 
@@ -98,8 +92,6 @@ module.exports = router => {
     let include = []
 
     if (type) include.push(getTypeInclusion(type))
-
-    console.log(include)
 
     let npsIdsResult = await models.NPS.findAll({
       include
