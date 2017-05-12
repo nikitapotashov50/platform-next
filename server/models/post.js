@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
           Post.belongsToMany(models.Like, { foreignKey: 'post_id', as: 'Likes', through: 'likes_posts' })
 
           // у поста может быть множество комментариев
-          Post.hasMany(models.Comment, { foreignKey: 'post_id' })
+          Post.hasMany(models.Comment, { foreignKey: 'post_id', as: 'comments' })
 
           // Множество постов могут принадлежать к множеству программ
           Post.belongsToMany(models.Program, { through: 'programs_posts', foreignKey: 'post_id' })

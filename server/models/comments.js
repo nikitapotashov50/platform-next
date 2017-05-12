@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'comments_view',
+      tableName: 'comments',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
           Comment.belongsTo(models.Post, { foreignKey: 'post_id' })
 
           // Комментарий оставляется пользователем
-          Comment.belongsTo(models.User, { foreignKey: 'user_id' })
+          Comment.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
 
           // Комментарий может являться дочерним комментарием
           Comment.belongsTo(Comment, { foreignKey: 'parent_id' })

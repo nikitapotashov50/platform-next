@@ -21,6 +21,8 @@ export const deletePost = createAction('posts/DELETE', async id => {
   return id
 })
 
+export const addComment = createAction('posts/ADD_COMMENT')
+
 export default handleActions({
   [loadPosts]: (state, action) => ({
     ...state,
@@ -37,5 +39,15 @@ export default handleActions({
   [deletePost]: (state, action) => ({
     ...state,
     posts: state.posts.filter(post => post.id !== action.payload)
-  })
+  }),
+  [addComment]: (state, action) => {
+    const postId = action.payload.post_id
+    const posts = state.posts.map(post => {
+      return post.id === postId ? { ...post, comments: [action.payload] } : post
+    })
+    return {
+      ...state,
+      posts
+    }
+  }
 }, defaultState)

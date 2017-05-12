@@ -5,15 +5,24 @@ module.exports = router => {
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
     const data = await models.Post.findAll({
-      attributes: ['id', 'title', 'content'],
+      attributes: ['id', 'title', 'content', 'user_id', 'created_at'],
+      order: [['created_at', 'desc']],
       include: [{
         model: models.User,
-        attributes: ['name', 'first_name', 'last_name', 'picture_small'],
+        attributes: ['id', 'name', 'first_name', 'last_name'],
         as: 'user'
+      }, {
+        model: models.Comment,
+        attributes: ['id', 'content', 'created_at'],
+        as: 'comments',
+        include: [{
+          model: models.User,
+          attributes: ['id', 'name', 'first_name', 'last_name'],
+          as: 'user'
+        }]
       }],
       limit: 20,
-      offset,
-      order: [['created_at', 'desc']]
+      offset
     })
     ctx.body = data
   })
@@ -56,5 +65,36 @@ module.exports = router => {
     }
 
     ctx.statusCode = 200
+  })
+
+  // список комментариев поста
+  router.get('/:id/comments', async ctx => {
+    const data = await models.Comment.findAll({
+      attributes: ['id', 'content'],
+      where: {
+        post_id: ctx.params.id
+      },
+      limit: 20,
+      order: [['created_at', 'desc']]
+    })
+    ctx.body = data
+  })
+
+  // создание комментария
+  router.post('/:id/comment', async ctx => {
+    const { content } = ctx.request.body
+    const created = await models.Comment.create({
+      content,
+      post_id: ctx.params.id,
+      user_id: ctx.session.user.id
+    })
+
+    const data = await models.Comment.findOne({
+      where: {
+        id: created.id
+      },
+      attributes: ['id', 'post_id', 'content']
+    })
+    ctx.body = data
   })
 }

@@ -1,48 +1,102 @@
+import React, { Component } from 'react'
 import Link from 'next/link'
 import Img from 'react-image'
-import onClickOutside from 'react-onclickoutside'
+import { connect } from 'react-redux'
+import axios from 'axios'
+import { addComment } from '../../redux/posts'
 import Button from '../../elements/Button'
 
-const CommentForm = ({ user }) => (
-  <div className='comment'>
-    <div className='user-photo-container'>
-      <Link href={`/@${user.name}`}>
-        <Img
-          src={[
-            user.picture,
-            '/static/img/user.png'
-          ]}
-          alt={`${user.firstName} ${user.lastName}`}
-          style={{
-            width: '30px',
-            borderRadius: '50%',
-            marginRight: '10px'
-          }} />
-      </Link>
-    </div>
-    <input
-      autoFocus
-      className='leave-comment'
-      type='text'
-      placeholder='оставить комментарий' />
-    <Button>Отправить</Button>
+class CommentForm extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      content: ''
+    }
+    this.handleContentChange = this.handleContentChange.bind(this)
+    this.createComment = this.createComment.bind(this)
+    this.clearForm = this.clearForm.bind(this)
+  }
 
-    <style jsx>{`
-      .comment {
-        border-top: 1px solid #efeff0;
-        margin-top: 15px;
-        padding-top: 15px;
-        display: flex;
-        font-size: 14px;
-      }
+  handleContentChange (e) {
+    this.setState({
+      content: e.target.value
+    })
+  }
 
-      input.leave-comment {
-        border: none;
-      }
-    `}</style>
-  </div>
-)
+  async createComment (e) {
+    e.preventDefault()
+    const { content } = this.state
+    const { postId } = this.props
 
-export default onClickOutside(CommentForm, {
-  handleClickOutside: ({ props }) => props.handleClickOutside
+    const comment = {
+      content
+    }
+
+    if (content) {
+      const { data } = await axios.post(`/api/post/${postId}/comment`, comment)
+      this.props.addComment({ ...data })
+      this.clearForm()
+    }
+  }
+
+  clearForm () {
+    this.setState({
+      content: ''
+    })
+  }
+
+  render () {
+    const { user } = this.props
+
+    return (
+      <div className='post-comment'>
+        <div className='user-photo-container'>
+          <Link href={`/@${user.name}`}>
+            <Img
+              src={[
+                user.picture,
+                '/static/img/user.png'
+              ]}
+              alt={`${user.firstName} ${user.lastName}`}
+              style={{
+                width: '30px',
+                borderRadius: '50%',
+                marginRight: '10px'
+              }} />
+          </Link>
+        </div>
+        <input
+          autoFocus
+          onChange={this.handleContentChange}
+          className='leave-comment'
+          type='text'
+          placeholder='оставить комментарий'
+          value={this.state.content} />
+        <Button onClick={this.createComment}>Отправить</Button>
+
+        <style jsx>{`
+          .post-comment {
+            border-top: 1px solid #efeff0;
+            margin-top: 15px;
+            padding-top: 15px;
+            display: flex;
+            font-size: 14px;
+          }
+
+          input.leave-comment {
+            border: none;
+          }
+        `}</style>
+      </div>
+    )
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  addComment: comment => dispatch(addComment(comment))
 })
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CommentForm)

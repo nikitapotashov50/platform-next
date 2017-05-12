@@ -33,7 +33,7 @@ class Post extends Component {
   }
 
   render () {
-    const { title, content, user, currentUser, added } = this.props
+    const { id, title, content, user, currentUser, added, comments = [] } = this.props
 
     return (
       <div className={classNames('post', { 'with-animation': added })}>
@@ -95,8 +95,11 @@ class Post extends Component {
           </div>
         </div>
 
+        <div>{comments.map(c => <div>{c.content}</div>)}</div>
+
         {this.state.showCommentForm && (
           <CommentForm
+            postId={id}
             user={currentUser}
             handleClickOutside={() => {
               this.setState({
@@ -212,7 +215,7 @@ class Post extends Component {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.user
+  currentUser: state.auth.user
 })
 
 const mapDispatchToProps = dispatch => ({
