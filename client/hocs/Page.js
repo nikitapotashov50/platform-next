@@ -1,11 +1,13 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
-import starti18n, { getTranslations } from '../tools/start_i18n'
-import initStore from '../redux/store'
 import { auth } from '../redux/auth'
+import { server } from '../../config'
+import initStore from '../redux/store'
+import starti18n, { getTranslations } from '../tools/start_i18n'
 
 export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
   return withRedux(
@@ -16,8 +18,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req) {
-          const { session } = ctx.req
-          if (session.user) ctx.store.dispatch(auth(session.user))
+          let { session, cookies } = ctx.req
+
+          if (session.user) ctx.store.dispatch(auth(data.user))
+          else {
+            let { data } = await axios.post('http://' + server.host + ':' + server.port + '/api/auth/restore', {
+              user: cookies.get('molodost_user'),
+              hash: cookies.get('molodost_hash')
+            })
+            if (data.isAuth && data.user) ctx.store.dispatch(auth(data.user))
+          }
         }
 
         let translations = await getTranslations('ru')
@@ -444,6 +454,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                 .user-inline {
                   position: relative;
+                  display: inline-block;
+
+                  &_small { width: 40px; }
 
                   &__image-link {
                     width: 50px;
@@ -457,8 +470,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                     width: 50px;
                     height: 50px;
-
-                    background: #000;
 
                     &_small {
                       width: 40px;

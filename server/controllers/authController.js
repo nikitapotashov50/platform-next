@@ -1,27 +1,16 @@
+const qs = require('query-string')
 const axios = require('axios')
 const config = require('../../config')
-
-// const getBMAccessTokenCredentialsOnly = async () => {
-//   let { status, statusText, data } = await axios.post(
-//     'http://api.molodost.bz/oauth/token/',
-//     {
-//        client_id: config.bmapi.client_id,
-//        client_secret: config.bmapi.client_secret,
-//        grant_type: 'client_credentials'
-//     }
-//   )
-//   return data
-// }
 
 const isUserAuthOnBM = async (user, hash, userAgent) => {
   try {
     let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+      grant_type: 'user_hash',
       user: user,
       hash: hash,
       user_agent: userAgent,
       client_id: config.bmapi.client_id,
-      client_secret: config.bmapi.client_secret,
-      grant_type: 'user_hash'
+      client_secret: config.bmapi.client_secret
     })
 
     return data.access_token

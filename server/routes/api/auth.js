@@ -2,7 +2,45 @@ const { models } = require('../../models')
 
 const { isUserAuthOnBM, getBMAccessToken } = require('../../controllers/authController')
 
+const getUser = async email => {
+  let dbUser = await models.User.findOne({
+    attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
+    where: { email }
+  })
+
+  return dbUser
+}
+
+const userResponse = user => ({
+  id: user.id,
+  name: user.name,
+  lastName: user.last_name,
+  firstName: user.first_name,
+  picture: user.picture_small
+})
+
 module.exports = router => {
+  router.post('/restore', async ctx => {
+    let { user, hash } = ctx.request.body
+    user = unescape(user)
+    hash = unescape(hash)
+
+    isAuth = false
+
+    // if (user && hash) isAuth = await isUserAuthOnBM(user, hash, ctx.request.header['user-agent'])
+    if (user && hash) isAuth = true
+
+    let dbUser = await getUser(user)
+
+    let sessionData = userResponse(dbUser)
+    ctx.session.user = sessionData
+
+    ctx.body = {
+      isAuth,
+      user: sessionData
+    }
+  })
+
   router.post('/logout', async ctx => {
     delete ctx.session.user
     ctx.body = {}
@@ -11,45 +49,22 @@ module.exports = router => {
   router.post('/login', async (ctx, next) => {
     let isAuth = false
     let { email, password } = ctx.request.body
-    // todo восстановление куки с molodost.bz
-    // если есть наша сессия - восстанавливать нашу сессию
 
-    let user = ctx.cookies.get('molodost_user')
-    let hash = ctx.cookies.get('molodost_hash')
-    let userAgent = ctx.request.header['user-agent']
-
+    
     try {
-      if (email && !password) isAuth = await isUserAuthOnBM(user, hash, userAgent)
-
-      //
       let BMAccess = await getBMAccessToken(email, password)
       //
       if (!BMAccess.access_token && !isAuth) throw new Error('No user account found on molodost.bz')
 
       // Проверяем наличие юзера у нас в базе данных
-      let dbUser = await models.User.findOne({
-        attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
-        where: { email }
-      })
+      let dbUser = await getUser(email)
 
       if (!dbUser) throw new Error('No user found in our local database')
 
-      ctx.session.user = {
-        id: dbUser.id,
-        name: dbUser.name,
-        firstName: dbUser.first_name,
-        lastName: dbUser.last_name,
-        picture: dbUser.picture_small
-      }
-
+      let sessionData = userResponse(dbUser)
+      ctx.session.user = sessionData
       ctx.body = {
-        user: {
-          id: dbUser.id,
-          name: dbUser.name,
-          firstName: dbUser.first_name,
-          lastName: dbUser.last_name,
-          picture: dbUser.picture_small
-        }
+        user: sessionData
       }
     } catch (e) {
       console.log(e)

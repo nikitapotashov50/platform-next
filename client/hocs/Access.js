@@ -27,7 +27,7 @@ export default rule => Next => {
   }
 
   let mapStateToProps = state => ({
-    access: state.access
+    access: state.error
   })
 
   return connect(mapStateToProps)(AccessHoc)

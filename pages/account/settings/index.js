@@ -1,31 +1,23 @@
+import { bindActionCreators } from 'redux'
 import { translate } from 'react-i18next'
+
+import AccountMainSettings from '../../../client/components/AccountSettings/Main'
+import AccountContactsSettings from '../../../client/components/AccountSettings/Contacts'
 
 import Access from '../../../client/hocs/Access'
 import Page from '../../../client/hocs/Page'
 import Panel from '../../../client/components/Panel'
 import SettingsLayout from '../../../client/layouts/settings'
 
-const AccoutSettings = ({ t, ...props }) => {
+const AccountSettings = ({ t, user, url, ...props }) => {
+  let { tab = 'main' } = url.query
+
   return (
-    <SettingsLayout {...props}>
-      <Panel Footer={() => <button className='myBtn'>{t('common.save')}</button>} Header={() => <h2>{t('settings.main.title')}</h2>}>
-
-        <form className='panel-form'>
-          <div className='panel-form__row'>
-            <label className='panel-form__label'>Label</label>
-            <input className='panel-form__input' type='text' />
-          </div>
-
-          <div className='panel-form__row'>
-            <label className='panel-form__label'>Label</label>
-            <input className='panel-form__input' type='text' />
-          </div>
-
-          <div className='panel-form__row'>
-            <label className='panel-form__label'>Label</label>
-            <input className='panel-form__input' type='text' />
-          </div>
-        </form>
+    <SettingsLayout {...props} tab={tab} url={url}>
+      <Panel Footer={() => <button className='myBtn'>{t('common.save')}</button>} Header={<h2>Настройки</h2>}>
+        
+        { (tab === 'main') && <AccountMainSettings user={user} /> }
+        { (tab === 'contacts') && <AccountContactsSettings user={user} /> }
 
       </Panel>
     </SettingsLayout>
@@ -34,6 +26,11 @@ const AccoutSettings = ({ t, ...props }) => {
 
 const accessRule = (user, state) => true
 
-let translated = translate([ 'common' ])(AccoutSettings)
+let Prepared = Access(accessRule)(translate([ 'common' ])(AccountSettings))
 
-export default Page(Access(accessRule)(translated))
+export default Page(Prepared, {
+  title: 'Настройки профиля',
+  mapStateToProps: ({ auth }) => ({
+    user: auth.user
+  })
+})

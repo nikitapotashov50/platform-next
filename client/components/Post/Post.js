@@ -16,6 +16,7 @@ class Post extends Component {
       showCommentForm: false,
       showPostMenu: false
     }
+
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
@@ -66,7 +67,7 @@ class Post extends Component {
     return (
       <Panel
         Footer={() => Footer}
-        Header={() => <UserInline user={user} />}
+        Header={<UserInline user={user} />}
         Options={() => Options}
         toggleOptions={async () => {
           await this.setState({ showPostMenu: true })
