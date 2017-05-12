@@ -8,7 +8,7 @@ export default rule => Next => {
   class AccessHoc extends Component {
     static async getInitialProps (ctx) {
       let state = ctx.store.getState()
-      
+
       if (!rule(state.auth.user, state, ctx.params)) ctx.store.dispatch(restrictAccess('Ошабка прав доступа'))
       else ctx.store.dispatch(allowAccess())
 

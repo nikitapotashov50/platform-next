@@ -24,7 +24,7 @@ const getMyInfo = async (accessToken) => {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
-			  'Authorization': 'Bearer ' + accessToken
+        'Authorization': 'Bearer ' + accessToken
       }
     })
 

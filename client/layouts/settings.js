@@ -23,7 +23,7 @@ const SettingsLayout = ({ children, tab, t, ...props }) => {
             <Panel Header={<div className='panel__title'>{t('settings.title')}</div>}>
               <ul className='side-links'>
                 { tabs.map(el => (
-                  <li className={[ 'side-links__item', ]} key={'settings-tab-' + el.title}>
+                  <li className={[ 'side-links__item' ]} key={'settings-tab-' + el.title}>
                     <Link href={el.href} as={el.path}>
                       { tab === el.code
                         ? <span className='side-links__link'>{t('account.settings.tab.' + el.code + '.title')}</span>

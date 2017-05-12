@@ -21,14 +21,14 @@ const userResponse = user => ({
 
 module.exports = router => {
   router.post('/restore', async ctx => {
-    let { user, hash } = ctx.request.body
+    let { user } = ctx.request.body
     user = unescape(user)
-    hash = unescape(hash)
+    // hash = unescape(hash)
 
-    let isAuth = false
+    // let isAuth = false
 
     // if (user && hash) isAuth = await isUserAuthOnBM(user, hash, ctx.request.header['user-agent'])
-    if (user && hash) isAuth = true
+    // if (user && hash) isAuth = true
 
     let dbUser = await getUser(user)
 
@@ -74,8 +74,7 @@ module.exports = router => {
           name: BMInfo.userId,
           picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
         })
-      }
-      else if (!dbUser) throw new Error('No user found in our local database')
+      } else if (!dbUser) throw new Error('No user found in our local database')
 
       let sessionData = userResponse(dbUser)
       ctx.session.user = sessionData
