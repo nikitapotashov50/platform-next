@@ -32,7 +32,7 @@ export default props => {
 
       { Header && (
         <PanelHeader {...headerStyles} noBorder={headerStyles.noBorder || (!!SubHeader && !Menu)}>
-          <Header />
+          {Header}
         </PanelHeader>
       )}
 

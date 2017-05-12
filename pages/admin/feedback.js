@@ -1,4 +1,8 @@
+import _ from 'lodash'
+import qs from 'query-string'
+import Router from 'next/router'
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
 import NpsRightMenu from '../../client/components/NPS/RightMenu'
@@ -11,7 +15,7 @@ import Page from '../../client/hocs/Page'
 import Panel from '../../client/components/Panel'
 import DefaultLayout from '../../client/layouts/default'
 
-import { getNpsEntries, getNpsCities, getNpsTotal } from '../../client/redux/admin/nps'
+import { getNpsEntries, getNpsCities } from '../../client/redux/admin/nps'
 
 let labels = {
   score_1: 'Контент',
@@ -28,66 +32,68 @@ let menu = [
 
 class FeedbackResults extends Component {
   static async getInitialProps (ctx) {
-    let { page = 1 } = ctx.query
+    let { page = 1, type = 'program' } = ctx.query
     let { nps } = ctx.store.getState()
 
-    if (ctx.isServer) {
-      await ctx.store.dispatch(getNpsEntries({ limit: nps.limit, page }))
-      await ctx.store.dispatch(getNpsCities())
-      await ctx.store.dispatch(getNpsTotal())
-    }
+    await Promise.all([
+      ctx.store.dispatch(getNpsEntries({ type }, { limit: nps.limit, page })),
+      ctx.store.dispatch(getNpsCities({ type })),
+    ])
 
-    return { page }
+    return {}
   }
 
   constructor (props) {
     super(props)
 
     this.state = {
-      page: props.page || 1,
       fetching: false
     }
+
+    this.onNavigate = this.onNavigate.bind(this)
   }
 
-  async onNavigate (page, e) {
+  onNavigate = field => async (value, e) => {
     e.preventDefault()
-    let { query } = this.props.url
 
-    if ((parseInt(query.page) || 1) !== page) {
-      let { limit } = this.props
+    let { query, pathname } = this.props.url
+    let { limit } = this.props.nps
+    let { type } = query
+    delete query.type
 
-      await this.setState(state => {
-        state.page = page
-        state.fetching = true
-      })
-
-      await this.props.dispatch(getNpsEntries({ limit, page }))
-      await this.setState(state => { state.fetching = false })
+    let newQuery = {
+      ...query,
+      [field]: value
     }
+
+    this.setState(state => { state.fetching = true })
+
+    let href = { pathname, query: { ...newQuery, type } }
+    let asHref = pathname + '/' + type + '?' + qs.stringify(newQuery)
+    Router.replace(href, asHref, { shallow: true })
+
+    await this.props.getNpsEntries({ type, city: newQuery.city || null }, { limit, page: newQuery.page || 1 })
+    
+    this.setState(state => { state.fetching = false })
   }
 
-  drawCities (items) {
-    let arr = []
-    items.map(el => {
-      arr.push({
-        path: '/',
-        title: (el.name || 'Город не указан') + ' (' + el.count + ')'
-      })
-    })
-
-    return arr
-  }
+  drawCities = items => items.map(el => ({  
+    path: '/',
+    code: el.city_id,
+    title: (el.name || 'Город не указан') + ' (' + el.count + ')',
+    onClick: this.onNavigate('city')
+  }))
 
   render () {
-    let { type } = this.props.url.query
+    let { type, page = 1 } = this.props.url.query
 
-    let { fetching, page } = this.state
-    let { items, limit, count, cities } = this.props
+    let { fetching } = this.state
+    let { items, limit, count, cities } = this.props.nps
 
     let SubHeader = (<div className='' />)
 
     let Pagination = null
-    if (count) Pagination = <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate.bind(this)} />
+    if (count) Pagination = <Pager total={count} current={page} limit={limit} onNavigate={this.onNavigate('page')} />
 
     return (
       <DefaultLayout>
@@ -109,7 +115,7 @@ class FeedbackResults extends Component {
           </div>
 
           <div className='feed__right'>
-            <Panel>
+            <Panel Header={<div className='panel__title'>Города</div>}>
               <NpsRightMenu items={this.drawCities(cities)} />
             </Panel>
           </div>
@@ -119,9 +125,14 @@ class FeedbackResults extends Component {
   }
 }
 
-let mapStateToProps = ({ nps }) => nps
+const mapStateToProps = ({ nps }) => ({ nps })
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getNpsEntries,
+  getNpsCities
+}, dispatch)
 
 export default Page(FeedbackResults, {
   title: 'NPS',
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 })
