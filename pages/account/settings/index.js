@@ -1,4 +1,3 @@
-import { bindActionCreators } from 'redux'
 import { translate } from 'react-i18next'
 
 import AccountMainSettings from '../../../client/components/AccountSettings/Main'
@@ -15,7 +14,7 @@ const AccountSettings = ({ t, user, url, ...props }) => {
   return (
     <SettingsLayout {...props} tab={tab} url={url}>
       <Panel Footer={() => <button className='myBtn'>{t('common.save')}</button>} Header={<h2>Настройки</h2>}>
-        
+
         { (tab === 'main') && <AccountMainSettings user={user} /> }
         { (tab === 'contacts') && <AccountContactsSettings user={user} /> }
 

@@ -6,12 +6,12 @@ import DefaultLayout from './default'
 
 let tabs = [
   { code: 'main', href: '/account/settings', path: '/account/settings', title: 'Основные' },
-  { code: 'contacts', href: '/account/settings?tab=contacts', path: '/account/settings/contacts', title: 'Контакты' },
+  { code: 'contacts', href: '/account/settings?tab=contacts', path: '/account/settings/contacts', title: 'Контакты' }
   // { path: '/account/settings/programs', title: 'Программы' }
 ]
 
 const SettingsLayout = ({ children, tab, t, ...props }) => {
-  let { pathname } = props.url
+  // let { pathname } = props.url
 
   return (
     <DefaultLayout>

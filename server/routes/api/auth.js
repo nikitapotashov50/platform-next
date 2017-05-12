@@ -1,6 +1,6 @@
 const { models } = require('../../models')
 
-const { isUserAuthOnBM, getBMAccessToken } = require('../../controllers/authController')
+const { getBMAccessToken } = require('../../controllers/authController')
 
 const getUser = async email => {
   let dbUser = await models.User.findOne({
@@ -25,7 +25,7 @@ module.exports = router => {
     user = unescape(user)
     hash = unescape(hash)
 
-    isAuth = false
+    let isAuth = false
 
     // if (user && hash) isAuth = await isUserAuthOnBM(user, hash, ctx.request.header['user-agent'])
     if (user && hash) isAuth = true
@@ -50,7 +50,6 @@ module.exports = router => {
     let isAuth = false
     let { email, password } = ctx.request.body
 
-    
     try {
       let BMAccess = await getBMAccessToken(email, password)
       //

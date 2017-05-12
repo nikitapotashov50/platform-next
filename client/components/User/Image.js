@@ -1,7 +1,7 @@
 import Img from 'react-image'
 
 const UserImage = ({ small, onClick, user }) => {
-  let containerClasses= [ 'user-inline' ]
+  let containerClasses = [ 'user-inline' ]
   let classes = [ 'user-inline__image' ]
   if (small) {
     containerClasses.push('user-inline_small')

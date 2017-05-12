@@ -20,7 +20,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
         if (ctx.req) {
           let { session, cookies } = ctx.req
 
-          if (session.user) ctx.store.dispatch(auth(data.user))
+          if (session.user) ctx.store.dispatch(auth(session.user))
           else {
             let { data } = await axios.post('http://' + server.host + ':' + server.port + '/api/auth/restore', {
               user: cookies.get('molodost_user'),
