@@ -1,4 +1,4 @@
-const AuthLogin = ({ recoverySwitch, values, onInput, errors, submit }) => (
+const AuthLogin = ({ recoverySwitch, values, onInput, errors, submit, fetching }) => (
   <div className='login-form'>
     <h3 className='login-form__title'>Авторизация</h3>
 
@@ -18,7 +18,7 @@ const AuthLogin = ({ recoverySwitch, values, onInput, errors, submit }) => (
       { errors.fetching && <div >{errors.fetching}</div>}
 
       <div className='login-form__row login-form__row_double-margin'>
-        <button className='login-form__btn' type='submit' onClick={submit}>Войти</button>
+        <button className='login-form__btn' type='submit' onClick={submit}>{ fetching ? 'Загрузка' : 'Войти' }</button>
       </div>
 
       <div className='login-form__row login-form__row_centered'>
