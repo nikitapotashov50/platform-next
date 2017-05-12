@@ -1,3 +1,4 @@
+import Img from 'react-image'
 import Link from 'next/link'
 import moment from 'moment'
 
@@ -13,7 +14,7 @@ export default ({ money, occupation = 'Огонь свет', subscribeButtons = 
       { user && (
         <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
           <a className='user-inline__image-link'>
-            <img className='user-inline__image' src={user.picture_small || null} alt={user.first_name + ' ' + user.last_name} />
+            <Img src={[ user.picture_small, '/static/img/user.png' ]} className='user-inline__image' alt={`${user.first_name} ${user.last_name}`} />
           </a>
         </Link>
       ) }

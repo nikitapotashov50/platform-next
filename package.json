@@ -67,6 +67,7 @@
     "reduce-reducers": "^0.1.2",
     "redux": "^3.6.0",
     "redux-actions": "^2.0.3",
+    "redux-observable": "^0.14.1",
     "redux-promise": "^0.5.3",
     "redux-state-sync": "^0.0.4",
     "redux-thunk": "^2.2.0",

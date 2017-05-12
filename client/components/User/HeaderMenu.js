@@ -8,13 +8,13 @@ class UserHeaderMenu extends Component {
   }
 
   render () {
-    let { opened, logout } = this.props
+    let { opened, logout, user } = this.props
     if (!opened) return null
 
     return (
       <ul className='user-sub-menu'>
         <li className='user-sub-menu__item'>
-          <Link href='/user?username=bm-paperdoll' as='/@bm-paperdoll'>
+          <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
             <a className='user-sub-menu__link'>Профиль</a>
           </Link>
         </li>

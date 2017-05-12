@@ -8,7 +8,7 @@ let menu = [
   { url: '/rating', title: 'Рейтинг' }
 ]
 
-const Header = ({ user, pathname }) => (
+const Header = ({ user, pathname, dispatch, isLogged }) => (
   <header className='app-header noPrint'>
     <div className='app-header__wrap'>
 
@@ -17,17 +17,16 @@ const Header = ({ user, pathname }) => (
       </div>
 
       <div className='app-header__block app-header__block_menu'>
-        <HeaderRight />
+        <HeaderRight dispatch={dispatch} user={user} isLogged={isLogged} />
       </div>
 
     </div>
   </header>
 )
 
-const mapStateToProps = state => {
-  return {
-    user: state.user
-  }
-}
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  isLogged: state.auth.isLogged
+})
 
 export default connect(mapStateToProps)(Header)

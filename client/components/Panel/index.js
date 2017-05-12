@@ -1,33 +1,46 @@
+import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
+
+import PanelMenu from './Menu'
 import PanelBody from './Body'
 import PanelHeader from './Header'
 import PanelSubHeader from './SubHeader'
 
 export default props => {
-  let { noMargin, margin } = props
+  let { noMargin, noBorder, margin, withAnimation } = props
   let containerClasses = [ 'panel' ]
 
   if (noMargin) containerClasses.push('panel_no_margin')
+  if (noBorder) containerClasses.push('panel_no_border')
   if (margin) containerClasses.push('panel_margin_' + margin)
+  if (withAnimation) containerClasses.push('fade_in')
 
   let { Header, headerStyles = {} } = props
   let { SubHeader, subHeaderStyles = {} } = props
   let { children, noBody, bodyStyles = {} } = props
-  let { Menu } = props
+  let { Menu, menuStyles } = props
   let { Footer } = props
+  let { Options, toggleOptions } = props
 
   return (
     <div className={containerClasses.join(' ')}>
 
+      { Options && (
+        <div className='panel__options'>
+          <EllipsisIcon color='#DADEE1' onClick={toggleOptions} />
+          <Options />
+        </div>
+      )}
+
       { Header && (
         <PanelHeader {...headerStyles} noBorder={headerStyles.noBorder || (!!SubHeader && !Menu)}>
-          <Header />
+          {Header}
         </PanelHeader>
       )}
 
       { Menu && (
-        <div className='panel__menu'>
+        <PanelMenu {...menuStyles}>
           <Menu />
-        </div>
+        </PanelMenu>
       )}
 
       { SubHeader && (
