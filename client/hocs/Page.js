@@ -1,11 +1,13 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
-import starti18n, { getTranslations } from '../tools/start_i18n'
-import initStore from '../redux/store'
 import { auth } from '../redux/auth'
+import { server } from '../../config'
+import initStore from '../redux/store'
+import starti18n, { getTranslations } from '../tools/start_i18n'
 
 export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
   return withRedux(
@@ -16,8 +18,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req) {
-          const { session } = ctx.req
+          let { session, cookies } = ctx.req
+
           if (session.user) ctx.store.dispatch(auth(session.user))
+          else {
+            let { data } = await axios.post('http://' + server.host + ':' + server.port + '/api/auth/restore', {
+              user: cookies.get('molodost_user'),
+              hash: cookies.get('molodost_hash')
+            })
+            if (data.isAuth && data.user) ctx.store.dispatch(auth(data.user))
+          }
         }
 
         let translations = await getTranslations('ru')
@@ -121,7 +131,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                 .app {
                   &__content {
-                    padding-top: 60px;
+                    padding-top: 75px;
 
                     margin: 0 auto;
                     max-width: $container-width;
@@ -229,6 +239,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                 }
 
                 .panel {
+                  position: relative;
                   border-radius: 3px;
 
                   margin-bottom: 15px;
@@ -240,7 +251,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     &_small { margin-bottom: 10px; }
                     &_negative { margin-bottom: -2px; }
                   }
-
+                  &_no_border { border-bottom: none; }
                   &_no_margin { margin-bottom: 0; }
 
                   &__title {
@@ -272,6 +283,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     }
                   }
 
+                  &__options {
+                    top: 10px;
+                    right: 0;
+                    position: absolute;
+
+                    height: 30px;
+                    width: 30px;
+                  }
+
                   &__body {
                     padding: 15px 20px;
                     &_no {
@@ -293,7 +313,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     padding: 10px 20px;
                     border-top: 1px solid #efeff0;
                   }
-                  &__menu { border-bottom: 1px solid #e1e3e4; }
+                  &__menu {
+                    border-bottom: 1px solid #e1e3e4;
+                    &_no_border { border-bottom: none; }
+                  }
                 }
 
                 .task-sub-header {
@@ -431,6 +454,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                 .user-inline {
                   position: relative;
+                  display: inline-block;
+
+                  &_small { width: 40px; }
 
                   &__image-link {
                     width: 50px;
@@ -444,8 +470,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                     width: 50px;
                     height: 50px;
-
-                    background: #000;
 
                     &_small {
                       width: 40px;

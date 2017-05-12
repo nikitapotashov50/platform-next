@@ -5,13 +5,13 @@ import Panel from '../components/Panel'
 import DefaultLayout from './default'
 
 let tabs = [
-  { path: '/account/settings', title: 'Основные' },
-  { path: '/account/settings/goal', title: 'Цель' },
-  { path: '/account/settings/programs', title: 'Программы' }
+  { code: 'main', href: '/account/settings', path: '/account/settings', title: 'Основные' },
+  { code: 'contacts', href: '/account/settings?tab=contacts', path: '/account/settings/contacts', title: 'Контакты' }
+  // { path: '/account/settings/programs', title: 'Программы' }
 ]
 
-const SettingsLayout = ({ children, t, ...props }) => {
-  let { pathname } = props.url
+const SettingsLayout = ({ children, tab, t, ...props }) => {
+  // let { pathname } = props.url
 
   return (
     <DefaultLayout>
@@ -25,8 +25,8 @@ const SettingsLayout = ({ children, t, ...props }) => {
             <Panel>
               { tabs.map(el => (
                 <div key={'settings-tab-' + el.title}>
-                  <Link href={el.path}>
-                    { pathname === el.path ? <span>{el.title}</span> : <a>{el.title}</a> }
+                  <Link href={el.href} as={el.path}>
+                    { tab === el.code ? <span>{el.title}</span> : <a>{el.title}</a> }
                   </Link>
                 </div>
               ))}

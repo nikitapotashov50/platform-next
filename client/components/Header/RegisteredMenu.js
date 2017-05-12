@@ -27,14 +27,14 @@ class HeaderRegisteredMenu extends Component {
 
   render () {
     let { menu } = this.state
-    let { className } = this.props
+    let { className, user } = this.props
 
     return (
-      <div className={className}>
+      <div className={[ className ].join(' ')}>
         <li className='user-menu__item user-menu__item_hoverable'>
-          <UserImage small onClick={this.toggleMenu.bind(this, !menu)} />
+          <UserImage small user={user} onClick={this.toggleMenu.bind(this, !menu)} />
 
-          <UserHeaderMenu opened={menu} logout={this.logout.bind(this)} onClose={this.toggleMenu.bind(this, false)} />
+          <UserHeaderMenu opened={menu} user={user} logout={this.logout.bind(this)} onClose={this.toggleMenu.bind(this, false)} />
         </li>
       </div>
     )

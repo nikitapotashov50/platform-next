@@ -5,7 +5,7 @@ import reducer from './reducers'
 
 const initStore = initialState => {
   const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
-  const middlewares = [promiseMiddleware]
+  const middlewares = [ promiseMiddleware ]
 
   if (typeof window !== 'undefined') {
     middlewares.push(actionStorageMiddleware)
