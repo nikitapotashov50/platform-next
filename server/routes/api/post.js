@@ -9,7 +9,7 @@ module.exports = router => {
       order: [['created_at', 'desc']],
       include: [{
         model: models.User,
-        attributes: ['id', 'name', 'first_name', 'last_name'],
+        attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
         as: 'user'
       }, {
         model: models.Comment,
@@ -17,7 +17,7 @@ module.exports = router => {
         as: 'comments',
         include: [{
           model: models.User,
-          attributes: ['id', 'name', 'first_name', 'last_name'],
+          attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
           as: 'user'
         }]
       }],
@@ -93,7 +93,12 @@ module.exports = router => {
       where: {
         id: created.id
       },
-      attributes: ['id', 'post_id', 'content']
+      attributes: ['id', 'post_id', 'content', 'created_at'],
+      include: [{
+        model: models.User,
+        attributes: ['name', 'first_name', 'last_name', 'picture_small'],
+        as: 'user'
+      }]
     })
     ctx.body = data
   })

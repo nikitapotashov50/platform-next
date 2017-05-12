@@ -43,7 +43,7 @@ export default handleActions({
   [addComment]: (state, action) => {
     const postId = action.payload.post_id
     const posts = state.posts.map(post => {
-      return post.id === postId ? { ...post, comments: [action.payload] } : post
+      return post.id === postId ? { ...post, comments: [...post.comments, action.payload] } : post
     })
     return {
       ...state,

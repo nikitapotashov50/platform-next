@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import Menu from './Menu'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
+import CommentList from './CommentList'
 import { deletePost } from '../../redux/posts'
 
 class Post extends Component {
@@ -95,7 +96,7 @@ class Post extends Component {
           </div>
         </div>
 
-        <div>{comments.map(c => <div>{c.content}</div>)}</div>
+        <CommentList comments={comments} />
 
         {this.state.showCommentForm && (
           <CommentForm
