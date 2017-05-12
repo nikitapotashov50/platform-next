@@ -66,7 +66,6 @@ class CommentForm extends Component {
           </Link>
         </div>
         <input
-          autoFocus
           onChange={this.handleContentChange}
           className='leave-comment'
           type='text'

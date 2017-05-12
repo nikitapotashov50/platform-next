@@ -9,14 +9,15 @@ import classNames from 'classnames'
 import Menu from './Menu'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
-import CommentList from './CommentList'
+import CommentList from '../Comment/CommentList'
 import { deletePost } from '../../redux/posts'
+import { isEmpty } from 'lodash'
 
 class Post extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showCommentForm: false,
+      showCommentForm: !isEmpty(this.props.comments) || false,
       showPostMenu: false
     }
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
