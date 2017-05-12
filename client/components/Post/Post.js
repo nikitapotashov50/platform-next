@@ -12,6 +12,7 @@ import CommentForm from '../Comment/Form'
 import CommentList from '../Comment/CommentList'
 import { deletePost } from '../../redux/posts'
 import { isEmpty } from 'lodash'
+import TimeAgo from '../TimeAgo'
 
 class Post extends Component {
   constructor (props) {
@@ -35,7 +36,7 @@ class Post extends Component {
   }
 
   render () {
-    const { id, title, content, user, currentUser, added, comments = [] } = this.props
+    const { id, title, content, user, created_at, currentUser, added, comments = [] } = this.props
 
     return (
       <div className={classNames('post', { 'with-animation': added })}>
@@ -59,11 +60,19 @@ class Post extends Component {
             </div>
 
             <div>
-              <Link href={`/@${user.name}`}>
-                <a className='user-name'>{user.first_name} {user.last_name}</a>
-              </Link>
+              <div className='name-and-date'>
+                <Link href={`/@${user.name}`}>
+                  <a className='user-name'>{user.first_name} {user.last_name}</a>
+                </Link>
+                <div className='post-date'>
+                  {/* eslint-disable camelcase */}
+                  <TimeAgo date={created_at} />
+                  {/* eslint-enable camelcase */}
+                </div>
+              </div>
               <div className='user-occupation'>Монтаж охранно-пожарных систем, видеонаблюдения, контроля доступом, локальные сети, автоматизация, продажа оборудования, проектирование и техническое обслуживание систем безопасности.</div>
             </div>
+
           </div>
 
           <div className='post-menu'>
@@ -215,8 +224,19 @@ class Post extends Component {
             font-size: 14px;
           }
 
+          .post-date {
+            font-size: 12px;
+            color: #7d7d7d;
+            margin-left: 10px;
+          }
+
           input.leave-comment {
             border: none;
+          }
+
+          .name-and-date {
+            display: flex;
+            align-items: baseline;
           }
         `}</style>
       </div>

@@ -1,3 +1,5 @@
+import TimeAgo from '../TimeAgo'
+
 const Comment = ({ user, content, created_at }) => (
   <div className='comment-container'>
     <div className='comment-author-photo'>
@@ -16,7 +18,9 @@ const Comment = ({ user, content, created_at }) => (
       <div className='comment-footer'>
         <div>
           {/* eslint-disable camelcase */}
-          <div className='comment-date'>{created_at}</div>
+          <div className='comment-date'>
+            <TimeAgo date={created_at} />
+          </div>
           {/* eslint-enable camelcase */}
         </div>
       </div>

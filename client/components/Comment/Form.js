@@ -54,6 +54,8 @@ class CommentForm extends Component {
   render () {
     const { user } = this.props
 
+    if (!user) return null
+
     return (
       <div className='post-comment'>
         <div className='user-photo-container'>
