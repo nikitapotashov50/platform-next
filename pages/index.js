@@ -27,24 +27,11 @@ class IndexPage extends Component {
   render () {
     return (
       <FeedLayout>
-        {this.props.user && (
-          <div className='reply-form'>
-            <PostEditor />
-          </div>
-        )}
+        {this.props.user && <PostEditor />}
 
-        <br />
-
-        <Panel
-          noBody
-          noMargin
-          noBorder
-          menuStyles={{ noBorder: true }}
-          Menu={() => <PanelMenu items={menuItems} selected={'index'} />}
-        />
+        <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'index'} />} />
 
         <PostList posts={this.props.posts} />
-
       </FeedLayout>
     )
   }

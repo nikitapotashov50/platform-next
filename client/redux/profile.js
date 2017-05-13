@@ -3,22 +3,25 @@ import { handleActions, createAction } from 'redux-actions'
 
 // default state
 let defaultState = {
-  user: null
+  user: null,
+  groups: [],
+  subscriptions: []
 }
 
 // action creators
-export const getUserInfo = createAction('profile/GET_INFO', user => ({ user }))
+export const getUserInfo = createAction('profile/GET_INFO', ({ user, groups, subscriptions }) => ({ user, groups, subscriptions }))
 export const userNotFound = createAction('profile/NOT_FOUND')
 
 // reducer
 
 export default handleActions({
-  [getUserInfo]: (state, action) => ({
+  [getUserInfo]: (state, { payload }) => ({
     ...state,
-    user: action.payload.user
+    user: payload.user,
+    groups: payload.groups || [],
+    subscriptions: payload.subscriptions || []
   }),
   [userNotFound]: (state, action) => ({
-    ...state,
-    user: null
+    ...defaultState
   })
 }, defaultState)

@@ -1,33 +1,24 @@
-import axios from 'axios'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
 import { auth } from '../redux/auth'
-import { server } from '../../config'
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
 
-export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
+export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }) => {
   return withRedux(
     initStore,
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req) {
-          let { session, cookies } = ctx.req
-
+          let { session } = ctx.req
           if (session.user) ctx.store.dispatch(auth(session.user))
-          else {
-            let { data } = await axios.post('http://' + server.host + ':' + server.port + '/api/auth/restore', {
-              user: cookies.get('molodost_user'),
-              hash: cookies.get('molodost_hash')
-            })
-            if (data.isAuth && data.user) ctx.store.dispatch(auth(data.user))
-          }
         }
 
         let translations = await getTranslations('ru')
@@ -131,7 +122,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
 
                 .app {
                   &__content {
-                    padding-top: 75px;
+                    padding-top: 60px;
 
                     margin: 0 auto;
                     max-width: $container-width;
@@ -196,7 +187,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                   background-position: 0 0;
                   background-repeat: repeat;
                   background-size: cover;
-                  background-image: url('~assets/img/profile/default-bg.jpg');
+                  background-image: url('/static/img/profile/default-bg.jpg');
 
                   &__image {
                     border-radius: 3px;
@@ -234,7 +225,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     text-transform: none;
                     background-color: rgba(0,0,0,.4);
 
-                    &:hover { background-color: #196aff; }
+                    &:hover, &_active { background-color: #196aff; }
                   }
                 }
 
@@ -268,6 +259,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     border-bottom: 1px solid #ebebeb;
 
                     &_no-border { border-bottom: none }
+                    &_no-bottom-padding { padding-bottom: 0 }
                   }
 
                   &__sub-header {
@@ -463,6 +455,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     margin-right: 10px;
                     vertical-align: top;
                     display: inline-block;
+                    &_small { width: 40px; }
                   }
 
                   &__image {
@@ -796,8 +789,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                     height: 30px;
                     margin-right: 10px;
                     display: inline-block;
-
-                    background: #000;
                   }
                   &__link {
                     box-sizing: border-box;
@@ -1147,14 +1138,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps }) => {
                 }
 
                 .comment {
-                  padding-left: 60px;
+                  padding-left: 50px;
                   margin-bottom: 20px;
 
-                  &__header { margin-left: -60px; }
+                  &:last-of-type { margin-bottom: 0; }
+
+                  &__header { margin-left: -50px; }
                   &__body { margin-top: 5px; }
                   &__footer { margin-top: 5px; }
 
                   &__body {}
+                  
                 }
 
                 .share {

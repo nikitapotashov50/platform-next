@@ -84,9 +84,6 @@ class CommentForm extends Component {
 
         <style jsx>{`
           .post-comment {
-            border-top: 1px solid #efeff0;
-            margin-top: 15px;
-            padding-top: 15px;
             display: flex;
             font-size: 14px;
           }

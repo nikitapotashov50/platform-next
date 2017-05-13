@@ -91,6 +91,18 @@ module.exports = (sequelize, DataTypes) => {
 
           // У пользователя есть доход
           User.hasMany(models.Income, {foreignKey: 'user_id'})
+
+          // Пользователь может подписаться на многих пользователей
+          User.belongsToMany(User, { as: 'Subscriptions', foreignKey: 'user_id', through: 'user_subscribers' })
+
+          // Пользователь может быть подписчиком
+          User.belongsToMany(User, { as: 'Subscribers', foreignKey: 'subscribe_user_id', through: 'user_subscribers' })
+
+          // Пользователь может добавить других пользователей в черный список
+          User.belongsToMany(User, { as: 'BlackList', foreignKey: 'user_id', through: 'user_blacklists' })
+
+          // Пользователь может быть в чьем то черном списке
+          User.belongsToMany(User, { as: 'BlackListed', foreignKey: 'blocked_user_id', through: 'user_blacklists' })
         }
       }
     }

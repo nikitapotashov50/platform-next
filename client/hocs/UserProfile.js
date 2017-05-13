@@ -12,12 +12,9 @@ export default Next => {
     let state = ctx.store.getState()
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
-      let { data } = await new Promise(async (resolve, reject) => {
-        let res = await axios.get(`http://${server.host}:${server.port}/api/user/${query.username}`)
-        setTimeout(() => { resolve(res) }, 1000)
-      })
+      let { data } = await axios.get(`http://${server.host}:${server.port}/api/user/${query.username}`)
 
-      if (data.user) ctx.store.dispatch(getUserInfo(data.user))
+      if (data.user) ctx.store.dispatch(getUserInfo(data))
       else ctx.store.dispatch(userNotFound())
     }
 

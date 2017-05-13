@@ -9,8 +9,8 @@ const FeedLayout = ({ children }) => (
       </div>
 
       <div className='feed__right'>
-        <Panel>
-          asdas
+        <Panel Header={<div className='panel__title'>Боковая панель</div>}>
+          Здесь контент
         </Panel>
       </div>
     </div>

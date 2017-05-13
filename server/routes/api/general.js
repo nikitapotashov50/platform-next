@@ -14,11 +14,37 @@ module.exports = router => {
     let user = await models.User.findOne({
       where: {
         name: ctx.params.username
-      }
+      },
+      include: [
+        {
+          required: false,
+          as: 'Groups',
+          model: models.Group,
+          where: { is_blocked: 0 },
+          attributes: [ 'title', 'id' ],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          required: false,
+          as: 'Subscriptions',
+          model: models.User,
+          attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
+          through: {
+            attributes: []
+          }
+        }
+      ]
     })
 
+    let groups = user.get('Groups')
+    let subscriptions = user.get('Subscriptions')
+
     ctx.body = {
-      user
+      user,
+      groups,
+      subscriptions
     }
   })
 }
