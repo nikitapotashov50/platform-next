@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
