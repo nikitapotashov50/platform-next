@@ -37,6 +37,9 @@ client.prepare().then(() => {
     ctx.res.statusCode = 200
     ctx.req.session = ctx.session
     ctx.req.cookies = ctx.cookies
+    ctx.req._env = {
+      server: config.server
+    }
     await next()
   })
 

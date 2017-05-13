@@ -9,6 +9,7 @@ import CommentList from '../Comment/CommentList'
 import { deletePost } from '../../redux/posts'
 import { isEmpty } from 'lodash'
 import TimeAgo from '../TimeAgo'
+import PostSummary from './Summary'
 
 class Post extends Component {
   constructor (props) {
@@ -39,29 +40,39 @@ class Post extends Component {
     })
   }
 
-  render () {
-    const { showPostMenu } = this.state
-    const { id, title, content, user, currentUser, added, created_at, comments = [] } = this.props
+  getFooter () {
+    let { showCommentForm } = this.state
+    let { comments = [], id, currentUser } = this.props
 
-    const Footer = (
-      <div className='post-summary'>
-        <div className='post-summary__block_left'>
-          <a className='post-summary__info post-summary__info_icon post-summary__info_icon_like' data-prefix='Нравится:  ' href='#'>0</a>
-          <a className='post-summary__info post-summary__info_icon post-summary__info_icon_comment' onClick={this.handleCommentButtonClick}>Комментировать</a>
-        </div>
-        <div className='post-summary__block_right'>
-          <div className='post-summary__info' />
-        </div>
-        <CommentList comments={comments} />
+    const Footer = []
+
+    Footer.push(<PostSummary likes={0} onComment={this.handleCommentButtonClick} />)
+
+    if (comments.length) {
+      Footer.push(<CommentList comments={comments} />)
+    }
+
+    if (comments.length || showCommentForm) {
+      Footer.push(
         <CommentForm
           postId={id}
           user={currentUser}
           handleClickOutside={() => {
+            console.log('12312')
             this.setState({ showCommentForm: false })
           }}
         />
-      </div>
-    )
+      )
+    }
+
+    return Footer
+  }
+
+  render () {
+    const { showPostMenu } = this.state
+    const { title, content, user, added, created_at } = this.props
+
+    let Footer = this.getFooter()
 
     const Options = showPostMenu ? (
       <Menu
@@ -74,15 +85,9 @@ class Post extends Component {
 
     return (
       <Panel
-        Footer={() => Footer}
-        Header={(
-          <div>
-            <UserInline user={user} />
-            {/* eslint-disable camelcase */}
-            <TimeAgo date={created_at} />
-            {/* eslint-enable camelcase */}
-          </div>
-        )}
+        Footer={Footer}
+        Header={<UserInline user={user} date={created_at} />}
+        headerStyles={{ noBorder: true, npBottomPadding: true }}
         Options={() => Options}
         withAnimation={added}
         toggleOptions={() => {
@@ -93,17 +98,6 @@ class Post extends Component {
           <a className='post-preview__title' href='#'>{title}</a>
           <TextWithImages text={content} />
         </div>
-
-        {/* {this.state.showCommentForm && (
-          <CommentForm
-            postId={id}
-            user={currentUser}
-            handleClickOutside={() => {
-              this.setState({ showCommentForm: false })
-            }}
-          />
-        )} */}
-
       </Panel>
     )
   }

@@ -1,61 +1,24 @@
-import TimeAgo from '../TimeAgo'
+import UserInline from '../User/Inline'
 
-const Comment = ({ user, content, created_at }) => (
-  <div className='comment-container'>
-    <div className='comment-author-photo'>
-      <img style={{ width: '40px', borderRadius: '50%' }} src={user.picture_small} />
+const Comment = ({ user, content, ...props }) => (
+  <div className='comment'>
+    <div className='comment__header'>
+      <UserInline small user={user} date={props.created_at} />
+    </div>
+    {/* !collapsed */}
+    <div className='comment__body'>
+      {content}
     </div>
 
-    <div className='lol'>
-      <div className='comment-author-name'>
-        {user.first_name} {user.last_name}
-      </div>
-
-      <div className='comment-content'>
-        {content}
-      </div>
-
-      <div className='comment-footer'>
-        <div>
-          {/* eslint-disable camelcase */}
-          <div className='comment-date'>
-            <TimeAgo date={created_at} />
-          </div>
-          {/* eslint-enable camelcase */}
+    <div className='comment__footer'>
+      <div className='post-summary'>
+        <div className='post-summary__block_left'>
+          <a className='post-summary__info post-summary__info_icon post-summary__info_icon_like' data-prefix='Нравится: '>1</a>
+          <a className='post-summary__info post-summary__info_icon post-summary__info_icon_comment'>2</a>
         </div>
+        <div className='post-summary__block_right' />
       </div>
     </div>
-
-    <style jsx>{`
-      .comment-container {
-        padding: 5px;
-        border-top: 1px solid #efeff0;
-        display: flex;
-      }
-
-      .comment-author-photo {
-        margin-right: 10px;
-      }
-
-      .lol {
-        flex-grow: 1;
-      }
-
-      .comment-author-name {
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .comment-footer {
-        margin-top: 10px;
-        display: flex;
-        font-size: 12px;
-      }
-
-      .comment-date {
-        color: #9da5ab;
-      }
-    `}</style>
   </div>
 )
 

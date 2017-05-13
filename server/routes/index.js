@@ -7,13 +7,18 @@ const clientRoutes = require('./client')
 let Router = bridge(koaRouter)
 let router = new Router()
 
-let initClientRoutes = async (ctx, next) => {
+const initClientRoutes = async (ctx, next) => {
   if (ctx.params && ctx.params[0]) delete ctx.params[0]
   await next()
   ctx.respond = false
 }
 
-router.bridge('/api', apiRoutes)
+const initApiRoutes = async (ctx, next) => {
+  if (!ctx.__) ctx.__ = {}
+  await next()
+}
+
+router.bridge('/api', [ initApiRoutes ], apiRoutes)
 router.bridge('*', [ initClientRoutes ], clientRoutes)
 
 module.exports = router

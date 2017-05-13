@@ -1,31 +1,57 @@
+import axios from 'axios'
+import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+
+import { server } from '../../config'
 import Page from '../../client/hocs/Page'
 import UserProfile from '../../client/hocs/UserProfile'
 
 import UserLayout from '../../client/layouts/user'
-import PostPreview from '../../client/components/Post/Short'
+import PostList from '../../client/components/Post/PostList'
+import PostEditor from '../../client/components/PostEditor/index'
 import ReplyForm from '../../client/components/ReplyForm'
 
-const UserPage = ({ user, ...props }) => (
-  <UserLayout user={user}>
-    <div className='user-blog'>
+import { loadPosts } from '../../client/redux/posts'
 
-      <ReplyForm />
 
-      <div className='user-blog__content'>
+class UserPage extends Component {
+  static async getInitialProps ({ store }) {
+    const baseURL = `http://${server.host}:${server.port}`
+    const { data } = await axios.get(`${baseURL}/api/post`)
+    store.dispatch(loadPosts(data))
+  }
 
-        <PostPreview />
+  render () {
+    const { posts, isMe } = this.props
 
-      </div>
+    return (
+      <UserLayout>
+        <div className='user-blog'>
 
-    </div>
-  </UserLayout>
-)
+          {/*<ReplyForm />*/}
+          { isMe && <PostEditor />}
 
-let mapStateToProps = state => ({
-  user: state.profile.user
+          <div className='user-blog__content'>
+            <PostList posts={posts} />
+          </div>
+
+        </div>
+      </UserLayout>
+    )
+  }
+}
+
+let mapStateToProps = ({ posts, auth, profile }) => ({
+  posts: posts.posts,
+  isMe: auth.user && profile.user && (auth.user.id === profile.user.id)
 })
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  loadPosts
+}, dispatch)
 
 export default Page(UserProfile(UserPage), {
   title: 'Профиль',
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 })

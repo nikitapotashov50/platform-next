@@ -5,5 +5,6 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 const formatter = buildFormatter(ruStrings)
 
 export default (props) => (
-  <TimeAgo formatter={formatter} live {...props} />
+  <div>132</div>
+  // <TimeAgo formatter={formatter} live {...props} />
 )

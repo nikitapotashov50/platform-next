@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const formatMoney = money => money
 
-export default ({ money, occupation = 'Огонь свет', subscribeButtons = false, date, user }) => {
+export default ({ money, occupation = 'Огонь свет', subscribeButtons = false, date, user, small }) => {
   let bodyClasses = [ 'user-inline__body' ]
 
   if (subscribeButtons) bodyClasses.push('user-inline__body_width_thin')
@@ -13,8 +13,8 @@ export default ({ money, occupation = 'Огонь свет', subscribeButtons = 
     <div className='user-inline'>
       { user && (
         <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
-          <a className='user-inline__image-link'>
-            <Img src={[ user.picture_small, '/static/img/user.png' ]} className='user-inline__image' alt={`${user.first_name} ${user.last_name}`} />
+          <a className={[ 'user-inline__image-link', small ? 'user-inline__image-link_small' : '' ].join(' ')}>
+            <Img src={[ user.picture_small, '/static/img/user.png' ]} className={[ 'user-inline__image', small ? 'user-inline__image_small' : '' ].join(' ')} alt={`${user.first_name} ${user.last_name}`} />
           </a>
         </Link>
       ) }

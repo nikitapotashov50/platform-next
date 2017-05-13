@@ -1,3 +1,4 @@
+import { isArray } from 'lodash'
 import EllipsisIcon from 'react-icons/lib/fa/ellipsis-h'
 
 import PanelMenu from './Menu'
@@ -21,15 +22,11 @@ export default props => {
   let { Footer } = props
   let { Options, toggleOptions } = props
 
+  let footerArray = null
+  if (Footer) footerArray = isArray(Footer) ? Footer : [ Footer ]
+
   return (
     <div className={containerClasses.join(' ')}>
-
-      { Options && (
-        <div className='panel__options'>
-          <EllipsisIcon color='#DADEE1' onClick={toggleOptions} />
-          <Options />
-        </div>
-      )}
 
       { Options && (
         <div className='panel__options'>
@@ -62,11 +59,11 @@ export default props => {
         </PanelBody>
       )}
 
-      { Footer && (
-        <div className='panel__footer'>
-          <Footer />
+      { (footerArray && footerArray.length) && footerArray.map((el, i) => (
+        <div className='panel__footer' key={'panel-footer-' + i}>
+          {el}
         </div>
-      )}
+      ))}
     </div>
   )
 }
