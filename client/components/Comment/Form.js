@@ -52,7 +52,7 @@ class CommentForm extends Component {
   }
 
   render () {
-    const { user } = this.props
+    const { user, expanded, toggleExpand } = this.props
 
     if (!user) return null
 
@@ -101,7 +101,24 @@ const mapDispatchToProps = dispatch => ({
   addComment: comment => dispatch(addComment(comment))
 })
 
+const mergeProps = (state, dispatch, props) => {
+  let expanded = false
+
+  const toggleExpand = () => {
+    console.log('123')
+    expanded = 'asdasdasdasdas'
+  }
+
+  return {
+    ...dispatch,
+    ...props,
+    expanded,
+    toggleExpand
+  }
+}
+
 export default connect(
   null,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(CommentForm)

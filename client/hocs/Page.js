@@ -18,17 +18,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req) {
-          let { server } = ctx.req._env
-          let { session, cookies } = ctx.req
-
+          let { session } = ctx.req
           if (session.user) ctx.store.dispatch(auth(session.user))
-          else {
-            let { data } = await axios.post('http://' + server.host + ':' + server.port + '/api/auth/restore', {
-              user: cookies.get('molodost_user'),
-              hash: cookies.get('molodost_hash')
-            })
-            if (data.isAuth && data.user) ctx.store.dispatch(auth(data.user))
-          }
         }
 
         let translations = await getTranslations('ru')

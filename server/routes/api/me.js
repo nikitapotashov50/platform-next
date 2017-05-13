@@ -23,7 +23,7 @@ module.exports = router => {
   router.bridge('/interact', [ initInteractions ], router => {
     router.bridge('/subscribe', router => {
       router.post('/', async ctx => {
-        await ctx.__.me.setSubscriptions([ ctx.__.target ])
+        await ctx.__.me.addSubscriptions([ ctx.__.target ])
         ctx.body = { status: 200 }
       })
       router.put('/', async ctx => {
@@ -34,7 +34,7 @@ module.exports = router => {
 
     router.bridge('/block', router => {
       router.post('/', async ctx => {
-        await ctx.__.me.setBlackList([ ctx.__.target ])
+        await ctx.__.me.addBlackList([ ctx.__.target ])
         ctx.body = { status: 200 }
       })
       router.put('/', async ctx => {

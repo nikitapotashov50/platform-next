@@ -58,7 +58,6 @@ class Post extends Component {
           postId={id}
           user={currentUser}
           handleClickOutside={() => {
-            console.log('12312')
             this.setState({ showCommentForm: false })
           }}
         />

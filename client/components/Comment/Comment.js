@@ -5,7 +5,7 @@ const Comment = ({ user, content, ...props }) => (
     <div className='comment__header'>
       <UserInline small user={user} date={props.created_at} />
     </div>
-    {/* !collapsed */}
+
     <div className='comment__body'>
       {content}
     </div>
@@ -14,7 +14,6 @@ const Comment = ({ user, content, ...props }) => (
       <div className='post-summary'>
         <div className='post-summary__block_left'>
           <a className='post-summary__info post-summary__info_icon post-summary__info_icon_like' data-prefix='Нравится: '>1</a>
-          <a className='post-summary__info post-summary__info_icon post-summary__info_icon_comment'>2</a>
         </div>
         <div className='post-summary__block_right' />
       </div>

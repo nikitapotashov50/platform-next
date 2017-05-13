@@ -21,8 +21,8 @@ const userResponse = user => ({
 
 module.exports = router => {
   router.post('/restore', async ctx => {
-    let { user } = ctx.request.body
-    user = unescape(user)
+    let user = ctx.cookies.get('molodost_user')
+    console.log(user)
     // hash = unescape(hash)
 
     // let isAuth = false
@@ -53,6 +53,7 @@ module.exports = router => {
   })
 
   router.post('/login', async (ctx, next) => {
+    console.log(ctx.request)
     let isAuth = false
     let { email, password } = ctx.request.body
 
