@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 
-import Form from './Form'
+// import Form from './Form'
 import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
@@ -97,7 +97,8 @@ class PostEditor extends Component {
       </div>
     )
 
-    /*return (
+    /*
+    return (
       <Form
         title={this.state.title}
         handleTitleChange={this.handleTitleChange}
@@ -106,7 +107,8 @@ class PostEditor extends Component {
         handleClickOutside={this.handleClickOutside}
         createPost={this.createPost}
       />
-    )*/
+    )
+    */
   }
 }
 

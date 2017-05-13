@@ -9,10 +9,9 @@ import UserProfile from '../../client/hocs/UserProfile'
 import UserLayout from '../../client/layouts/user'
 import PostList from '../../client/components/Post/PostList'
 import PostEditor from '../../client/components/PostEditor/index'
-import ReplyForm from '../../client/components/ReplyForm'
+// import ReplyForm from '../../client/components/ReplyForm'
 
 import { loadPosts } from '../../client/redux/posts'
-
 
 class UserPage extends Component {
   static async getInitialProps ({ store }) {
@@ -28,7 +27,6 @@ class UserPage extends Component {
       <UserLayout>
         <div className='user-blog'>
 
-          {/*<ReplyForm />*/}
           { isMe && <PostEditor />}
 
           <div className='user-blog__content'>

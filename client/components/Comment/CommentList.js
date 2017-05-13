@@ -26,7 +26,7 @@ class CommentList extends Component {
 
     return (
       <div className=''>
-        {/*{this.state.showAllButton && <button
+        {/* {this.state.showAllButton && <button
           className='show-more-comments'
           onClick={() => {
             this.setState({
@@ -34,7 +34,7 @@ class CommentList extends Component {
             })
           }}>
           Показать {this.state.all ? 'меньше' : 'больше'}
-        </button>}*/}
+        </button>} */}
         {comments.map(comment => (
           <Comment key={comment.id} {...comment} />
         ))}

@@ -1,4 +1,4 @@
-const { models, orm } = require('../../models')
+const { models } = require('../../models')
 
 const initInteractions = async (ctx, next) => {
   let { id } = ctx.request.body
@@ -31,7 +31,7 @@ module.exports = router => {
         ctx.body = { status: 200 }
       })
     })
-    
+
     router.bridge('/block', router => {
       router.post('/', async ctx => {
         await ctx.__.me.setBlackList([ ctx.__.target ])

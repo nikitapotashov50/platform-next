@@ -8,7 +8,7 @@ import CommentForm from '../Comment/Form'
 import CommentList from '../Comment/CommentList'
 import { deletePost } from '../../redux/posts'
 import { isEmpty } from 'lodash'
-import TimeAgo from '../TimeAgo'
+// import TimeAgo from '../TimeAgo'
 import PostSummary from './Summary'
 
 class Post extends Component {
@@ -70,7 +70,7 @@ class Post extends Component {
 
   render () {
     const { showPostMenu } = this.state
-    const { title, content, user, added, created_at } = this.props
+    const { title, content, user, added } = this.props
 
     let Footer = this.getFooter()
 
@@ -86,7 +86,7 @@ class Post extends Component {
     return (
       <Panel
         Footer={Footer}
-        Header={<UserInline user={user} date={created_at} />}
+        Header={<UserInline user={user} date={this.props.created_at} />}
         headerStyles={{ noBorder: true, npBottomPadding: true }}
         Options={() => Options}
         withAnimation={added}

@@ -79,7 +79,7 @@ const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, is
             )}
 
             {/* Ищу могу */}
-            {/*<Panel bodyStyles={panelBodyStyles} />*/}
+            {/* <Panel bodyStyles={panelBodyStyles} /> */}
           </div>
 
           <div className='user-page__content-block user-page__content-block_body'>
