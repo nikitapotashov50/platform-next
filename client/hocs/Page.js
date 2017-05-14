@@ -449,6 +449,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                   display: inline-block;
 
                   &_small { width: 40px; }
+                  &_smallest { width: 30px; }
 
                   &__image-link {
                     width: 50px;
@@ -456,6 +457,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     vertical-align: top;
                     display: inline-block;
                     &_small { width: 40px; }
+                    &_smallest { width: 30px; }
                   }
 
                   &__image {
@@ -467,6 +469,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     &_small {
                       width: 40px;
                       height: 40px;
+                    }
+                    &_smallest {
+                      width: 30px;
+                      height: 30px;
                     }
                   }
 

@@ -57,6 +57,7 @@ class Post extends Component {
         <CommentForm
           postId={id}
           user={currentUser}
+          expanded={showCommentForm}
           handleClickOutside={() => {
             this.setState({ showCommentForm: false })
           }}
