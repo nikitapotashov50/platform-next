@@ -1,6 +1,4 @@
 import axios from 'axios'
-import Link from 'next/link'
-import Img from 'react-image'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
@@ -66,14 +64,12 @@ class CommentForm extends Component {
 
   handleClickOutside () {
     if (this.state.content) return
-    
+
     this.setState(state => {
       state.content = ''
       state.expanded = false
     })
   }
-
-  inputRef
 
   render () {
     const { user } = this.props
@@ -87,7 +83,7 @@ class CommentForm extends Component {
           <UserImage user={user} smallest />
         </div>
         <div className='post-comment__block post-comment__block_body'>
-          <textarea className={[ 'post-comment__input', !expanded ? 'post-comment__input_collapsed' : ''].join(' ')}
+          <textarea className={[ 'post-comment__input', !expanded ? 'post-comment__input_collapsed' : '' ].join(' ')}
             value={content}
             ref={ref => { this.inputRef = ref }}
             rows={expanded ? 3 : 1}
@@ -141,6 +137,8 @@ class CommentForm extends Component {
     )
   }
 }
+
+CommentForm.inputRef = null
 
 let wrappedComponent = clickOutside(CommentForm)
 
