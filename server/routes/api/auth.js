@@ -1,3 +1,4 @@
+const { pick } = require('lodash')
 const { models } = require('../../models')
 
 const { getBMAccessToken, getMyInfo } = require('../../controllers/authController')
@@ -11,55 +12,15 @@ const getUser = async email => {
   return dbUser
 }
 
-const userResponse = user => ({
-  id: user.id,
-  name: user.name,
-  lastName: user.last_name,
-  firstName: user.first_name,
-  picture: user.picture_small
-})
+const userResponse = user => pick(user, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ])
 
 module.exports = router => {
-  router.post('/restore', async ctx => {
-    let user = ctx.cookies.get('molodost_user')
-    console.log(user)
-    // hash = unescape(hash)
-
-    // let isAuth = false
-
-    // if (user && hash) isAuth = await isUserAuthOnBM(user, hash, ctx.request.header['user-agent'])
-    // if (user && hash) isAuth = true
-
-    let dbUser = await getUser(user)
-
-    let sessionData = null
-
-    if (dbUser) {
-      sessionData = userResponse(dbUser)
-      ctx.session.user = sessionData
-    } else {
-      // let bmInfo = await getMyInfo()
-      // console.log(bmInfo)
-    }
-
-    ctx.body = {
-      user: sessionData
-    }
-  })
-
-  router.post('/logout', async ctx => {
-    delete ctx.session.user
-    ctx.body = {}
-  })
-
   router.post('/login', async (ctx, next) => {
-    console.log(ctx.request)
     let isAuth = false
     let { email, password } = ctx.request.body
 
     try {
       let BMAccess = await getBMAccessToken(email, password)
-      //
       if (!BMAccess.access_token && !isAuth) throw new Error('No user account found on molodost.bz')
 
       // Проверяем наличие юзера у нас в базе данных

@@ -13,6 +13,7 @@ class CommentList extends Component {
 
   render () {
     let comments = []
+    let { all } = this.state
 
     if (isEmpty(this.props.comments)) {
       return null
@@ -26,35 +27,35 @@ class CommentList extends Component {
 
     return (
       <div className=''>
-        {/* {this.state.showAllButton && <button
+        {this.state.showAllButton && <button
           className='show-more-comments'
           onClick={() => {
-            this.setState({
-              all: !this.state.all
-            })
+            this.setState({ all: !all })
           }}>
-          Показать {this.state.all ? 'меньше' : 'больше'}
-        </button>} */}
+          {all ? 'Скрыть коммантерии' : 'Показать больше'}
+        </button>}
+
         {comments.map(comment => (
           <Comment key={comment.id} {...comment} />
         ))}
 
         <style jsx>{`
           .show-more-comments {
-            height: 50px;
+            transition: background .25s;
+
             width: 100%;
-            background: #ccc;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 10px;
+
             cursor: pointer;
-            transition: background 0.2s ease;
+            font-size: 12px;
+            text-align: center;
+            background: color(#efeff0 a(-10%));
           }
 
           .show-more-comments:hover {
-            background: #666;
+            background: color(#efeff0 a(-15%));
           }
         `}</style>
       </div>
