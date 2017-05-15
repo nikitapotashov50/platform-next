@@ -21,6 +21,12 @@ class CommentForm extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
+  componentDidMount () {
+    if (this.props.expanded && this.inputRef) {
+      // this.inputRef.focus()
+    }
+  }
+
   handleContentChange (e) {
     this.setState({
       content: e.target.value
