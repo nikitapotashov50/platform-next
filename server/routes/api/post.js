@@ -22,7 +22,7 @@ let initPostRoutes = async (ctx, next) => {
       status: 404,
       message: e.message
     }
-  }  
+  }
 }
 
 module.exports = router => {
@@ -105,7 +105,7 @@ module.exports = router => {
       ctx.__.post.destroy()
       ctx.statusCode = 200
     })
-  })  
+  })
 
   // список комментариев поста
   router.get('/:id/comments', async ctx => {

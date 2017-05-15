@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
-import NpsRightMenu from '../../client/components/NPS/RightMenu'
+// import NpsRightMenu from '../../client/components/NPS/RightMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
@@ -91,7 +91,7 @@ class FeedbackResults extends Component {
     let { type, page = 1 } = this.props.url.query
 
     let { fetching } = this.state
-    let { items, limit, count, cities } = this.props.nps
+    let { items, limit, count } = this.props.nps
 
     let SubHeader = (<div className='' />)
 
