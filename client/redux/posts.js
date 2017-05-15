@@ -28,10 +28,13 @@ export default handleActions({
     ...state,
     posts: action.payload
   }),
-  [addPost]: (state, action) => ({
-    ...state,
-    posts: [action.payload, ...state.posts]
-  }),
+  [addPost]: (state, action) => {
+    const post = { ...action.payload, comments: [], likes: [] }
+    return {
+      ...state,
+      posts: [post, ...state.posts]
+    }
+  },
   [loadMore]: (state, action) => ({
     ...state,
     posts: [...state.posts, ...action.payload]

@@ -23,7 +23,7 @@ class CommentForm extends Component {
 
   componentDidMount () {
     if (this.props.expanded && this.inputRef) {
-      this.inputRef.focus()
+      // this.inputRef.focus()
     }
   }
 
