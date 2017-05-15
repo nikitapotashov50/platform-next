@@ -62,9 +62,11 @@ const UserLayout = ({ user, groups, showButtons, subscribers, subscriptions, isS
             </Panel>
 
             {/* Цель */}
-            <Panel bodyStyles={{ noPadding: true }} Header={<div className='user-side-panel'>
+            <Panel bodyStyles={{ noPadding: true }} Header={(
+              <div className='user-side-panel'>
                 <div className='user-side-panel__title'> Цель</div>
-              </div>}>              
+              </div>
+            )}>
               <div className='profile-goal'>
                 <div className='profile-goal__progress' style={{ width: progress + '%' }} />
                 <div className='profile-goal__block profile-goal__block_a'>{numeral(goal.a).format('0,0')} ₽</div>

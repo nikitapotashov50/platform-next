@@ -1,8 +1,6 @@
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import ErrorLayout from '../layouts/error'
-import { restrictAccess, allowAccess } from '../redux/error'
 
 export default rule => Next => {
   class AccessHoc extends Component {
@@ -20,7 +18,7 @@ export default rule => Next => {
       let { accessResult } = this.props
 
       if (!accessResult) {
-        return <ErrorLayout code={access.error} message={access.message} />
+        return <ErrorLayout code={403} message={'Доступ запрещен'} />
       }
 
       return <Next {...this.props} />
