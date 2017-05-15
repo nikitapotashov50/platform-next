@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
-import NpsRightMenu from '../../client/components/NPS/RightMenu'
+// import NpsRightMenu from '../../client/components/NPS/RightMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
@@ -78,11 +78,20 @@ class FeedbackResults extends Component {
     }
   }
 
+  drawCities (items) {
+    return items.map(el => ({
+      path: '/',
+      code: el.city_id,
+      title: (el.name || 'Город не указан') + ' (' + el.count + ')',
+      onClick: this.onNavigate('city')
+    }))
+  }
+
   render () {
     let { type, page = 1 } = this.props.url.query
 
     let { fetching } = this.state
-    let { items, limit, count, cities } = this.props.nps
+    let { items, limit, count } = this.props.nps
 
     let SubHeader = (<div className='' />)
 
@@ -110,7 +119,7 @@ class FeedbackResults extends Component {
 
           <div className='feed__right'>
             <Panel Header={<div className='panel__title'>Города</div>}>
-              <NpsRightMenu items={this.drawCities(cities)} />
+              {/* <NpsRightMenu items={this.drawCities(cities)} /> */}
             </Panel>
           </div>
         </div>
@@ -118,13 +127,6 @@ class FeedbackResults extends Component {
     )
   }
 }
-
-FeedbackResults.drawCities = items => items.map(el => ({
-  path: '/',
-  code: el.city_id,
-  title: (el.name || 'Город не указан') + ' (' + el.count + ')',
-  onClick: this.onNavigate('city')
-}))
 
 const mapStateToProps = ({ nps }) => ({ nps })
 const mapDispatchToProps = dispatch => bindActionCreators({
