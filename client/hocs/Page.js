@@ -1,3 +1,5 @@
+import moment from 'moment'
+import numeral from 'numeral'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
@@ -6,6 +8,10 @@ import { I18nextProvider } from 'react-i18next'
 import { auth } from '../redux/auth'
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
+
+moment.locale('ru')
+numeral.language('ru', { delimiters: { thousands: ' ', decimal: '.' } })
+numeral.language('ru')
 
 export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }) => {
   return withRedux(
@@ -50,28 +56,31 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
               <style jsx global>{`
                 @reset-global pc;
 
+
                 @font-face {
-                  font-family: museo_sans_cyrl;
-                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format("woff2"),
-                      url('/static/fonts/museosanscyrl_500-webfont.woff') format("woff"),
-                      url('/static/fonts/museosanscyrl_500-webfont.ttf') format("truetype"),
-                      url('/static/fonts/museosanscyrl_500-webfont.svg#museo_sans_cyrl500') format("svg");
-                  font-weight:500;
-                  font-style:normal;
+                  font-family: 'museo_sans_cyrl';
+                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format('woff2'),
+                       url('/static/fonts/museosanscyrl_500-webfont.woff') format('woff'),
+                       url('/static/fonts/museosanscyrl_500-webfont.ttf') format('truetype'),
+                       url('/static/fonts/museosanscyrl_500-webfont.svg#museo_sans_cyrl500') format('svg');
+                  font-weight: 500;
+                  font-style: normal;
+
                 }
 
                 @font-face {
-                  font-family: museo_sans_cyrl;
-                  src: url('/static/fonts/museosanscyrl_700-webfont.woff2') format("woff2"),
-                      url('/static/fonts/museosanscyrl_700-webfont.woff') format("woff"),
-                      url('/static/fonts/museosanscyrl_700-webfont.ttf') format("truetype"),
-                      url('/static/fonts/museosanscyrl_700-webfont.svg#museo_sans_cyrl700') format("svg");
-                  font-weight:700;
-                  font-style:normal;
+                    font-family: 'museo_sans_cyrl';
+                    src: url('/static/fonts/museosanscyrl_700-webfont.woff2') format('woff2'),
+                         url('/static/fonts/museosanscyrl_700-webfont.woff') format('woff'),
+                         url('/static/fonts/museosanscyrl_700-webfont.ttf') format('truetype'),
+                         url('/static/fonts/museosanscyrl_700-webfont.svg#museo_sans_cyrl700') format('svg');
+                    font-weight: 700;
+                    font-style: normal;
+
                 }
 
                 @define-placeholder museo {
-                  font-family: museo_sans_cyrl, Helvetica, Arial, sans-serif;
+                  font-family: 'museo_sans_cyrl', Helvetica, Arial, sans-serif;
                 }
 
                 /* width */
@@ -82,12 +91,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                 html {
                   font-size: 14px;
+                   -webkit-font-smoothing: antialiased;
                 }
 
                 body {
                   color: #1f1f1f;
                   background: #edeeee;
                   @extend museo;
+                  -webkit-font-smoothing: antialiased;
+                
                 }
 
                 img {
@@ -775,8 +787,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                 .user-side-panel {
                   &__title {
-                    margin-bottom: 5px;
-
+                    line-height: 14px;
+                    display: inline-block;
                     color: #0c0c0c;
                     font-size: 10px;
                     font-weight: 700;
@@ -864,8 +876,21 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                 }
 
                 .profile-goal {
-                  box-shadow: inset 0 1px 0 0 rgba(0,0,0,.14);
+                  position: relative;
+                  // box-shadow: inset 0 1px 0 0 rgba(0,0,0,.14);
+                  border-top: #ebebeb;
+                  
+                  &__progress {
+                    positin: absolute;
+
+                    height: 2px;
+                    display: block;
+                    background-color: rgb(35, 116, 255);
+                  }
+
                   &__block {
+                    box-sizing: border-box;
+
                     width: 50%;
                     vertical-align: top;
                     display: inline-block;
@@ -1062,6 +1087,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     height: 59px !important;
                     line-height: 59px !important;
 
+                    display: block;
                     color: #0c0c0c;
                     font-size: 12px;
                     font-weight: 700;
@@ -1071,9 +1097,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                 }
 
                 .post-full {
+                  box-sizing: border-box;
+
                   padding: 20px;
                   margin: 0 auto;
-                  max-width: 50rem;
+                  max-width: 800px;
+                  /* max-width: 50rem; */
 
                   background: #fff;
                   border-bottom: 1px solid #e6e6e6;
@@ -1118,8 +1147,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                 }
 
                 .comments {
+                  box-sizing: border-box;
                   margin: 0 auto;
-                  max-width: 50rem;
+                  /* max-width: 50rem; */
+                  max-width: 800px;
                   padding: 15px 32px 30px 20px;
 
                   background: #fff;
@@ -1273,6 +1304,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     padding: 35px 15px 0;
 
                     background-color: #fefefe;
+
+                    &:focus {
+                      outline: none;
+                    }
                   }
 
                   &__top {

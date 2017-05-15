@@ -32,7 +32,7 @@ class IndexPage extends Component {
 
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'index'} />} />
 
-        <PostList posts={this.props.posts} />
+        <PostList posts={this.props.posts} pathname={this.props.url.pathname} />
       </FeedLayout>
     )
   }

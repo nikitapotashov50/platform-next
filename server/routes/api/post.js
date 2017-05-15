@@ -1,5 +1,30 @@
 const { models } = require('../../models')
 
+let initPostRoutes = async (ctx, next) => {
+  try {
+    let post = await models.Post.findOne({
+      where: { id: ctx.params.id },
+      include: [
+        {
+          model: models.User,
+          attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+          as: 'user'
+        }
+      ]
+    })
+
+    if (!post) throw new Error('Post entry is not exists')
+    ctx.__.post = post
+
+    await next()
+  } catch (e) {
+    ctx.body = {
+      status: 404,
+      message: e.message
+    }
+  }
+}
+
 module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
@@ -52,19 +77,34 @@ module.exports = router => {
     ctx.body = data
   })
 
-  // удаление поста
-  router.delete('/:id', async ctx => {
-    const post = await models.Post.findOne({
-      where: {
-        id: ctx.params.id
+  router.bridge('/:id', [ initPostRoutes ], router => {
+    // получени информации о посте
+    router.get('/', async ctx => {
+      const comments = await models.Comment.findAll({
+        where: {
+          is_blocked: 0,
+          post_id: ctx.__.post.get('id')
+        },
+        include: [
+          {
+            model: models.User,
+            attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+            as: 'user'
+          }
+        ]
+      })
+
+      ctx.body = {
+        post: ctx.__.post,
+        comments
       }
     })
 
-    if (post) {
-      await post.destroy()
-    }
-
-    ctx.statusCode = 200
+    // удаление поста
+    router.delete('/', async ctx => {
+      ctx.__.post.destroy()
+      ctx.statusCode = 200
+    })
   })
 
   // список комментариев поста

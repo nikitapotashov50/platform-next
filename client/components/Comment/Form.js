@@ -13,7 +13,7 @@ class CommentForm extends Component {
     super(props)
     this.state = {
       content: '',
-      expanded: props.expanded
+      expanded: false
     }
     this.handleContentChange = this.handleContentChange.bind(this)
     this.createComment = this.createComment.bind(this)
