@@ -34,6 +34,7 @@ export default ({ isLogged, onLike, onComment, withShare, likes = 0 }) => {
 
       <style jsx>{`
         .post-summary__block_left {
+          float: none;
           display: flex;
           align-items: center;
         }

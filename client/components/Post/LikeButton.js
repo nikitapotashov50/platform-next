@@ -17,6 +17,7 @@ export default ({ count, handleClick }) => (
         font-size: 12px;
         font-weight: 500;
         user-select: none;
+        margin-right: 10px;
       }
 
       .like-button:hover {
