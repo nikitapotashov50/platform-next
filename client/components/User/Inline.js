@@ -1,8 +1,9 @@
 import Img from 'react-image'
 import Link from 'next/link'
 import moment from 'moment'
+import numeral from 'numeral'
 
-const formatMoney = money => money
+const formatMoney = money => numeral(money).format('0,0')
 
 export default ({ money, occupation = 'Огонь свет', subscribeButtons = false, date, user, small }) => {
   let bodyClasses = [ 'user-inline__body' ]

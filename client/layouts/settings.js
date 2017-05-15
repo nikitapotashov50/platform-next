@@ -20,7 +20,7 @@ const SettingsLayout = ({ children, tab, t, ...props }) => {
         <div className='user-page__content'>
           <div className='user-page__content-block user-page__content-block_side'>
 
-            <Panel Header={<div className='panel__title'>{t('settings.title')}</div>}>
+            <Panel Header={<div className='panel__title'>{t('account.settings.title')}</div>}>
               <ul className='side-links'>
                 { tabs.map(el => (
                   <li className={[ 'side-links__item' ]} key={'settings-tab-' + el.title}>

@@ -10,6 +10,24 @@ module.exports = router => {
 
   router.get('/version', services.general.getAPIVersionService)
 
+  router.get('/ratings', async ctx => {})
+
+  router.get('/admin/programs/list', async ctx => {
+    try {
+      let programsRaw = await models.Program.findAll()
+
+      ctx.body = {
+        programs: programsRaw
+      }
+    } catch (e) {
+      console.log(e.message)
+      ctx.body = {
+        status: 500,
+        message: e.message
+      }
+    }
+  })
+
   router.get('/user/:username', async ctx => {
     let user = await models.User.findOne({
       where: {

@@ -1,8 +1,58 @@
 {
-  "settings": {
-    "title": "Настройки профиля",
-    "main": {
-      "title": "Основные настройки"
+  "account": {
+    "settings": {
+      "title": "Настройки аккаунта",
+      "tab": {
+        "main": {
+          "title": "Основная информация",
+          "field": {
+            "last_name": "Фамилия",
+            "first_name": "Имя",
+            "city": "Город",
+            "birthday": "Дата рождения"
+          }
+        },
+        "contacts": {
+          "title": "Контактные данные",
+          "field": {
+            "vk": "ВКонтакте",
+            "facebook": "Facebook",
+            "instagram": "Instargam",
+            "phone": "Контактный телефон",
+            "website": "Сайт"
+          }
+        },
+        "goal": {
+          "title": "Цель",
+          "fields": {
+            "a": "Точка А",
+            "b": "Точка Б",
+            "occupation": "Ниша",
+            "category": "Категория бизнеса",
+            "date": "Дата постановки точки Б"
+          }
+        },
+        "about": {
+          "title": "О себе",
+          "fields": {
+            "hobbi": "Хобби",
+            "about": "Рассказ о себе"
+          }
+        },
+        "avatar": {
+          "title": "Аватар и фон",
+          "fields": {
+            "avatar": "Картинка профиля",
+            "background": "Картинка фона"
+          }
+        },
+        "other": {
+          "title": "Настройки платформы",
+          "fields": {
+            "lang": "Язык"
+          }
+        }
+      }
     }
   },
   "common": {
