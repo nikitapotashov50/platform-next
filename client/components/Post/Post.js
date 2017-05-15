@@ -1,6 +1,6 @@
+import React, { Component } from 'react'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
 
 import Menu from './Menu'
 import Panel from '../Panel'
@@ -9,7 +9,7 @@ import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
 import CommentList from '../Comment/CommentList'
-import { deletePost } from '../../redux/posts'
+import { deletePost, addLike } from '../../redux/posts'
 
 class Post extends Component {
   constructor (props) {
@@ -22,6 +22,7 @@ class Post extends Component {
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
+    this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
@@ -31,7 +32,12 @@ class Post extends Component {
   }
 
   handleDeleteButtonClick () {
-    this.props.deletePost(this.props.id)
+    console.log('click delete')
+    // this.props.deletePost(this.props.id)
+  }
+
+  handleLikeButtonClick () {
+    this.props.addLike(this.props.id)
   }
 
   handleOptionButtonClick () {
@@ -42,11 +48,17 @@ class Post extends Component {
 
   getFooter () {
     let { showCommentForm } = this.state
-    let { comments = [], id, currentUser, isLogged } = this.props
+    let { likes = [], comments = [], id, currentUser, isLogged } = this.props
 
     const Footer = []
 
-    Footer.push(<PostSummary isLogged={isLogged} likes={0} onComment={this.handleCommentButtonClick} />)
+    Footer.push(
+      <PostSummary
+        isLogged={isLogged}
+        likes={likes}
+        onComment={this.handleCommentButtonClick}
+        onLike={this.handleLikeButtonClick} />
+      )
 
     if (comments.length) {
       Footer.push(<CommentList comments={comments} />)
@@ -111,7 +123,8 @@ const mapStateToProps = ({ auth }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  deletePost: id => dispatch(deletePost(id))
+  deletePost: id => dispatch(deletePost(id)),
+  addLike: id => dispatch(addLike(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Post)

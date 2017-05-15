@@ -21,6 +21,11 @@ export const deletePost = createAction('posts/DELETE', async id => {
   return id
 })
 
+export const addLike = createAction('posts/LIKE', async id => {
+  const { data } = await axios.post(`/api/post/${id}/like`)
+  return data
+})
+
 export const addComment = createAction('posts/ADD_COMMENT')
 
 export default handleActions({
@@ -47,6 +52,16 @@ export default handleActions({
     const postId = action.payload.post_id
     const posts = state.posts.map(post => {
       return post.id === postId ? { ...post, comments: [...post.comments, action.payload] } : post
+    })
+    return {
+      ...state,
+      posts
+    }
+  },
+  [addLike]: (state, action) => {
+    const postId = action.payload.post_id
+    const posts = state.posts.map(post => {
+      return post.id === postId ? { ...post, likes: [...post.likes, action.payload] } : post
     })
     return {
       ...state,

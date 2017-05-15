@@ -20,10 +20,20 @@ module.exports = router => {
           attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
           as: 'user'
         }]
+      }, {
+        model: models.Like,
+        as: 'likes',
+        attributes: ['id', 'created_at'],
+        include: [{
+          model: models.User,
+          attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+          as: 'user'
+        }]
       }],
       limit: 20,
       offset
     })
+
     ctx.body = data
   })
 
@@ -105,9 +115,26 @@ module.exports = router => {
 
   // поставить лайк посту
   router.post('/:id/like', async ctx => {
-    await models.Like.create({
-      user_id: ctx.session.user.id
+    const Post = await models.Post.findOne({
+      where: {
+        id: ctx.params.id
+      }
     })
-    ctx.statusCode = 200
+
+    const like = await models.Like.create({
+      user_id: 2
+    })
+
+    await Post.addLike(like)
+
+    const data = await models.Like.findOne({
+      where: {
+        id: like.id
+      }
+    })
+
+    ctx.body = Object.assign({}, data.toJSON(), {
+      post_id: Post.id
+    })
   })
 }
