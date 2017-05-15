@@ -65,14 +65,14 @@ const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, is
             </Panel>
 
             {/* Подписки */}
-            { subscriptions.length && (
+            { (subscriptions.length !== 0) && (
               <Panel bodyStyles={panelBodyStyles}>
                 <UserProfileSubscribers items={subscriptions} />
               </Panel>
             )}
 
             {/* Группы */}
-            { groups.length && (
+            { (groups.length !== 0) && (
               <Panel bodyStyles={panelBodyStyles}>
                 <UserProfileGroups groups={groups} />
               </Panel>

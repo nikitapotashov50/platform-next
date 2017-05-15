@@ -1,18 +1,13 @@
 export default ({ user, t }) => (
   <form className='panel-form'>
     <div className='panel-form__row'>
-      <label className='panel-form__label'>Я хочу</label>
-      <textarea className='panel-form__input' value={user.website} type='text' />
+      <label className='panel-form__label'>{t('account.settings.tab.goal.fields.about')}</label>
+      <textarea className='panel-form__input' type='text' />
     </div>
 
     <div className='panel-form__row'>
-      <label className='panel-form__label'>Я могу</label>
-      <textarea className='panel-form__input' value={user.instagram} type='text' />
-    </div>
-
-    <div className='panel-form__row'>
-      <label className='panel-form__label'>Мои хобби</label>
-      <textarea className='panel-form__input' value={user.facebook} type='text' />
+      <label className='panel-form__label'>{t('account.settings.tab.goal.fields.hobbi')}</label>
+      <textarea className='panel-form__input' type='text' />
     </div>
   </form>
 )

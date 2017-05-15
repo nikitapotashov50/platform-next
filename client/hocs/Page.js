@@ -269,6 +269,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                   }
 
                   &__sub-header {
+                    position: relative;
+
                     margin: 0;
                     padding: 12px 20px 7px;
 
@@ -376,7 +378,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                 .panel-search {
                   top: 0;
-                  right: 0;
+                  right: 10px;
                   position: absolute;
 
                   width: 150px;
@@ -452,7 +454,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                 .user-inline {
                   position: relative;
-                  display: inline-block;
+                  display: block;
 
                   &_small { width: 40px; }
                   &_smallest { width: 30px; }
@@ -799,8 +801,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                   &__image {
                     width: 30px;
                     height: 30px;
-                    margin-right: 10px;
+
+                    vertical-align: top;
                     display: inline-block;
+                  }
+                  &__body {
+                    box-sizing: border-box;
+
+                    padding-left: 10px;
+                    vertical-align: top;
+                    display: inline-block;
+                    width: calc(100% - 30px);
                   }
                   &__link {
                     box-sizing: border-box;
@@ -1092,6 +1103,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                       background-position: 15px center;
                       background-image: svg("clock", "[fill]: #1f1f1f;");
                     }
+                  }
+
+                  &__comments {
+                    margin-top: 20px;
+                    border-top: 
                   }
 
                   &__title {
