@@ -657,7 +657,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                     color: #333;
                     font-weight: 700;
-
+                    cursor: pointer;
 
                     &:hover { color: #333; }
                     &:visited, &:active { color: #777; }

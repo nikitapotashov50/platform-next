@@ -22,7 +22,7 @@ class CommentForm extends Component {
   }
 
   componentDidMount () {
-    if (this.props.expanded) {
+    if (this.props.expanded && this.inputRef) {
       this.inputRef.focus()
     }
   }
@@ -74,8 +74,6 @@ class CommentForm extends Component {
   render () {
     const { user } = this.props
     const { expanded = false, content } = this.state
-
-    if (!user) return null
 
     return (
       <div className='post-comment'>

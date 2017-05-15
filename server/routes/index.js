@@ -48,7 +48,7 @@ const initApiRoutes = async (ctx, next) => {
   await next()
 }
 
-router.bridge('/api', [ initApiRoutes, initRoutes ], apiRoutes)
-router.bridge('*', [ initClientRoutes, initRoutes ], clientRoutes)
+router.bridge('/api', [ initApiRoutes ], apiRoutes)
+router.bridge('*', [ initClientRoutes ], clientRoutes)
 
 module.exports = router

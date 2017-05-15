@@ -7,6 +7,8 @@ const DefaultLayout = ({ children }) => (
     <div className='app__content'>
       {children}
     </div>
+
+    <div id="modal-portal" />
   </div>
 )
 

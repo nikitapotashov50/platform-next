@@ -1,15 +1,24 @@
+import { bindActionCreators } from 'redux'
 import React, { Component } from 'react'
 import Waypoint from 'react-waypoint'
 import { connect } from 'react-redux'
 import { loadMore } from '../../redux/posts'
 import Post from './Post'
 
+import PostFull from './Full'
+import PostModal from './Modal'
+
 class PostList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      offset: 20
+      offset: 20,
+      expanded: null,
+      expandedIndex: null
     }
+
+    this.onPostExpand = this.onPostExpand.bind(this)
+    this.onPostPaginate = this.onPostPaginate.bind(this)
     this.scrollDownHandle = this.scrollDownHandle.bind(this)
   }
 
@@ -20,21 +29,48 @@ class PostList extends Component {
     })
   }
 
+  onPostExpand (post, index) {
+    return () => {
+      this.setState(state => {
+        state.expanded = post
+        state.expandedIndex = post ? index : null
+      })
+    }
+  }
+
+  onPostPaginate (direction) {
+    let { expandedIndex } = this.state
+    let nextIndex = expandedIndex + direction
+
+    if (!this.props.posts[nextIndex]) return
+
+    this.setState(state => {
+      state.expandedIndex = nextIndex
+      state.expanded = this.props.posts[nextIndex]
+    })
+  }
+
   render () {
     const { posts } = this.props
+    const { expanded } = this.state
 
     return (
       <div>
-        {posts.map(post => <Post key={post.id} {...post} />)}
+        {posts.map((post, index) => <Post key={post.id} {...post} onExpand={this.onPostExpand(post, index)} />)}
         <Waypoint onEnter={this.scrollDownHandle} />
         <div>Загрузка</div>
+
+        {/* Модалка с постом */}
+        <PostModal isOpened={!!expanded} onPaginate={this.onPostPaginate} onClose={this.onPostExpand(null)}>
+          <PostFull {...expanded} />
+        </PostModal>
       </div>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  loadMore: offset => dispatch(loadMore(offset))
-})
+const mapDispatchToProps = dispatch => bindActionCreators({
+  loadMore
+}, dispatch)
 
 export default connect(null, mapDispatchToProps)(PostList)

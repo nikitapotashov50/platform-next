@@ -12,7 +12,10 @@ export default rule => Next => {
       if (!rule(state.auth.user, state, ctx.params)) ctx.store.dispatch(restrictAccess('Ошабка прав доступа'))
       else ctx.store.dispatch(allowAccess())
 
-      return Next.getInitialProps && Next.getInitialProps(ctx)
+      let initialProps = {}
+      if (Next.getInitialProps) initialProps = await Next.getInitialProps(ctx)
+
+      return initialProps
     }
 
     render () {

@@ -12,9 +12,10 @@ import Panel from '../client/components/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
 const menuItems = [
-  { href: '/', path: '/', title: 'Ссылка 1', code: 'index' },
-  { href: '/', path: '/', title: 'Ссылка 2', code: 'index2' },
-  { href: '/', path: '/', title: 'Ссылка 3', code: 'index3' }
+  { href: '/', path: '/', title: 'Актуальное', code: 'index' },
+  { href: '/', path: '/', title: 'Новое', code: 'index2' },
+  { href: '/', path: '/', title: 'Лучшее', code: 'index3' },
+  { href: '/', path: '/', title: 'Мои подписки', code: 'index4' }
 ]
 
 class IndexPage extends Component {
