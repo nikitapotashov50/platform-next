@@ -231,6 +231,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     text-transform: none;
                     background-color: rgba(0,0,0,.4);
 
+                    cursor: pointer;
+
                     &:hover, &_active { background-color: #196aff; }
                   }
                 }
@@ -294,6 +296,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                   &__body {
                     padding: 15px 20px;
+                    line-height: 150%;
+
                     &_no {
                       &_padding { padding: 0; }
                       &_vertical-padding {
@@ -566,6 +570,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                   font-size: 15px;
                   background: #196aff;
                   text-transform: none;
+                  border-radius: 3px;
+                  cursor: pointer;
 
                   & + & { margin-left: 5px !important; }
 
