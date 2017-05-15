@@ -5,7 +5,7 @@ import PostSummary from './Summary'
 import TextWithImages from './TextWithImages'
 import CommentsList from '../Comment/CommentList'
 
-export default ({ title, comments, content, user, date }) => (
+export default ({ title, comments, content, user, created_at }) => (
   <div>
     <div className='post-full'>
 
@@ -17,7 +17,7 @@ export default ({ title, comments, content, user, date }) => (
             <a className='post-full__header-info post-full__header-info_link'>{`${user.first_name} ${user.last_name}`}</a>
           </Link>
         )}
-        <span className='post-full__header-info post-full__header-info_time'>{moment(date).from(moment())}</span>
+        <span className='post-full__header-info post-full__header-info_time'>{moment(created_at).from(moment())}</span>
       </div>
 
       <div className='post-full__content'>

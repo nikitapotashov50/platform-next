@@ -1,7 +1,7 @@
 import Link from 'next/link'
+import numeral from 'numeral'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import { subscribeToUser, unsubscribeFromUser, addToBlackList, removeFromBlackList } from '../redux/auth'
 
 import DefaultLayout from './default'
@@ -10,7 +10,13 @@ import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
-const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children, ...props }) => {
+let goal = {
+  a: 100000,
+  b: 300000,
+  fact: 140000
+}
+
+const UserLayout = ({ user, groups, showButtons, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children, ...props }) => {
   if (!user) {
     return (
       <DefaultLayout>
@@ -26,6 +32,9 @@ const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, is
 
   let bgImageStyles = {}
   if (user.picture_large) bgImageStyles.backgroundImage = `url(${user.picture_large})`
+
+  let progress = 100 - ((goal.b - goal.fact) / (goal.b / 100))
+  if (progress > 100) progress = 100
 
   return (
     <DefaultLayout>
@@ -53,21 +62,27 @@ const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, is
             </Panel>
 
             {/* Цель */}
-            <Panel bodyStyles={panelBodyStyles}>
-              <div className='user-side-panel'>
+            <Panel bodyStyles={{ noPadding: true }} Header={<div className='user-side-panel'>
                 <div className='user-side-panel__title'> Цель</div>
-              </div>
-
+              </div>}>              
               <div className='profile-goal'>
-                <div className='profile-goal__block profile-goal__block_a'>100 000 ₽</div>
-                <div className='profile-goal__block profile-goal__block_b'>200 000 ₽</div>
+                <div className='profile-goal__progress' style={{ width: progress + '%' }} />
+                <div className='profile-goal__block profile-goal__block_a'>{numeral(goal.a).format('0,0')} ₽</div>
+                <div className='profile-goal__block profile-goal__block_b'>{numeral(goal.b).format('0,0')} ₽</div>
               </div>
             </Panel>
 
             {/* Подписки */}
             { (subscriptions.length !== 0) && (
               <Panel bodyStyles={panelBodyStyles}>
-                <UserProfileSubscribers items={subscriptions} />
+                <UserProfileSubscribers items={subscriptions} title='Подписки' />
+              </Panel>
+            )}
+
+            {/* Подписчики */}
+            { (subscribers.length !== 0) && (
+              <Panel bodyStyles={panelBodyStyles}>
+                <UserProfileSubscribers items={subscribers} title='Подписчики' />
               </Panel>
             )}
 
@@ -92,10 +107,8 @@ const UserLayout = ({ user, groups, showButtons, subscriptions, isSubscribed, is
 }
 
 const mapStateToProps = ({ profile, auth }) => ({
+  ...profile,
   me: auth.user,
-  user: profile.user,
-  groups: profile.groups,
-  subscriptions: profile.subscriptions,
   isBlocked: profile.user ? (auth.blackList.indexOf(profile.user.id) !== -1) : false,
   isSubscribed: profile.user ? (auth.subscriptions.indexOf(profile.user.id) !== -1) : false
 })

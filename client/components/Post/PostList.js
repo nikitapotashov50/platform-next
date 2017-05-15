@@ -1,9 +1,11 @@
-import { bindActionCreators } from 'redux'
-import React, { Component } from 'react'
-import Waypoint from 'react-waypoint'
+import Router from 'next/router'
 import { connect } from 'react-redux'
-import { loadMore } from '../../redux/posts'
+import Waypoint from 'react-waypoint'
+import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+
 import Post from './Post'
+import { loadMore } from '../../redux/posts'
 
 import PostFull from './Full'
 import PostModal from './Modal'
@@ -31,6 +33,8 @@ class PostList extends Component {
 
   onPostExpand (post, index) {
     return () => {
+      let { pathname } = this.props
+      Router.replace(pathname, post ? '/posts/' + post.id : pathname, { shallow: true })
       this.setState(state => {
         state.expanded = post
         state.expandedIndex = post ? index : null
@@ -43,7 +47,8 @@ class PostList extends Component {
     let nextIndex = expandedIndex + direction
 
     if (!this.props.posts[nextIndex]) return
-
+    let { pathname } = this.props
+    Router.replace(pathname, '/posts/' + this.props.posts[nextIndex].id, { shallow: true })
     this.setState(state => {
       state.expandedIndex = nextIndex
       state.expanded = this.props.posts[nextIndex]

@@ -8,20 +8,18 @@ export default rule => Next => {
   class AccessHoc extends Component {
     static async getInitialProps (ctx) {
       let state = ctx.store.getState()
-
-      if (!rule(state.auth.user, state, ctx.params)) ctx.store.dispatch(restrictAccess('Ошабка прав доступа'))
-      else ctx.store.dispatch(allowAccess())
+      let access = rule(state.auth.user, state, ctx.params)
 
       let initialProps = {}
       if (Next.getInitialProps) initialProps = await Next.getInitialProps(ctx)
 
-      return initialProps
+      return { accessResult: access, ...initialProps }
     }
 
     render () {
-      let { access } = this.props
+      let { accessResult } = this.props
 
-      if (access.error) {
+      if (!accessResult) {
         return <ErrorLayout code={access.error} message={access.message} />
       }
 
@@ -29,9 +27,5 @@ export default rule => Next => {
     }
   }
 
-  let mapStateToProps = state => ({
-    access: state.error
-  })
-
-  return connect(mapStateToProps)(AccessHoc)
+  return AccessHoc
 }
