@@ -6,8 +6,8 @@ class CommentList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      all: false,
-      showAllButton: size(this.props.comments) > 3
+      all: props.full || false,
+      showAllButton: props.full || size(this.props.comments) > 3
     }
   }
 
@@ -27,13 +27,11 @@ class CommentList extends Component {
 
     return (
       <div className=''>
-        {this.state.showAllButton && <button
-          className='show-more-comments'
-          onClick={() => {
-            this.setState({ all: !all })
-          }}>
-          {all ? 'Скрыть коммантерии' : 'Показать больше'}
-        </button>}
+        { (!this.props.full && this.state.showAllButton) && (
+          <button className='show-more-comments' onClick={() => { this.setState({ all: !all }) }}>
+            {all ? 'Скрыть комментарии' : 'Показать больше'}
+          </button>
+        )}
 
         {comments.map(comment => (
           <Comment key={comment.id} {...comment} />
@@ -51,11 +49,11 @@ class CommentList extends Component {
             cursor: pointer;
             font-size: 12px;
             text-align: center;
-            background: color(#efeff0 a(-10%));
+            background: color(#efeff0 a(-5%));
           }
 
           .show-more-comments:hover {
-            background: color(#efeff0 a(-15%));
+            background: color(#efeff0 a(-35%));
           }
         `}</style>
       </div>

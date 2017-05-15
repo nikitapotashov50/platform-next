@@ -18,7 +18,7 @@ export default Next => {
       else ctx.store.dispatch(userNotFound())
     }
 
-    return Next.getInitialProps && Next.getInitialProps(ctx)
+    return Next.getInitialProps(ctx)
   }
 
   return UserProfileHoc

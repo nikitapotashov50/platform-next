@@ -5,7 +5,7 @@ const AuthLogin = ({ recoverySwitch, values, onInput, errors, submit, fetching }
     <form method='post'>
       <div className='login-form__row'>
         <label className='login-form__label'>Логин</label>
-        <input className='login-form__input' value={values.email} onChange={onInput.bind(this, 'email')} type='text' autoComplete='on' />
+        <input className='login-form__input' value={values.email} name='platform_email' onChange={onInput.bind(this, 'email')} type='text' autoComplete='on' />
         { errors.email && (<div>{errors.email}</div>)}
       </div>
 
