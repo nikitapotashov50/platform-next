@@ -1304,6 +1304,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     padding: 35px 15px 0;
 
                     background-color: #fefefe;
+
+                    &:focus {
+                      outline: none;
+                    }
                   }
 
                   &__top {
