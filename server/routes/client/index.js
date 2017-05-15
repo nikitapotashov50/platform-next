@@ -3,15 +3,15 @@ module.exports = router => {
     await ctx.__next.render(ctx.req, ctx.res, '/')
   })
 
-  router.bridge('/@bm-:username', router => {
+  router.bridge('/@:username', router => {
     router.get('/', async ctx => {
-      let username = 'bm-' + ctx.params.username
-      await ctx.__next.render(ctx.req, ctx.res, '/user', Object.assign({}, ctx.params, { username }))
+      await ctx.__next.render(ctx.req, ctx.res, '/user', Object.assign({}, ctx.params, ctx.query))
     })
+  })
 
-    router.get('/settings', async ctx => {
-      let username = 'bm-' + ctx.params.username
-      await ctx.__next.render(ctx.req, ctx.res, '/user/settings', Object.assign({}, ctx.params, { username }))
+  router.bridge('/posts', router => {
+    router.get('/:postId', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/posts', Object.assign({}, ctx.params, ctx.query))
     })
   })
 

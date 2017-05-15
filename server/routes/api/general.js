@@ -52,17 +52,30 @@ module.exports = router => {
           through: {
             attributes: []
           }
+        },
+        {
+          required: false,
+          as: 'Subscribers',
+          model: models.User,
+          attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
+          through: {
+            attributes: []
+          }
         }
       ]
     })
 
     let groups = user.get('Groups')
     let subscriptions = user.get('Subscriptions')
+    let subscribers = user.get('Subscribers')
+
+    console.log(subscribers)
 
     ctx.body = {
       user,
       groups,
-      subscriptions
+      subscriptions,
+      subscribers
     }
   })
 }

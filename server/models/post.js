@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
         type: DataTypes.BOOLEAN
       },
-      is_visible: {
-        defaultValue: true,
-        type: DataTypes.BOOLEAN
+      visible_to: {
+        defaultValue: 'all',
+        type: DataTypes.ENUM([ 'all', 'self', 'subscribers', 'selected' ])
       },
       type: {
         allowNull: false,

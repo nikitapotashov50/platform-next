@@ -13,18 +13,12 @@ class CommentForm extends Component {
     super(props)
     this.state = {
       content: '',
-      expanded: props.expanded
+      expanded: false
     }
     this.handleContentChange = this.handleContentChange.bind(this)
     this.createComment = this.createComment.bind(this)
     this.clearForm = this.clearForm.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
-  }
-
-  componentDidMount () {
-    if (this.props.expanded && this.inputRef) {
-      this.inputRef.focus()
-    }
   }
 
   handleContentChange (e) {
