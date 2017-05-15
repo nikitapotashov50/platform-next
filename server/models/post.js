@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           Post.belongsToMany(models.Tag, { foreignKey: 'post_id', as: 'Tags', through: 'tags_posts' })
 
           // у поста может быть множество лайков
-          Post.belongsToMany(models.Like, { foreignKey: 'post_id', as: 'Likes', through: 'likes_posts' })
+          Post.belongsToMany(models.Like, { foreignKey: 'post_id', as: 'likes', through: 'likes_posts' })
 
           // у поста может быть множество комментариев
           Post.hasMany(models.Comment, { foreignKey: 'post_id', as: 'comments' })

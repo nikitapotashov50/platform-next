@@ -9,6 +9,7 @@ const helmet = require('koa-helmet')
 const bodyParser = require('koa-bodyparser')
 const session = require('koa-session')
 const koaBunyanLogger = require('koa-bunyan-logger')
+const ms = require('ms')
 const config = require('./config')
 const routes = require('./server/routes')
 
@@ -23,14 +24,15 @@ client.prepare().then(() => {
 
   server.use(koaBunyanLogger(log))
   server.use(helmet())
+  server.use(cors())
   server.use(bodyParser())
   server.use(session({
     key: 'sess',
+    maxAge: ms('0.5y'), // half-year
     // secure: true, // Need HTTPS on development
     httpOnly: true,
     signed: true
   }, server))
-  server.use(cors())
 
   server.use(async (ctx, next) => {
     ctx.__next = client

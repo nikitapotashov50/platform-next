@@ -21,6 +21,16 @@ export const deletePost = createAction('posts/DELETE', async id => {
   return id
 })
 
+export const addLike = createAction('posts/ADD_LIKE', async id => {
+  const { data } = await axios.post(`/api/post/${id}/like`)
+  return { ...data, post_id: id }
+})
+
+export const removeLike = createAction('posts/REMOVE_LIKE', async id => {
+  const { data } = await axios.delete(`/api/post/${id}/like`)
+  return { ...data, post_id: id }
+})
+
 export const addComment = createAction('posts/ADD_COMMENT')
 
 export default handleActions({
@@ -47,6 +57,34 @@ export default handleActions({
     const postId = action.payload.post_id
     const posts = state.posts.map(post => {
       return post.id === postId ? { ...post, comments: [...post.comments, action.payload] } : post
+    })
+    return {
+      ...state,
+      posts
+    }
+  },
+  [addLike]: (state, action) => {
+    const postId = action.payload.post_id
+    const posts = state.posts.map(post => {
+      return post.id === postId ? {
+        ...post,
+        likes: [...post.likes, action.payload],
+        liked: true
+      } : post
+    })
+    return {
+      ...state,
+      posts
+    }
+  },
+  [removeLike]: (state, action) => {
+    const postId = action.payload.post_id
+    const posts = state.posts.map(post => {
+      return post.id === postId ? {
+        ...post,
+        likes: post.likes.filter(like => like.id !== action.payload.id),
+        liked: false
+      } : post
     })
     return {
       ...state,

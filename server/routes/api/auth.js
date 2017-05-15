@@ -48,4 +48,8 @@ module.exports = router => {
       ctx.throw(400, e.message)
     }
   })
+
+  router.post('/logout', async ctx => {
+    ctx.session = null
+  })
 }

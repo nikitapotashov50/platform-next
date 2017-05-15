@@ -1,3 +1,4 @@
+const { size } = require('lodash')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -45,11 +46,36 @@ module.exports = router => {
           attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
           as: 'user'
         }]
+      }, {
+        model: models.Like,
+        as: 'likes',
+        attributes: ['id', 'created_at'],
+        include: [{
+          model: models.User,
+          attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+          as: 'user'
+        }]
       }],
       limit: 20,
       offset
     })
-    ctx.body = data
+
+    let posts = data
+    let user = JSON.parse(ctx.query.user) || ctx.session.user
+
+    if (user) {
+      posts = data.map(post => {
+        let liked = false
+        if (size(post.likes.filter(like => like.user.id === user.id)) > 0) {
+          liked = true
+        }
+        return Object.assign({}, post.toJSON(), {
+          liked
+        })
+      })
+    }
+
+    ctx.body = posts
   })
 
   // создание поста
@@ -141,5 +167,56 @@ module.exports = router => {
       }]
     })
     ctx.body = data
+  })
+
+  // поставить лайк посту
+  router.post('/:id/like', async ctx => {
+    const Post = await models.Post.findOne({
+      where: {
+        id: ctx.params.id
+      }
+    })
+
+    const like = await models.Like.create({
+      user_id: ctx.session.user.id
+    })
+
+    await Post.addLike(like)
+
+    const data = await models.Like.findOne({
+      where: {
+        id: like.id
+      }
+    })
+
+    ctx.body = data
+  })
+
+  router.delete('/:id/like', async ctx => {
+    const postId = ctx.params.id
+
+    const data = await models.Post.findOne({
+      where: {
+        id: postId
+      },
+      include: [{
+        attributes: ['id'],
+        model: models.Like,
+        as: 'likes',
+        where: {
+          user_id: ctx.session.user.id
+        }
+      }]
+    })
+
+    const like = data.likes[0]
+
+    await models.Like.destroy({
+      where: {
+        id: like.id
+      }
+    })
+
+    ctx.body = like
   })
 }
