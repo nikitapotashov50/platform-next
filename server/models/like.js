@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       classMethods: {
         associate: (models) => {
           // Лайк ставится пользователем
-          Like.belongsTo(models.User, { foreignKey: 'user_id' })
+          Like.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
 
           // Лайк ставится посту
           Like.belongsToMany(models.Post, { foreignKey: 'like_id', as: 'Posts', through: 'likes_posts' })
