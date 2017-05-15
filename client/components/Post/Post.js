@@ -69,8 +69,8 @@ class Post extends Component {
   }
 
   render () {
-    const { showPostMenu, showModal } = this.state
-    const { title, content, user, added, id, onExpand } = this.props
+    const { showPostMenu } = this.state
+    const { title, content, user, added, onExpand } = this.props
 
     let Footer = this.getFooter()
 

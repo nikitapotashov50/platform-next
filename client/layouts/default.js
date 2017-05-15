@@ -8,7 +8,7 @@ const DefaultLayout = ({ children }) => (
       {children}
     </div>
 
-    <div id="modal-portal" />
+    <div id='modal-portal' />
   </div>
 )
 
