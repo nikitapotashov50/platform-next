@@ -24,6 +24,7 @@ client.prepare().then(() => {
 
   server.use(koaBunyanLogger(log))
   server.use(helmet())
+  server.use(cors())
   server.use(bodyParser())
   server.use(session({
     key: 'sess',
@@ -32,7 +33,6 @@ client.prepare().then(() => {
     httpOnly: true,
     signed: true
   }, server))
-  server.use(cors())
 
   server.use(async (ctx, next) => {
     ctx.__next = client

@@ -1,8 +1,8 @@
 import HeartIcon from 'react-icons/lib/fa/heart'
 
-export default ({ count, handleClick }) => (
+export default ({ count, handleClick, liked }) => (
   <div className='like-button' onClick={handleClick}>
-    <HeartIcon color='#dadee1' size={20} />
+    <HeartIcon color={liked ? '#0c00ff' : '#dadee1'} size={20} />
     <div className='like-button-text'>Нравится {count}</div>
 
     <style jsx>{`

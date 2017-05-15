@@ -52,7 +52,7 @@ class Post extends Component {
 
   getFooter () {
     let { showCommentForm } = this.state
-    let { likes = [], comments = [], id, currentUser, isLogged } = this.props
+    let { likes = [], comments = [], id, currentUser, isLogged, liked } = this.props
 
     const Footer = []
 
@@ -60,6 +60,7 @@ class Post extends Component {
       <PostSummary
         isLogged={isLogged}
         likes={likes}
+        liked={liked}
         onComment={this.handleCommentButtonClick}
         onLike={this.handleLikeButtonClick} />
       )

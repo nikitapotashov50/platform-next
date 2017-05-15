@@ -61,11 +61,12 @@ module.exports = router => {
     })
 
     let posts = data
+    let user = JSON.parse(ctx.query.user) || ctx.session.user
 
-    if (ctx.session.user) {
+    if (user) {
       posts = data.map(post => {
         let liked = false
-        if (size(post.likes.filter(like => like.user_id === ctx.session.user.id)) > 0) {
+        if (size(post.likes.filter(like => like.user.id === user.id)) > 0) {
           liked = true
         }
         return Object.assign({}, post.toJSON(), {
