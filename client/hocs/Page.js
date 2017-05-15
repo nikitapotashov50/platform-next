@@ -50,28 +50,31 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
               <style jsx global>{`
                 @reset-global pc;
 
+
                 @font-face {
-                  font-family: museo_sans_cyrl;
-                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format("woff2"),
-                      url('/static/fonts/museosanscyrl_500-webfont.woff') format("woff"),
-                      url('/static/fonts/museosanscyrl_500-webfont.ttf') format("truetype"),
-                      url('/static/fonts/museosanscyrl_500-webfont.svg#museo_sans_cyrl500') format("svg");
-                  font-weight:500;
-                  font-style:normal;
+                  font-family: 'museo_sans_cyrl';
+                  src: url('/static/fonts/museosanscyrl_500-webfont.woff2') format('woff2'),
+                       url('/static/fonts/museosanscyrl_500-webfont.woff') format('woff'),
+                       url('/static/fonts/museosanscyrl_500-webfont.ttf') format('truetype'),
+                       url('/static/fonts/museosanscyrl_500-webfont.svg#museo_sans_cyrl500') format('svg');
+                  font-weight: 500;
+                  font-style: normal;
+
                 }
 
                 @font-face {
-                  font-family: museo_sans_cyrl;
-                  src: url('/static/fonts/museosanscyrl_700-webfont.woff2') format("woff2"),
-                      url('/static/fonts/museosanscyrl_700-webfont.woff') format("woff"),
-                      url('/static/fonts/museosanscyrl_700-webfont.ttf') format("truetype"),
-                      url('/static/fonts/museosanscyrl_700-webfont.svg#museo_sans_cyrl700') format("svg");
-                  font-weight:700;
-                  font-style:normal;
+                    font-family: 'museo_sans_cyrl';
+                    src: url('/static/fonts/museosanscyrl_700-webfont.woff2') format('woff2'),
+                         url('/static/fonts/museosanscyrl_700-webfont.woff') format('woff'),
+                         url('/static/fonts/museosanscyrl_700-webfont.ttf') format('truetype'),
+                         url('/static/fonts/museosanscyrl_700-webfont.svg#museo_sans_cyrl700') format('svg');
+                    font-weight: 700;
+                    font-style: normal;
+
                 }
 
                 @define-placeholder museo {
-                  font-family: museo_sans_cyrl, Helvetica, Arial, sans-serif;
+                  font-family: 'museo_sans_cyrl', Helvetica, Arial, sans-serif;
                 }
 
                 /* width */
@@ -82,12 +85,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
                 html {
                   font-size: 14px;
+                   -webkit-font-smoothing: antialiased;
                 }
 
                 body {
                   color: #1f1f1f;
                   background: #edeeee;
                   @extend museo;
+                  -webkit-font-smoothing: antialiased;
+                
                 }
 
                 img {
@@ -1051,6 +1057,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                     height: 59px !important;
                     line-height: 59px !important;
 
+                    display: block;
                     color: #0c0c0c;
                     font-size: 12px;
                     font-weight: 700;
