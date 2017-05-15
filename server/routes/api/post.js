@@ -1,3 +1,4 @@
+const { size } = require('lodash')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -59,7 +60,21 @@ module.exports = router => {
       offset
     })
 
-    ctx.body = data
+    let posts = data
+
+    if (ctx.session.user) {
+      posts = data.map(post => {
+        let liked = false
+        if (size(post.likes.filter(like => like.user_id === ctx.session.user.id)) > 0) {
+          liked = true
+        }
+        return Object.assign({}, post.toJSON(), {
+          liked
+        })
+      })
+    }
+
+    ctx.body = posts
   })
 
   // создание поста
@@ -173,8 +188,34 @@ module.exports = router => {
       }
     })
 
-    ctx.body = Object.assign({}, data.toJSON(), {
-      post_id: Post.id
+    ctx.body = data
+  })
+
+  router.delete('/:id/like', async ctx => {
+    const postId = ctx.params.id
+
+    const data = await models.Post.findOne({
+      where: {
+        id: postId
+      },
+      include: [{
+        attributes: ['id'],
+        model: models.Like,
+        as: 'likes',
+        where: {
+          user_id: ctx.session.user.id
+        }
+      }]
     })
+
+    const like = data.likes[0]
+
+    await models.Like.destroy({
+      where: {
+        id: like.id
+      }
+    })
+
+    ctx.body = like
   })
 }

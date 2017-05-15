@@ -9,7 +9,7 @@ import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
 import CommentForm from '../Comment/Form'
 import CommentList from '../Comment/CommentList'
-import { deletePost, addLike } from '../../redux/posts'
+import { deletePost, addLike, removeLike } from '../../redux/posts'
 
 class Post extends Component {
   constructor (props) {
@@ -37,7 +37,11 @@ class Post extends Component {
   }
 
   handleLikeButtonClick () {
-    this.props.addLike(this.props.id)
+    if (this.props.liked) {
+      this.props.removeLike(this.props.id)
+    } else {
+      this.props.addLike(this.props.id)
+    }
   }
 
   handleOptionButtonClick () {
@@ -124,7 +128,8 @@ const mapStateToProps = ({ auth }) => ({
 
 const mapDispatchToProps = dispatch => ({
   deletePost: id => dispatch(deletePost(id)),
-  addLike: id => dispatch(addLike(id))
+  addLike: id => dispatch(addLike(id)),
+  removeLike: id => dispatch(removeLike(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Post)
