@@ -65,12 +65,10 @@ export default PageHoc(RatingsPage, {
 //           <nuxt-link :class="{ 'panel-menu__link': true, 'panel-menu__link_active': key === tab }" :to="{ name: 'rating-category', params: { category: item.path || key  } }">{{ item.title }}</nuxt-link >
 //         </div>
 //       </div>
-
 //       <div class="panel-menu" v-if="subCategories" slot="sub-header">
 //         <div class="panel-menu__item" v-for="(item, key) in subCategories">
 //           <nuxt-link :class="{ 'panel-menu__link': true, 'panel-menu__link_active': key === tab }" :to="{ name: 'rating-category', params: { category: item.path || key  } }">{{ item.title }}</nuxt-link >
 //         </div>
-        
 //         <div class="panel-search">
 //           <input class="panel-search__input" type="text" placeholder="Поиск по имени" />
 //         </div>
