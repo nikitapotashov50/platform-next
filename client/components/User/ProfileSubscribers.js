@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-export default ({ items }) => (
+export default ({ items, title }) => (
   <div className='user-side-panel'>
-    <div className='user-side-panel__title'>Подписки</div>
+    <div className='user-side-panel__title'>{title}</div>
 
     <div className='user-side-panel__body'>
       <div className='followers-tiles'>

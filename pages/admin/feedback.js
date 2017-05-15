@@ -78,6 +78,15 @@ class FeedbackResults extends Component {
     }
   }
 
+  drawCities (items) {
+    return items.map(el => ({
+      path: '/',
+      code: el.city_id,
+      title: (el.name || 'Город не указан') + ' (' + el.count + ')',
+      onClick: this.onNavigate('city')
+    }))
+  }
+
   render () {
     let { type, page = 1 } = this.props.url.query
 
@@ -110,7 +119,7 @@ class FeedbackResults extends Component {
 
           <div className='feed__right'>
             <Panel Header={<div className='panel__title'>Города</div>}>
-              <NpsRightMenu items={this.drawCities(cities)} />
+              {/* <NpsRightMenu items={this.drawCities(cities)} /> */}
             </Panel>
           </div>
         </div>
@@ -118,13 +127,6 @@ class FeedbackResults extends Component {
     )
   }
 }
-
-FeedbackResults.drawCities = items => items.map(el => ({
-  path: '/',
-  code: el.city_id,
-  title: (el.name || 'Город не указан') + ' (' + el.count + ')',
-  onClick: this.onNavigate('city')
-}))
 
 const mapStateToProps = ({ nps }) => ({ nps })
 const mapDispatchToProps = dispatch => bindActionCreators({
