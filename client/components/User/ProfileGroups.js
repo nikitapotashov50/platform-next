@@ -12,7 +12,9 @@ export default ({ groups }) => (
           <Link href={'/groups?id=' + group.id} as={'/groups/' + group.id} key={'user-group-' + group.id}>
             <a className='user-groups__item'>
               <img className='user-groups__image' src={group.image || '/static/img/logo.png'} alt={group.title} />
-              <span className='user-groups__link'>{group.title}</span>
+              <div className='user-groups__body'>
+                <span className='user-groups__link'>{group.title}</span>
+              </div>
             </a>
           </Link>
         )) }

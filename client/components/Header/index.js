@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 let menu = [
   { url: '/', title: 'Отчеты', as: '/reports' },
   { url: '/tasks', title: 'Задания' },
-  { url: '/rating', title: 'Рейтинг' }
+  { url: '/ratings', title: 'Рейтинг' }
 ]
 
 const Header = ({ user, pathname, dispatch, isLogged }) => (
