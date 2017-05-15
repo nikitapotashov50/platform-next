@@ -162,7 +162,7 @@ module.exports = router => {
     })
 
     const like = await models.Like.create({
-      user_id: 2
+      user_id: ctx.session.user.id
     })
 
     await Post.addLike(like)
