@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import { server } from '../../config'
 import PageHoc from '../../client/hocs/Page'
 import Panel from '../../client/components/Panel'
 import DefaultLayout from '../../client/layouts/default'
@@ -17,7 +18,7 @@ const AdminPrograms = ({ data }) => (
 )
 
 AdminPrograms.getInitialProps = async ctx => {
-  let { data } = await axios.get('http://dev2.molodost.bz:3000/api/admin/programs/list/')
+  let { data } = await axios.get(`http://${server.host}:${server.port}/api/admin/programs/list/`)
   return { data: data.programs }
 }
 

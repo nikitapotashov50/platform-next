@@ -1,5 +1,6 @@
 const axios = require('axios')
 const config = require('../../config')
+const { models } = require('../models')
 
 const isUserAuthOnBM = async (user, hash, userAgent) => {
   try {
@@ -50,9 +51,23 @@ const getBMAccessToken = async (username, password) => {
   }
 }
 
+const restoreCookieSession = async (email, hash, agent) => {
+  try {
+    let isAuth = await isUserAuthOnBM(email, hash, agent)
+    
+    let user = await models.User.findOne({
+      where: { email }
+    })
+
+    return { user }
+  } catch (e) {
+    console.log(e.message)
+  }
+}
+
 module.exports = {
   getMyInfo,
   isUserAuthOnBM,
-  getBMAccessToken
-  // getBMAccessTokenCredentialsOnly
+  getBMAccessToken,
+  restoreCookieSession
 }

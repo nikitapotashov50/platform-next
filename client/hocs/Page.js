@@ -1,3 +1,4 @@
+import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
 import React, { Component } from 'react'
@@ -5,6 +6,7 @@ import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
+import { server } from '../../config'
 import { auth } from '../redux/auth'
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
@@ -22,9 +24,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
+        let hash = null
         if (ctx.req) {
-          let { session } = ctx.req
-          if (session.user) ctx.store.dispatch(auth(session.user))
+          if (ctx.req.session.user) ctx.store.dispatch(auth(ctx.req.session.user))
+          else hash = ctx.req.cookies.get('molodost_user')
         }
 
         let translations = await getTranslations('ru')
@@ -32,12 +35,19 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
         let initialProps = {}
         if (Page.getInitialProps) initialProps = await Page.getInitialProps(ctx)
 
-        return { translations, ...initialProps }
+        return { translations, hash, ...initialProps }
       }
 
       constructor (props) {
         super(props)
         this.i18n = starti18n(props.translations)
+      }
+
+      async componentDidMount () {
+        if (this.props.hash) {
+          let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
+          this.props.dispatch(auth(data.user))
+        }
       }
 
       render () {
