@@ -49,12 +49,16 @@ export const removeFromBlackList = createAction('auth/BLACK_LIST_REMOVE', async 
 export default handleActions({
   [auth]: (state, action) => ({
     ...state,
-    user: action.payload,
+    user: action.payload.user,
+    blackList: action.payload.blackList,
+    subscriptions: action.payload.subscriptions,
+    currentProgram: action.payload.programs.length ? action.payload.programs[0].id : null,
     isLogged: true
   }),
   [logout]: (state, action) => ({
     ...defaultState
   }),
+  //
   [subscribeToUser]: (state, { payload }) => ({
     ...state,
     subscriptions: payload.id ? [ ...state.subscriptions, payload.id ] : [ ...state.subscriptions ]
