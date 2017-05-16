@@ -21,9 +21,11 @@ const menuItems = [
 class IndexPage extends Component {
   static async getInitialProps ({ store, req }) {
     const baseURL = `http://${config.server.host}:${config.server.port}`
+    const state = store.getState()
+
     const { data } = await axios.get(`${baseURL}/api/post`, {
       params: {
-        user: req.session.user
+        user: state.auth.user
       }
     })
 

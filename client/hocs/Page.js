@@ -25,7 +25,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         let hash = null
-        if (ctx.req) {
+        if (ctx.req && ctx.isServer) {
           if (ctx.req.session.user && ctx.req.session.user.id) {
             ctx.store.dispatch(auth(ctx.req.session))
             ctx.store.dispatch(fillPrograms(ctx.req.session.programs || []))
