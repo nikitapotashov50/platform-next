@@ -5,7 +5,8 @@ import React, { Component } from 'react'
 import UserImage from '../User/Image'
 import UserHeaderMenu from '../User/HeaderMenu'
 
-import { logout, changeProgram } from '../../redux/auth'
+import { logout } from '../../redux/auth'
+import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs'
 
 class HeaderRegisteredMenu extends Component {
   constructor (props) {
@@ -28,7 +29,7 @@ class HeaderRegisteredMenu extends Component {
   }
 
   async changeProgram (e) {
-    this.props.dispatch(changeProgram(e.target.value))
+    this.props.dispatch(changeCurrentProgram(e.target.value))
   }
 
   drawPrograms (items) {

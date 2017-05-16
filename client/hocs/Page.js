@@ -132,8 +132,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                 }
 
                 textarea, input {
+                  box-sizing: border-box;
+
                   width: 100%;
                   display: block;
+                  padding: 7px 10px;
+                  border: 1px solid #ebebeb;
                 }
 
                 button {
@@ -586,6 +590,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                   font-size: 15px;
                   background: #196aff;
                   text-transform: none;
+                  border: 1px solid #196aff;
 
                   & + & { margin-left: 5px !important; }
 

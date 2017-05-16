@@ -1,19 +1,24 @@
-export default ({ maxRate = 10, inline = false, rate, ...props }) => {
+export default ({ maxRate = 10, noValues, onChange, inline = false, rate, ...props }) => {
   let classes = [ 'rating-bar' ]
   if (inline) classes.push('rating-bar_inline')
 
-  let stars = []
-  for (var i = 0; i < rate; i++) {
-    stars.push(<span className='rating-star' key={'star-' + i}>&#9733;</span>)
+  const onStarClick = (index, e) => {
+    if (onChange) onChange(index, e)
   }
-  for (var k = 0; k < maxRate - rate; k++) {
-    stars.push(<span className='rating-star' key={'star-' + rate + k}>&#9734;</span>)
+
+  let stars = []
+  for (var i = 1; i < maxRate; i++) {
+    stars.push(
+      <span className='rating-star' key={'star-' + i} onClick={onStarClick.bind(this, i)}>
+        { (i <= rate) ? <span>&#9733;</span> : <span>&#9734;</span> }
+      </span>
+    )
   }
 
   return (
     <div className={classes.join(' ')}>
       {stars}
-      <span className='rating-bar'>&nbsp;&nbsp;{rate}</span>
+      { !noValues && <span className='rating-bar'>&nbsp;&nbsp;{rate}</span> }
     </div>
   )
 }
