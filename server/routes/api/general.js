@@ -64,15 +64,21 @@ module.exports = router => {
       ]
     })
 
-    let groups = user.get('Groups')
-    let subscriptions = user.get('Subscriptions')
-    let subscribers = user.get('Subscribers')
+    if (!user) {
+      ctx.body = {
+        status: 404
+      }
+    } else {
+      let groups = user.get('Groups')
+      let subscriptions = user.get('Subscriptions')
+      let subscribers = user.get('Subscribers')
 
-    ctx.body = {
-      user,
-      groups,
-      subscriptions,
-      subscribers
+      ctx.body = {
+        user,
+        groups,
+        subscriptions,
+        subscribers
+      }
     }
   })
 }

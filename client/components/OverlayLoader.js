@@ -1,8 +1,12 @@
+import Loader from 'react-loaders'
+
 export default ({ loading = false, children }) => (
   <div className='overlay-loader'>
     {children}
 
-    { loading && <div className='overlay-loader__loader' /> }
+    { loading && (
+      <div className='overlay-loader__loader' />
+    )}
 
     <style jsx>{`
       .overlay-loader {

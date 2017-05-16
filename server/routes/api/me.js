@@ -20,6 +20,20 @@ const initInteractions = async (ctx, next) => {
 }
 
 module.exports = router => {
+  router.put('/edit', async ctx => {
+    let body = ctx.request.body
+
+    await ctx.__.me.update(body)
+    ctx.session.user = Object.assign({}, ctx.session.user, ctx.__.me.toJSON())
+
+    ctx.body = {
+      status: 200,
+      result: {
+        user: ctx.__.me
+      }
+    }
+  })
+
   router.bridge('/interact', [ initInteractions ], router => {
     router.bridge('/subscribe', router => {
       router.post('/', async ctx => {

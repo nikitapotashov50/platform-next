@@ -43,6 +43,33 @@ module.exports = (sequelize, DataTypes) => {
       },
       migration_id: {
         type: DataTypes.INTEGER
+      },
+      //
+      molodost_id: {
+        type: DataTypes.STRING(64)
+      },
+      //
+      phone: {
+        type: DataTypes.STRING(64)
+      },
+      website: {
+        type: DataTypes.STRING(255)
+      },
+      vk: {
+        type: DataTypes.STRING(255)
+      },
+      facebook: {
+        type: DataTypes.STRING(255)
+      },
+      instagram: {
+        type: DataTypes.STRING(255)
+      },
+      //
+      about: {
+        type: DataTypes.TEXT
+      },
+      hobbies: {
+        type: DataTypes.TEXT
       }
     },
     {

@@ -20,6 +20,9 @@ let defaultState = {
 export const auth = createAction('auth/LOGIN')
 export const logout = createAction('auth/LOGOUT')
 
+//
+export const updateInfo = createAction('auth/UPDATE_INFO')
+
 // interactions
 export const subscribeToUser = createAction('auth/SUBSCRIBE_TO_USER', async id => {
   let { status } = await axios.post('/api/me/interact/subscribe', { id }, { withCredentials: true })
@@ -57,6 +60,14 @@ export default handleActions({
   }),
   [logout]: (state, action) => ({
     ...defaultState
+  }),
+  //
+  [updateInfo]: (state, { payload }) => ({
+    ...state,
+    user: {
+      ...state.user,
+      ...payload
+    }
   }),
   //
   [subscribeToUser]: (state, { payload }) => ({
