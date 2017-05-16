@@ -54,5 +54,4 @@ module.exports = {
   getMyInfo,
   isUserAuthOnBM,
   getBMAccessToken
-  // getBMAccessTokenCredentialsOnly
 }

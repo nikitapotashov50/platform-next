@@ -21,7 +21,7 @@ class UserPage extends Component {
   }
 
   render () {
-    const { posts, isMe } = this.props
+    const { posts, isMe, url } = this.props
 
     return (
       <UserLayout>
@@ -30,7 +30,7 @@ class UserPage extends Component {
           { isMe && <PostEditor />}
 
           <div className='user-blog__content'>
-            <PostList posts={posts} />
+            <PostList posts={posts} pathname={url.pathname} />
           </div>
 
         </div>

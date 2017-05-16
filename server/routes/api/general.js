@@ -20,7 +20,6 @@ module.exports = router => {
         programs: programsRaw
       }
     } catch (e) {
-      console.log(e.message)
       ctx.body = {
         status: 500,
         message: e.message
@@ -68,8 +67,6 @@ module.exports = router => {
     let groups = user.get('Groups')
     let subscriptions = user.get('Subscriptions')
     let subscribers = user.get('Subscribers')
-
-    console.log(subscribers)
 
     ctx.body = {
       user,

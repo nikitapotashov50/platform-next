@@ -14,6 +14,8 @@ export default rule => Next => {
       return { accessResult: access, ...initialProps }
     }
 
+    componentDidUpdate (prevProps) {}
+
     render () {
       let { accessResult } = this.props
 

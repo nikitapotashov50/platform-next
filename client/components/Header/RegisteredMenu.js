@@ -19,7 +19,7 @@ class HeaderRegisteredMenu extends Component {
 
   async logout (e) {
     e.preventDefault()
-    await axios.post('/api/auth/logout')
+    await axios.post('/api/auth/logout', {}, { withCredentials: true })
 
     await this.toggleMenu(false)
     this.props.dispatch(logout())
