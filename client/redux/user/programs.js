@@ -1,8 +1,10 @@
-import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
 
 // default state
-let defaultState = {}
+let defaultState = {
+  items: null,
+  current: null
+}
 
 //
 export const fill = createAction('user/programs/FILL_PROGRAMS', array => {

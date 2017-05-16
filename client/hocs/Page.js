@@ -29,8 +29,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
           if (ctx.req.session.user && ctx.req.session.user.id) {
             ctx.store.dispatch(auth(ctx.req.session))
             ctx.store.dispatch(fillPrograms(ctx.req.session.programs || []))
-          }
-          else hash = ctx.req.cookies.get('molodost_user')
+          } else hash = ctx.req.cookies.get('molodost_user')
         }
 
         let translations = await getTranslations('ru')
@@ -52,7 +51,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
           if (data.user && data.user.id) {
             this.props.dispatch(auth(data))
             this.props.dispatch(fillPrograms(data.programs || []))
-          }          
+          }
         }
       }
 
