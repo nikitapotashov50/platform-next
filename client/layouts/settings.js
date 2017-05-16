@@ -26,8 +26,8 @@ const SettingsLayout = ({ children, tab, t, ...props }) => {
                   <li className={[ 'side-links__item' ]} key={'settings-tab-' + el.title}>
                     <Link href={el.href} as={el.path}>
                       { tab === el.code
-                        ? <span className='side-links__link'>{t('account.settings.tab.' + el.code + '.title')}</span>
-                        : <a className='side-links__link'>{t('account.settings.tab.' + el.code + '.title')}</a>
+                        ? <span className='side-links__link'>{t('account.settings.' + el.code + '.title')}</span>
+                        : <a className='side-links__link'>{t('account.settings.' + el.code + '.title')}</a>
                       }
                     </Link>
                   </li>

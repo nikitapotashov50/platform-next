@@ -1454,7 +1454,7 @@ circular-json@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.1.tgz#be8b36aefccde8b3ca7aa2d6afc07a37242c0d2d"
 
-classnames@^2.2.5:
+classnames@^2.2.3, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -6174,6 +6174,14 @@ react-image@^1.0.1:
   dependencies:
     prop-types "^15.5.8"
 
+react-loaders@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-loaders/-/react-loaders-2.5.0.tgz#fb23e9545995a403f8214e893037549aae5088c8"
+  dependencies:
+    classnames "^2.2.3"
+    prop-types "^15.5.8"
+    react "^15.4.2"
+
 react-onclickoutside@^5.11.1:
   version "5.11.1"
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-5.11.1.tgz#00314e52567cf55faba94cabbacd119619070623"
@@ -6231,7 +6239,7 @@ react-waypoint@^7.0.0:
     consolidated-events "^1.0.1"
     prop-types "^15.0.0"
 
-react@^15.5.4:
+react@^15.4.2, react@^15.5.4:
   version "15.5.4"
   resolved "https://registry.yarnpkg.com/react/-/react-15.5.4.tgz#fa83eb01506ab237cdc1c8c3b1cea8de012bf047"
   dependencies:
