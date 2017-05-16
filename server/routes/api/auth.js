@@ -59,7 +59,8 @@ module.exports = router => {
       if (BMAccess) {
         user = await getUser(email)
       }
-      ctx.session.user = user
+
+      ctx.session = user
     }
 
     ctx.body = user
@@ -94,6 +95,7 @@ module.exports = router => {
         })
       } else if (!dbUser) throw new Error('No user found in our local database')
 
+      ctx.session = dbUser
       ctx.body = dbUser
     } catch (e) {
       ctx.throw(400, e.message)

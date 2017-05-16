@@ -1,16 +1,18 @@
 import axios from 'axios'
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import UserImage from '../User/Image'
 import UserHeaderMenu from '../User/HeaderMenu'
 
-import { logout } from '../../redux/auth'
+import { logout, changeProgram } from '../../redux/auth'
 
 class HeaderRegisteredMenu extends Component {
   constructor (props) {
     super(props)
 
     this.state = { menu: false }
+    this.changeProgram = this.changeProgram.bind(this)
   }
 
   async toggleMenu (flag) {
@@ -25,14 +27,33 @@ class HeaderRegisteredMenu extends Component {
     this.props.dispatch(logout())
   }
 
-  componentWillReceiveProps (nextProps) {}
+  async changeProgram (e) {
+    this.props.dispatch(changeProgram(e.target.value))
+  }
+
+  drawPrograms (items) {
+    let result = []
+    for (var i in items) {
+      result.push(
+        <option value={items[i].id} key={'program-' + items[i].id}>{items[i].title}</option>
+      )
+    }
+    return result
+  }
 
   render () {
     let { menu } = this.state
-    let { className, user } = this.props
+    let { className, user, programs } = this.props
 
     return (
       <div className={[ className ].join(' ')}>
+        <li className='user-menu__item user-menu__item_hoverable'>
+          { !!programs.items && (
+            <select onChange={this.changeProgram} value={programs.current || ''}>
+              {this.drawPrograms(programs.items)}
+            </select>
+          )}
+        </li>
         <li className='user-menu__item user-menu__item_hoverable'>
           <UserImage small user={user} onClick={this.toggleMenu.bind(this, !menu)} />
 
@@ -43,4 +64,9 @@ class HeaderRegisteredMenu extends Component {
   }
 }
 
-export default HeaderRegisteredMenu
+let mapStateToProps = ({ auth, user }) => ({
+  user: auth.user,
+  programs: user.programs
+})
+
+export default connect(mapStateToProps)(HeaderRegisteredMenu)
