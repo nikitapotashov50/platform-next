@@ -7,6 +7,7 @@ import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
 import { auth } from '../redux/auth'
+import { fill as fillPrograms } from '../redux/user/programs'
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
 
@@ -25,7 +26,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
       static async getInitialProps (ctx) {
         let hash = null
         if (ctx.req) {
-          if (ctx.req.session.user) ctx.store.dispatch(auth(ctx.req.session.user))
+          if (ctx.req.session.user && ctx.req.session.user.id) {
+            ctx.store.dispatch(auth(ctx.req.session))
+            ctx.store.dispatch(fillPrograms(ctx.req.session.programs || []))
+          }
           else hash = ctx.req.cookies.get('molodost_user')
         }
 
@@ -45,7 +49,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
       async componentDidMount () {
         if (this.props.hash) {
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
-          this.props.dispatch(auth(data.user))
+          if (data.user && data.user.id) {
+            this.props.dispatch(auth(data))
+            this.props.dispatch(fillPrograms(data.programs || []))
+          }          
         }
       }
 

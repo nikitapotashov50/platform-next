@@ -7,10 +7,15 @@ import profile from './profile'
 
 import nps from './admin/nps'
 
+import programs from './user/programs'
+
 export default combineReducers({
   nps,
   auth,
   error,
   posts,
-  profile
+  profile,
+  user: combineReducers({
+    programs
+  })
 })

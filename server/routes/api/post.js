@@ -61,7 +61,7 @@ module.exports = router => {
     })
 
     let posts = data
-    let user = JSON.parse(ctx.query.user) || ctx.session.user
+    let user = ctx.query.user ? JSON.parse(ctx.query.user) : ctx.session.user
 
     if (user) {
       posts = data.map(post => {
@@ -131,92 +131,113 @@ module.exports = router => {
       ctx.__.post.destroy()
       ctx.statusCode = 200
     })
-  })
 
-  // список комментариев поста
-  router.get('/:id/comments', async ctx => {
-    const data = await models.Comment.findAll({
-      attributes: ['id', 'content'],
-      where: {
-        post_id: ctx.params.id
-      },
-      limit: 20,
-      order: [['created_at', 'desc']]
-    })
-    ctx.body = data
-  })
-
-  // создание комментария
-  router.post('/:id/comment', async ctx => {
-    const { content } = ctx.request.body
-    const created = await models.Comment.create({
-      content,
-      post_id: ctx.params.id,
-      user_id: ctx.session.user.id
-    })
-
-    const data = await models.Comment.findOne({
-      where: {
-        id: created.id
-      },
-      attributes: ['id', 'post_id', 'content', 'created_at'],
-      include: [{
-        model: models.User,
-        attributes: ['name', 'first_name', 'last_name', 'picture_small'],
-        as: 'user'
-      }]
-    })
-    ctx.body = data
-  })
-
-  // поставить лайк посту
-  router.post('/:id/like', async ctx => {
-    const Post = await models.Post.findOne({
-      where: {
-        id: ctx.params.id
-      }
-    })
-
-    const like = await models.Like.create({
-      user_id: ctx.session.user.id
-    })
-
-    await Post.addLike(like)
-
-    const data = await models.Like.findOne({
-      where: {
-        id: like.id
-      }
-    })
-
-    ctx.body = data
-  })
-
-  router.delete('/:id/like', async ctx => {
-    const postId = ctx.params.id
-
-    const data = await models.Post.findOne({
-      where: {
-        id: postId
-      },
-      include: [{
-        attributes: ['id'],
-        model: models.Like,
-        as: 'likes',
+    // список комментариев поста
+    router.get('/comments', async ctx => {
+      const data = await models.Comment.findAll({
+        attributes: ['id', 'content'],
         where: {
-          user_id: ctx.session.user.id
-        }
-      }]
+          post_id: ctx.__.post.id
+        },
+        limit: 20,
+        order: [['created_at', 'desc']]
+      })
+
+      ctx.body = data
     })
 
-    const like = data.likes[0]
+    // создание комментария
+    router.post('/comment', async ctx => {
+      try {
+        if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
 
-    await models.Like.destroy({
-      where: {
-        id: like.id
+        const { content } = ctx.request.body
+        const created = await models.Comment.create({
+          content,
+          post_id: ctx.__.post.id,
+          user_id: ctx.session.user.id
+        })
+
+        const data = await models.Comment.findOne({
+          where: {
+            id: created.id
+          },
+          attributes: [ 'id', 'post_id', 'content', 'created_at' ],
+          include: [
+            {
+              model: models.User,
+              attributes: [ 'name', 'first_name', 'last_name', 'picture_small' ],
+              as: 'user'
+            }
+          ]
+        })
+
+        ctx.body = data
+      } catch (e) {
+        ctx.body = {}
       }
     })
 
-    ctx.body = like
+    // поставить лайк посту
+    router.post('/like', async ctx => {
+      try {
+        if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
+
+        const like = await models.Like.create({
+          user_id: ctx.session.user.id
+        })
+
+        await ctx.__.post.addLike(like)
+
+        const data = await models.Like.findOne({
+          where: {
+            id: like.id
+          }
+        })
+
+        ctx.body = data
+      } catch (e) {
+        ctx.body = {
+          status: 403,
+          message: e.message
+        }
+      }
+    })
+
+    router.delete('/like', async ctx => {
+      try {
+        if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
+        const postId = ctx.params.id
+
+        const data = await models.Post.findOne({
+          where: {
+            id: postId
+          },
+          include: [{
+            attributes: ['id'],
+            model: models.Like,
+            as: 'likes',
+            where: {
+              user_id: ctx.session.user.id
+            }
+          }]
+        })
+
+        const like = data.likes[0]
+
+        await models.Like.destroy({
+          where: {
+            id: like.id
+          }
+        })
+
+        ctx.body = like
+      } catch (e) {
+        ctx.body = {
+          status: 403,
+          message: e.message
+        }
+      }
+    })
   })
 }
