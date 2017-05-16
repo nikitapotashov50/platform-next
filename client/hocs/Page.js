@@ -6,7 +6,6 @@ import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
-import { server } from '../../config'
 import { auth } from '../redux/auth'
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
@@ -65,7 +64,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
 
               <style jsx global>{`
                 @reset-global pc;
-
 
                 @font-face {
                   font-family: 'museo_sans_cyrl';

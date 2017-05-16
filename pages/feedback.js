@@ -16,7 +16,7 @@ const FeedbackPage = props => (
       Menu={() => <PanelMenu items={menuItems} selected={'program'} />}
     >
       <div>Hello world</div>
-    </Panel>  
+    </Panel>
   </FeedLayout>
 )
 

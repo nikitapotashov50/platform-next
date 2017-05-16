@@ -45,7 +45,7 @@ const getUser = async email => {
   }
 }
 
-const userResponse = user => pick(user, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ])
+// const userResponse = user => pick(user, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ])
 
 module.exports = router => {
   router.get('/restore', async ctx => {
@@ -54,17 +54,15 @@ module.exports = router => {
     let BMAccess, user
 
     if (hash && email) {
-       BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
+      BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
 
-       if (BMAccess) {
-         user = await getUser(email)
-       }
-       ctx.session.user = user
+      if (BMAccess) {
+        user = await getUser(email)
+      }
+      ctx.session.user = user
     }
-    
-    ctx.body = {
-      user
-    }
+
+    ctx.body = user
   })
 
   router.post('/logout', ctx => {
@@ -75,7 +73,6 @@ module.exports = router => {
   })
 
   router.post('/login', async (ctx, next) => {
-    let isAuth = false
     let { email, password } = ctx.request.body
 
     try {
