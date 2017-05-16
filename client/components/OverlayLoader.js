@@ -1,5 +1,3 @@
-import Loader from 'react-loaders'
-
 export default ({ loading = false, children }) => (
   <div className='overlay-loader'>
     {children}

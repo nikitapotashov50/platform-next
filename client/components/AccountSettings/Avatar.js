@@ -1,4 +1,3 @@
 export default () => (
-  <form className='panel-form'>
-  </form>
+  <form className='panel-form' />
 )

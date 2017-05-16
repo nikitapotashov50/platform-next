@@ -58,7 +58,7 @@ class FeedbackPage extends Component {
       this.pushErrors(errors)
       return
     }
-    
+
     await this.setState(state => {
       state.errors = {}
       state.fetching = true
@@ -72,7 +72,7 @@ class FeedbackPage extends Component {
   async pushErrors (errors) {
     await this.setState(state => {
       let obj = {}
-      errors.map(el => obj[el.type] = el.value)
+      errors.map(el => { obj[el.type] = el.value })
 
       state.errors = obj
     })
@@ -86,8 +86,8 @@ class FeedbackPage extends Component {
 
     return (
       <FeedLayout emptySide>
-        <Panel noBody  noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'platfrom'} />} />
-          
+        <Panel noBody noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'platfrom'} />} />
+
         <Panel
           Header={<div className='panel__title'>Оставьте отзыв о платформе</div>}
           Footer={Footer}
@@ -103,17 +103,17 @@ class FeedbackPage extends Component {
             <div className='nps-result'>
               <div className='nps-result__row'>
                 <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[0]} inline noValues onChange={this.handleScoreChange(0)}  />
+                <RatingBar className='nps-result__row-value' rate={scores[0]} inline noValues onChange={this.handleScoreChange(0)} />
               </div>
 
               <div className='nps-result__row'>
                 <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[1]} inline noValues onChange={this.handleScoreChange(1)}  />
+                <RatingBar className='nps-result__row-value' rate={scores[1]} inline noValues onChange={this.handleScoreChange(1)} />
               </div>
 
               <div className='nps-result__row'>
                 <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[2]} inline noValues onChange={this.handleScoreChange(2)}  />
+                <RatingBar className='nps-result__row-value' rate={scores[2]} inline noValues onChange={this.handleScoreChange(2)} />
               </div>
             </div>
           </OverlayLoader>
