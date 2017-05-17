@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import axios from 'axios'
-import Router from 'next/router'
 import React, { Component } from 'react'
 
 import Modal from '../Modal'

@@ -1,4 +1,4 @@
-const form_encode = require('form-urlencoded')
+const formEncode = require('form-urlencoded')
 const axios = require('axios')
 const config = require('../../config')
 
@@ -69,7 +69,7 @@ const getBMSignUp = async (email, firstname, lastname, accessToken) => {
   lastname = toString(lastname).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
 
   try {
-    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/register/', form_encode({ firstname, lastname, email }), {
+    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/register/', formEncode({ firstname, lastname, email }), {
       headers: {
         'Authorization': 'Bearer ' + accessToken
       }
@@ -83,7 +83,7 @@ const getBMSignUp = async (email, firstname, lastname, accessToken) => {
 
 const getBMRecovery = async (email, accessToken) => {
   try {
-    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/password/restore/', form_encode({ email }), {
+    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/password/restore/', formEncode({ email }), {
       headers: {
         'Authorization': 'Bearer ' + accessToken
       }

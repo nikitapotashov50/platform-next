@@ -120,7 +120,7 @@ module.exports = router => {
       let { email, firstName, lastName } = ctx.request.body
 
       const getBMNewUser = await getBMSignUp(email, firstName, lastName, BMAccess.access_token)
-      
+
       if (!getBMNewUser.status || getBMNewUser.status !== 'success') {
         ctx.body = {
           status: 400,
