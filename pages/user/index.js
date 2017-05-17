@@ -16,7 +16,12 @@ import { loadPosts } from '../../client/redux/posts'
 class UserPage extends Component {
   static async getInitialProps ({ store }) {
     const baseURL = `http://${server.host}:${server.port}`
-    const { data } = await axios.get(`${baseURL}/api/post`)
+    const state = store.getState()
+    const { data } = await axios.get(`${baseURL}/api/post`, {
+      params: {
+        byUserId: state.auth.user.id
+      }
+    })
     store.dispatch(loadPosts(data))
   }
 
