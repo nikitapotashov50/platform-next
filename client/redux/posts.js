@@ -7,12 +7,8 @@ export const defaultState = {
 
 export const addPost = createAction('posts/ADD_POST')
 export const loadPosts = createAction('posts/LOAD_POSTS')
-export const loadMore = createAction('posts/LOAD_MORE', async offset => {
-  const { data } = await axios.get('/api/post', {
-    params: {
-      offset
-    }
-  })
+export const loadMore = createAction('posts/LOAD_MORE', async params => {
+  const { data } = await axios.get('/api/post', { params })
   return data
 })
 

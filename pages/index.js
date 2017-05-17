@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { bindActionCreators } from 'redux'
+import Waypoint from 'react-waypoint'
+
 import config from '../config'
 import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
-import { loadPosts } from '../client/redux/posts'
-
-//
+import { loadPosts, loadMore } from '../client/redux/posts'
 import Panel from '../client/components/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
@@ -19,12 +20,29 @@ const menuItems = [
 ]
 
 class IndexPage extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      offset: 20
+    }
+    this.scrollDownHandle = this.scrollDownHandle.bind(this)
+  }
+
   static async getInitialProps ({ store, req }) {
     const baseURL = `http://${config.server.host}:${config.server.port}`
 
     const { data } = await axios.get(`${baseURL}/api/post`)
 
     store.dispatch(loadPosts(data))
+  }
+
+  scrollDownHandle () {
+    this.props.loadMore({
+      offset: this.state.offset
+    })
+    this.setState({
+      offset: this.state.offset * 2
+    })
   }
 
   render () {
@@ -35,6 +53,7 @@ class IndexPage extends Component {
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'index'} />} />
 
         <PostList posts={this.props.posts} pathname={this.props.url.pathname} />
+        <Waypoint onEnter={this.scrollDownHandle} />
       </FeedLayout>
     )
   }
@@ -45,5 +64,8 @@ export default Page(IndexPage, {
   mapStateToProps: state => ({
     user: state.auth.user,
     posts: state.posts.posts
-  })
+  }),
+  mapDispatchToProps: dispatch => bindActionCreators({
+    loadMore
+  }, dispatch)
 })
