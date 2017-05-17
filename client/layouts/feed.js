@@ -1,5 +1,5 @@
 import DefaultLayout from './default'
-import Panel from '../components/Panel'
+// import Panel from '../components/Panel'
 
 const FeedLayout = ({ children, emptySide, Side = [] }) => (
   <DefaultLayout>
