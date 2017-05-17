@@ -30,15 +30,21 @@ class IndexPage extends Component {
 
   static async getInitialProps ({ store, req }) {
     const baseURL = `http://${config.server.host}:${config.server.port}`
+    const state = store.getState()
 
-    const { data } = await axios.get(`${baseURL}/api/post`)
+    const { data } = await axios.get(`${baseURL}/api/post`, {
+      params: {
+        user: state.auth.user
+      }
+    })
 
     store.dispatch(loadPosts(data))
   }
 
   scrollDownHandle () {
     this.props.loadMore({
-      offset: this.state.offset
+      offset: this.state.offset,
+      user: this.props.user
     })
     this.setState({
       offset: this.state.offset * 2

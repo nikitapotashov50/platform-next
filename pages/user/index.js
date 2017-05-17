@@ -28,6 +28,7 @@ class UserPage extends Component {
     const state = store.getState()
     const { data } = await axios.get(`${baseURL}/api/post`, {
       params: {
+        user: state.auth.user,
         byUserId: state.auth.user.id
       }
     })
@@ -37,6 +38,7 @@ class UserPage extends Component {
   scrollDownHandle () {
     this.props.loadMore({
       offset: this.state.offset,
+      user: this.props.auth.user,
       byUserId: this.props.auth.user.id
     })
     this.setState({
