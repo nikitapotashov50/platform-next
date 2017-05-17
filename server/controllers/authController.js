@@ -1,3 +1,4 @@
+const formEncode = require('form-urlencoded')
 const axios = require('axios')
 const config = require('../../config')
 
@@ -57,24 +58,32 @@ const getBMAccessTokenCredentialsOnly = async () => {
       client_id: config.bmapi.client_id,
       client_secret: config.bmapi.client_secret
     })
-    console.log(data)
     return data
   } catch ({ response }) {
     throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
   }
 }
 
-const getBMSignUp = async (email, firstName, lastName, accessToken) => {
-  firstName = toString(firstName).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
-  lastName = toString(lastName).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
-  email = toString(email)
+const getBMSignUp = async (email, firstname, lastname, accessToken) => {
+  firstname = toString(firstname).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
+  lastname = toString(lastname).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
 
   try {
-    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/register/', {
-      email,
-      lastname: lastName,
-      firstname: firstName
-    }, {
+    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/register/', formEncode({ firstname, lastname, email }), {
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
+const getBMRecovery = async (email, accessToken) => {
+  try {
+    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/password/restore/', formEncode({ email }), {
       headers: {
         'Authorization': 'Bearer ' + accessToken
       }
@@ -89,6 +98,7 @@ const getBMSignUp = async (email, firstName, lastName, accessToken) => {
 module.exports = {
   getMyInfo,
   getBMSignUp,
+  getBMRecovery,
   isUserAuthOnBM,
   getBMAccessToken,
   getBMAccessTokenCredentialsOnly

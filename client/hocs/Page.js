@@ -15,6 +15,7 @@ import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
 
 import ErrorLayout from '../layouts/error'
+import OverlayLoader from '../components/OverlayLoader'
 
 moment.locale('ru')
 numeral.language('ru', { delimiters: { thousands: ' ', decimal: '.' } })
@@ -86,7 +87,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
           : (__service.user !== this.props.__service.user)
 
         if (flag && accessRule && isFunction(accessRule)) {
-          console.log('user changed flag fired')
           if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Ошибка доступа'))
           else nextProps.dispatch(allowAccess())
         }
@@ -96,7 +96,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
         let { __service, ...props } = this.props
 
         let Body = null
-        if (__service.access.error) {
+        if (__service.hash && !__service.user) {
+          Body = <OverlayLoader full loading />
+        } else if (__service.access.error) {
           Body = <ErrorLayout code={__service.access.error} message={__service.access.message} />
         }
 
@@ -1453,7 +1455,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   &__row {
                     margin: 15px 0;
 
-                    &_double-margin { margin: 30px 0; }
+                    &_double-margin { margin: 30px 0 15px; }
                     &:last-of-type { margin-bottom: 0; }
                     &_centered { text-align: center; }
                   }
