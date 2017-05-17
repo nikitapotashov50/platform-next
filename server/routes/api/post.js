@@ -30,13 +30,17 @@ module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
-    let where = {}
+
+    // не показывать удаленные посты
+    let where = {
+      is_blocked: false
+    }
 
     // посты конкретного юзера
     if (has(ctx.query, 'byUserId')) {
-      where = {
+      where = Object.assign({}, where, {
         user_id: ctx.query.byUserId
-      }
+      })
     }
 
     const data = await models.Post.findAll({
@@ -139,7 +143,9 @@ module.exports = router => {
 
     // удаление поста
     router.delete('/', async ctx => {
-      ctx.__.post.destroy()
+      ctx.__.post.update({
+        is_blocked: true
+      })
       ctx.statusCode = 200
     })
 

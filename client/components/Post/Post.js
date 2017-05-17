@@ -32,8 +32,7 @@ class Post extends Component {
   }
 
   handleDeleteButtonClick () {
-    console.log('click delete')
-    // this.props.deletePost(this.props.id)
+    this.props.deletePost(this.props.id)
   }
 
   handleLikeButtonClick () {
@@ -108,6 +107,7 @@ class Post extends Component {
           headerStyles={{ noBorder: true, npBottomPadding: true }}
           Options={() => Options}
           withAnimation={added}
+          showOptions={this.state.showPostMenu}
           toggleOptions={() => {
             this.setState({ showPostMenu: true })
           }}
