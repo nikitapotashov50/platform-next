@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import Waypoint from 'react-waypoint'
 
 import { server } from '../../config'
 import Page from '../../client/hocs/Page'
@@ -11,18 +12,38 @@ import PostList from '../../client/components/Post/PostList'
 import PostEditor from '../../client/components/PostEditor/index'
 // import ReplyForm from '../../client/components/ReplyForm'
 
-import { loadPosts } from '../../client/redux/posts'
+import { loadPosts, loadMore } from '../../client/redux/posts'
 
 class UserPage extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      offset: 20
+    }
+    this.scrollDownHandle = this.scrollDownHandle.bind(this)
+  }
+
   static async getInitialProps ({ store }) {
     const baseURL = `http://${server.host}:${server.port}`
     const state = store.getState()
     const { data } = await axios.get(`${baseURL}/api/post`, {
       params: {
+        user: state.auth.user,
         byUserId: state.auth.user.id
       }
     })
     store.dispatch(loadPosts(data))
+  }
+
+  scrollDownHandle () {
+    this.props.loadMore({
+      offset: this.state.offset,
+      user: this.props.auth.user,
+      byUserId: this.props.auth.user.id
+    })
+    this.setState({
+      offset: this.state.offset * 2
+    })
   }
 
   render () {
@@ -36,6 +57,7 @@ class UserPage extends Component {
 
           <div className='user-blog__content'>
             <PostList posts={posts} pathname={url.pathname} />
+            <Waypoint onEnter={this.scrollDownHandle} />
           </div>
 
         </div>
@@ -46,12 +68,14 @@ class UserPage extends Component {
 
 let mapStateToProps = ({ posts, auth, profile }) => ({
   posts: posts.posts,
+  auth,
   isMe: auth.user && profile.user && (auth.user.id === profile.user.id)
 })
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators({
-    loadPosts
+    loadPosts,
+    loadMore
   }, dispatch),
   dispatch
 })

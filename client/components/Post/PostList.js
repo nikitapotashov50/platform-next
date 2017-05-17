@@ -1,12 +1,7 @@
 import Router from 'next/router'
-import { connect } from 'react-redux'
-import Waypoint from 'react-waypoint'
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 
 import Post from './Post'
-import { loadMore } from '../../redux/posts'
-
 import PostFull from './Full'
 import PostModal from './Modal'
 
@@ -21,14 +16,6 @@ class PostList extends Component {
 
     this.onPostExpand = this.onPostExpand.bind(this)
     this.onPostPaginate = this.onPostPaginate.bind(this)
-    this.scrollDownHandle = this.scrollDownHandle.bind(this)
-  }
-
-  scrollDownHandle () {
-    this.props.loadMore(this.state.offset)
-    this.setState({
-      offset: this.state.offset * 2
-    })
   }
 
   onPostExpand (post, index) {
@@ -62,8 +49,6 @@ class PostList extends Component {
     return (
       <div>
         {posts.map((post, index) => <Post key={post.id} {...post} onExpand={this.onPostExpand(post, index)} />)}
-        <Waypoint onEnter={this.scrollDownHandle} />
-        <div>Загрузка</div>
 
         {/* Модалка с постом */}
         <PostModal isOpened={!!expanded} onPaginate={this.onPostPaginate} onClose={this.onPostExpand(null)}>
@@ -74,8 +59,4 @@ class PostList extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  loadMore
-}, dispatch)
-
-export default connect(null, mapDispatchToProps)(PostList)
+export default PostList

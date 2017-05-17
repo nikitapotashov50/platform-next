@@ -32,6 +32,7 @@ module.exports = router => {
     const offset = Number(ctx.query.offset) || 0
     let where = {}
 
+    // посты конкретного юзера
     if (has(ctx.query, 'byUserId')) {
       where = {
         user_id: ctx.query.byUserId
@@ -72,6 +73,7 @@ module.exports = router => {
     let posts = data
     let user = ctx.query.user ? JSON.parse(ctx.query.user) : ctx.session.user
 
+    // лайкал пост или нет
     if (user) {
       posts = data.map(post => {
         let liked = false
