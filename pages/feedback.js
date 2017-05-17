@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 
 import PanelMenu from '../client/components/PanelMenu'
 import PageHoc from '../client/hocs/Page'
-import AccessHoc from '../client/hocs/Access'
 import Panel from '../client/components/Panel'
 import FeedLayout from '../client/layouts/feed'
 
@@ -127,10 +126,11 @@ FeedbackPage.getInitialProps = async (ctx) => ({
   type: (ctx.params && ctx.params.type) ? ctx.params.type : 'platform'
 })
 
-const rule = user => !!user
+const accessRule = user => !!user
 
-let AccessedPage = AccessHoc(rule)(translate([ 'common' ])(FeedbackPage))
+let translated = translate([ 'common' ])(FeedbackPage)
 
-export default PageHoc(AccessedPage, {
-  title: 'Оставить отзыв'
+export default PageHoc(translated, {
+  title: 'Оставить отзыв',
+  accessRule
 })
