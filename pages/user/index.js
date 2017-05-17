@@ -28,8 +28,8 @@ class UserPage extends Component {
     const state = store.getState()
     const { data } = await axios.get(`${baseURL}/api/post`, {
       params: {
-        user: state.auth.user,
-        byUserId: state.auth.user.id
+        user: state.auth.user
+        // byUserId: state.auth.user.id
       }
     })
     store.dispatch(loadPosts(data))
@@ -38,8 +38,8 @@ class UserPage extends Component {
   scrollDownHandle () {
     this.props.loadMore({
       offset: this.state.offset,
-      user: this.props.auth.user,
-      byUserId: this.props.auth.user.id
+      user: this.props.auth.user
+      // byUserId: this.props.auth.user.id
     })
     this.setState({
       offset: this.state.offset * 2
