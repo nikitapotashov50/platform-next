@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
@@ -48,13 +49,14 @@ class HeaderRegisteredMenu extends Component {
 
     return (
       <div className={[ className ].join(' ')}>
-        <li className='user-menu__item user-menu__item_hoverable'>
-          { !!programs.items && (
+        { !isEmpty(programs.items) && (
+          <li className='user-menu__item user-menu__item_hoverable'>
             <select onChange={this.changeProgram} value={programs.current || ''}>
               {this.drawPrograms(programs.items)}
             </select>
-          )}
-        </li>
+          </li>
+        )}
+
         <li className='user-menu__item user-menu__item_hoverable'>
           <UserImage small user={user} onClick={this.toggleMenu.bind(this, !menu)} />
 
