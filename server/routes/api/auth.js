@@ -1,7 +1,7 @@
 const { pick } = require('lodash')
 const { models } = require('../../models')
 
-const { getBMAccessToken, getMyInfo, isUserAuthOnBM } = require('../../controllers/authController')
+const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
 const getUser = async email => {
   let rawUser = await models.User.findOne({
@@ -37,6 +37,8 @@ const getUser = async email => {
     ]
   })
 
+  if (!rawUser) return null
+
   return {
     user: pick(rawUser, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ]),
     programs: rawUser.get('Programs'),
@@ -45,7 +47,19 @@ const getUser = async email => {
   }
 }
 
-// const userResponse = user => pick(user, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ])
+const createUserBasedOnBM = async accessToken => {
+  let BMInfo = await getMyInfo(accessToken)
+  let user = await models.User.create({
+    first_name: BMInfo.firstName,
+    last_name: BMInfo.lastName,
+    birthday: BMInfo.birthDate,
+    email: BMInfo.email,
+    name: BMInfo.userId,
+    picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
+  })
+
+  return { user }
+}
 
 module.exports = router => {
   router.get('/restore', async ctx => {
@@ -58,6 +72,9 @@ module.exports = router => {
 
       if (BMAccess) {
         user = await getUser(email)
+        if (!user) {
+          user = await createUserBasedOnBM(BMAccess)
+        }
       }
 
       ctx.session = user
@@ -73,6 +90,29 @@ module.exports = router => {
     }
   })
 
+  router.post('/register', async ctx => {
+    try {
+      let BMAccess = await getBMAccessTokenCredentialsOnly()
+      console.log(BMAccess)
+
+      if (!BMAccess || !BMAccess.access_token) throw new Error('no token')
+
+      let { email, firstName, lastName } = ctx.request.body
+
+      const getBMNewUser = await getBMSignUp(email, firstName, lastName, BMAccess.access_token)
+      console.log(getBMNewUser)
+
+      ctx.body = {
+        status: 200
+      }
+    } catch (e) {
+      ctx.body = {
+        status: 500,
+        message: e.message
+      }
+    }
+  })
+
   router.post('/login', async (ctx, next) => {
     let { email, password } = ctx.request.body
 
@@ -84,15 +124,7 @@ module.exports = router => {
       let dbUser = await getUser(email)
 
       if (!dbUser && BMAccess.access_token) {
-        let BMInfo = await getMyInfo(BMAccess.access_token)
-        dbUser = await models.User.create({
-          first_name: BMInfo.firstName,
-          last_name: BMInfo.lastName,
-          birthday: BMInfo.birthDate,
-          email: BMInfo.email,
-          name: BMInfo.userId,
-          picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
-        })
+        dbUser = await createUserBasedOnBM(BMAccess.access_token)
       } else if (!dbUser) throw new Error('No user found in our local database')
 
       ctx.session = dbUser
@@ -100,9 +132,5 @@ module.exports = router => {
     } catch (e) {
       ctx.throw(400, e.message)
     }
-  })
-
-  router.post('/logout', async ctx => {
-    ctx.session = null
   })
 }

@@ -1,6 +1,8 @@
 let defaultVisible = 7
 
-const Pager = ({ total, limit, current, onNavigate, visible = defaultVisible }) => {
+const Pager = ({ total, limit, current, onNavigate, visible = defaultVisible, panel = false }) => {
+  let prefix = panel ? 'panel-pager' : 'pager'
+
   current = parseInt(current)
   let pages = Math.ceil(total / limit)
 
@@ -20,15 +22,15 @@ const Pager = ({ total, limit, current, onNavigate, visible = defaultVisible }) 
   let links = []
   for (var i = firstVisible; i < dispayedCount; i++) {
     links.push(
-      <button className={[ 'pager__btn', current === i ? 'pager__btn_active' : null ].join(' ')} onClick={onNavigate.bind(this, i)} key={'pager-' + i}>{i}</button>
+      <button className={[ prefix + '__btn', current === i ? prefix + '__btn_active' : null ].join(' ')} onClick={onNavigate.bind(this, i)} key={'pager-' + i}>{i}</button>
     )
   }
 
   return (
-    <div className='pager'>
-      <button className='pager__btn pager__btn_control' onClick={onNavigate.bind(this, 1)}>«</button>
+    <div className={prefix}>
+      <button className={prefix + '__btn pager__btn_control'} onClick={onNavigate.bind(this, 1)}>«</button>
       {links}
-      <button className='pager__btn pager__btn_control' onClick={onNavigate.bind(this, pages)}>»</button>
+      <button className={prefix + '__btn pager__btn_control'} onClick={onNavigate.bind(this, pages)}>»</button>
     </div>
   )
 }

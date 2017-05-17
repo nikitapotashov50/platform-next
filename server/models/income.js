@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     'Income',
     {
       // сумма дохода
-      amount: {
+      ammount: {
         allowNull: false,
         type: DataTypes.BIGINT
       },

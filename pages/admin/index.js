@@ -1,15 +1,31 @@
+import Panel from '../../client/components/Panel'
 import Page from '../../client/hocs/Page'
 
-import DefaultLayout from '../../client/layouts/default'
+import AdminLayout from '../../client/layouts/admin'
 
 const AdminIndexPage = props => {
   return (
-    <DefaultLayout>
-      Admin panel
-    </DefaultLayout>
+    <AdminLayout>
+      <div className='feed'>
+        <div className='feed__left'>
+          <Panel>
+            Dashboard
+          </Panel>
+        </div>
+        <div className='feed__right'>
+          <Panel>
+            Side panel with parameters
+          </Panel>
+          <Panel>
+            Side panel with parameters
+          </Panel>
+        </div>
+      </div>
+    </AdminLayout>
   )
 }
 
+//
 let accessRule = user => !!user
 
 export default Page(AdminIndexPage, {

@@ -50,8 +50,46 @@ const getBMAccessToken = async (username, password) => {
   }
 }
 
+const getBMAccessTokenCredentialsOnly = async () => {
+  try {
+    let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+      grant_type: 'client_credentials',
+      client_id: config.bmapi.client_id,
+      client_secret: config.bmapi.client_secret
+    })
+    console.log(data)
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
+const getBMSignUp = async (email, firstName, lastName, accessToken) => {
+  firstName = toString(firstName).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
+  lastName = toString(lastName).replace(/[^A-Za-zА-Яа-яЁё]/g, '')
+  email = toString(email)
+
+  try {
+    let { data } = await axios.post('http://api.molodost.bz/api/v3/auth/register/', {
+      email,
+      lastname: lastName,
+      firstname: firstName
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
 module.exports = {
   getMyInfo,
+  getBMSignUp,
   isUserAuthOnBM,
-  getBMAccessToken
+  getBMAccessToken,
+  getBMAccessTokenCredentialsOnly
 }

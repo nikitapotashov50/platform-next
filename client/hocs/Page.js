@@ -93,17 +93,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
       }
 
       render () {
-        // отделяю сервисные свойства от настоящих
         let { __service, ...props } = this.props
 
         let Body = null
         if (__service.access.error) {
           Body = <ErrorLayout code={__service.access.error} message={__service.access.message} />
         }
-        // if (__service.hash && !__service.user) {
-        //   console.log('hello test')
-        //   Body = <div>Загрузка</div>
-        // }
 
         return (
           <I18nextProvider i18n={this.i18n}>
@@ -193,6 +188,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   border: none;
                   outline: none;
                   background: none;
+                }
+
+                .pull-right {
+                  text-align: right;
                 }
 
                 .noscroll {
@@ -460,6 +459,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                   width: 150px;
                   padding: 10px 0;
+
+                  &_static {
+                    position: static;
+                  }
 
                   &__input {
                     transition: border .3s;

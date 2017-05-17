@@ -21,7 +21,7 @@ const Menu = ({ items, withLogo = false, pathname }) => (
           <a className='menu__link'>{el.title}</a>
         </Link>
       </li>
-    ))}
+    )) }
 
     <style jsx>{`
       .active {
