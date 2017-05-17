@@ -13,12 +13,14 @@ let defaultState = {
   user: null,
   isLogged: false,
   subscriptions: [],
-  blackList: []
+  blackList: [],
+  cookieExists: false
 }
 
 // action creators
-export const auth = createAction('auth/LOGIN')
+export const auth = createAction('auth/LOGIN', (user, isRestored = false) => ({ ...user, isRestored }))
 export const logout = createAction('auth/LOGOUT')
+export const cookieExists = createAction('auth/cookieExists')
 
 //
 export const updateInfo = createAction('auth/UPDATE_INFO')
@@ -50,16 +52,20 @@ export const removeFromBlackList = createAction('auth/BLACK_LIST_REMOVE', async 
 
 // reducer
 export default handleActions({
-  [auth]: (state, action) => ({
+  [auth]: (state, { payload }) => ({
     ...state,
-    user: action.payload.user,
-    blackList: action.payload.blackList,
-    subscriptions: action.payload.subscriptions,
-    currentProgram: action.payload.programs ? action.payload.programs[0].id : null,
-    isLogged: true
+    user: payload.user,
+    blackList: payload.blackList,
+    subscriptions: payload.subscriptions,
+    isLogged: true,
+    cookieExists: payload.isRestored
   }),
   [logout]: (state, action) => ({
     ...defaultState
+  }),
+  [cookieExists]: state => ({
+    ...state,
+    cookieExists: true
   }),
   //
   [updateInfo]: (state, { payload }) => ({

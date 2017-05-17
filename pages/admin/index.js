@@ -1,5 +1,4 @@
 import Page from '../../client/hocs/Page'
-import Access from '../../client/hocs/Access'
 
 import DefaultLayout from '../../client/layouts/default'
 
@@ -11,6 +10,8 @@ const AdminIndexPage = props => {
   )
 }
 
-let accessRule = user => true
+let accessRule = user => !!user
 
-export default Page(Access(accessRule)(AdminIndexPage))
+export default Page(AdminIndexPage, {
+  accessRule
+})

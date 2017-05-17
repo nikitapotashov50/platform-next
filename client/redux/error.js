@@ -18,7 +18,6 @@ export default handleActions({
     message: action.payload.message
   }),
   [allowAccess]: (state, action) => ({
-    ...state,
-    error: null
+    ...defaultState
   })
 }, defaultState)

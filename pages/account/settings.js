@@ -10,7 +10,6 @@ import AccountGoalSettings from '../../client/components/AccountSettings/Goal'
 import AccountOtherSettings from '../../client/components/AccountSettings/Other'
 import AccountAvatarSettings from '../../client/components/AccountSettings/Avatar'
 
-import Access from '../../client/hocs/Access'
 import Page from '../../client/hocs/Page'
 import Panel from '../../client/components/Panel'
 import SettingsLayout from '../../client/layouts/settings'
@@ -107,11 +106,14 @@ class AccountSettings extends Component {
 
 const accessRule = user => !!user
 
-let Prepared = Access(accessRule)(translate([ 'common' ])(AccountSettings))
+const mapStateToProps = ({ auth }) => ({
+  user: auth.user
+})
 
-export default Page(Prepared, {
+let translated = translate([ 'common' ])(AccountSettings)
+
+export default Page(translated, {
   title: 'Настройки профиля',
-  mapStateToProps: ({ auth }) => ({
-    user: auth.user
-  })
+  accessRule,
+  mapStateToProps
 })
