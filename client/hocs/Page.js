@@ -1,35 +1,58 @@
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
+import { isFunction } from 'lodash'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
-import { auth } from '../redux/auth'
+import { auth, cookieExists } from '../redux/auth'
 import { fill as fillPrograms } from '../redux/user/programs'
+import { restrictAccess, allowAccess } from '../redux/error'
+
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
+
+import ErrorLayout from '../layouts/error'
 
 moment.locale('ru')
 numeral.language('ru', { delimiters: { thousands: ' ', decimal: '.' } })
 numeral.language('ru')
 
-export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }) => {
+export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, accessRule }) => {
+  const realMapStateToProps = state => {
+    let props = {}
+    if (mapStateToProps && isFunction(mapStateToProps)) props = mapStateToProps(state)
+    return {
+      ...props,
+      __service: {
+        access: state.error,
+        user: state.auth.user,
+        hash: state.auth.cookieExists
+      }
+    }
+  }
+
   return withRedux(
     initStore,
-    mapStateToProps,
+    realMapStateToProps,
     mapDispatchToProps,
     mergeProps
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
-        let hash = null
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.user && ctx.req.session.user.id) {
             ctx.store.dispatch(auth(ctx.req.session))
             ctx.store.dispatch(fillPrograms(ctx.req.session.programs || []))
-          } else hash = ctx.req.cookies.get('molodost_user')
+          } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
+        }
+
+        if (accessRule && isFunction(accessRule)) {
+          let state = ctx.store.getState()
+          if (!accessRule(state.auth.user, state)) ctx.store.dispatch(restrictAccess('Ошибка доступа'))
+          else ctx.store.dispatch(allowAccess())
         }
 
         let translations = await getTranslations('ru')
@@ -37,25 +60,51 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
         let initialProps = {}
         if (Page.getInitialProps) initialProps = await Page.getInitialProps(ctx)
 
-        return { translations, hash, ...initialProps }
+        return { translations, ...initialProps }
       }
 
       constructor (props) {
         super(props)
+
         this.i18n = starti18n(props.translations)
       }
 
       async componentDidMount () {
-        if (this.props.hash) {
+        if (this.props.__service.hash && !this.props.__service.user) {
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
+
           if (data.user && data.user.id) {
-            this.props.dispatch(auth(data))
+            this.props.dispatch(auth(data, true))
             this.props.dispatch(fillPrograms(data.programs || []))
           }
         }
       }
 
+      componentWillReceiveProps ({ __service, ...nextProps }) {
+        let flag = (__service.user && this.props.__service.user)
+          ? (__service.user.id !== this.props.__service.user.id)
+          : (__service.user !== this.props.__service.user)
+
+        if (flag && accessRule && isFunction(accessRule)) {
+          console.log('user changed flag fired')
+          if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Ошибка доступа'))
+          else nextProps.dispatch(allowAccess())
+        }
+      }
+
       render () {
+        // отделяю сервисные свойства от настоящих
+        let { __service, ...props } = this.props
+
+        let Body = null
+        if (__service.access.error) {
+          Body = <ErrorLayout code={__service.access.error} message={__service.access.message} />
+        }
+        // if (__service.hash && !__service.user) {
+        //   console.log('hello test')
+        //   Body = <div>Загрузка</div>
+        // }
+
         return (
           <I18nextProvider i18n={this.i18n}>
             <div>
@@ -66,7 +115,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
 
-              <Page {...this.props} />
+              { Body || <Page {...props} /> }
 
               <style jsx global>{`
                 @reset-global pc;
