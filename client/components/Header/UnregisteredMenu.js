@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import axios from 'axios'
+import Router from 'next/router'
 import React, { Component } from 'react'
 
 import Modal from '../Modal'
@@ -38,6 +39,8 @@ class HeaderUnregisteredMenu extends Component {
       state.errors = {}
       if (!name) {
         state.credentials = { ...defaultCredentials }
+        state.fetching = false
+        state.message = null
       }
     })
   }
@@ -119,20 +122,26 @@ class HeaderUnregisteredMenu extends Component {
 
     try {
       let { data } = await axios.post('/api/auth/register', { email, firstName, lastName }, { withCredentials: true })
-      console.log(data)
 
-      // this.props.dispatch(auth(data))
-      // this.props.dispatch(fillPrograms(data.programs || []))
+      if (data.status === 200) {
+        await this.setState(state => {
+          state.fetching = false
+          state.message = 'Ваш аккаунт создан! Вам на почту придет ссылка для подтверждения E-mail.'
+        })
 
-      // await this.setState(state => {
-      //   state.fetching = false
-      //   state.modal = null
-      //   state.credentials = { ...defaultCredentials }
-      // })
+        this.toggleModal('login')
+      } else {
+        await this.setState(state => {
+          let errors = { fetching: data.message }
+          data.result.errors.map(el => { errors[el] = 'Неверный формат данных' })
+          state.errors = errors
+          state.fetching = false
+        })
+      }
     } catch (error) {
       await this.setState(state => {
-        // state.fetching = false
-        // state.errors.fetching = error.message
+        state.fetching = false
+        state.errors.fetching = error.message
       })
     }
   }
@@ -153,10 +162,21 @@ class HeaderUnregisteredMenu extends Component {
     await this.startFetching()
 
     try {
-      await this.setState(state => {
-        state.fetching = false
-        state.message = 'Ссылка отправлена вам на почту'
-      })
+      let { data } = await axios.post('/api/auth/recover', { email }, { withCredentials: true })
+
+      if (data.status === 200) {
+        await this.setState(state => {
+          state.fetching = false
+          state.message = 'Ссылка для восстановления пароля отправлена на ваш E-mail'
+        })
+
+        this.toggleModal('login')
+      } else {
+        await this.setState(state => {
+          state.fetching = false
+          state.errors.fetching = data.message
+        })
+      }
     } catch (error) {
       await this.setState(state => {
         state.fetching = false
@@ -184,7 +204,7 @@ class HeaderUnregisteredMenu extends Component {
             <AuthSignup onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.signup.bind(this)} values={_.pick(credentials, [ 'email', 'firstName', 'lastName' ])} loginSwitch={this.toggleModal.bind(this, 'login')} />
           )}
           { modal === 'login' && (
-            <AuthLogin onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} />
+            <AuthLogin onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.login.bind(this)} values={_.pick(credentials, [ 'email', 'password' ])} recoverySwitch={this.toggleModal.bind(this, 'recovery')} message={message} />
           )}
           { modal === 'recovery' && (
             <AuthRecovery onInput={this.inputChange.bind(this)} fetching={fetching} errors={errors} submit={this.recovery.bind(this)} values={_.pick(credentials, [ 'email' ])} loginSwitch={this.toggleModal.bind(this, 'login')} message={message} />

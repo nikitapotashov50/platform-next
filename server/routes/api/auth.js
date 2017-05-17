@@ -1,7 +1,7 @@
 const { pick } = require('lodash')
 const { models } = require('../../models')
 
-const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
+const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
 const getUser = async email => {
   let rawUser = await models.User.findOne({
@@ -90,20 +90,47 @@ module.exports = router => {
     }
   })
 
+  router.post('/recover', async ctx => {
+    try {
+      const BMAccess = await getBMAccessTokenCredentialsOnly()
+
+      if (!BMAccess || !BMAccess.access_token) throw new Error('no token')
+
+      let { email } = ctx.request.body
+
+      await getBMRecovery(email, BMAccess.access_token)
+
+      ctx.body = {
+        status: 200
+      }
+    } catch (e) {
+      ctx.body = {
+        status: 500,
+        message: e.message
+      }
+    }
+  })
+
   router.post('/register', async ctx => {
     try {
       let BMAccess = await getBMAccessTokenCredentialsOnly()
-      console.log(BMAccess)
 
       if (!BMAccess || !BMAccess.access_token) throw new Error('no token')
 
       let { email, firstName, lastName } = ctx.request.body
 
       const getBMNewUser = await getBMSignUp(email, firstName, lastName, BMAccess.access_token)
-      console.log(getBMNewUser)
-
-      ctx.body = {
-        status: 200
+      
+      if (!getBMNewUser.status || getBMNewUser.status !== 'success') {
+        ctx.body = {
+          status: 400,
+          message: getBMNewUser.description,
+          result: {
+            errors: Object.keys(getBMNewUser.err_data)
+          }
+        }
+      } else {
+        ctx.body = { status: 200 }
       }
     } catch (e) {
       ctx.body = {

@@ -44,9 +44,12 @@ let mapStateToProps = ({ posts, auth, profile }) => ({
   isMe: auth.user && profile.user && (auth.user.id === profile.user.id)
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  loadPosts
-}, dispatch)
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators({
+    loadPosts
+  }, dispatch),
+  dispatch
+})
 
 export default Page(UserProfile(UserPage), {
   title: 'Профиль',
