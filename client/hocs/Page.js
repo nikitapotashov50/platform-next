@@ -1277,7 +1277,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   &:last-of-type { margin-bottom: 0; }
 
                   &__header { margin-left: -50px; }
-                  &__body { margin-top: 5px; }
+                  &__body { margin-top: -19px; }
                   &__footer { margin-top: 5px; }
 
                   &__body {}
