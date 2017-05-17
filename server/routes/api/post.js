@@ -131,7 +131,7 @@ module.exports = router => {
       where: {
         id: created.id
       },
-      attributes: ['id', 'title', 'content'],
+      attributes: ['id', 'title', 'content', 'created_at'],
       include: [{
         model: models.User,
         attributes: ['name', 'first_name', 'last_name', 'picture_small'],
