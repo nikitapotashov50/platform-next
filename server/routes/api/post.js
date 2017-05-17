@@ -1,4 +1,4 @@
-const { size } = require('lodash')
+const { size, has } = require('lodash')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -30,6 +30,14 @@ module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
+    let where = {}
+
+    if (has(ctx.query, 'byUserId')) {
+      where = {
+        user_id: ctx.query.byUserId
+      }
+    }
+
     const data = await models.Post.findAll({
       attributes: ['id', 'title', 'content', 'user_id', 'created_at'],
       order: [['created_at', 'desc']],
@@ -56,6 +64,7 @@ module.exports = router => {
           as: 'user'
         }]
       }],
+      where,
       limit: 20,
       offset
     })
