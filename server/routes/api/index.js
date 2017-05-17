@@ -7,6 +7,7 @@ const authRoutes = require('./auth')
 const postRouter = require('./post')
 const feedbackRoutes = require('./feedback')
 const meRoutes = require('./me')
+const usersRoutes = require('./users')
 
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
@@ -28,6 +29,7 @@ const initMeRoutes = async (ctx, next) => {
 
 module.exports = router => {
   router.bridge('/auth', authRoutes)
+  router.bridge('/users', usersRoutes)
   router.bridge('/feedback', feedbackRoutes)
   router.bridge('/post', postRouter)
   router.bridge('/me', [ initMeRoutes ], meRoutes)

@@ -1,8 +1,8 @@
 import moment from 'moment'
 
-export default ({ birthday, city = 'Москва', occupation = 'Машинная вышивка(нашивки, картины), дизайн-интерьеров, картины.', ...props }) => {
+export default ({ birthday, city, occupation, ...props }) => {
   let badgeInfo = []
-  if (birthday) badgeInfo.push(moment(birthday).month(0).from(moment().month(0)))
+  if (birthday) badgeInfo.push(Math.floor(moment(new Date()).diff(moment(birthday), 'years', true)) + ' лет')
   if (city) badgeInfo.push(city)
 
   return (

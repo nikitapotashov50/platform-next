@@ -16,6 +16,10 @@ module.exports = router => {
   })
 
   router.bridge('/admin', router => {
+    router.get('/users/:userId', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/admin/users', Object.assign({}, ctx.params, ctx.query))
+    })
+
     router.bridge('/feedback', router => {
       router.get('/', async ctx => {
         await ctx.__next.render(ctx.req, ctx.res, '/admin/feedback', Object.assign({}, ctx.params, ctx.query, { type: 'program' }))

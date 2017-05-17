@@ -8,6 +8,7 @@ import AuthSignup from '../Auth/Signup'
 import AuthRecovery from '../Auth/Recovery'
 
 import { auth } from '../../redux/auth'
+import { fill as fillPrograms } from '../../redux/user/programs'
 
 let defaultCredentials = {
   email: '',
@@ -90,6 +91,7 @@ class HeaderUnregisteredMenu extends Component {
         state.credentials = { ...defaultCredentials }
       })
       this.props.dispatch(auth(data))
+      this.props.dispatch(fillPrograms(data.programs))
     } catch (error) {
       await this.setState(state => {
         state.fetching = false
@@ -116,15 +118,21 @@ class HeaderUnregisteredMenu extends Component {
     await this.startFetching()
 
     try {
-      await this.setState(state => {
-        state.fetching = false
-        state.modal = null
-        state.credentials = { ...defaultCredentials }
-      })
+      let { data } = await axios.post('/api/auth/register', { email, firstName, lastName }, { withCredentials: true })
+      console.log(data)
+
+      // this.props.dispatch(auth(data))
+      // this.props.dispatch(fillPrograms(data.programs || []))
+
+      // await this.setState(state => {
+      //   state.fetching = false
+      //   state.modal = null
+      //   state.credentials = { ...defaultCredentials }
+      // })
     } catch (error) {
       await this.setState(state => {
-        state.fetching = false
-        state.errors.fetching = error.message
+        // state.fetching = false
+        // state.errors.fetching = error.message
       })
     }
   }

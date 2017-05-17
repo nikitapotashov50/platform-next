@@ -111,8 +111,8 @@ const UserLayout = ({ user, groups, showButtons, subscribers, subscriptions, isS
 const mapStateToProps = ({ profile, auth }) => ({
   ...profile,
   me: auth.user,
-  isBlocked: profile.user ? (auth.blackList.indexOf(profile.user.id) !== -1) : false,
-  isSubscribed: profile.user ? (auth.subscriptions.indexOf(profile.user.id) !== -1) : false
+  isBlocked: profile.user && auth.blackList ? (auth.blackList.indexOf(profile.user.id) !== -1) : false,
+  isSubscribed: profile.user && auth.subscriptions ? (auth.subscriptions.indexOf(profile.user.id) !== -1) : false
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
