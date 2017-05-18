@@ -186,6 +186,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   border: 1px solid #ebebeb;
                 }
 
+                input::-webkit-input-placeholder {color:#9f9f9f;}, 
+                input::-moz-placeholder {color:#9f9f9f;}      
+                input:-moz-placeholder {color:#9f9f9f;}          
+                input:-ms-input-placeholder {color:#9f9f9f;}
+                textarea::-webkit-input-placeholder {color:#9f9f9f;}
+                textarea::-moz-placeholder {color:#9f9f9f;}       
+                textarea:-moz-placeholder {color:#9f9f9f;}          
+                textarea:-ms-input-placeholder {color:#9f9f9f;}
+                
+
                 button {
                   border: none;
                   outline: none;
@@ -389,7 +399,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     }
                   }
                   &__footer {
-                    padding: 10px 20px;
+                    padding: 10px 15px;
                     border-top: 1px solid #efeff0;
                   }
                   &__menu {
@@ -749,7 +759,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       padding: 0 0 0 45px;
 
                       border: none;
-                      background: svg("edit", "[fill]: #7f7f7f;") 18px 18px no-repeat #fff;
+                      background: svg("edit", "[fill]: #7f7f7f;") 16px 16px no-repeat #fff;
                       background-size: 17px 17px;
                     }
                   }
@@ -1051,6 +1061,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     select {
                       
                       background: none;
+                      -webkit-appearance:none;
                       border: 0 none;
                       height: 59px;
                       padding: 0 10px;
@@ -1723,14 +1734,47 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       display: none;
                     }
                   }
+
+                  .panel {
+                    border-radius: 0;
+                  }
+
+
+                  .user-sub-menu {
                   
+                  &__item {
+                    
+                    min-width: 250px;
+
+                  }
+
+                  &__link {
+                  
+                    padding: 16px 15px !important;
+                    font-size: 15px;
+                  }
+                }
+                  
+                  .comment {
+
+                    &__header .user-inline {
+
+
+                      &__when {
+                        display: none;
+                      }
+                  }
+                    
+                  }
 
                   .user-inline {
 
                       &__title {
                         display: block;
                       }
+
                   }
+                  
 
                   .user-page {
                   &__header {
@@ -1755,12 +1799,27 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
 
                 .reply-form {
+
+                  &__input {
+                    border-radius: 0;
+                    font-size: 16px;
+                  }
+
+                  &__textarea {
+                    border-radius: 0;
+                    font-size: 16px;
+                    line-height: 140%;
+                  }
                   
                   &__textarea {
                     
-
+                    
                     &_short {
+                      border-radius: 0;
                       font-size: 16px;
+                      padding: 13px 0 0 45px;
+                      
+
                     }
                   }
                 }
