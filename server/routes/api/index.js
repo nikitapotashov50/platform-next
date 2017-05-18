@@ -34,7 +34,5 @@ module.exports = router => {
   router.bridge('/me', [ initMeRoutes ], meRoutes)
 
   // router.bridge('/field', fieldRouter)
-  // router.bridge('*', generalRouter)
-
   router.bridge('*', generalRouter)
 }

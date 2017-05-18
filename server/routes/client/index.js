@@ -9,6 +9,10 @@ module.exports = router => {
     })
   })
 
+  router.get('/feed/:tab', async ctx => {
+    await ctx.__next.render(ctx.req, ctx.res, '/', Object.assign({}, ctx.params, ctx.query))
+  })
+
   router.bridge('/posts', router => {
     router.get('/:postId', async ctx => {
       await ctx.__next.render(ctx.req, ctx.res, '/posts', Object.assign({}, ctx.params, ctx.query))

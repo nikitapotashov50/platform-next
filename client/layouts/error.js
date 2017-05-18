@@ -9,7 +9,7 @@ export default ({ children, code, message, ...props }) => (
       <br />
       {/* <div className='error-page__code'>{code}</div>
       <div className='error-page__message'>{message}</div> */}
-      <div className='error-page__message'>Страница недоступна</div>
+      <div className='error-page__message'>{ message || 'Страница недоступна'}</div>
       <br />
       <Link href='/'>
         <a>На главную</a>

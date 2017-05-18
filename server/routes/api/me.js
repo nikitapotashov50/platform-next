@@ -52,11 +52,31 @@ module.exports = router => {
 
   router.bridge('/goal', [ initGoal ], router => {
     router.get('/', ctx => {
-      ctx.response.headers['Access-Control-Allow-Credentials'] = true
       ctx.body = {
         status: 200,
         result: {
           goal: ctx.__.goal
+        }
+      }
+    })
+
+    router.put('/', async ctx => {
+      let { a, b, occupation } = ctx.request.body
+
+      try {
+        let goal = await ctx.__.goal.update({ a, b, occupation })
+
+        ctx.body = {
+          status: 200,
+          result: {
+            goal
+          }
+        }
+      } catch (e) {
+        ctx.body = {
+          status: 500,
+          message: 'Error saving goal',
+          errorMessage: e.message
         }
       }
     })

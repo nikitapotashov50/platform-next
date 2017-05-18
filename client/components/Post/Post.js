@@ -99,11 +99,14 @@ class Post extends Component {
       />
     ) : null
 
+    let goal = null
+    if (user.Goals && user.Goals.length) goal = user.Goals[0]
+
     return (
       <div>
         <Panel
           Footer={Footer}
-          Header={<UserInline user={user} date={this.props.created_at} />}
+          Header={<UserInline user={user} goal={goal} date={this.props.created_at} />}
           headerStyles={{ noBorder: true, npBottomPadding: true }}
           Options={() => Options}
           withAnimation={added}

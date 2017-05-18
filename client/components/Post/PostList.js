@@ -45,6 +45,7 @@ class PostList extends Component {
   render () {
     const { posts } = this.props
     const { expanded } = this.state
+    // console.log(posts)
 
     return (
       <div>

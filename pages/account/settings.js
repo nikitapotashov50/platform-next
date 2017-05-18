@@ -6,8 +6,8 @@ import React, { Component } from 'react'
 import MainSettings from '../../client/components/AccountSettings/Main'
 import AboutSettings from '../../client/components/AccountSettings/About'
 import ContactsSettings from '../../client/components/AccountSettings/Contacts'
-import OtherSettings from '../../client/components/AccountSettings/Other'
-import AvatarSettings from '../../client/components/AccountSettings/Avatar'
+// import OtherSettings from '../../client/components/AccountSettings/Other'
+// import AvatarSettings from '../../client/components/AccountSettings/Avatar'
 
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
@@ -79,12 +79,12 @@ class AccountSettings extends Component {
     return (
       <SettingsLayout url={this.props.url}>
         <OverlayLoader loading={fetching}>
-          <Panel Footer={Footer} Header={<h2 className='panel__title'>{t('account.settings.' + tab + '.title')}</h2>}>
+          <Panel Footer={Footer} bodyStyles={{ noVerticalPadding: true }} Header={<h2 className='panel__title'>{t('account.settings.' + tab + '.title')}</h2>}>
             { (tab === 'main') && <MainSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             { (tab === 'contacts') && <ContactsSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             { (tab === 'about') && <AboutSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
-            { (tab === 'avatar') && <AvatarSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
-            { (tab === 'other') && <OtherSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
+            {/* { (tab === 'avatar') && <AvatarSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> } */}
+            {/* { (tab === 'other') && <OtherSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> } */}
           </Panel>
         </OverlayLoader>
       </SettingsLayout>
