@@ -23,6 +23,7 @@ class Post extends Component {
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
     this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
+    this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
@@ -33,6 +34,10 @@ class Post extends Component {
 
   handleDeleteButtonClick () {
     this.props.deletePost(this.props.id)
+  }
+
+  handleEditButtonClick () {
+    console.log('edit post')
   }
 
   handleLikeButtonClick () {
@@ -92,6 +97,7 @@ class Post extends Component {
 
     const Options = showPostMenu ? (
       <Menu
+        onEdit={this.handleEditButtonClick}
         onDelete={this.handleDeleteButtonClick}
         handleClickOutside={() => {
           this.setState({ showPostMenu: false })
