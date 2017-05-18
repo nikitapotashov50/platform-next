@@ -67,6 +67,7 @@
     "react-loaders": "^2.5.0",
     "react-onclickoutside": "^5.11.1",
     "react-redux": "^5.0.4",
+    "react-slick": "^0.14.11",
     "react-string-replace": "^0.4.0",
     "react-timeago": "^3.3.0",
     "react-waypoint": "^7.0.0",
