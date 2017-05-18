@@ -52,14 +52,23 @@ export const removeFromBlackList = createAction('auth/BLACK_LIST_REMOVE', async 
 
 // reducer
 export default handleActions({
-  [auth]: (state, { payload }) => ({
-    ...state,
-    user: payload.user,
-    blackList: payload.blackList,
-    subscriptions: payload.subscriptions,
-    isLogged: true,
-    cookieExists: payload.isRestored
-  }),
+  [auth]: (state, { payload }) => {
+    let subs = []
+    if (payload.subscriptions) {
+      payload.subscriptions.map(el => {
+        subs.push(el.id)
+      })
+    }
+
+    return {
+      ...state,
+      user: payload.user,
+      blackList: payload.blackList,
+      subscriptions: subs,
+      isLogged: true,
+      cookieExists: payload.isRestored
+    }
+  },
   [logout]: (state, action) => ({
     ...defaultState
   }),

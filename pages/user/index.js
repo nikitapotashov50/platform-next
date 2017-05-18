@@ -23,13 +23,14 @@ class UserPage extends Component {
     this.scrollDownHandle = this.scrollDownHandle.bind(this)
   }
 
-  static async getInitialProps ({ store }) {
+  static async getInitialProps ({ store, ...ctx }) {
     const baseURL = `http://${server.host}:${server.port}`
     const state = store.getState()
+
     const { data } = await axios.get(`${baseURL}/api/post`, {
       params: {
+        by_author_id: state.profile.user.id,
         user: state.auth.user
-        // byUserId: state.auth.user.id
       }
     })
     store.dispatch(loadPosts(data))
@@ -38,9 +39,10 @@ class UserPage extends Component {
   scrollDownHandle () {
     this.props.loadMore({
       offset: this.state.offset,
-      user: this.props.auth.user
-      // byUserId: this.props.auth.user.id
+      user: this.props.auth.user,
+      by_author_id: this.props.user.id
     })
+
     this.setState({
       offset: this.state.offset * 2
     })
@@ -69,6 +71,7 @@ class UserPage extends Component {
 let mapStateToProps = ({ posts, auth, profile }) => ({
   posts: posts.posts,
   auth,
+  user: profile.user,
   isMe: auth.user && profile.user && (auth.user.id === profile.user.id)
 })
 

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'goals_view',
+      tableName: 'goals',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,
@@ -55,6 +55,9 @@ module.exports = (sequelize, DataTypes) => {
 
           // У цели есть доход
           Goal.hasMany(models.Income, { foreignKey: 'goal_id' })
+
+          //
+          Goal.belongsTo(models.Company, { foreignKey: 'company_id' })
         }
       }
     }

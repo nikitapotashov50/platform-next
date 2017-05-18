@@ -10,7 +10,10 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
 
       { !emptySide && (
         <div className='feed__right'>
-          { (Side.length > 0) && Side.map(el => el)}
+          { (Side.length > 0) && Side.map(el => (
+            <div key={Math.random()}>{el}</div>
+          ))}
+
           <div className='beta'>
             <div className='beta__overflow'>
               <div className='beta__title'>Это beta-версия нового поколения IT-платформы БМ</div>
@@ -30,7 +33,7 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
         position: relative;
 
         height: 185px;
-        padding: 10px 15px;
+        padding: 10px 7px;
 
         background: url('/static/img/beta.jpg') no-repeat;
         background-size: cover;
@@ -54,7 +57,7 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
         content: '';
       }
       .beta__title {
-        padding-top: 72px;
+        padding-top: 103px;
 
         color: #fff;
         font-weight: 700;

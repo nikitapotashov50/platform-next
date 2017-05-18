@@ -8,7 +8,7 @@ const dbConfig = require('../../config').db
  * @type {module}
  */
 
-let sequelize = new Sequelize(dbConfig.uri)
+let sequelize = new Sequelize(dbConfig.uri, { logging: () => {} })
 let db = []
 let views = {}
 

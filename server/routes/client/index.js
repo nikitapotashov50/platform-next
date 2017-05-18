@@ -9,6 +9,10 @@ module.exports = router => {
     })
   })
 
+  router.get('/feed/:tab', async ctx => {
+    await ctx.__next.render(ctx.req, ctx.res, '/', Object.assign({}, ctx.params, ctx.query))
+  })
+
   router.bridge('/posts', router => {
     router.get('/:postId', async ctx => {
       await ctx.__next.render(ctx.req, ctx.res, '/posts', Object.assign({}, ctx.params, ctx.query))
@@ -40,7 +44,10 @@ module.exports = router => {
 
   router.bridge('/account/settings', [ initSettings ], router => {
     router.get('/:tab', async ctx => {
-      await ctx.__next.render(ctx.req, ctx.res, '/account/settings', Object.assign({}, ctx.params, ctx.query))
+      let page = '/account/settings'
+      if (ctx.params.tab === 'goal') page = '/account/settings_goal'
+
+      await ctx.__next.render(ctx.req, ctx.res, page, Object.assign({}, ctx.params, ctx.query))
     })
   })
 

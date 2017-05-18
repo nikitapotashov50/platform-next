@@ -96,19 +96,6 @@ class PostEditor extends Component {
         )}
       </div>
     )
-
-    /*
-    return (
-      <Form
-        title={this.state.title}
-        handleTitleChange={this.handleTitleChange}
-        content={this.state.content}
-        handleContentChange={this.handleContentChange}
-        handleClickOutside={this.handleClickOutside}
-        createPost={this.createPost}
-      />
-    )
-    */
   }
 }
 

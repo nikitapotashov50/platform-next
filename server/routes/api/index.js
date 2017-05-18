@@ -12,7 +12,6 @@ const usersRoutes = require('./users')
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
     let User = await models.User.findOne({
-      attributes: [ 'id' ],
       where: { id: ctx.session.user.id }
     })
     ctx.__.me = User
@@ -35,7 +34,5 @@ module.exports = router => {
   router.bridge('/me', [ initMeRoutes ], meRoutes)
 
   // router.bridge('/field', fieldRouter)
-  // router.bridge('*', generalRouter)
-
   router.bridge('*', generalRouter)
 }

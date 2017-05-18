@@ -30,6 +30,7 @@ module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
+    let authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
 
     // не показывать удаленные посты
     let where = {
@@ -37,38 +38,59 @@ module.exports = router => {
     }
 
     // посты конкретного юзера
-    if (has(ctx.query, 'byUserId')) {
-      where = Object.assign({}, where, {
-        user_id: ctx.query.byUserId
-      })
+    if (authors) {
+      where.user_id = {
+        $in: authors
+      }
     }
 
     const data = await models.Post.findAll({
       attributes: ['id', 'title', 'content', 'user_id', 'created_at'],
       order: [['created_at', 'desc']],
-      include: [{
-        model: models.User,
-        attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
-        as: 'user'
-      }, {
-        model: models.Comment,
-        attributes: ['id', 'content', 'created_at'],
-        as: 'comments',
-        include: [{
+      include: [
+        {
           model: models.User,
           attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
-          as: 'user'
-        }]
-      }, {
-        model: models.Like,
-        as: 'likes',
-        attributes: ['id', 'created_at'],
-        include: [{
-          model: models.User,
-          attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
-          as: 'user'
-        }]
-      }],
+          as: 'user',
+          include: [
+            {
+              required: false,
+              model: models.Goal,
+              where: {
+                is_closed: 0
+              },
+              attributes: [ 'occupation', 'id' ]
+            }
+          ]
+        },
+        {
+          model: models.Comment,
+          attributes: ['id', 'content', 'created_at'],
+          as: 'comments',
+          include: [
+            {
+              model: models.User,
+              attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+              as: 'user'
+            }
+          ]
+        },
+        {
+          model: models.Like,
+          as: 'likes',
+          attributes: ['id', 'created_at'],
+          include: [
+            {
+              model: models.User,
+              attributes: ['id', 'name', 'first_name', 'last_name', 'picture_small'],
+              as: 'user'
+            }
+          ],
+          through: {
+            attributes: []
+          }
+        }
+      ],
       where,
       limit: 20,
       offset
@@ -77,8 +99,8 @@ module.exports = router => {
     let posts = data
     let user = ctx.query.user ? JSON.parse(ctx.query.user) : ctx.session.user
 
-    // лайкал пост или нет
     if (user) {
+      // лайкал пост или нет
       posts = data.map(post => {
         let liked = false
         if (size(post.likes.filter(like => like.user.id === user.id)) > 0) {
