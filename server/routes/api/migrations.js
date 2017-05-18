@@ -1,5 +1,5 @@
 const emojiStrip = require('emoji-strip')
-const { pick, drop, last, some, startsWith, eq, uniq, isEmpty } = require('lodash')
+const { pick, some, startsWith, eq, uniq, isEmpty } = require('lodash')
 const steem = require('steem')
 const { models } = require('../../models')
 
@@ -28,7 +28,7 @@ module.exports = router => {
     let userNames = []
     let users = []
 
-    // await models.SteemUser.truncate()
+    await models.SteemUser.truncate()
 
     rawUsers.map(el => { userNames.push(el.name) })
 
@@ -43,7 +43,7 @@ module.exports = router => {
       delete userTmp.json_metadata
       users.push(userTmp)
 
-      // await models.SteemUser.create(userTmp)
+      await models.SteemUser.create(userTmp)
     })
 
     ctx.body = {
@@ -65,8 +65,8 @@ module.exports = router => {
 
     let userAttrNames = [
       'vk',
-      'age',
-      'city',
+      // 'age',
+      // 'city',
       'phone',
       'website',
       'facebook',
@@ -124,19 +124,23 @@ module.exports = router => {
             else goalAttrs[k] = userData.data[k]
           }
 
-          if (userAttrs.city) {
-            let city = await models.City.findOrCreate({
-              where: {
-                name: { $like: userAttrs.city }
-              }
-            })
-            userAttrs.city_id = city[0].get('id')
-            delete userAttrs.city
-          }
-          if (userAttrs.birthay) {
-            console.log(userAttrs.birthay)
+          // if (userAttrs.city) {
+          //   try {
+          //     let city = await models.City.findOrCreate({
+          //       where: {
+          //         name: { $like: userAttrs.city }
+          //       }
+          //     })
+          //     userAttrs.city_id = city[0].get('id')
+          //     delete userAttrs.city
+          //   } catch (e) {
+          //     console.log(userAttrs.city)
+          //   }
+          // }
+          // if (userAttrs.birthay) {
+            // console.log(userAttrs.birthay)
             // userAttrs.birthay = new Date(userAttrs.birthay)
-          }
+          // }
           // await user.update(userAttrs, { fields: Object.keys(userAttrs) })
 
           if (!isEmpty(goalAttrs) && goalAttrs.a && goalAttrs.b && goalAttrs.occupation) {
@@ -149,15 +153,18 @@ module.exports = router => {
             // if (goalAttrs.finish_at) goalAttrs.finish_at = new Date(goalAttrs.finish_at)
             let goal = await models.Goal.findOne({
               where: {
-                user_id: user.id,
+                user_id: user.get('id'),
                 is_closed: 0
               }
             })
 
+            goalAttrs.user_id = user.get('id')
+            console.log(user.get('id'))
+
             if (goal) {
               await goal.update(goalAttrs, { fields: Object.keys(goalAttrs) })
             } else {
-              await models.Goal.create(Object.assign({}, goalAttrs, { suer_id: user.id }))
+              await models.Goal.create(goalAttrs)
             }
           }
         }
