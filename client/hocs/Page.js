@@ -1710,7 +1710,14 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       display: none;
                     }
                   }
+                  
 
+                  .user-inline {
+
+                      &__title {
+                        display: block;
+                      }
+                  }
 
                   .user-page {
                   &__header {
