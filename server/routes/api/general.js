@@ -35,6 +35,13 @@ module.exports = router => {
       include: [
         {
           required: false,
+          model: models.Goal,
+          where: {
+            is_closed: 0
+          }
+        },
+        {
+          required: false,
           as: 'Groups',
           model: models.Group,
           where: { is_blocked: 0 },
@@ -72,9 +79,11 @@ module.exports = router => {
       let groups = user.get('Groups')
       let subscriptions = user.get('Subscriptions')
       let subscribers = user.get('Subscribers')
+      let goal = user.get('Goals')
 
       ctx.body = {
         user,
+        goal,
         groups,
         subscriptions,
         subscribers

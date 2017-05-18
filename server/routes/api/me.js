@@ -8,7 +8,6 @@ const initInteractions = async (ctx, next) => {
   })
 
   if (!User) {
-    ctx.status = 403
     ctx.body = {
       status: 403,
       message: 'No user found'
@@ -17,6 +16,23 @@ const initInteractions = async (ctx, next) => {
     ctx.__.target = User
     await next()
   }
+}
+
+const initGoal = async (ctx, next) => {
+  let [ goal ] = await models.Goal.findOrCreate({
+    where: {
+      user_id: ctx.__.me.id,
+      is_closed: 0
+    },
+    defaults: {
+      a: 0,
+      b: 0
+    }
+  })
+
+  ctx.__.goal = goal
+
+  await next()
 }
 
 module.exports = router => {
@@ -32,6 +48,38 @@ module.exports = router => {
         user: ctx.__.me
       }
     }
+  })
+
+  router.bridge('/goal', [ initGoal ], router => {
+    router.get('/', ctx => {
+      ctx.body = {
+        status: 200,
+        result: {
+          goal: ctx.__.goal
+        }
+      }
+    })
+
+    router.put('/', async ctx => {
+      let { a, b, occupation } = ctx.request.body
+
+      try {
+        let goal = await ctx.__.goal.update({ a, b, occupation })
+
+        ctx.body = {
+          status: 200,
+          result: {
+            goal
+          }
+        }
+      } catch (e) {
+        ctx.body = {
+          status: 500,
+          message: 'Error saving goal',
+          errorMessage: e.message
+        }
+      }
+    })
   })
 
   router.bridge('/interact', [ initInteractions ], router => {

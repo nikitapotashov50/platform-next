@@ -1,40 +1,20 @@
-import Link from 'next/link'
-import numeral from 'numeral'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { subscribeToUser, unsubscribeFromUser, addToBlackList, removeFromBlackList } from '../redux/auth'
 
 import DefaultLayout from './default'
 import Panel from '../components/Panel'
+
+import UserProfileGoal from '../components/User/ProfileGoal'
 import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
-let goal = {
-  a: 100000,
-  b: 300000,
-  fact: 140000
-}
-
-const UserLayout = ({ user, groups, showButtons, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children, ...props }) => {
-  if (!user) {
-    return (
-      <DefaultLayout>
-        <Link href='/@bm-paperdoll/settings'>
-          <a>Ссылка</a>
-        </Link>
-        <div className='user-page'>Пользоветель не найден</div>
-      </DefaultLayout>
-    )
-  }
-
+const UserLayout = ({ user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children, ...props }) => {
   let panelBodyStyles = { padding: 'small' }
 
   let bgImageStyles = {}
   if (user.picture_large) bgImageStyles.backgroundImage = `url(${user.picture_large})`
-
-  let progress = 100 - ((goal.b - goal.fact) / (goal.b / 100))
-  if (progress > 100) progress = 100
 
   return (
     <DefaultLayout>
@@ -58,33 +38,25 @@ const UserLayout = ({ user, groups, showButtons, subscribers, subscriptions, isS
           <div className='user-page__content-block user-page__content-block_side'>
             {/* Информация */}
             <Panel bodyStyles={panelBodyStyles}>
-              <UserProfileBadge {...user} />
+              <UserProfileBadge {...user} {...goal} />
             </Panel>
 
             {/* Цель */}
-            <Panel bodyStyles={{ noPadding: true }} Header={(
-              <div className='user-side-panel'>
-                <div className='user-side-panel__title'> Цель</div>
-              </div>
-            )}>
-              <div className='profile-goal'>
-                <div className='profile-goal__progress' style={{ width: progress + '%' }} />
-                <div className='profile-goal__block profile-goal__block_a'>{numeral(goal.a).format('0,0')} ₽</div>
-                <div className='profile-goal__block profile-goal__block_b'>{numeral(goal.b).format('0,0')} ₽</div>
-              </div>
-            </Panel>
-
-            {/* Подписки */}
-            { (subscriptions.length !== 0) && (
-              <Panel bodyStyles={panelBodyStyles}>
-                <UserProfileSubscribers items={subscriptions} title='Подписки' />
-              </Panel>
-            )}
+            { goal && <UserProfileGoal goal={goal} />}
 
             {/* Подписчики */}
             { (subscribers.length !== 0) && (
               <Panel bodyStyles={panelBodyStyles}>
                 <UserProfileSubscribers items={subscribers} title='Подписчики' />
+              </Panel>
+            )}
+
+            {/* Подписки */}
+            { (subscriptions.length !== 0) && (
+              <Panel bodyStyles={panelBodyStyles}>
+                <div className='user-side-panel'>
+                  <div className='user-side-panel__title'>Подписки ({subscriptions.length})</div>
+                </div>
               </Panel>
             )}
 
