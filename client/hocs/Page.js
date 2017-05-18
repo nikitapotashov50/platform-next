@@ -1075,7 +1075,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       height: 59px;
                       padding: 0 5px;
                       width: 70px;
-<<<<<<< HEAD
 
                        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
                     background-size: 9px 6px;
@@ -1083,9 +1082,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     background-origin: content-box;
                     background-repeat: no-repeat;
 
-=======
-
->>>>>>> attachments
                     }
 
                     &_padded { padding: 9.5px 13px; }
@@ -1819,7 +1815,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                 .reply-form {
 
-<<<<<<< HEAD
                   &__input {
                     border-radius: 0;
                     font-size: 16px;
@@ -1833,12 +1828,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                   &__textarea {
 
-
-=======
-                  &__textarea {
-
-
->>>>>>> attachments
                     &_short {
                       border-radius: 0;
                       font-size: 16px;
