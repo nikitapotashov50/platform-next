@@ -20,6 +20,55 @@ const tagsFromMeta = meta => {
 }
 
 module.exports = router => {
+  router.get('/followers', async ctx => {
+    let users = await models.User.findAll({
+      attributes: [ 'id', 'name' ]
+    })
+
+    let result = {}
+    let limit = 20
+
+    await Promise.all(users.map(el => {
+      return new Promise(async (resolve, reject) => {
+        let lastFollower
+
+        while (true) {
+          let data = await steem.api.getFollowing(el.name, lastFollower, undefined, limit)
+          if (!result[el.id]) result[el.id] = []
+
+          if (!lastFollower) Array.prototype.push.apply(result[el.id], data)
+          else Array.prototype.push.apply(result[el.id], data)
+
+          if (data.length < (lastFollower ? limit - 1 : limit)) break
+
+          lastFollower = data[data.length - 1].following
+        }
+
+        await Promise.all(result[el.id].map(followerEl => {
+          return new Promise(async (resolve, reject) => {
+            let followerEntry = await models.User.findOne({
+              where: {
+                name: { $like: followerEl.following }
+              }
+            })
+
+            if (followerEntry) await el.addSubscriptions(followerEntry)
+            resolve()
+          })
+        }))
+
+        resolve()
+      })
+    }))
+
+    ctx.body = {
+      status: 200,
+      result: {
+        data: result
+      }
+    }
+  })
+
   router.get('/users', async ctx => {
     let rawUsers = await models.User.findAll({
       attributes: [ 'id', 'name' ]
