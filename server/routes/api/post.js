@@ -1,4 +1,4 @@
-const { size, has, isArray } = require('lodash')
+const { size, has } = require('lodash')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {

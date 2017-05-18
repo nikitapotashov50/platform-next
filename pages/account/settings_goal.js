@@ -1,5 +1,4 @@
 import axios from 'axios'
-import numeral from 'numeral'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 
