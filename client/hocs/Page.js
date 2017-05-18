@@ -164,6 +164,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   background: #edeeee;
                   @extend museo;
                   -webkit-font-smoothing: antialiased;
+                  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
                 
                 }
 
@@ -1058,11 +1059,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                     border-left: 1px solid #f0f1f1;
                     
-                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
-                    background-size: 9px 6px;
-                    background-position: 100%;
-                    background-origin: content-box;
-                    background-repeat: no-repeat;
+                   
 
                     &_hoverable {
                       transition: background .3s;
@@ -1075,8 +1072,14 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       -webkit-appearance:none;
                       border: 0 none;
                       height: 59px;
-                      padding: 0 10px;
+                      padding: 0 5px;
                       width: 70px;
+                      
+                       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
+                    background-size: 9px 6px;
+                    background-position: 100%;
+                    background-origin: content-box;
+                    background-repeat: no-repeat;
                      
                     }
 
