@@ -1,4 +1,5 @@
 const { size, has } = require('lodash')
+const pMap = require('p-map')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -45,7 +46,7 @@ module.exports = router => {
     }
 
     const data = await models.Post.findAll({
-      attributes: ['id', 'title', 'content', 'user_id', 'created_at'],
+      attributes: ['id', 'title', 'content', 'user_id', 'created_at'], // [orm.fn('COUNT', orm.col('likes.id')), 'likes_count']
       order: [['created_at', 'desc']],
       include: [
         {
@@ -57,7 +58,7 @@ module.exports = router => {
               required: false,
               model: models.Goal,
               where: {
-                is_closed: 0
+                is_closed: false
               },
               attributes: [ 'occupation', 'id' ]
             }
@@ -89,11 +90,20 @@ module.exports = router => {
           through: {
             attributes: []
           }
+        },
+        {
+          model: models.Attachment,
+          attributes: ['id', 'name', 'path'],
+          as: 'attachments',
+          through: {
+            attributes: []
+          }
         }
       ],
       where,
       limit: 20,
-      offset
+      offset,
+      logging: log => console.log(log)
     })
 
     let posts = data
@@ -126,15 +136,32 @@ module.exports = router => {
       user_id: ctx.session.user.id
     })
 
+    const attachments = await pMap(postData.attachments, async attachment => {
+      const result = await models.Attachment.create({
+        name: attachment.key,
+        path: attachment.url
+      })
+      return result
+    })
+
+    await created.addAttachments(attachments)
+
     const data = await models.Post.findOne({
       where: {
         id: created.id
       },
-      attributes: ['id', 'title', 'content'],
+      attributes: ['id', 'title', 'content', 'created_at'],
       include: [{
         model: models.User,
         attributes: ['name', 'first_name', 'last_name', 'picture_small'],
         as: 'user'
+      }, {
+        model: models.Attachment,
+        attributes: ['id', 'name', 'path'],
+        as: 'attachments',
+        through: {
+          attributes: []
+        }
       }]
     })
     ctx.body = data

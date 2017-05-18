@@ -114,6 +114,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                 <link rel='icon' type='image/png' href='/static/favicons/favicon-32x32.png' sizes='32x32' />
                 <link rel='icon' type='image/png' href='/static/favicons/favicon-16x16.png' sizes='16x16' />
                 <link rel='manifest' href='/static/favicons/manifest.json' />
+                <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css' />
+                <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
 
@@ -165,7 +167,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   @extend museo;
                   -webkit-font-smoothing: antialiased;
                   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-                
                 }
 
                 img {
@@ -192,15 +193,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   border: 1px solid #ebebeb;
                 }
 
-                input::-webkit-input-placeholder {color:#9f9f9f;}, 
-                input::-moz-placeholder {color:#9f9f9f;}      
-                input:-moz-placeholder {color:#9f9f9f;}          
+                input::-webkit-input-placeholder {color:#9f9f9f;},
+                input::-moz-placeholder {color:#9f9f9f;}
+                input:-moz-placeholder {color:#9f9f9f;}
                 input:-ms-input-placeholder {color:#9f9f9f;}
                 textarea::-webkit-input-placeholder {color:#9f9f9f;}
-                textarea::-moz-placeholder {color:#9f9f9f;}       
-                textarea:-moz-placeholder {color:#9f9f9f;}          
+                textarea::-moz-placeholder {color:#9f9f9f;}
+                textarea:-moz-placeholder {color:#9f9f9f;}
                 textarea:-ms-input-placeholder {color:#9f9f9f;}
-                
+
 
                 button {
                   border: none;
@@ -987,7 +988,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   position: relative;
                   // box-shadow: inset 0 1px 0 0 rgba(0,0,0,.14);
                   border-top: #ebebeb;
-                  
+
                   &__progress {
                     positin: absolute;
 
@@ -1058,8 +1059,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     display: inline-block;
 
                     border-left: 1px solid #f0f1f1;
-                    
-                   
+
+
 
                     &_hoverable {
                       transition: background .3s;
@@ -1067,20 +1068,24 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     }
 
                     select {
-                      
+
                       background: none;
                       -webkit-appearance:none;
                       border: 0 none;
                       height: 59px;
                       padding: 0 5px;
                       width: 70px;
-                      
+<<<<<<< HEAD
+
                        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
                     background-size: 9px 6px;
                     background-position: 100%;
                     background-origin: content-box;
                     background-repeat: no-repeat;
-                     
+
+=======
+
+>>>>>>> attachments
                     }
 
                     &_padded { padding: 9.5px 13px; }
@@ -1260,7 +1265,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                   &__comments {
                     margin-top: 20px;
-                    border-top: 
+                    border-top:
                   }
 
                   &__title {
@@ -1332,7 +1337,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   &__footer { margin-top: 5px; }
 
                   &__body {}
-                  
+
                 }
 
                 .share {
@@ -1723,13 +1728,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
               /*  Мобильные стили */
               @media screen and (max-width: 39.9375em) {
-                  
+
                   .menu {
                     padding: 0 0 0 10px;
                   }
 
                   .app-header {
-                    
+
                     &__wrap {
                       width: 100%;
                     }
@@ -1738,7 +1743,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   .feed {
 
                     margin: 0;
-                    
+
                     &__left {
                       width: 100%;
                       padding: 0;
@@ -1755,20 +1760,20 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
 
                   .user-sub-menu {
-                  
+
                   &__item {
-                    
+
                     min-width: 250px;
 
                   }
 
                   &__link {
-                  
+
                     padding: 16px 15px !important;
                     font-size: 15px;
                   }
                 }
-                  
+
                   .comment {
 
                     &__header .user-inline {
@@ -1778,7 +1783,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                         display: none;
                       }
                   }
-                    
+
                   }
 
                   .user-inline {
@@ -1788,19 +1793,19 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       }
 
                   }
-                  
+
 
                   .user-page {
                   &__header {
-                   
+
                   }
 
                   &__content {
-               
+
                   }
 
                   &__content-block {
-                    
+
 
                     &_side {
                       width: 100%;
@@ -1814,6 +1819,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                 .reply-form {
 
+<<<<<<< HEAD
                   &__input {
                     border-radius: 0;
                     font-size: 16px;
@@ -1824,15 +1830,20 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     font-size: 16px;
                     line-height: 140%;
                   }
-                  
+
                   &__textarea {
-                    
-                    
+
+
+=======
+                  &__textarea {
+
+
+>>>>>>> attachments
                     &_short {
                       border-radius: 0;
                       font-size: 16px;
                       padding: 13px 0 0 45px;
-                      
+
 
                     }
                   }

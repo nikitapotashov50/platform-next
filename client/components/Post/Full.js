@@ -5,7 +5,7 @@ import PostSummary from './Summary'
 import TextWithImages from './TextWithImages'
 import CommentsList from '../Comment/CommentList'
 
-export default ({ title, comments, content, user, created_at }) => (
+export default ({ title, comments, content, attachments, user, created_at }) => (
   <div>
     <div className='post-full'>
 
@@ -22,6 +22,9 @@ export default ({ title, comments, content, user, created_at }) => (
 
       <div className='post-full__content'>
         <TextWithImages text={content} />
+        <div>{attachments && attachments.map(({ id, path }) => (
+          <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
+        ))}</div>
       </div>
 
       <div className='post-full__footer'>

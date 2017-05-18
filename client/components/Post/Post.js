@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
+import Slider from 'react-slick'
 
 import Menu from './Menu'
 import Panel from '../Panel'
@@ -23,6 +24,7 @@ class Post extends Component {
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
     this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
+    this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
@@ -33,6 +35,10 @@ class Post extends Component {
 
   handleDeleteButtonClick () {
     this.props.deletePost(this.props.id)
+  }
+
+  handleEditButtonClick () {
+    console.log('edit post')
   }
 
   handleLikeButtonClick () {
@@ -86,12 +92,13 @@ class Post extends Component {
 
   render () {
     const { showPostMenu } = this.state
-    const { title, content, user, added, onExpand } = this.props
+    const { title, content, attachments, user, added, onExpand } = this.props
 
     let Footer = this.getFooter()
 
     const Options = showPostMenu ? (
       <Menu
+        onEdit={this.handleEditButtonClick}
         onDelete={this.handleDeleteButtonClick}
         handleClickOutside={() => {
           this.setState({ showPostMenu: false })
@@ -118,6 +125,35 @@ class Post extends Component {
           <div className='post-preview'>
             <a className='post-preview__title' onClick={onExpand}>{title}</a>
             <TextWithImages text={content} />
+            {/* <div>{attachments && attachments.map(({ id, path }) => (
+              <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
+            ))}</div> */}
+
+            {attachments.length > 0
+              ? <div style={{ height: '500px' }}>
+                <Slider
+                  slidesToShow={1}
+                  dots
+                  infinite={false}
+                  // centerMode
+                  // adaptiveHeight={false}
+                >{(attachments || []).map(x => {
+                  return (
+                    <div key={x.id} style={{ width: '500px', background: '#ccc' }}>
+                      <img src={x.path} style={{height: '500px'}} />
+                    </div>
+                  )
+                })}</Slider>
+              </div>
+              : null
+            }
+
+            {/* <div style={{ overflow: 'hidden' }}>{attachments && <Gallery images={attachments.map(x => ({
+              src: x.path,
+              thumbnail: x.path,
+              thumbnailWidth: null,
+              thumbnailHeight: null
+            }))} enableImageSelection={false} />}</div> */}
           </div>
         </Panel>
       </div>
