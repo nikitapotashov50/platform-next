@@ -109,6 +109,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                 <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
                 <meta charSet='utf-8' />
                 <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+                <link rel='icon' type='image/x-icon' href='/static/favicons/favicon.ico' />
+                <link rel='apple-touch-icon' sizes='180x180' href='/static/favicons/apple-touch-icon.png' />
+                <link rel='icon' type='image/png' href='/static/favicons/favicon-32x32.png' sizes='32x32' />
+                <link rel='icon' type='image/png' href='/static/favicons/favicon-16x16.png' sizes='16x16' />
+                <link rel='manifest' href='/static/favicons/manifest.json' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
 
@@ -159,6 +164,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   background: #edeeee;
                   @extend museo;
                   -webkit-font-smoothing: antialiased;
+                  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
                 
                 }
 
@@ -185,6 +191,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   padding: 7px 10px;
                   border: 1px solid #ebebeb;
                 }
+
+                input::-webkit-input-placeholder {color:#9f9f9f;}, 
+                input::-moz-placeholder {color:#9f9f9f;}      
+                input:-moz-placeholder {color:#9f9f9f;}          
+                input:-ms-input-placeholder {color:#9f9f9f;}
+                textarea::-webkit-input-placeholder {color:#9f9f9f;}
+                textarea::-moz-placeholder {color:#9f9f9f;}       
+                textarea:-moz-placeholder {color:#9f9f9f;}          
+                textarea:-ms-input-placeholder {color:#9f9f9f;}
+                
 
                 button {
                   border: none;
@@ -389,7 +405,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     }
                   }
                   &__footer {
-                    padding: 10px 20px;
+                    padding: 10px 15px;
                     border-top: 1px solid #efeff0;
                   }
                   &__menu {
@@ -749,7 +765,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       padding: 0 0 0 45px;
 
                       border: none;
-                      background: svg("edit", "[fill]: #7f7f7f;") 18px 18px no-repeat #fff;
+                      background: svg("edit", "[fill]: #7f7f7f;") 16px 16px no-repeat #fff;
                       background-size: 17px 17px;
                     }
                   }
@@ -1042,6 +1058,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     display: inline-block;
 
                     border-left: 1px solid #f0f1f1;
+                    
+                   
 
                     &_hoverable {
                       transition: background .3s;
@@ -1051,10 +1069,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     select {
                       
                       background: none;
+                      -webkit-appearance:none;
                       border: 0 none;
                       height: 59px;
-                      padding: 0 10px;
+                      padding: 0 5px;
                       width: 70px;
+                      
+                       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
+                    background-size: 9px 6px;
+                    background-position: 100%;
+                    background-origin: content-box;
+                    background-repeat: no-repeat;
                      
                     }
 
@@ -1151,7 +1176,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   position: fixed;
 
                   width: 100%;
-                  height: 60px;
+                  height: 59px;
 
                   background-color: #fefefe;
                   border-bottom: 1px solid #e1e3e4;
@@ -1724,6 +1749,46 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     }
                   }
 
+                  .panel {
+                    border-radius: 0;
+                  }
+
+
+                  .user-sub-menu {
+                  
+                  &__item {
+                    
+                    min-width: 250px;
+
+                  }
+
+                  &__link {
+                  
+                    padding: 16px 15px !important;
+                    font-size: 15px;
+                  }
+                }
+                  
+                  .comment {
+
+                    &__header .user-inline {
+
+
+                      &__when {
+                        display: none;
+                      }
+                  }
+                    
+                  }
+
+                  .user-inline {
+
+                      &__title {
+                        display: block;
+                      }
+
+                  }
+                  
 
                   .user-page {
                   &__header {
@@ -1748,12 +1813,27 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
 
                 .reply-form {
+
+                  &__input {
+                    border-radius: 0;
+                    font-size: 16px;
+                  }
+
+                  &__textarea {
+                    border-radius: 0;
+                    font-size: 16px;
+                    line-height: 140%;
+                  }
                   
                   &__textarea {
                     
-
+                    
                     &_short {
+                      border-radius: 0;
                       font-size: 16px;
+                      padding: 13px 0 0 45px;
+                      
+
                     }
                   }
                 }
