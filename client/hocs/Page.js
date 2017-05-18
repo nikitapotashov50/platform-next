@@ -212,7 +212,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                 }
 
                 .feed {
-                  padding-top: 20px;
+                  padding-top: 10px;
                   margin-left: -7.5px;
                   margin-right: -7.5px;
 
@@ -315,7 +315,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   position: relative;
                   border-radius: 3px;
 
-                  margin-bottom: 15px;
+                  margin-bottom: 12px;
 
                   background: #fff;
                   border: 1px solid #e1e3e4;
@@ -371,6 +371,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   &__body {
                     padding: 15px 20px;
                     line-height: 150%;
+                    word-break: break-all;
 
                     &_no {
                       &_padding { padding: 0; }
@@ -648,12 +649,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   font-size: 15px;
                   background: #196aff;
                   text-transform: none;
-<<<<<<< HEAD
+
                   border-radius: 3px;
                   cursor: pointer;
-=======
+
                   border: 1px solid #196aff;
->>>>>>> 98692784549ab75e4f89452b460008f6ce86aa0b
+
 
                   & + & { margin-left: 5px !important; }
 
@@ -1034,6 +1035,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       &:hover { background-color: #f0f0f0; }
                     }
 
+                    select {
+                      
+                      background: none;
+                      border: 0 none;
+                      height: 59px;
+                      padding: 0 10px;
+                      width: 70px;
+                     
+                    }
+
                     &_padded { padding: 9.5px 13px; }
                     &_no {
                       &_padding { padding: 0; }
@@ -1279,7 +1290,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   &:last-of-type { margin-bottom: 0; }
 
                   &__header { margin-left: -50px; }
-                  &__body { margin-top: 5px; }
+                  &__body { margin-top: -19px; }
                   &__footer { margin-top: 5px; }
 
                   &__body {}
@@ -1671,6 +1682,71 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   animation-duration: 0.5s;
                   animation-name: fadeIn;
                 }
+
+              /*  Мобильные стили */
+              @media screen and (max-width: 39.9375em) {
+                  
+                  .menu {
+                    padding: 0 0 0 10px;
+                  }
+
+                  .app-header {
+                    
+                    &__wrap {
+                      width: 100%;
+                    }
+                  }
+
+                  .feed {
+
+                    margin: 0;
+                    
+                    &__left {
+                      width: 100%;
+                      padding: 0;
+                    }
+
+                    &__right {
+                      display: none;
+                    }
+                  }
+
+
+                  .user-page {
+                  &__header {
+                   
+                  }
+
+                  &__content {
+               
+                  }
+
+                  &__content-block {
+                    
+
+                    &_side {
+                      width: 100%;
+                    }
+                    &_body {
+                      width: 100%;
+                    }
+                  }
+                }
+
+
+                .reply-form {
+                  
+                  &__textarea {
+                    
+
+                    &_short {
+                      font-size: 16px;
+                    }
+                  }
+                }
+
+
+              }
 
                @keyframes fadeIn {
                  from {
