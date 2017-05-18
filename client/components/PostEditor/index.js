@@ -5,7 +5,11 @@ import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
 import { isEmpty } from 'lodash'
-
+// import ImageIcon from 'react-icons/lib/fa/image'
+import CameraIcon from 'react-icons/lib/fa/camera'
+import VideoIcon from 'react-icons/lib/fa/video-camera'
+import FileIcon from 'react-icons/lib/fa/file-o'
+import RemoveButton from 'react-icons/lib/fa/close'
 // import Form from './Form'
 import { addPost } from '../../redux/posts'
 
@@ -18,6 +22,7 @@ class PostEditor extends Component {
       title: '',
       content: '',
       files: [],
+      attachments: [],
       dropzoneActive: false
     }
 
@@ -31,8 +36,8 @@ class PostEditor extends Component {
 
   async createPost (e) {
     e.preventDefault()
-    const { title, content, files } = this.state
-    const post = { title, content, files }
+    const { title, content, attachments } = this.state
+    const post = { title, content, attachments }
 
     if (title && content) {
       const { data } = await axios.post('/api/post', post, { withCredentials: true })
@@ -45,7 +50,8 @@ class PostEditor extends Component {
     this.setState({
       expanded: false,
       title: '',
-      content: ''
+      content: '',
+      files: []
     })
   }
 
@@ -76,7 +82,7 @@ class PostEditor extends Component {
   }
 
   render () {
-    let { expanded, title, content, dropzoneActive } = this.state
+    let { expanded, title, content } = this.state
 
     let textareaClasses = [ 'reply-form__textarea' ]
     if (!expanded) textareaClasses.push('reply-form__textarea_short')
@@ -84,6 +90,8 @@ class PostEditor extends Component {
     return (
       <Dropzone
         disableClick
+        ref={node => { this.dropzoneRef = node }}
+        multiple={false}
         style={{}}
         onDragEnter={() => {
           this.setState({
@@ -95,19 +103,25 @@ class PostEditor extends Component {
             dropzoneActive: false
           })
         }}
-        onDrop={async files => {
-          let formData = new FormData()
-          formData.append('files', files)
+        onDrop={async ([file]) => {
+          const formData = new window.FormData()
+          formData.append('file', file)
+
           const { data } = await axios.post('/api/attachment', formData)
 
+          const attachment = {
+            key: data.key,
+            url: data.url
+          }
+
           this.setState({
-            files: [...this.state.files, ...files],
+            attachments: [...this.state.attachments, attachment],
+            files: [...this.state.files, file],
             dropzoneActive: false,
             expanded: true
           })
         }}
       >
-        { dropzoneActive && <div className='dropzone-overlay'>Drop files...</div> }
 
         <div className='reply-form'>
           { expanded && (
@@ -120,21 +134,49 @@ class PostEditor extends Component {
             <textarea className={textareaClasses.join(' ')} value={content} onChange={this.handleContentChange} placeholder={'Написать отчет за сегодня'} rows={expanded ? 8 : 1} onFocus={this.expand} />
           </div>
 
-          { expanded && (
+          { expanded && !isEmpty(this.state.files) && (
             <div className='attachments'>
               {this.state.files.map(file => (
-                <div key={file.preview} style={{ width: '300px' }}>
+                <div key={file.preview} style={{ width: '300px', position: 'relative' }}>
+                  <div className='preview-image-remove' onClick={() => {
+                    this.setState({
+                      files: this.state.files.filter(f => f.preview !== file.preview)
+                    })
+                  }}><RemoveButton /></div>
                   <img src={file.preview} className='preview-image' />
                 </div>
               ))}
             </div>
           ) }
 
-          { expanded && (
-          <div className='reply-form__submit-block'>
-            <button className='myBtn' onClick={this.createPost} type='submit' tabIndex='4'><span title='Запостить как '>Отправить</span></button>
-          </div>
-        )}
+          {expanded && (
+            <div className='post-editor-footer'>
+              <div>
+                <button
+                  className='attach-button'
+                  type='button'
+                  onClick={() => {
+                    this.dropzoneRef.open()
+                  }}>
+                  <CameraIcon />
+                </button>
+                <button
+                  className='attach-button'
+                  type='button'>
+                  <VideoIcon />
+                </button>
+                <button
+                  className='attach-button'
+                  type='button'>
+                  <FileIcon />
+                </button>
+              </div>
+
+              <div>
+                <button className='myBtn' onClick={this.createPost} type='submit' tabIndex='4'><span title='Запостить как '>Отправить</span></button>
+              </div>
+            </div>
+          )}
 
           <style jsx>{`
           .attachments {
@@ -147,8 +189,38 @@ class PostEditor extends Component {
           }
 
           .preview-image {
-            /*border-radius: 20px;*/
-            /*width: calc(100% * (1/3) - 10px - 1px);*/
+            max-width: 100%;
+          }
+
+          .post-editor-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+          }
+
+          .preview-image-remove {
+            top: 0;
+            right: 0;
+            position: absolute;
+            color: #fefefe;
+            background: rgba(0,0,0,0.9);
+            padding: 1px;
+            cursor: pointer;
+          }
+
+          .preview-image-remove:hover {
+            color: #fff;
+          }
+
+          .attach-button {
+            background: #fff;
+            font-size: 20px;
+            border-radius: 4px;
+            padding: 5px;
+            color: #196aff;
+            cursor: pointer;
+            margin-right: 20px;
           }
 
           .dropzone-overlay {

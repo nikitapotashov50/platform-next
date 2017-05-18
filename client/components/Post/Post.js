@@ -91,7 +91,7 @@ class Post extends Component {
 
   render () {
     const { showPostMenu } = this.state
-    const { title, content, user, added, onExpand } = this.props
+    const { title, content, attachments, user, added, onExpand } = this.props
 
     let Footer = this.getFooter()
 
@@ -124,6 +124,9 @@ class Post extends Component {
           <div className='post-preview'>
             <a className='post-preview__title' onClick={onExpand}>{title}</a>
             <TextWithImages text={content} />
+            <div>{attachments && attachments.map(({ id, path }) => (
+              <img key={id} src={path} style={{ maxWidth: '100%' }} />
+            ))}</div>
           </div>
         </Panel>
       </div>
