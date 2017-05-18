@@ -61,6 +61,8 @@ module.exports = (sequelize, DataTypes) => {
           Group.belongsToMany(models.NPS, { through: 'nps_group', foreignKey: 'group_id', as: 'Nps' })
 
           Group.hasMany(models.GameGroup, { foreignKey: 'group_id', as: 'GameGroups' })
+
+          Group.hasMany(models.CoachGroup, { foreignKey: 'group_id', as: 'CoachGroups' })
         }
       }
     }

@@ -22,7 +22,7 @@ export default ({ money, subscribeButtons = false, date, user, small, goal }) =>
 
       <div className={bodyClasses.join(' ')}>
         <div className='user-inline__title-block'>
-          { user && (
+          { user && user.name && (
             <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
               <a className='user-inline__title'>{user.first_name + ' ' + user.last_name}</a>
             </Link>
@@ -45,7 +45,7 @@ export default ({ money, subscribeButtons = false, date, user, small, goal }) =>
         </div>
       )}
 
-      { (user && money) && (<div className='user-inline__money'>{formatMoney(money)} ₽</div>)}
+      { user && (<div className='user-inline__money'>{formatMoney(money)} ₽</div>)}
     </div>
   )
 }

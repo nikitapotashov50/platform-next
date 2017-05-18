@@ -19,6 +19,17 @@ module.exports = router => {
     })
   })
 
+  router.bridge('/ratings', router => {
+    router.bridge('/:tab', router => {
+      router.get('/', async ctx => {
+        await ctx.__next.render(ctx.req, ctx.res, '/ratings', Object.assign({}, ctx.params, ctx.query))
+      })
+      router.get('/:id', async ctx => {
+        await ctx.__next.render(ctx.req, ctx.res, '/ratings', Object.assign({}, ctx.params, ctx.query))
+      })
+    })
+  })
+
   router.bridge('/admin', router => {
     router.get('/users/:userId', async ctx => {
       await ctx.__next.render(ctx.req, ctx.res, '/admin/users', Object.assign({}, ctx.params, ctx.query))
