@@ -109,6 +109,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                 <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
                 <meta charSet='utf-8' />
                 <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+                <link rel='icon' type='image/x-icon' href='/static/favicons/favicon.ico' />
+                <link rel='apple-touch-icon' sizes='180x180' href='/static/favicons/apple-touch-icon.png' />
+                <link rel='icon' type='image/png' href='/static/favicons/favicon-32x32.png' sizes='32x32' />
+                <link rel='icon' type='image/png' href='/static/favicons/favicon-16x16.png' sizes='16x16' />
+                <link rel='manifest' href='/static/favicons/manifest.json' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
 
@@ -1162,7 +1167,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                   position: fixed;
 
                   width: 100%;
-                  height: 60px;
+                  height: 59px;
 
                   background-color: #fefefe;
                   border-bottom: 1px solid #e1e3e4;

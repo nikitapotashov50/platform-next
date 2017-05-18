@@ -119,6 +119,7 @@ class CommentForm extends Component {
             padding: 5px 0;
             line-height: 20px;
             border: none;
+
           }
           .post-comment__input_collapsed {
             padding: 0;
@@ -130,6 +131,18 @@ class CommentForm extends Component {
             text-align: right;
             border-top: 1px solid #efeff0;
           }
+
+
+          /*  Мобильные стили */
+              @media screen and (max-width: 39.9375em) {
+
+                .post-comment__input {
+                  font-size:16px;
+
+                }
+
+
+              }
         `}</style>
       </div>
     )
