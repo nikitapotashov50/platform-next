@@ -87,7 +87,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
           : (__service.user !== this.props.__service.user)
 
         if (flag && accessRule && isFunction(accessRule)) {
-          if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Ошибка доступа'))
+          if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Страница недоступна'))
           else nextProps.dispatch(allowAccess())
         }
       }
@@ -494,6 +494,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     margin-top: 10px;
 
                     border-bottom: 1px solid #eee;
+
+                    &:last-of-type {
+                      border-bottom: none
+                    }
                   }
                   &__label {
                     display: block;
@@ -528,6 +532,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                       resize: auto;
                       height: auto;
                     }
+                  }
+                  &__error {
+                    padding: 10px 20px;
+
+                    border-top: 1px solid #eee;
                   }
                   &__fake-input {
                     padding: 0 20px 10px;
@@ -969,6 +978,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                     height: 2px;
                     display: block;
                     background-color: rgb(35, 116, 255);
+
+                    &_completed {
+                      background-color: rgb(255, 116, 35);
+                    }
                   }
 
                   &__block {

@@ -57,8 +57,8 @@ class HeaderRegisteredMenu extends Component {
           </li>
         )}
 
-        <li className='user-menu__item user-menu__item_hoverable'>
-          <UserImage small user={user} onClick={this.toggleMenu.bind(this, !menu)} />
+        <li className='user-menu__item user-menu__item_hoverable' onClick={this.toggleMenu.bind(this, !menu)}>
+          <UserImage small user={user} />
 
           <UserHeaderMenu opened={menu} user={user} logout={this.logout.bind(this)} onClose={this.toggleMenu.bind(this, false)} />
         </li>
