@@ -1,4 +1,5 @@
 const { size, has } = require('lodash')
+const pMap = require('p-map')
 const { models } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -89,6 +90,14 @@ module.exports = router => {
           through: {
             attributes: []
           }
+        },
+        {
+          model: models.Attachment,
+          attributes: ['id', 'name', 'path'],
+          as: 'attachments',
+          through: {
+            attributes: []
+          }
         }
       ],
       where,
@@ -127,15 +136,32 @@ module.exports = router => {
       user_id: ctx.session.user.id
     })
 
+    const attachments = await pMap(postData.attachments, async attachment => {
+      const result = await models.Attachment.create({
+        name: attachment.key,
+        path: attachment.url
+      })
+      return result
+    })
+
+    await created.addAttachments(attachments)
+
     const data = await models.Post.findOne({
       where: {
         id: created.id
       },
-      attributes: ['id', 'title', 'content'],
+      attributes: ['id', 'title', 'content', 'created_at'],
       include: [{
         model: models.User,
         attributes: ['name', 'first_name', 'last_name', 'picture_small'],
         as: 'user'
+      }, {
+        model: models.Attachment,
+        attributes: ['id', 'name', 'path'],
+        as: 'attachments',
+        through: {
+          attributes: []
+        }
       }]
     })
     ctx.body = data
