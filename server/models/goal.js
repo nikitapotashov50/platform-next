@@ -32,6 +32,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       occupation: {
         type: DataTypes.TEXT
+      },
+      category: {
+        type: DataTypes.TEXT
       }
     },
     {

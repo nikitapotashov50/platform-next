@@ -63,12 +63,12 @@ class AccountSettings extends Component {
     this.setState(state => { state.fetching = true })
 
     let data = { ...this.props.goal, ...this.state.affected }
-    console.log(data.a, data.b)
+
     if (!data.a) errors.push({ field: 'a', message: 'Укажите точку А' })
     if (!data.b) errors.push({ field: 'b', message: 'Укажите точку Б' })
 
-    // data.a = data.a.replace(/[^0-9]+/g, '')
-    // data.b = data.b.replace(/[^0-9]+/g, '')
+    data.a = data.a.replace(/[^0-9]+/g, '')
+    data.b = data.b.replace(/[^0-9]+/g, '')
 
     if (!data.occupation || !data.occupation.length) errors.push({ field: 'occupation', message: 'Укажите свою нишу' })
     if (parseInt(data.a) > parseInt(data.b)) errors.push({ field: 'a', message: 'Точка A не может быть больше точки Б' })

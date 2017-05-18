@@ -8,6 +8,7 @@ const postRouter = require('./post')
 const feedbackRoutes = require('./feedback')
 const meRoutes = require('./me')
 const usersRoutes = require('./users')
+const migrations = require('./migrations')
 
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
@@ -32,7 +33,7 @@ module.exports = router => {
   router.bridge('/feedback', feedbackRoutes)
   router.bridge('/post', postRouter)
   router.bridge('/me', [ initMeRoutes ], meRoutes)
-
+  router.bridge('/migrate', migrations)
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)
 }
