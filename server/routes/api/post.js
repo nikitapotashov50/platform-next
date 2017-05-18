@@ -45,7 +45,7 @@ module.exports = router => {
     }
 
     const data = await models.Post.findAll({
-      attributes: ['id', 'title', 'content', 'user_id', 'created_at'],
+      attributes: ['id', 'title', 'content', 'user_id', 'created_at'], // [orm.fn('COUNT', orm.col('likes.id')), 'likes_count']
       order: [['created_at', 'desc']],
       include: [
         {
@@ -57,7 +57,7 @@ module.exports = router => {
               required: false,
               model: models.Goal,
               where: {
-                is_closed: 0
+                is_closed: false
               },
               attributes: [ 'occupation', 'id' ]
             }
@@ -93,7 +93,8 @@ module.exports = router => {
       ],
       where,
       limit: 20,
-      offset
+      offset,
+      logging: log => console.log(log)
     })
 
     let posts = data
