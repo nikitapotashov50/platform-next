@@ -1,7 +1,7 @@
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 
-import { server } from '../../config'
+// import { server } from '../../config'
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
 import Page from '../../client/hocs/Page'
