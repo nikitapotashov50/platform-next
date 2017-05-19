@@ -158,37 +158,6 @@ class Post extends Component {
               }}
              />}
 
-            {/* {isOpen && <Lightbox onCloseRequest={() => this.setState({ isOpen: false })} mainSrc={'https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/jeremiah-wilson-1.jpg'} />} */}
-
-            {/* <div>{attachments && attachments.map(({ id, path }) => (
-              <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
-            ))}</div> */}
-
-            {/* {attachments.length > 0
-              ? <div style={{ height: '500px' }}>
-                <Slider
-                  slidesToShow={1}
-                  dots
-                  infinite={false}
-                  // centerMode
-                  // adaptiveHeight={false}
-                >{(attachments || []).map(x => {
-                  return (
-                    <div key={x.id} style={{ width: '500px', background: '#ccc' }}>
-                      <img src={x.path} style={{height: '500px'}} />
-                    </div>
-                  )
-                })}</Slider>
-              </div>
-              : null
-            } */}
-
-            {/* <div style={{ overflow: 'hidden' }}>{attachments && <Gallery images={attachments.map(x => ({
-              src: x.path,
-              thumbnail: x.path,
-              thumbnailWidth: null,
-              thumbnailHeight: null
-            }))} enableImageSelection={false} />}</div> */}
           </div>
         </Panel>
 
