@@ -19,16 +19,8 @@ class UserHeaderMenu extends Component {
           </Link>
         </li>
         <li className='user-sub-menu__item'>
-          <a className='user-sub-menu__link' href='#'>Ответы</a>
-        </li>
-        <li className='user-sub-menu__item'>
           <Link href='/account/settings'>
             <a className='user-sub-menu__link'>Настройки</a>
-          </Link>
-        </li>
-        <li className='user-sub-menu__item'>
-          <Link href={`/feedback`}>
-            <a className='user-sub-menu__link'>Оставить отзыв</a>
           </Link>
         </li>
         <li className='user-sub-menu__item'>
