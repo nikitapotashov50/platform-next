@@ -5,12 +5,10 @@ import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
 import { isEmpty } from 'lodash'
-// import ImageIcon from 'react-icons/lib/fa/image'
 import CameraIcon from 'react-icons/lib/fa/camera'
 import VideoIcon from 'react-icons/lib/fa/video-camera'
 import FileIcon from 'react-icons/lib/fa/file-o'
 import RemoveButton from 'react-icons/lib/fa/close'
-// import Form from './Form'
 import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
@@ -21,7 +19,7 @@ class PostEditor extends Component {
       expanded: false,
       title: '',
       content: '',
-      files: [],
+      previewImages: [],
       attachments: [],
       dropzoneActive: false
     }
@@ -104,6 +102,12 @@ class PostEditor extends Component {
           })
         }}
         onDrop={async ([file]) => {
+          this.setState({
+            previewImages: [...this.state.previewImages, Object.assign({}, file, { name: file.name, loading: true })],
+            expanded: true,
+            dropzoneActive: false
+          })
+
           const formData = new window.FormData()
           formData.append('file', file)
 
@@ -115,10 +119,10 @@ class PostEditor extends Component {
           }
 
           this.setState({
-            attachments: [...this.state.attachments, attachment],
-            files: [...this.state.files, file],
-            dropzoneActive: false,
-            expanded: true
+            previewImages: this.state.previewImages.map(f => {
+              return f.name === file.name ? Object.assign({}, f, { loading: false }) : f
+            }),
+            attachments: [...this.state.attachments, attachment]
           })
         }}
       >
@@ -134,13 +138,15 @@ class PostEditor extends Component {
             <textarea className={textareaClasses.join(' ')} value={content} onChange={this.handleContentChange} placeholder={'Написать отчет за сегодня'} rows={expanded ? 8 : 1} onFocus={this.expand} />
           </div>
 
-          { expanded && !isEmpty(this.state.files) && (
+          { expanded && !isEmpty(this.state.previewImages) && (
             <div className='attachments'>
-              {this.state.files.map(file => (
+              {this.state.previewImages.map(file => (
                 <div key={file.preview} style={{ width: '300px', position: 'relative' }}>
+                  {file.loading && <div className='preview-image-progress'>Загрузка</div>}
                   <div className='preview-image-remove' onClick={() => {
                     this.setState({
-                      files: this.state.files.filter(f => f.preview !== file.preview)
+                      previewImages: this.state.previewImages.filter(f => f.preview !== file.preview),
+                      attachments: this.state.attachments.filter(f => f.key !== file.name)
                     })
                   }}><RemoveButton /></div>
                   <img src={file.preview} className='preview-image' />
@@ -199,6 +205,20 @@ class PostEditor extends Component {
             margin: 10px 0;
           }
 
+          .preview-image-progress {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            right: 0;
+            position: absolute;
+            color: #fefefe;
+            background: rgba(0,0,0,0.4);
+            z-index: 2;
+          }
+
           .preview-image-remove {
             top: 0;
             right: 0;
@@ -207,6 +227,7 @@ class PostEditor extends Component {
             background: rgba(0,0,0,0.9);
             padding: 1px;
             cursor: pointer;
+            z-index: 3;
           }
 
           .preview-image-remove:hover {
