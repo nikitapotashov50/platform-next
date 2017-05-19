@@ -70,12 +70,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       hobbies: {
         type: DataTypes.TEXT
-      },
-      i_can: {
-        type: DataTypes.TEXT
-      },
-      looking_for: {
-        type: DataTypes.TEXT
       }
     },
     {
@@ -88,9 +82,6 @@ module.exports = (sequelize, DataTypes) => {
         associate: (models) => {
           // Юзер может участвовать в множестве програм
           User.belongsToMany(models.Program, {foreignKey: 'user_id', through: models.UserProgram})
-
-          // город пользователя
-          User.belongsTo(models.City, { foreignKey: 'city_id' })
 
           // пользователь может написать пост
           User.hasMany(models.Post, {foreignKey: 'user_id'})

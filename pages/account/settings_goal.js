@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { isUndefined } from 'lodash'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 
@@ -10,7 +9,7 @@ import Panel from '../../client/components/Panel'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import GoalSettings from '../../client/components/AccountSettings/Goal'
 
-class GoalSettingsPage extends Component {
+class AccountSettings extends Component {
   static async getInitialProps (ctx) {
     let options = {}
     if (ctx.isServer && ctx.req) {
@@ -64,12 +63,12 @@ class GoalSettingsPage extends Component {
     this.setState(state => { state.fetching = true })
 
     let data = { ...this.props.goal, ...this.state.affected }
+    console.log(data.a, data.b)
+    if (!data.a) errors.push({ field: 'a', message: 'Укажите точку А' })
+    if (!data.b) errors.push({ field: 'b', message: 'Укажите точку Б' })
 
-    if (isUndefined(data.a)) errors.push({ field: 'a', message: 'Укажите точку А' })
-    if (isUndefined(data.b)) errors.push({ field: 'b', message: 'Укажите точку Б' })
-
-    if (data.a === '') data.a = 0
-    if (data.b === '') data.b = 0
+    // data.a = data.a.replace(/[^0-9]+/g, '')
+    // data.b = data.b.replace(/[^0-9]+/g, '')
 
     if (!data.occupation || !data.occupation.length) errors.push({ field: 'occupation', message: 'Укажите свою нишу' })
     if (parseInt(data.a) > parseInt(data.b)) errors.push({ field: 'a', message: 'Точка A не может быть больше точки Б' })
@@ -84,6 +83,7 @@ class GoalSettingsPage extends Component {
       })
     } else {
       await this.setState(state => { state.errors = {} })
+
       await axios.put(`http://dev2.molodost.bz:3000/api/me/goal`, data, { withCredentials: true })
 
       setTimeout(() => {
@@ -128,15 +128,13 @@ class GoalSettingsPage extends Component {
   }
 }
 
-GoalSettingsPage.displayName = 'GoalSettingsPage'
-
 const accessRule = user => !!user
 
 const mapStateToProps = ({ auth }) => ({
   user: auth.user
 })
 
-let translated = translate([ 'common' ])(GoalSettingsPage)
+let translated = translate([ 'common' ])(AccountSettings)
 
 export default Page(translated, {
   title: 'Настройки профиля',

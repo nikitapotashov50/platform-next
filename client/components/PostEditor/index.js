@@ -11,7 +11,7 @@ import VideoIcon from 'react-icons/lib/fa/video-camera'
 import FileIcon from 'react-icons/lib/fa/file-o'
 import RemoveButton from 'react-icons/lib/fa/close'
 // import Form from './Form'
-import { addPost, addUsers } from '../../redux/posts'
+import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
   constructor (props) {
@@ -36,14 +36,12 @@ class PostEditor extends Component {
 
   async createPost (e) {
     e.preventDefault()
-    const { program } = this.props
     const { title, content, attachments } = this.state
-    const post = { title, content, attachments, program }
+    const post = { title, content, attachments }
 
     if (title && content) {
       const { data } = await axios.post('/api/post', post, { withCredentials: true })
-      this.props.addPost({ ...data.result.post, added: true })
-      this.props.addUsers({ users: data.result.users })
+      this.props.addPost({ ...data, added: true })
       this.clearForm()
     }
   }
@@ -243,15 +241,10 @@ class PostEditor extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({
-  program: user.programs.current || null
-})
-
 const mapDispatchToProps = dispatch => bindActionCreators({
-  addUsers,
   addPost
 }, dispatch)
 
 const wrappedComponent = clickOutside(PostEditor)
 
-export default connect(mapStateToProps, mapDispatchToProps)(wrappedComponent)
+export default connect(() => ({}), mapDispatchToProps)(wrappedComponent)

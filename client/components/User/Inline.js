@@ -5,7 +5,7 @@ import numeral from 'numeral'
 
 const formatMoney = money => numeral(money).format('0,0')
 
-export default ({ money, subscribeButtons = false, date, user, small, noOccupation }) => {
+export default ({ money, subscribeButtons = false, date, user, small, goal }) => {
   let bodyClasses = [ 'user-inline__body' ]
 
   if (subscribeButtons) bodyClasses.push('user-inline__body_width_thin')
@@ -34,7 +34,7 @@ export default ({ money, subscribeButtons = false, date, user, small, noOccupati
         </div>
 
         <div className='user-inline__info'>
-          { (user && user.occupation && !noOccupation) && user.occupation }
+          { user && goal ? goal.occupation : '' }
         </div>
       </div>
 

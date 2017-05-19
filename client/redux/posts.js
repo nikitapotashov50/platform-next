@@ -2,38 +2,22 @@ import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
 
 export const defaultState = {
-  posts: [],
-  users: {},
-  comments: {},
-  fething: false,
-  offset: 0
+  posts: []
 }
 
-// posts fetching actions
-export const fetchPosts = createAction('posts/LOAD_MORE', async (params, serverPath = '', isInitial = false) => {
-  let apiPath = serverPath + '/api/post'
-  const { data } = await axios.get(apiPath, { params })
-
-  return {
-    ...data.result,
-    offset: params.offset || 0
-  }
+export const addPost = createAction('posts/ADD_POST')
+export const loadPosts = createAction('posts/LOAD_POSTS')
+export const loadMore = createAction('posts/LOAD_MORE', async params => {
+  console.log(params)
+  const { data } = await axios.get('/api/post', { params })
+  return data
 })
 
-export const clearPosts = createAction('posts/CLEAR_POST')
-export const startFetchPosts = createAction('posts/FETCH_START')
-
-export const setOffset = createAction('posts/SET_OFFSET')
-
-// posts add actions
-export const addPost = createAction('posts/ADD_POST')
 export const deletePost = createAction('posts/DELETE', async id => {
   await axios.delete(`/api/post/${id}`)
   return id
 })
-export const addUsers = createAction('posts/ADD_POST')
 
-// post interactions
 export const addLike = createAction('posts/ADD_LIKE', async id => {
   const { data } = await axios.post(`/api/post/${id}/like`)
   return { ...data, post_id: id }
@@ -46,28 +30,10 @@ export const removeLike = createAction('posts/REMOVE_LIKE', async id => {
 
 export const addComment = createAction('posts/ADD_COMMENT')
 
-// resucer
 export default handleActions({
-  [fetchPosts]: (state, action) => ({
+  [loadPosts]: (state, action) => ({
     ...state,
-    posts: [
-      ...state.posts,
-      ...action.payload.posts
-    ],
-    users: {
-      ...state.users,
-      ...(action.payload.users || {})
-    },
-    fetching: false,
-    offset: action.payload.offset
-  }),
-  [clearPosts]: state => ({
-    ...state,
-    posts: []
-  }),
-  [startFetchPosts]: state => ({
-    ...state,
-    fetching: true
+    posts: action.payload
   }),
   [addPost]: (state, action) => {
     const post = { ...action.payload, comments: [], likes: [] }
@@ -76,12 +42,9 @@ export default handleActions({
       posts: [post, ...state.posts]
     }
   },
-  [addUsers]: (state, { payload }) => ({
+  [loadMore]: (state, action) => ({
     ...state,
-    users: {
-      ...state.users,
-      ...payload.users
-    }
+    posts: [...state.posts, ...action.payload]
   }),
   [deletePost]: (state, action) => ({
     ...state,

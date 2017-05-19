@@ -57,16 +57,15 @@ class Post extends Component {
 
   getFooter () {
     let { showCommentForm } = this.state
-    let { id, currentUser, isLogged, comments } = this.props
+    let { likes = [], comments = [], id, currentUser, isLogged, liked } = this.props
 
     const Footer = []
 
     Footer.push(
       <PostSummary
         isLogged={isLogged}
-        // liked={liked}
-        likes={this.props.likes_count}
-        comments={this.props.comments_count}
+        likes={likes}
+        liked={liked}
         onComment={this.handleCommentButtonClick}
         onLike={this.handleLikeButtonClick} />
       )
@@ -75,7 +74,7 @@ class Post extends Component {
       Footer.push(<CommentList comments={comments} />)
     }
 
-    if (isLogged && (this.props.comments_count || showCommentForm)) {
+    if (isLogged && (comments.length || showCommentForm)) {
       Footer.push(
         <CommentForm
           postId={id}
@@ -107,49 +106,57 @@ class Post extends Component {
       />
     ) : null
 
+    let goal = null
+    if (user.Goals && user.Goals.length) goal = user.Goals[0]
+
     return (
-      <Panel
-        Footer={Footer}
-        Header={<UserInline user={user} date={this.props.created_at} />}
-        headerStyles={{ noBorder: true, npBottomPadding: true }}
-        Options={() => Options}
-        withAnimation={added}
-        showOptions={this.state.showPostMenu}
-        toggleOptions={() => {
-          this.setState({ showPostMenu: true })
-        }}
-      >
-        <div className='post-preview'>
-          <a className='post-preview__title' onClick={onExpand}>{title}</a>
-          <TextWithImages text={content} />
-          {/* <div>{attachments && attachments.map(({ id, path }) => (
-            <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
-          ))}</div> */}
+      <div>
+        <Panel
+          Footer={Footer}
+          Header={<UserInline user={user} goal={goal} date={this.props.created_at} />}
+          headerStyles={{ noBorder: true, npBottomPadding: true }}
+          Options={() => Options}
+          withAnimation={added}
+          showOptions={this.state.showPostMenu}
+          toggleOptions={() => {
+            this.setState({ showPostMenu: true })
+          }}
+        >
+          <div className='post-preview'>
+            <a className='post-preview__title' onClick={onExpand}>{title}</a>
+            <TextWithImages text={content} />
+            {/* <div>{attachments && attachments.map(({ id, path }) => (
+              <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
+            ))}</div> */}
 
-          { (attachments && attachments.length > 0) && (
-            <div style={{ height: '500px' }}>
-              {/*
-                // centerMode
-                // adaptiveHeight={false}>
-              */}
-              <Slider slidesToShow={1} dots infinite={false}>
-                {(attachments || []).map(x => (
-                  <div key={x.id} style={{ width: '500px', background: '#ccc' }}>
-                    <img src={x.path} style={{height: '500px'}} />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          )}
+            {attachments.length > 0
+              ? <div style={{ height: '500px' }}>
+                <Slider
+                  slidesToShow={1}
+                  dots
+                  infinite={false}
+                  // centerMode
+                  // adaptiveHeight={false}
+                >{(attachments || []).map(x => {
+                  return (
+                    <div key={x.id} style={{ width: '500px', background: '#ccc' }}>
+                      <img src={x.path} style={{height: '500px'}} />
+                    </div>
+                  )
+                })}</Slider>
+              </div>
+              : null
+            }
 
-          {/* <div style={{ overflow: 'hidden' }}>{attachments && <Gallery images={attachments.map(x => ({
-            src: x.path,
-            thumbnail: x.path,
-            thumbnailWidth: null,
-            thumbnailHeight: null
-          }))} enableImageSelection={false} />}</div> */}
-        </div>
-      </Panel>
+            {/* <div style={{ overflow: 'hidden' }}>{attachments && <Gallery images={attachments.map(x => ({
+              src: x.path,
+              thumbnail: x.path,
+              thumbnailWidth: null,
+              thumbnailHeight: null
+            }))} enableImageSelection={false} />}</div> */}
+          </div>
+        </Panel>
+      </div>
     )
   }
 }
