@@ -172,7 +172,7 @@ class Post extends Component {
           .attachments-container div {
             flex: auto;
             width: 150px;
-            margin: .5vw;
+            margin: 10px 2px 5px 2px;
           }
 
           .attachments-container div img {
