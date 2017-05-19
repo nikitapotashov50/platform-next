@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
-import Lightbox from 'react-images'
+import Lightbox from 'react-image-lightbox-universal'
 
 import Menu from './Menu'
 import Panel from '../Panel'
@@ -19,7 +19,8 @@ class Post extends Component {
       images: this.props.attachments.map(x => ({ src: x.path })),
       showPostMenu: false,
       showCommentForm: !isEmpty(this.props.comments) || false,
-      isLightboxOpen: false
+      isLightboxOpen: false,
+      lightboxShowIndex: 0
     }
 
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
@@ -131,31 +132,31 @@ class Post extends Component {
                       isLightboxOpen: true,
                       lightboxShowIndex: index
                     })
-                  }}><img src={attachment.path} /></div>
+                  }}><img src={attachment.path} style={{ cursor: 'pointer' }} /></div>
                 ))}
               </div>
             )}
 
             {isLightboxOpen && <Lightbox
-              images={this.state.images}
-              // backdropClosesModal
-              currentImage={this.state.lightboxShowIndex}
-              onClickPrev={() => {
+              mainSrc={this.state.images[this.state.lightboxShowIndex].src}
+              prevSrc={this.state.images[(this.state.lightboxShowIndex + this.state.images.length - 1) % this.state.images.length].src}
+              nextSrc={this.state.images[(this.state.lightboxShowIndex + 1) % this.state.images.length].src}
+              onMovePrevRequest={() => {
                 this.setState({
-                  lightboxShowIndex: this.state.lightboxShowIndex - 1
+                  lightboxShowIndex: (this.state.lightboxShowIndex + this.state.images.length - 1) % this.state.images.length
                 })
               }}
-              onClickNext={() => {
+              onMoveNextRequest={() => {
                 this.setState({
-                  lightboxShowIndex: this.state.lightboxShowIndex + 1
+                  lightboxShowIndex: (this.state.lightboxShowIndex + 1) % this.state.images.length
                 })
               }}
-              isOpen={isLightboxOpen}
-              onClose={() => {
+              onCloseRequest={() => {
                 this.setState({
                   isLightboxOpen: false
                 })
-              }} />}
+              }}
+             />}
 
             {/* {isOpen && <Lightbox onCloseRequest={() => this.setState({ isOpen: false })} mainSrc={'https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/jeremiah-wilson-1.jpg'} />} */}
 

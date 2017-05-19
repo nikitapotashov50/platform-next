@@ -6259,6 +6259,10 @@ react-icons@^2.2.5:
   dependencies:
     react-icon-base "2.0.7"
 
+react-image-lightbox-universal@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-image-lightbox-universal/-/react-image-lightbox-universal-0.0.2.tgz#70b2f7ca5812b2984c9ad3913ab9b17970bce7d9"
+
 react-image@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-image/-/react-image-1.0.1.tgz#eb3178a7b2a09945310a4bea6f89317d8b6f8c40"
