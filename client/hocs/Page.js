@@ -1788,6 +1788,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                    &__title {
                                      display: block;
                                    }
+                                   &__body {
+                                     max-width: 215px;
+                                   }
 
                                }
 
