@@ -27,7 +27,7 @@ module.exports = router => {
       router.get('/:id', async ctx => {
         await ctx.__next.render(ctx.req, ctx.res, '/ratings', Object.assign({}, ctx.params, ctx.query))
       })
-    })
+    })  
   })
 
   router.bridge('/admin', router => {

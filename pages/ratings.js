@@ -8,12 +8,13 @@ import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
 import UserInline from '../client/components/User/Inline'
 import PanelSearch from '../client/components/PanelSearch'
+// import SpeakersRating from '../client/components/Rating/Speakers'
 
 const menuItems = [
   { href: '/ratings?tab=all', path: '/ratings/all', title: 'Все', code: 'all' },
-  { href: '/ratings?tab=ten', path: '/ratings/ten', title: 'Десятки', code: 'ten' },
-  { href: '/ratings?tab=hundred', path: '/ratings/hundred', title: 'Сотни', code: 'hundred' },
-  { href: '/ratings?tab=squad', path: '/ratings/squad', title: 'Полки', code: 'squad' },
+  { href: '/ratings?tab=tens', path: '/ratings/tens', title: 'Десятки', code: 'tens' },
+  { href: '/ratings?tab=hundreds', path: '/ratings/hundreds', title: 'Сотни', code: 'hundreds' },
+  { href: '/ratings?tab=polks', path: '/ratings/polks', title: 'Полки', code: 'polks' },
   { href: '/ratings?tab=coaches', path: '/ratings/coaches', title: 'Тренера', code: 'coaches' },
   { href: '/ratings?tab=speakers', path: '/ratings/speakers', title: 'Спикеры', code: 'speakes' }
 ]
@@ -25,9 +26,12 @@ const subMenu = [
 ]
 
 class RatingsPage extends Component {
+  constructor () {
+    super()
+    this.handleSearchInput = this.handleSearchInput.bind(this)
+  }
+
   componentDidMount () {
-    console.log(this.props.url.query.tab)
-    console.log(this.props.userId)
     this.props.loadRatings(this.props.url.query.tab, this.props.program)
   }
 
@@ -36,15 +40,19 @@ class RatingsPage extends Component {
       if (nextProps.url.query.tab === 'all') {
         this.props.loadRatings('all', this.props.program)
       }
-      if (nextProps.url.query.tab === 'ten') {
-        this.props.loadRatings('ten', this.props.program)
+      if (nextProps.url.query.tab === 'tens') {
+        this.props.loadRatings('tens', this.props.program)
       }
-      if (nextProps.url.query.tab === 'hundred') {
-        this.props.loadRatings('hundred', this.props.program)
+      if (nextProps.url.query.tab === 'hundreds') {
+        this.props.loadRatings('hundreds', this.props.program)
       }
-      if (nextProps.url.query.tab === 'squad') {
-        this.props.loadRatings('squad', this.props.program)
+      if (nextProps.url.query.tab === 'polks') {
+        this.props.loadRatings('polks', this.props.program)
       }
+      // пока еще не реализовано
+      // if (nextProps.url.query.tab === 'polk') {
+      //   this.props.loadRatings('polk', this.props.program, nextProps.url.query.id)
+      // }
       if (nextProps.url.query.tab === 'coaches') {
         this.props.loadRatings('coaches', this.props.program)
       }
@@ -60,7 +68,36 @@ class RatingsPage extends Component {
     }
   }
 
+  handleSearchInput (event) {
+    event.preventDefault()
+    this.props.loadRatings('search', this.props.program, this.searchInput.value)
+  }
+
   render () {
+    const link = rating => {
+      if (rating.first_name) {
+        return {
+          href: `/user?username=${rating.name}`,
+          path: `/@${rating.name}`
+        }
+      }
+      if (rating.GameGroups) {
+        return {
+          href: `/ratings?tab=${rating.GameGroups[0].type}&id=${rating.id}`,
+          path: `/ratings/${rating.GameGroups[0].type}/${rating.id}`
+        }
+      }
+      if (rating.CoachGroups) {
+        return {
+          href: `/ratings?tab=coach&id=${rating.id}`,
+          path: `/ratings/coach/${rating.id}`
+        }
+      }
+      return {
+        href: '', path: ''
+      }
+    }
+
     let subHeaderStyles = { noPadding: true }
     let panelProps = { subHeaderStyles, menuStyles: { noBorder: true } }
 
@@ -69,24 +106,32 @@ class RatingsPage extends Component {
       if (['all', 'myten', 'mygroup'].includes(this.props.url.query.tab) || !this.props.url.query.tab) {
         return (
           <div>
-            <PanelMenu items={subMenu} selected={this.props.url.query.tab || 'index7'} />
-            <PanelSearch placeholder={'Поиск по имени'} />
+            <PanelMenu items={subMenu} selected={this.props.url.query.tab || 'all'} />
+            <PanelSearch placeholder={'Поиск по имени'} searchInput={e => (this.searchInput = e)} onSubmit={this.handleSearchInput} />
           </div>
         )
       }
       return null
     }
+    // if (this.props.url.query.tab === 'speakers') {
+    //   return (
+    //     <FeedLayout>
+    //       <Panel {...panelProps}>
+    //         <SpeakersRating ratings={this.props.ratings} />
+    //       </Panel>
+    //     </FeedLayout>
+    //   )
+    // }
     return (
       <FeedLayout>
         <Panel {...panelProps}>
           <div className='rating-list'>
             {this.props.ratings.map(rating => (<div className='rating-list__item' key={rating.id}>
-              <UserInline money={rating.money} user={{
-                name: rating.name || rating.id,
-                first_name: rating.first_name || rating.title.split(' ')[0],
-                last_name: rating.last_name || rating.title.slice(rating.title.indexOf(' ')),
-                picture_small: rating.picture_small
-              }} />
+              <UserInline money={rating.money}
+                picture={rating.picture_small}
+                title={rating.title || rating.first_name + ' ' + rating.last_name}
+                link={link(rating)}
+                small />
             </div>))}
           </div>
         </Panel>

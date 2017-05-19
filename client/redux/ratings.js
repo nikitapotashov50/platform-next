@@ -7,7 +7,7 @@ export const defaultState = {
 }
 
 export const loadRatings = createAction('ratings/LOAD_RATINGS', async (tab, program, userId) => {
-  const trailingParams = userId ? program + `/${userId}` : program
+  const trailingParams = userId ? `${program}/${userId}` : program
   const { data } = await axios.get(`http://${server.host}:${server.port}/api/rating/${tab || 'all'}/${trailingParams}`)
   return data
 })
