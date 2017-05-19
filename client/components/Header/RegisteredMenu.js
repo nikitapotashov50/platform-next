@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { isEmpty } from 'lodash'
+// import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
@@ -45,17 +45,18 @@ class HeaderRegisteredMenu extends Component {
 
   render () {
     let { menu } = this.state
-    let { className, user, programs } = this.props
+    let {className, user/*, programs */} = this.props // eslint-disable-line standard/object-curly-even-spacing
 
     return (
       <div className={[ className ].join(' ')}>
-        { !isEmpty(programs.items) && (
+        {/* ПЕРЕКЛЮЧАЛКА ПРОГРАММЫ
+          { !isEmpty(programs.items) && (
           <li className='user-menu__item user-menu__item_hoverable'>
             <select onChange={this.changeProgram} value={programs.current || ''}>
               {this.drawPrograms(programs.items)}
             </select>
           </li>
-        )}
+        )} */}
 
         <li className='user-menu__item user-menu__item_hoverable' onClick={this.toggleMenu.bind(this, !menu)}>
           <UserImage small user={user} />
