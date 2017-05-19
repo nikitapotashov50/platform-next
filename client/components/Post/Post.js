@@ -92,17 +92,17 @@ class Post extends Component {
 
     let Footer = this.getFooter()
 
-    const myPost = this.props.currentUser ? this.props.currentUser.id === user.id : false
+    // const Options = myPost && showPostMenu ? (
+    //   <Menu
+    //     onEdit={this.handleEditButtonClick}
+    //     onDelete={this.handleDeleteButtonClick}
+    //     handleClickOutside={() => {
+    //       this.setState({ showPostMenu: false })
+    //     }}
+    //   />
+    // ) : null
 
-    const Options = myPost && showPostMenu ? (
-      <Menu
-        onEdit={this.handleEditButtonClick}
-        onDelete={this.handleDeleteButtonClick}
-        handleClickOutside={() => {
-          this.setState({ showPostMenu: false })
-        }}
-      />
-    ) : null
+    const Options = null
 
     let goal = null
     if (user && user.Goals && user.Goals.length) goal = user.Goals[0]
