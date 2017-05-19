@@ -16,6 +16,26 @@ module.exports = (sequelize, DataTypes) => {
       price: {
         defaultValue: 0,
         type: DataTypes.INTEGER
+      },
+      cover: {
+        type: DataTypes.STRING
+      },
+      file: {
+        type: DataTypes.STRING
+      },
+      video: {
+        type: DataTypes.STRING
+      },
+      type: {
+        type: DataTypes.ENUM(['presentation', 'video'])
+      },
+      views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      free: {
+        defaultValue: 0,
+        type: DataTypes.ENUM([0, 1])
       }
     },
     {
