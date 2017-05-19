@@ -3,8 +3,8 @@ import numeral from 'numeral'
 const isUndef = value => (typeof value === 'undefined')
 
 const GoalSettings = ({ t, errors, data, affected, fetching, onChange }) => {
-  let a = isUndef(affected.a) ? data.a : affected.a
-  let b = isUndef(affected.b) ? data.b : affected.b
+  let a = parseInt(isUndef(affected.a) ? data.a : affected.a || 0)
+  let b = parseInt(isUndef(affected.b) ? data.b : affected.b || 0)
 
   return (
     <form className='panel-form'>
@@ -26,5 +26,7 @@ const GoalSettings = ({ t, errors, data, affected, fetching, onChange }) => {
     </form>
   )
 }
+
+GoalSettings.displayName = 'GoalSettingsForm'
 
 export default GoalSettings

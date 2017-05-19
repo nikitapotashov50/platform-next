@@ -8,7 +8,13 @@ const dbConfig = require('../../config').db
  * @type {module}
  */
 
-let sequelize = new Sequelize(dbConfig.uri, { logging: () => {} })
+let sequelize = new Sequelize(dbConfig.uri, {
+  // logging: () => {},
+  dialect: 'mysql',
+  dialectOptions: {
+    charset: 'utf8mb4'
+  }
+})
 let db = []
 let views = {}
 

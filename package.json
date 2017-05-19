@@ -84,6 +84,7 @@
     "shortid": "^2.2.8",
     "slate": "^0.19.29",
     "sql-template-strings": "^2.2.2",
+    "steem": "^0.5.5",
     "styled-jsx-postcss": "^0.2.0"
   },
   "devDependencies": {

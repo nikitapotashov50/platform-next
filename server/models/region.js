@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       classMethods: {
         associate: (models) => {
-          Region.hasMany(models.City)
+          // Region.hasMany(models.City)
         }
       }
     }

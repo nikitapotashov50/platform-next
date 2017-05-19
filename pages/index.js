@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import { bindActionCreators } from 'redux'
-import Waypoint from 'react-waypoint'
 
 import config from '../config'
 import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
-import { loadPosts, loadMore } from '../client/redux/posts'
 import Panel from '../client/components/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
@@ -18,42 +14,32 @@ const menuItems = [
 ]
 
 class IndexPage extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { offset: 20 }
-    this.scrollDownHandle = this.scrollDownHandle.bind(this)
-  }
-
   static async getInitialProps ({ store, req, query }) {
-    const baseURL = `http://${config.server.host}:${config.server.port}`
-    const state = store.getState()
-
-    let params = { user: state.auth.user }
-    if (query.tab === 'subscriptions' && state.auth.user) {
-      params.by_author_id = state.auth.subscriptions.join(',')
-    }
-
-    const { data } = await axios.get(`${baseURL}/api/post`, { params })
-
-    store.dispatch(loadPosts(data))
-  }
-
-  scrollDownHandle () {
+    let { auth, user } = store.getState()
     let params = {
-      offset: this.state.offset,
-      user: this.props.user
+      user: auth.user,
+      programId: user.programs.current || null
     }
 
-    if (this.props.url.query.tab === 'subscriptions') params.by_author_id = this.props.subscr.join(',')
+    if (query.tab === 'subscriptions' && auth.user) params.by_author_id = auth.subscriptions.join(',')
 
-    this.props.loadMore(params)
-    this.setState({
-      offset: this.state.offset * 2
-    })
+    await PostList.getInitial(store.dispatch, `http://${config.server.host}:${config.server.port}`, params)
+
+    return { tab: query.tab || 'index' }
   }
 
   render () {
-    let { tab = 'index' } = this.props.url.query
+    let { tab, url, program } = this.props
+    let params = {
+      programId: program
+    }
+
+    if (tab === 'subscriptions') params.by_author_id = this.props.subscriptions.join(',')
+
+    let pathname = {
+      href: url.pathname + '?tab=' + tab,
+      path: tab ? ('/feed/' + tab) : '/'
+    }
 
     return (
       <FeedLayout>
@@ -61,11 +47,7 @@ class IndexPage extends Component {
 
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} />
 
-        { (this.props.posts.length > 0) && <PostList posts={this.props.posts} pathname={this.props.url.pathname} />}
-        { !this.props.posts.length && (
-          <div>Пусто</div>
-        )}
-        <Waypoint onEnter={this.scrollDownHandle} />
+        <PostList params={params} pathname={pathname} />
       </FeedLayout>
     )
   }
@@ -73,15 +55,9 @@ class IndexPage extends Component {
 
 export default Page(IndexPage, {
   title: 'Отчеты',
-  mapStateToProps: state => ({
-    user: state.auth.user,
-    subscr: state.auth.subscriptions || [],
-    posts: state.posts.posts
-  }),
-  mapDispatchToProps: dispatch => ({
-    ...bindActionCreators({
-      loadMore
-    }, dispatch),
-    dispatch
+  mapStateToProps: ({ auth, user }) => ({
+    user: auth.user,
+    program: user.programs.current || null,
+    subscriptions: auth.subscriptions
   })
 })
