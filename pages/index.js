@@ -9,13 +9,13 @@ import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
 import { loadPosts, loadMore } from '../client/redux/posts'
-import Panel from '../client/components/Panel'
-import PanelMenu from '../client/components/PanelMenu'
+// import Panel from '../client/components/Panel'
+// import PanelMenu from '../client/components/PanelMenu'
 
-const menuItems = [
-  { href: '/', path: '/', title: 'Новое', code: 'index' },
-  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' }
-]
+// const menuItems = [
+//   { href: '/', path: '/', title: 'Новое', code: 'index' },
+//   { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' }
+// ]
 
 class IndexPage extends Component {
   constructor (props) {
@@ -53,13 +53,14 @@ class IndexPage extends Component {
   }
 
   render () {
-    let { tab = 'index' } = this.props.url.query
+    // let { tab = 'index' } = this.props.url.query
 
     return (
       <FeedLayout>
         {this.props.user && <PostEditor />}
 
-        <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} />
+        {/* МЕНЮШКА ПОСТОВ */}
+        {/* <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} /> */}
 
         { (this.props.posts.length > 0) && <PostList posts={this.props.posts} pathname={this.props.url.pathname} />}
         { !this.props.posts.length && (
