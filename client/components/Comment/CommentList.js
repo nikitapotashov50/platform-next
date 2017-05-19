@@ -1,3 +1,4 @@
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { isEmpty, size, takeRight } from 'lodash'
 import Comment from './Comment'
@@ -14,6 +15,7 @@ class CommentList extends Component {
   render () {
     let comments = []
     let { all } = this.state
+    let { users } = this.props
 
     if (isEmpty(this.props.comments)) {
       return null
@@ -34,7 +36,7 @@ class CommentList extends Component {
         )}
 
         {comments.map(comment => (
-          <Comment key={comment.id} {...comment} />
+          <Comment key={comment.id} {...comment} user={users[comment.user_id]} />
         ))}
 
         <style jsx>{`
@@ -61,4 +63,8 @@ class CommentList extends Component {
   }
 }
 
-export default CommentList
+const mapStateToProps = ({ posts }) => ({
+  users: posts.users
+})
+
+export default connect(mapStateToProps)(CommentList)

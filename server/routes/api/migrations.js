@@ -232,6 +232,8 @@ module.exports = router => {
 
   router.get('/posts', async ctx => {
     let posts = []
+    let likes = {}
+    let comments = {}
 
     let tag = 'bm-open'
     let limit = 20
@@ -257,33 +259,39 @@ module.exports = router => {
 
       if (data.length < (limit - 1)) break
     }
-    console.log(posts.length)
-    posts.map(async post => {
-      let tmp = {
-        uid: post.id,
-        title: post.title,
-        body: emojiStrip(post.body),
-        author: post.author,
-        created: new Date(post.created),
-        updated: new Date(post.last_update),
-        permlink: post.permlink,
-        meta: post.json_metadata,
-        money: moneyFromMeta(post.json_metadata),
-        tags: tagsFromMeta(post.json_metadata),
-        isTaskReply: some(startsWith('bm-task'), tagsFromMeta(post.json_metadata)),
-        isMzs: some(eq('bm-mzs17'), tagsFromMeta(post.json_metadata)),
-        reblogged_by: post.reblogged_by,
-        replies: post.replies,
-        active_votes: post.active_votes,
-        parent_permlink: post.parent_permlink
-      }
 
-      await models.SteemPost.create(tmp)
-    })
+    await Promise.all(posts.map(post => {
+      return new Promise(async (resolve, reject) => {
+        likes['/@' + post.author + '/' + post.permlink] = await steem.api.getActiveVotes(post.author, post.permlink)
+        comments['/@' + post.author + '/' + post.permlink] = await steem.api.getContentReplies(post.id, post.permlink)
+
+        let tmp = {
+          uid: post.id,
+          title: post.title,
+          body: emojiStrip(post.body),
+          author: post.author,
+          created: new Date(post.created),
+          updated: new Date(post.last_update),
+          permlink: post.permlink,
+          meta: post.json_metadata,
+          money: moneyFromMeta(post.json_metadata),
+          tags: tagsFromMeta(post.json_metadata),
+          isTaskReply: some(startsWith('bm-task'), tagsFromMeta(post.json_metadata)),
+          isMzs: some(eq('bm-mzs17'), tagsFromMeta(post.json_metadata)),
+          reblogged_by: post.reblogged_by,
+          replies: post.replies,
+          active_votes: post.active_votes,
+          parent_permlink: post.parent_permlink
+        }
+
+        await models.SteemPost.create(tmp)
+        resolve()
+      })
+    }))
 
     ctx.body = {
       status: 200,
-      result: { posts }
+      result: { comments, likes, posts }
     }
   })
 }

@@ -24,10 +24,7 @@ const initGoal = async (ctx, next) => {
       user_id: ctx.__.me.id,
       is_closed: 0
     },
-    defaults: {
-      a: 0,
-      b: 0
-    }
+    defaults: { a: 0, b: 0 }
   })
 
   ctx.__.goal = goal
