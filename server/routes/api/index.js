@@ -9,10 +9,14 @@ const feedbackRoutes = require('./feedback')
 const meRoutes = require('./me')
 const usersRoutes = require('./users')
 <<<<<<< HEAD
+<<<<<<< HEAD
 const attachmentRoutes = require('./attachment')
 =======
 const migrations = require('./migrations')
 >>>>>>> migrations
+=======
+const migrations = require('./migrations')
+>>>>>>> 760ce990f2850f4cbd0a494e1f5ac46bc7126441
 
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
@@ -38,11 +42,15 @@ module.exports = router => {
   router.bridge('/post', postRouter)
   router.bridge('/me', [ initMeRoutes ], meRoutes)
 <<<<<<< HEAD
+<<<<<<< HEAD
   router.bridge('/attachment', attachmentRoutes)
 
 =======
   router.bridge('/migrate', migrations)
 >>>>>>> migrations
+=======
+  router.bridge('/migrate', migrations)
+>>>>>>> 760ce990f2850f4cbd0a494e1f5ac46bc7126441
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)
 }
