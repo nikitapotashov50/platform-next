@@ -14,8 +14,12 @@ export const loadMore = createAction('posts/LOAD_MORE', async params => {
 })
 
 export const deletePost = createAction('posts/DELETE', async id => {
-  await axios.delete(`/api/post/${id}`)
-  return id
+  try {
+    await axios.delete(`/api/post/${id}`)
+    return id
+  } catch (e) {
+    return e
+  }
 })
 
 export const addLike = createAction('posts/ADD_LIKE', async id => {

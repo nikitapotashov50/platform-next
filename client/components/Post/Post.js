@@ -22,7 +22,6 @@ class Post extends Component {
 
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
-    this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
     this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
   }
@@ -47,12 +46,6 @@ class Post extends Component {
     } else {
       this.props.addLike(this.props.id)
     }
-  }
-
-  handleOptionButtonClick () {
-    this.setState({
-      showPostMenu: !this.state.showPostMenu
-    })
   }
 
   getFooter () {
@@ -96,7 +89,9 @@ class Post extends Component {
 
     let Footer = this.getFooter()
 
-    const Options = showPostMenu ? (
+    const myPost = this.props.currentUser.id === user.id
+
+    const Options = myPost && showPostMenu ? (
       <Menu
         onEdit={this.handleEditButtonClick}
         onDelete={this.handleDeleteButtonClick}
