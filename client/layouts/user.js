@@ -9,6 +9,7 @@ import UserProfileGoal from '../components/User/ProfileGoal'
 import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
+import { take, shuffle } from 'lodash'
 
 const UserLayout = ({ user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children, ...props }) => {
   let panelBodyStyles = { padding: 'small' }
@@ -47,7 +48,7 @@ const UserLayout = ({ user, groups, showButtons, goal, subscribers, subscription
             {/* Подписчики */}
             { (subscribers.length !== 0) && (
               <Panel bodyStyles={panelBodyStyles}>
-                <UserProfileSubscribers items={subscribers} title='Подписчики' />
+                <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title='Подписчики' />
               </Panel>
             )}
 
