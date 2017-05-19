@@ -6,8 +6,8 @@ import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
 import { isEmpty } from 'lodash'
 import CameraIcon from 'react-icons/lib/fa/camera'
-import VideoIcon from 'react-icons/lib/fa/video-camera'
-import FileIcon from 'react-icons/lib/fa/file-o'
+// import VideoIcon from 'react-icons/lib/fa/video-camera'
+// import FileIcon from 'react-icons/lib/fa/file-o'
 import RemoveButton from 'react-icons/lib/fa/close'
 import { addPost } from '../../redux/posts'
 
@@ -166,7 +166,8 @@ class PostEditor extends Component {
                   }}>
                   <CameraIcon />
                 </button>
-                <button
+                {/* Кнопки для видео и документов
+                  <button
                   className='attach-button'
                   type='button'>
                   <VideoIcon />
@@ -175,7 +176,7 @@ class PostEditor extends Component {
                   className='attach-button'
                   type='button'>
                   <FileIcon />
-                </button>
+                </button> */}
               </div>
 
               <div>
