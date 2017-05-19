@@ -105,7 +105,7 @@ class Post extends Component {
     ) : null
 
     let goal = null
-    if (user.Goals && user.Goals.length) goal = user.Goals[0]
+    if (user && user.Goals && user.Goals.length) goal = user.Goals[0]
 
     return (
       <div>
