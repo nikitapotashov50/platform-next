@@ -92,7 +92,7 @@ class Post extends Component {
 
     let Footer = this.getFooter()
 
-    const myPost = this.props.currentUser.id === user.id
+    const myPost = this.props.currentUser && this.props.currentUser.id === user.id
 
     const Options = myPost && showPostMenu ? (
       <Menu
