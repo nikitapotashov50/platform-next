@@ -1,14 +1,5 @@
 import React from 'react'
 
-<style>{`
-  body { 
-    background: #000;
-    font: 11px menlo;
-    color: #fff;
-  }
-`}</style>
-
-
 const SpeakersRating = ({rating}) => (
   <table className='SpeakersRating'>
     <thead>
