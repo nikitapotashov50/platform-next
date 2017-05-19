@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
-import Slider from 'react-slick'
+import Lightbox from 'react-images'
 
 import Menu from './Menu'
 import Panel from '../Panel'
@@ -16,8 +16,10 @@ class Post extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      images: this.props.attachments.map(x => ({ src: x.path })),
       showPostMenu: false,
-      showCommentForm: !isEmpty(this.props.comments) || false
+      showCommentForm: !isEmpty(this.props.comments) || false,
+      isLightboxOpen: false
     }
 
     this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
@@ -84,7 +86,7 @@ class Post extends Component {
   }
 
   render () {
-    const { showPostMenu } = this.state
+    const { showPostMenu, isLightboxOpen } = this.state
     const { title, content, attachments, user, added, onExpand } = this.props
 
     let Footer = this.getFooter()
@@ -120,11 +122,48 @@ class Post extends Component {
           <div className='post-preview'>
             <a className='post-preview__title' onClick={onExpand}>{title}</a>
             <TextWithImages text={content} />
+
+            {attachments && (
+              <div className='attachments-container'>
+                {attachments.map((attachment, index) => (
+                  <div key={attachment.id} onClick={() => {
+                    this.setState({
+                      isLightboxOpen: true,
+                      lightboxShowIndex: index
+                    })
+                  }}><img src={attachment.path} /></div>
+                ))}
+              </div>
+            )}
+
+            {isLightboxOpen && <Lightbox
+              images={this.state.images}
+              // backdropClosesModal
+              currentImage={this.state.lightboxShowIndex}
+              onClickPrev={() => {
+                this.setState({
+                  lightboxShowIndex: this.state.lightboxShowIndex - 1
+                })
+              }}
+              onClickNext={() => {
+                this.setState({
+                  lightboxShowIndex: this.state.lightboxShowIndex + 1
+                })
+              }}
+              isOpen={isLightboxOpen}
+              onClose={() => {
+                this.setState({
+                  isLightboxOpen: false
+                })
+              }} />}
+
+            {/* {isOpen && <Lightbox onCloseRequest={() => this.setState({ isOpen: false })} mainSrc={'https://s3-us-west-2.amazonaws.com/s.cdpn.io/4273/jeremiah-wilson-1.jpg'} />} */}
+
             {/* <div>{attachments && attachments.map(({ id, path }) => (
               <img key={id} src={path} style={{ maxWidth: '100%', marginBottom: '15px' }} />
             ))}</div> */}
 
-            {attachments.length > 0
+            {/* {attachments.length > 0
               ? <div style={{ height: '500px' }}>
                 <Slider
                   slidesToShow={1}
@@ -141,7 +180,7 @@ class Post extends Component {
                 })}</Slider>
               </div>
               : null
-            }
+            } */}
 
             {/* <div style={{ overflow: 'hidden' }}>{attachments && <Gallery images={attachments.map(x => ({
               src: x.path,
@@ -151,6 +190,36 @@ class Post extends Component {
             }))} enableImageSelection={false} />}</div> */}
           </div>
         </Panel>
+
+        <style jsx>{`
+          .attachments-container {
+            /*padding: .5vw;*/
+            font-size: 0;
+            display: flex;
+            flex-flow: row wrap;
+          }
+
+          .attachments-container div {
+            flex: auto;
+            width: 150px;
+            margin: .5vw;
+          }
+
+          .attachments-container div img {
+            max-width: 100%;
+            height: auto;
+          }
+
+          @media screen and (max-width: 400px) {
+            .attachments-container div {
+              width: 100px;
+              margin: 2px;
+            }
+            .attachments-container {
+              padding: 0;
+            }
+          }
+        `}</style>
       </div>
     )
   }
