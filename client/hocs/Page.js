@@ -388,7 +388,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &__body {
                                  padding: 15px 20px;
                                  line-height: 150%;
-                                 word-break: break-all;
+                                 /*word-break: break-all;*/
 
                                  &_no {
                                    &_padding { padding: 0; }
