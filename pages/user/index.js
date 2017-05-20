@@ -24,7 +24,7 @@ class UserPage extends Component {
   }
 
   static async getInitialProps ({ store, ...ctx }) {
-    const baseURL = `http://${server.host}:${server.port}`
+    const baseURL = `https://platform.molodost.bz`
     const state = store.getState()
 
     const { data } = await axios.get(`${baseURL}/api/post`, {

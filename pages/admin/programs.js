@@ -18,7 +18,7 @@ const AdminPrograms = ({ data }) => (
 )
 
 AdminPrograms.getInitialProps = async ctx => {
-  let { data } = await axios.get(`http://${server.host}:${server.port}/api/admin/programs/list/`)
+  let { data } = await axios.get(`https://platform.molodost.bz/api/admin/programs/list/`)
   return { data: data.programs }
 }
 

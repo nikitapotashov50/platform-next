@@ -18,7 +18,7 @@ class AccountSettings extends Component {
       options = { withCredentials: true }
     }
 
-    let { data } = await axios.get(`http://dev2.molodost.bz:3000/api/me/goal`, options)
+    let { data } = await axios.get(`https://platform.molodost.bz/api/me/goal`, options)
 
     return {
       goal: data.result.goal
@@ -84,7 +84,7 @@ class AccountSettings extends Component {
     } else {
       await this.setState(state => { state.errors = {} })
 
-      await axios.put(`http://dev2.molodost.bz:3000/api/me/goal`, data, { withCredentials: true })
+      await axios.put(`https://platform.molodost.bz/api/me/goal`, data, { withCredentials: true })
 
       setTimeout(() => {
         this.setState(state => { state.fetching = false })

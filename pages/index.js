@@ -25,7 +25,7 @@ class IndexPage extends Component {
   }
 
   static async getInitialProps ({ store, req, query }) {
-    const baseURL = `http://${config.server.host}:${config.server.port}`
+    const baseURL = `https://platform.molodost.bz`
     const state = store.getState()
 
     let params = { user: state.auth.user }

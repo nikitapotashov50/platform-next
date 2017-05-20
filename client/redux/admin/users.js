@@ -17,7 +17,7 @@ export const fill = createAction('admin/users/FILL_ITEMS', items => ({ items }))
 export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset = 0, limit = defaultState.limit, ...props }) => {
   console.log(props)
   let query = qs.stringify({ limit, offset })
-  let { data } = await axios.get(`http://${server.host}:${server.port}/api/users/list?` + query)
+  let { data } = await axios.get(`https://platform.molodost.bz/api/users/list?` + query)
 
   if (data.status === 200) {
     return {

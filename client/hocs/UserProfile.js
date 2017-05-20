@@ -16,7 +16,7 @@ export default Next => {
     let state = ctx.store.getState()
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
-      let { data } = await axios.get(`http://${server.host}:${server.port}/api/user/${query.username}`)
+      let { data } = await axios.get(`https://platform.molodost.bz/api/user/${query.username}`)
 
       if (data.user) {
         ctx.store.dispatch(getUserInfo(data))
