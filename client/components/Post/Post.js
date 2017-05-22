@@ -132,7 +132,7 @@ class Post extends Component {
                       isLightboxOpen: true,
                       lightboxShowIndex: index
                     })
-                  }}><img src={attachment.path} style={{ cursor: 'pointer' }} /></div>
+                  }}><a><img src={attachment.path} style={{ cursor: 'pointer' }} /></a></div>
                 ))}
               </div>
             )}
@@ -175,9 +175,18 @@ class Post extends Component {
             margin: 10px 2px 5px 2px;
           }
 
+          .attachments-container div a {
+            flex-grow: 1;
+            flex-basis: 125px;
+            max-width: 200px;
+            /*margin: 5px;*/
+          }
+
           .attachments-container div img {
-            max-width: 100%;
-            height: auto;
+            /*max-width: 100%;*/
+            /*height: auto;*/
+            width: 100%;
+            height: 100%;
           }
 
           @media screen and (max-width: 400px) {
