@@ -8,13 +8,15 @@ import PostList from '../../client/components/Post/PostList'
 import PostEditor from '../../client/components/PostEditor/index'
 
 class UserPage extends Component {
-  static async getInitialProps ({ store, ...ctx }) {
-    let { auth, profile, user } = store.getState()
+  static async getInitialProps ({ store, req, ...ctx }) {
+    let { profile, user } = store.getState()
+
     let params = {
-      user: auth.user,
       by_author_id: profile.user.id,
       programId: user.programs.current || null
     }
+
+    if (req) params.user = req.session.user ? req.session.user.id : null
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)
   }

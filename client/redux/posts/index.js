@@ -39,21 +39,11 @@ export const addPost = createAction('posts/POST_ADD', async post => {
   }
 })
 
+/** Post removal */
 export const deletePost = createAction('posts/POST_DELETE', async id => {
   await axios.delete(`/api/post/${id}`)
   return id
 })
-
-// post interactions
-// export const addLike = createAction('posts/ADD_LIKE', async id => {
-//   const { data } = await axios.post(`/api/post/${id}/like`)
-//   return { ...data, post_id: id }
-// })
-
-// export const removeLike = createAction('posts/REMOVE_LIKE', async id => {
-//   const { data } = await axios.delete(`/api/post/${id}/like`)
-//   return { ...data, post_id: id }
-// })
 
 // reducer functions
 const toggleFetchFlag = (state, flag) => ({

@@ -3,6 +3,8 @@ import { combineReducers } from 'redux'
 import posts from './posts/index'
 import comments from './posts/comments'
 
+import likes from './likes'
+
 import auth from './auth'
 import error from './error'
 import profile from './profile'
@@ -20,11 +22,14 @@ export default combineReducers({
   profile,
   ratings,
   users,
-  comments,
+  // likes
+  likes,
+  // posts & comments
   posts: combineReducers({
     posts,
     comments
   }),
+  // session user data
   user: combineReducers({
     programs
   })

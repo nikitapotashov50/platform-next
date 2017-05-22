@@ -8,7 +8,10 @@ import Post from './Post'
 import PostFull from './Full'
 import PostModal from './Modal'
 
-import { fetchPosts, startListFetch, endListFetch, queryUpdate } from '../../redux/posts'
+import { addLike, removeLike } from '../../redux/likes'
+import { fetchPosts, startListFetch, endListFetch, queryUpdate, deletePost } from '../../redux/posts'
+
+const isLiked = (likes, id) => (likes || []).indexOf(id) > -1
 
 class PostList extends Component {
   static async getInitial (dispatch, params, serverPath) {
@@ -71,7 +74,7 @@ class PostList extends Component {
   }
 
   render () {
-    const { posts = [], users = {}, fetching } = this.props
+    const { posts = [], users = {}, fetching, removePost, toggleLike, loggedUser, likes } = this.props
     const { expanded } = this.state
 
     let postCount = posts.length
@@ -79,7 +82,16 @@ class PostList extends Component {
     return (
       <div>
         { postCount > 0 && posts.map((post, index) => (
-          <Post key={post.id} {...post} user={users[post.user_id]} onExpand={this.onPostExpand(post, index)} />
+          <Post
+            {...post}
+            key={post.id}
+            isLiked={isLiked(likes, post.id)}
+            loggedUser={loggedUser}
+            user={users[post.user_id]}
+            onLike={toggleLike(post.id)}
+            onRemove={removePost(post.id)}
+            onExpand={this.onPostExpand(post, index)}
+          />
         ))}
 
         { postCount > 0 && (
@@ -117,11 +129,17 @@ class PostList extends Component {
   }
 }
 
-const mapStateToProps = ({ posts }) => ({ ...posts.posts })
+const mapStateToProps = ({ posts, likes, auth }) => ({
+  ...posts.posts,
+  likes: likes.posts || [],
+  loggedUser: auth.user ? auth.user.id : null
+})
 
 const mapDispatchToProps = dispatch => ({ dispatch })
 
 const mergeProps = (state, dispatchProps, props) => {
+  console.log(state.likes)
+
   const getPosts = async params => {
     dispatchProps.dispatch(startListFetch())
     await dispatchProps.dispatch(fetchPosts(params))
@@ -133,11 +151,22 @@ const mergeProps = (state, dispatchProps, props) => {
     await getPosts({ ...(rewrite ? {} : state.query), ...params })
   }
 
+  const toggleLike = postId => async () => {
+    if (state.likes.indexOf(postId) > -1) await dispatchProps.dispatch(removeLike(postId))
+    else await dispatchProps.dispatch(addLike(postId))
+  }
+
+  const removePost = postId => async () => {
+    await dispatchProps.dispatch(deletePost(postId))
+  }
+
   return {
     ...state,
     ...props,
     getPosts,
-    updateParams
+    toggleLike,
+    updateParams,
+    removePost
   }
 }
 
