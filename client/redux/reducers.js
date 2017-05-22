@@ -4,6 +4,7 @@ import posts from './posts'
 import auth from './auth'
 import error from './error'
 import profile from './profile'
+import ratings from './ratings'
 
 import nps from './admin/nps'
 
@@ -16,6 +17,7 @@ export default combineReducers({
   error,
   posts,
   profile,
+  ratings,
   users,
   user: combineReducers({
     programs
