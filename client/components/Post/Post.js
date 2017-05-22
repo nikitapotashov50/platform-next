@@ -23,8 +23,6 @@ class Post extends Component {
       lightboxShowIndex: 0
     }
 
-    this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
-    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
