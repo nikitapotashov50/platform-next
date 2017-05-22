@@ -120,6 +120,7 @@ module.exports = router => {
     console.log(calculated, type)
 
     ctx.body = {
+      calculated,
       cities: result
     }
   })

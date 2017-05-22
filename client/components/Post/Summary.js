@@ -1,8 +1,7 @@
-import { size } from 'lodash'
 import LikeButton from './LikeButton'
 import CommentButton from './CommentButton'
 
-export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked }) => {
+export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked = false }) => {
   const onLikeClicked = e => {
     e.preventDefault()
     if (!isLogged) return
@@ -12,15 +11,10 @@ export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked }) =>
   return (
     <div className='post-summary'>
       <div className='post-summary__block_left'>
-        <LikeButton
-          count={size(likes) > 0 && size(likes)}
-          handleClick={onLikeClicked}
-          liked={liked}
-         />
+        <LikeButton count={likes} handleClick={onLikeClicked} liked={liked} />
         {isLogged && <CommentButton handleClick={onComment} />}
-        {/* <a className='post-summary__info post-summary__info_icon post-summary__info_icon_like' onClick={onLikeClicked} data-prefix='Нравится: ' href='#'>{likes}</a> */}
-        {/* { isLogged && <a className='post-summary__info post-summary__info_icon post-summary__info_icon_comment' onClick={onComment}>Комментировать</a> } */}
       </div>
+
       { withShare && (
         <div className='post-summary__block_right'>
           { isLogged && <a className='post-summary__link' href='#'>Ответить</a> }

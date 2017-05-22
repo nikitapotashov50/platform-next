@@ -15,7 +15,7 @@ export default Next => {
     let state = ctx.store.getState()
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
-      let { data } = await axios.get(`${BACKEND_URL}/${query.username}`)
+      let { data } = await axios.get(`${BACKEND_URL}/api/user/${query.username}`)
 
       if (data.user) {
         ctx.store.dispatch(getUserInfo(data))

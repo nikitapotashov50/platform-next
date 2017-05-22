@@ -6,7 +6,7 @@ import PageHoc from '../client/hocs/Page'
 import Panel from '../client/components/Panel'
 import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
-import UserInline from '../client/components/User/Inline'
+import GroupInline from '../client/components/Group/Inline'
 import PanelSearch from '../client/components/PanelSearch'
 // import SpeakersRating from '../client/components/Rating/Speakers'
 
@@ -127,7 +127,7 @@ class RatingsPage extends Component {
         <Panel {...panelProps}>
           <div className='rating-list'>
             {this.props.ratings.map(rating => (<div className='rating-list__item' key={rating.id}>
-              <UserInline money={rating.money}
+              <GroupInline money={rating.money}
                 picture={rating.picture_small}
                 title={rating.title || rating.first_name + ' ' + rating.last_name}
                 link={link(rating)}

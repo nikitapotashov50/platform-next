@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 
-import posts from './posts'
+import posts from './posts/index'
+import comments from './posts/comments'
+
 import auth from './auth'
 import error from './error'
 import profile from './profile'
@@ -15,10 +17,14 @@ export default combineReducers({
   nps,
   auth,
   error,
-  posts,
   profile,
   ratings,
   users,
+  comments,
+  posts: combineReducers({
+    posts,
+    comments
+  }),
   user: combineReducers({
     programs
   })
