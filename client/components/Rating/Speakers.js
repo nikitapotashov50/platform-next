@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SpeakersRating = ({rating}) => (
+const SpeakersRating = ({speakers}) => (
   <table className='SpeakersRating'>
     <thead>
       <tr>

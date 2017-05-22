@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import { loadRatings } from '../client/redux/ratings'
+import { loadRatings, loadSpeakers } from '../client/redux/ratings'
 
 import PageHoc from '../client/hocs/Page'
 import Panel from '../client/components/Panel'
@@ -8,7 +8,7 @@ import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
 import UserInline from '../client/components/User/Inline'
 import PanelSearch from '../client/components/PanelSearch'
-// import SpeakersRating from '../client/components/Rating/Speakers'
+import SpeakersRating from '../client/components/Rating/Speakers'
 
 const menuItems = [
   { href: '/ratings?tab=all', path: '/ratings/all', title: 'Все', code: 'all' },
@@ -33,6 +33,7 @@ class RatingsPage extends Component {
 
   componentDidMount () {
     this.props.loadRatings(this.props.url.query.tab, this.props.program)
+    this.props.loadSpeakers(this.props.program)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -61,6 +62,9 @@ class RatingsPage extends Component {
       }
       if (nextProps.url.query.tab === 'mygroup') {
         this.props.loadRatings('mygroup', this.props.program, this.props.userId)
+      }
+      if (nextProps.url.query.tab === 'speakers') {
+        this.props.loadSpeakers(this.props.program)
       }
     }
     if (this.props.program !== nextProps.program) {
@@ -113,15 +117,15 @@ class RatingsPage extends Component {
       }
       return null
     }
-    // if (this.props.url.query.tab === 'speakers') {
-    //   return (
-    //     <FeedLayout>
-    //       <Panel {...panelProps}>
-    //         <SpeakersRating ratings={this.props.ratings} />
-    //       </Panel>
-    //     </FeedLayout>
-    //   )
-    // }
+    if (this.props.url.query.tab === 'speakers') {
+      return (
+        <FeedLayout>
+          <Panel {...panelProps}>
+            <SpeakersRating speakers={this.props.speakers} />
+          </Panel>
+        </FeedLayout>
+      )
+    }
     return (
       <FeedLayout>
         <Panel {...panelProps}>
@@ -145,10 +149,12 @@ export default PageHoc(RatingsPage, {
   mapStateToProps: state => ({
     userId: state.auth.user.id,
     program: state.user.programs.current,
-    ratings: state.ratings.ratings
+    ratings: state.ratings.ratings,
+    speakers: state.ratings.speakers
   }),
   mapDispatchToProps: dispatch => bindActionCreators({
-    loadRatings
+    loadRatings,
+    loadSpeakers
   }, dispatch)
 })
 
