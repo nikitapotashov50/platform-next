@@ -11,7 +11,7 @@ import VideoIcon from 'react-icons/lib/fa/video-camera'
 import FileIcon from 'react-icons/lib/fa/file-o'
 import RemoveButton from 'react-icons/lib/fa/close'
 // import Form from './Form'
-import { addPost, addUsers } from '../../redux/posts'
+import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
   constructor (props) {
@@ -36,16 +36,16 @@ class PostEditor extends Component {
 
   async createPost (e) {
     e.preventDefault()
+
     const { program } = this.props
     const { title, content, attachments } = this.state
+
+    if (!title || !content) return
+
     const post = { title, content, attachments, program }
 
-    if (title && content) {
-      const { data } = await axios.post('/api/post', post, { withCredentials: true })
-      this.props.addPost({ ...data.result.post, added: true })
-      this.props.addUsers({ users: data.result.users })
-      this.clearForm()
-    }
+    await this.props.addPost(post)
+    this.clearForm()
   }
 
   clearForm () {
@@ -96,14 +96,10 @@ class PostEditor extends Component {
         multiple={false}
         style={{}}
         onDragEnter={() => {
-          this.setState({
-            dropzoneActive: true
-          })
+          this.setState({ dropzoneActive: true })
         }}
         onDragLeave={() => {
-          this.setState({
-            dropzoneActive: false
-          })
+          this.setState({ dropzoneActive: false })
         }}
         onDrop={async ([file]) => {
           const formData = new window.FormData()
@@ -154,22 +150,13 @@ class PostEditor extends Component {
           {expanded && (
             <div className='post-editor-footer'>
               <div>
-                <button
-                  className='attach-button'
-                  type='button'
-                  onClick={() => {
-                    this.dropzoneRef.open()
-                  }}>
+                <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
                   <CameraIcon />
                 </button>
-                <button
-                  className='attach-button'
-                  type='button'>
+                <button className='attach-button' type='button'>
                   <VideoIcon />
                 </button>
-                <button
-                  className='attach-button'
-                  type='button'>
+                <button className='attach-button' type='button'>
                   <FileIcon />
                 </button>
               </div>
@@ -248,7 +235,6 @@ const mapStateToProps = ({ user }) => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  addUsers,
   addPost
 }, dispatch)
 

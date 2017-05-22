@@ -1,9 +1,9 @@
 import CommentIcon from 'react-icons/lib/fa/comment'
 
-export default ({ handleClick, count }) => (
+export default ({ handleClick }) => (
   <div className='comment-button' onClick={handleClick}>
     <CommentIcon color='#dadee1' size={20} />
-    <div className='comment-button-text'>Комментировать: {count}</div>
+    <div className='comment-button-text'>Комментировать</div>
 
     <style jsx>{`
       .comment-button {

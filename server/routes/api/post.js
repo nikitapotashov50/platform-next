@@ -1,6 +1,6 @@
 const pMap = require('p-map')
 const { has, pick, uniq } = require('lodash')
-const { models, orm } = require('../../models')
+const { models, cached, orm } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
   try {
@@ -28,15 +28,17 @@ let initPostRoutes = async (ctx, next) => {
 }
 
 const getPostList = async (params) => {
-  let { where, offset, limit = 5 } = params
+  let { where, offset, limit = 7 } = params
 
   let include = [
     {
       as: 'comments',
-      attributes: [ 'id', 'content', 'user_id' ],
-      model: models.Comment
+      model: models.Comment,
+      attributes: [ 'id' ]
     },
     {
+      required: false,
+      duplicating: false,
       as: 'likes',
       attributes: [ 'id' ],
       model: models.Like,
@@ -45,6 +47,8 @@ const getPostList = async (params) => {
       }
     },
     {
+      required: false,
+      duplicating: false,
       model: models.Attachment,
       attributes: ['id', 'name', 'path'],
       as: 'attachments',
@@ -69,7 +73,7 @@ const getPostList = async (params) => {
     })
   }
 
-  const data = await models.Post.findAll({
+  const data = await cached.Post.findAll({
     attributes: [
       'id', 'title', 'content', 'created_at', 'user_id'
     ],
@@ -80,14 +84,14 @@ const getPostList = async (params) => {
     where,
     limit,
     offset: offset * limit,
-    group: [ 'id' ]
+    subquery: false
   })
 
   return data
 }
 
 const getUsersByIds = async ids => {
-  let result = await models.User.findAll({
+  let result = await cached.User.findAll({
     where: {
       id: { $in: ids }
     },
@@ -97,7 +101,7 @@ const getUsersByIds = async ids => {
     ],
     include: [
       {
-        attributes: [ 'occupation' ],
+        attributes: [],
         model: models.Goal,
         where: { is_closed: false }
       }
@@ -108,6 +112,26 @@ const getUsersByIds = async ids => {
 }
 
 module.exports = router => {
+  router.get('/comments', async ctx => {
+    console.log(ctx.query)
+    let idArray = ctx.query.idArray || ''
+
+    let data = await models.Comment.findAll({
+      where: {
+        id: { $in: idArray.split(',') }
+      }
+    })
+
+    ctx.body = {
+      status: 200,
+      result: {
+        comments: data.reduce((acc, item) => {
+          acc[item.id] = item
+          return acc
+        }, {})
+      }
+    }
+  })
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
@@ -128,29 +152,31 @@ module.exports = router => {
 
     let postIds = []
     let userIds = []
+    let commentIds = []
 
     let realPosts = posts.map(el => {
       postIds.push(el.id)
       userIds.push(el.user_id)
 
       if (el.comments) {
-        el.comments.map(el => {
-          userIds.push(el.user_id)
-        })
+        el.comments.slice(-3).map(el => { commentIds.push(el.id) })
       }
 
-      return Object.assign(
-        {},
-        pick(el, [ 'title', 'content', 'created_at', 'user_id', 'id', 'comments', 'likes' ]),
-        {
-          likes_count: el.likes.length,
-          comments_count: el.comments.length
-        }
-      )
+      return el
     })
 
-    let usersArr = await getUsersByIds(uniq(userIds))
+    let comments = await cached.Comment.findAll({
+      attributes: [ 'id', 'content', 'user_id', 'created_at' ],
+      where: { id: { $in: commentIds } }
+    })
 
+    comments = comments.reduce((acc, item) => {
+      acc[item.id] = item
+      userIds.push(item.user_id)
+      return acc
+    }, {})
+
+    let usersArr = await getUsersByIds(uniq(userIds))
     let users = usersArr.reduce((acc, item) => {
       acc[item.id] = item
       return acc
@@ -159,6 +185,7 @@ module.exports = router => {
     ctx.body = {
       status: 200,
       result: {
+        comments,
         posts: realPosts,
         users
       }
@@ -200,7 +227,7 @@ module.exports = router => {
       where: {
         id: created.id
       },
-      attributes: ['id', 'title', 'content', 'created_at'],
+      attributes: [ 'id', 'title', 'content', 'created_at', 'user_id' ],
       include: [
         {
           model: models.Attachment,
@@ -213,12 +240,13 @@ module.exports = router => {
       ]
     })
 
-    let user = await getUsersByIds([ ctx.session.user.id ])
+    let users = await getUsersByIds([ ctx.session.user.id ])
+    let user = users.shift()
 
     ctx.body = {
       status: 200,
       result: {
-        post: data,
+        posts: data,
         users: { [user.id]: user }
       }
     }
@@ -281,23 +309,42 @@ module.exports = router => {
           user_id: ctx.session.user.id
         })
 
-        const data = await models.Comment.findOne({
-          where: {
-            id: created.id
-          },
-          attributes: [ 'id', 'post_id', 'content', 'created_at' ],
-          include: [
-            {
-              model: models.User,
-              attributes: [ 'name', 'first_name', 'last_name', 'picture_small' ],
-              as: 'user'
-            }
-          ]
+        ctx.body = {
+          status: 200,
+          result: {
+            comment: created
+          }
+        }
+      } catch (e) {
+        ctx.body = {
+          status: 500
+        }
+      }
+    })
+
+    router.delete('/comment/:commentId', async ctx => {
+      console.log('asdasdasdasdasdasdasd', ctx.params)
+      try {
+        if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
+
+        let comment = await models.Comment.findOne({
+          where: { id: ctx.params.commentId }
         })
 
-        ctx.body = data
+        if (!comment) throw new Error('Comment not exists')
+        if (comment.user_id !== ctx.session.user.id) throw new Error('Access denied')
+
+        await comment.destroy()
+
+        ctx.body = {
+          status: 200,
+          result: { data: 'ok' }
+        }
       } catch (e) {
-        ctx.body = {}
+        console.log(e)
+        ctx.body = {
+          status: 500
+        }
       }
     })
 

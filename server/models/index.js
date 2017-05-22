@@ -1,6 +1,9 @@
-const Sequelize = require('sequelize')
 const fs = require('fs')
 const path = require('path')
+const redis = require('redis')
+const Sequelize = require('sequelize')
+const cacher = require('sequelize-redis-cache')
+
 const dbConfig = require('../../config').db
 
 /**
@@ -8,6 +11,7 @@ const dbConfig = require('../../config').db
  * @type {module}
  */
 
+let redisClient = redis.createClient(6379, 'localhost')
 let sequelize = new Sequelize(dbConfig.uri, {
   // logging: () => {},
   dialect: 'mysql',
@@ -17,6 +21,7 @@ let sequelize = new Sequelize(dbConfig.uri, {
 })
 let db = []
 let views = {}
+let cached = {}
 
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
@@ -37,11 +42,15 @@ fs.readdirSync(path.join(__dirname, './views'))
   })
 
 Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) db[modelName].associate(db)
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
+    cached[modelName] = cacher(sequelize, redisClient).model(modelName).ttl(5)
+  }
 })
 
 module.exports = {
   views,
   models: db,
+  cached: cached,
   orm: sequelize
 }

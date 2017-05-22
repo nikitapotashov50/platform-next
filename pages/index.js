@@ -16,30 +16,22 @@ const menuItems = [
 class IndexPage extends Component {
   static async getInitialProps ({ store, req, query }) {
     let { auth, user } = store.getState()
-    let params = {
-      user: auth.user,
-      programId: user.programs.current || null
-    }
 
+    let params = { programId: user.programs.current || null }
     if (query.tab === 'subscriptions' && auth.user) params.by_author_id = auth.subscriptions.join(',')
 
-    await PostList.getInitial(store.dispatch, `http://${config.server.host}:${config.server.port}`, params)
+    await PostList.getInitial(store.dispatch, params, `http://${config.server.host}:${config.server.port}`)
 
     return { tab: query.tab || 'index' }
   }
 
   render () {
     let { tab, url, program } = this.props
-    let params = {
-      programId: program
-    }
+
+    let params = { programId: program }
+    let pathname = { href: url.pathname + '?tab=' + tab, path: tab ? ('/feed/' + tab) : '/' }
 
     if (tab === 'subscriptions') params.by_author_id = this.props.subscriptions.join(',')
-
-    let pathname = {
-      href: url.pathname + '?tab=' + tab,
-      path: tab ? ('/feed/' + tab) : '/'
-    }
 
     return (
       <FeedLayout>

@@ -19,7 +19,7 @@ class UserPage extends Component {
       programId: user.programs.current || null
     }
 
-    await PostList.getInitial(store.dispatch, baseURL, params)
+    await PostList.getInitial(store.dispatch, params, baseURL)
   }
 
   render () {

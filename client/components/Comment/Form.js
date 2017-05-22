@@ -1,42 +1,50 @@
-import axios from 'axios'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 
-import { addComment } from '../../redux/posts'
-import Button from '../../elements/Button'
 import UserImage from '../User/Image'
+import Button from '../../elements/Button'
+import { add } from '../../redux/posts/comments'
+
+const defaultState = { content: '', expanded: false }
 
 class CommentForm extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      content: '',
-      expanded: false
-    }
-    this.handleContentChange = this.handleContentChange.bind(this)
-    this.createComment = this.createComment.bind(this)
+    this.state = { ...defaultState, ...(props.expanded ? { expanded: true } : {}) }
+
     this.clearForm = this.clearForm.bind(this)
+    this.createComment = this.createComment.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.handleContentChange = this.handleContentChange.bind(this)
   }
 
   componentDidMount () {
-    if (this.props.expanded && this.inputRef) {
-      // this.inputRef.focus()
-    }
+    if (this.props.expanded && this.inputRef) this.inputRef.focus()
   }
 
   handleContentChange (e) {
     this.setState({
-      content: e.target.value
+      content: (e.target.value || '').replace(/(<([^>]+)>)/ig, '')
     })
   }
 
+  toggleExpand (flag) {
+    this.setState(state => { state.expanded = flag })
+  }
+
+  clearForm () {
+    this.setState({ ...defaultState })
+  }
+
+  handleClickOutside () {
+    if (this.state.content) return
+    this.clearForm()
+  }
+
   handleKeyPress (e) {
-    if (e.key === 'Enter') {
-      this.createComment()
-    }
+    if (e.key === 'Enter') this.createComment()
   }
 
   async createComment (e) {
@@ -44,31 +52,9 @@ class CommentForm extends Component {
     const { postId } = this.props
 
     if (content) {
-      const { data } = await axios.post(`/api/post/${postId}/comment`, { content })
-      this.props.addComment({ ...data })
-      this.clearForm()
+      await this.props.addComment(content, postId)
+      await this.clearForm()
     }
-  }
-
-  toggleExpand (flag) {
-    this.setState(state => {
-      state.expanded = flag
-    })
-  }
-
-  clearForm () {
-    this.setState({
-      content: ''
-    })
-  }
-
-  handleClickOutside () {
-    if (this.state.content) return
-
-    this.setState(state => {
-      state.content = ''
-      state.expanded = false
-    })
   }
 
   render () {
@@ -81,14 +67,16 @@ class CommentForm extends Component {
           <UserImage user={user} smallest />
         </div>
         <div className='post-comment__block post-comment__block_body'>
-          <textarea className={[ 'post-comment__input', !expanded ? 'post-comment__input_collapsed' : '' ].join(' ')}
+          <textarea
+            placeholder='Оставить комментарий'
+            className={[ 'post-comment__input', !expanded ? 'post-comment__input_collapsed' : '' ].join(' ')}
             value={content}
-            ref={ref => { this.inputRef = ref }}
             rows={expanded ? 3 : 1}
+            ref={ref => { this.inputRef = ref }}
+            /* Describing form interactins */
             onKeyPress={this.handleKeyPress}
             onChange={this.handleContentChange}
             onFocus={this.toggleExpand.bind(this, true)}
-            type='text' placeholder='Оставить комментарий'
           />
         </div>
 
@@ -98,6 +86,7 @@ class CommentForm extends Component {
           </div>
         ) }
 
+        {/* TODO вынести стили в один файл */}
         <style jsx>{`
           .post-comment {}
           .post-comment__block {
@@ -134,15 +123,11 @@ class CommentForm extends Component {
 
 
           /*  Мобильные стили */
-              @media screen and (max-width: 39.9375em) {
-
-                .post-comment__input {
-                  font-size:16px;
-
-                }
-
-
-              }
+          @media screen and (max-width: 39.9375em) {
+            .post-comment__input {
+              font-size:16px;
+            }
+          }
         `}</style>
       </div>
     )
@@ -154,7 +139,7 @@ CommentForm.inputRef = null
 let wrappedComponent = clickOutside(CommentForm)
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  addComment
+  addComment: add
 }, dispatch)
 
 export default connect(null, mapDispatchToProps)(wrappedComponent)
