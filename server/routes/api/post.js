@@ -1,5 +1,5 @@
 const pMap = require('p-map')
-const { has, pick, uniq } = require('lodash')
+const { has, uniq } = require('lodash')
 const { models, cached, orm } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {

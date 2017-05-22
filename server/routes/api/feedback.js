@@ -115,9 +115,10 @@ module.exports = router => {
       group: [ orm.col('city_id'), orm.col('city_name') ]
     })
 
-    // let calculated = calcNPS(result)
+    let calculated = calcNPS(result)
 
     ctx.body = {
+      calculated,
       cities: result
     }
   })

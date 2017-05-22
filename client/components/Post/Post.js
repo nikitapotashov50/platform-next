@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import Slider from 'react-slick'
 
