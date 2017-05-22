@@ -175,7 +175,7 @@ class Post extends Component {
           .attachments-container div {
             flex: auto;
             width: 150px;
-            margin: 10px 2px 5px 2px;
+            margin: 2px;
           }
 
           .attachments-container div a {
@@ -192,7 +192,6 @@ class Post extends Component {
           @media screen and (max-width: 400px) {
             .attachments-container div {
               width: 100px;
-              margin: 2px;
             }
             .attachments-container {
               padding: 0;
