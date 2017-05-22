@@ -8,17 +8,18 @@ import Panel from '../Panel'
 import PostSummary from './Summary'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
-import CommentForm from '../Comment/Form'
-import CommentList from '../Comment/CommentList'
+import Comments from '../Comment/List'
+
 import { deletePost, addLike, removeLike } from '../../redux/posts'
 
 class Post extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       images: this.props.attachments.map(x => ({ src: x.path })),
       showPostMenu: false,
-      showCommentForm: !isEmpty(this.props.comments) || false,
+      showCommentForm: false,
       isLightboxOpen: false,
       lightboxShowIndex: 0
     }
@@ -27,16 +28,17 @@ class Post extends Component {
     this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
     this.handleLikeButtonClick = this.handleLikeButtonClick.bind(this)
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this)
+    this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
+    this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
   }
 
   handleCommentButtonClick () {
-    this.setState({
-      showCommentForm: true
-    })
+    this.setState({ showCommentForm: true })
   }
 
-  handleDeleteButtonClick () {
-    this.props.deletePost(this.props.id)
+  async handleDeleteButtonClick () {
+    await this.props.deletePost(this.props.id)
   }
 
   handleEditButtonClick () {
@@ -44,44 +46,30 @@ class Post extends Component {
   }
 
   handleLikeButtonClick () {
-    if (this.props.liked) {
-      this.props.removeLike(this.props.id)
-    } else {
-      this.props.addLike(this.props.id)
-    }
+    if (this.props.liked) this.props.removeLike(this.props.id)
+    else this.props.addLike(this.props.id)
+  }
+
+  handleOptionButtonClick () {
+    this.setState({ showPostMenu: !this.state.showPostMenu })
   }
 
   getFooter () {
+    let { id, isLogged, comments = [] } = this.props
     let { showCommentForm } = this.state
-    let { likes = [], comments = [], id, currentUser, isLogged, liked } = this.props
 
-    const Footer = []
-
-    Footer.push(
-      <PostSummary
-        isLogged={isLogged}
-        likes={likes}
-        liked={liked}
-        onComment={this.handleCommentButtonClick}
-        onLike={this.handleLikeButtonClick} />
-      )
-
-    if (comments.length) {
-      Footer.push(<CommentList comments={comments} />)
-    }
-
-    if (isLogged && (comments.length || showCommentForm)) {
-      Footer.push(
-        <CommentForm
-          postId={id}
-          user={currentUser}
-          expanded={showCommentForm}
-          handleClickOutside={() => {
-            this.setState({ showCommentForm: false })
-          }}
+    const Footer = (
+      <div>
+        <PostSummary
+          isLogged={isLogged}
+          likes={this.props.likes_count}
+          onLike={this.handleLikeButtonClick}
+          onComment={this.handleCommentButtonClick}
         />
-      )
-    }
+
+        <Comments ids={comments} postId={id} expanded={showCommentForm} />
+      </div>
+    )
 
     return Footer
   }

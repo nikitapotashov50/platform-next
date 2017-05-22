@@ -570,11 +570,18 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                &__image-link {
                                  width: 50px;
+                                 height: 50px;
                                  margin-right: 10px;
                                  vertical-align: top;
                                  display: inline-block;
-                                 &_small { width: 40px; }
-                                 &_smallest { width: 30px; }
+                                 &_small {
+                                   width: 40px;
+                                  height: 40px;
+                                }
+                                 &_smallest {
+                                   width: 30px;
+                                   height: 30px;
+                                }
                                }
 
                                &__image {
@@ -1282,17 +1289,59 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .comments {
                                box-sizing: border-box;
                                margin: 0 auto;
-                               /* max-width: 50rem; */
                                max-width: 800px;
                                padding: 15px 32px 30px 20px;
 
                                background: #fff;
+
+                               &_footer {
+                                 padding: 0;
+                                 margin: 0 -15px;
+
+                                 &_expanded {
+                                   margin-top: 10px;
+                                   padding-top: 10px;
+                                   border-top: 1px solid rgb(235, 235, 235);
+                                 }
+                               }
+
+                               &__block {
+                                 margin-top: 10px;
+                                 padding: 10px 15px 0;
+                                 border-top: 1px solid rgb(235, 235, 235);
+                               }
+                                 list {
+                                 padding-bottom: 10px;
+                                 margin-bottom: 10px;
+                                 border-bottom: 1px solid rgb(235, 235, 235);
+                               }
+
+                               &__form {
+                                 margin: 0 -15px;
+                                 padding: 0 15px;
+                               }
 
                                &__item {
                                  position: relative;
 
                                  margin: 10px 0;
                                  &_root { margin-bottom: 30px; }
+                               }
+
+                               &__more {
+                                 transition: background .25s;
+
+                                 width: 100%;
+                                 height: 30px;
+                                 line-height: 30px;
+                                 margin-bottom: 10px;
+
+                                 cursor: pointer;
+                                 font-size: 12px;
+                                 text-align: center;
+                                 background: color(#efeff0 a(-5%));
+
+                                 &:hover { background: color(#efeff0 a(-35%)); }
                                }
 
                                &__branch { padding-left: 60px; }
@@ -1329,12 +1378,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                &:last-of-type { margin-bottom: 0; }
 
-                               &__header { margin-left: -50px; }
+                               &__header {
+                                 position: relative;
+                                 margin-left: -50px;
+                              }
                                &__body { margin-top: -19px; }
                                &__footer { margin-top: 5px; }
-
-                               &__body {}
-
+                               &__remove {
+                                 top: 0;
+                                 right: 0;
+                                 position: absolute;
+                               }
                              }
 
                              .share {

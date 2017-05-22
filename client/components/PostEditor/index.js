@@ -6,8 +6,6 @@ import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
 import { isEmpty } from 'lodash'
 import CameraIcon from 'react-icons/lib/fa/camera'
-// import VideoIcon from 'react-icons/lib/fa/video-camera'
-// import FileIcon from 'react-icons/lib/fa/file-o'
 import RemoveButton from 'react-icons/lib/fa/close'
 import { addPost } from '../../redux/posts'
 
@@ -34,14 +32,16 @@ class PostEditor extends Component {
 
   async createPost (e) {
     e.preventDefault()
-    const { title, content, attachments } = this.state
-    const post = { title, content, attachments }
 
-    if (title && content) {
-      const { data } = await axios.post('/api/post', post, { withCredentials: true })
-      this.props.addPost({ ...data, added: true })
-      this.clearForm()
-    }
+    const { program } = this.props
+    const { title, content, attachments } = this.state
+
+    if (!title || !content) return
+
+    const post = { title, content, attachments, program }
+
+    await this.props.addPost(post)
+    this.clearForm()
   }
 
   clearForm () {
@@ -92,14 +92,10 @@ class PostEditor extends Component {
         multiple={false}
         style={{}}
         onDragEnter={() => {
-          this.setState({
-            dropzoneActive: true
-          })
+          this.setState({ dropzoneActive: true })
         }}
         onDragLeave={() => {
-          this.setState({
-            dropzoneActive: false
-          })
+          this.setState({ dropzoneActive: false })
         }}
         onDrop={async ([file]) => {
           this.setState({
@@ -158,25 +154,9 @@ class PostEditor extends Component {
           {expanded && (
             <div className='post-editor-footer'>
               <div>
-                <button
-                  className='attach-button'
-                  type='button'
-                  onClick={() => {
-                    this.dropzoneRef.open()
-                  }}>
+                <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
                   <CameraIcon />
                 </button>
-                {/* Кнопки для видео и документов
-                  <button
-                  className='attach-button'
-                  type='button'>
-                  <VideoIcon />
-                </button>
-                <button
-                  className='attach-button'
-                  type='button'>
-                  <FileIcon />
-                </button> */}
               </div>
 
               <div>
