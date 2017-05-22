@@ -127,12 +127,16 @@ class Post extends Component {
             {attachments && (
               <div className='attachments-container'>
                 {attachments.map((attachment, index) => (
-                  <div key={attachment.id} onClick={() => {
-                    this.setState({
-                      isLightboxOpen: true,
-                      lightboxShowIndex: index
-                    })
-                  }}><a><img src={attachment.path} style={{ cursor: 'pointer' }} /></a></div>
+                  <div key={attachment.id}>
+                    <a onClick={() => {
+                      this.setState({
+                        isLightboxOpen: true,
+                        lightboxShowIndex: index
+                      })
+                    }}>
+                      <img src={attachment.path} style={{ cursor: 'pointer' }} />
+                    </a>
+                  </div>
                 ))}
               </div>
             )}
@@ -163,7 +167,6 @@ class Post extends Component {
 
         <style jsx>{`
           .attachments-container {
-            /*padding: .5vw;*/
             font-size: 0;
             display: flex;
             flex-flow: row wrap;
@@ -179,12 +182,9 @@ class Post extends Component {
             flex-grow: 1;
             flex-basis: 125px;
             max-width: 200px;
-            /*margin: 5px;*/
           }
 
           .attachments-container div img {
-            /*max-width: 100%;*/
-            /*height: auto;*/
             width: 100%;
             height: 100%;
           }
