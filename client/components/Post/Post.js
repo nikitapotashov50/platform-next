@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Lightbox from 'react-image-lightbox-universal'
 
 import Menu from './Menu'
 import Panel from '../Panel'
@@ -8,16 +7,15 @@ import Comments from '../Comment/List'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
 
+import Attachments from './Attachments'
+
 class Post extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      likes: props.isLiked ? (props.likes_count - 1) : props.likes_count,
-      images: this.props.attachments.map(x => ({ src: x.path })),
       showPostMenu: false,
       showCommentForm: false,
-      isLightboxOpen: false,
-      lightboxShowIndex: 0
+      likes: props.likes_count - Number(props.isLiked || false)
     }
 
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
@@ -58,7 +56,7 @@ class Post extends Component {
   }
 
   render () {
-    const { showPostMenu, isLightboxOpen } = this.state
+    const { showPostMenu } = this.state
     const { title, content, attachments, user, added, onExpand, onRemove } = this.props
 
     let Footer = this.getFooter()
@@ -91,81 +89,9 @@ class Post extends Component {
           <div className='post-preview'>
             <a className='post-preview__title' onClick={onExpand}>{title}</a>
             <TextWithImages text={content} />
-
-            {attachments && (
-              <div className='attachments-container'>
-                {attachments.map((attachment, index) => (
-                  <div key={attachment.id}>
-                    <a onClick={() => {
-                      this.setState({
-                        isLightboxOpen: true,
-                        lightboxShowIndex: index
-                      })
-                    }}>
-                      <img src={attachment.path} style={{ cursor: 'pointer' }} />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {isLightboxOpen && <Lightbox
-              mainSrc={this.state.images[this.state.lightboxShowIndex].src}
-              prevSrc={this.state.images[(this.state.lightboxShowIndex + this.state.images.length - 1) % this.state.images.length].src}
-              nextSrc={this.state.images[(this.state.lightboxShowIndex + 1) % this.state.images.length].src}
-              onMovePrevRequest={() => {
-                this.setState({
-                  lightboxShowIndex: (this.state.lightboxShowIndex + this.state.images.length - 1) % this.state.images.length
-                })
-              }}
-              onMoveNextRequest={() => {
-                this.setState({
-                  lightboxShowIndex: (this.state.lightboxShowIndex + 1) % this.state.images.length
-                })
-              }}
-              onCloseRequest={() => {
-                this.setState({
-                  isLightboxOpen: false
-                })
-              }}
-             />}
-
+            { (attachments.length > 0) && <Attachments items={attachments} />}
           </div>
         </Panel>
-
-        <style jsx>{`
-          .attachments-container {
-            font-size: 0;
-            display: flex;
-            flex-flow: row wrap;
-          }
-
-          .attachments-container div {
-            flex: auto;
-            width: 150px;
-            margin: 2px;
-          }
-
-          .attachments-container div a {
-            flex-grow: 1;
-            flex-basis: 125px;
-            max-width: 200px;
-          }
-
-          .attachments-container div img {
-            width: 100%;
-            height: 100%;
-          }
-
-          @media screen and (max-width: 400px) {
-            .attachments-container div {
-              width: 100px;
-            }
-            .attachments-container {
-              padding: 0;
-            }
-          }
-        `}</style>
       </div>
     )
   }

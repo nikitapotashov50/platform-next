@@ -85,9 +85,11 @@ class PostList extends Component {
           <Post
             {...post}
             key={post.id}
-            isLiked={isLiked(likes, post.id)}
+            //
             loggedUser={loggedUser}
             user={users[post.user_id]}
+            isLiked={isLiked(likes, post.id)}
+            //
             onLike={toggleLike(post.id)}
             onRemove={removePost(post.id)}
             onExpand={this.onPostExpand(post, index)}
@@ -111,7 +113,14 @@ class PostList extends Component {
         {/* Модалка с постом */}
         { !!expanded && (
           <PostModal isOpened={!!expanded} onPaginate={this.onPostPaginate} onClose={this.onPostExpand(null)}>
-            <PostFull {...expanded} user={users[expanded.user_id]} />
+            <PostFull
+              {...expanded}
+              loggedUser={loggedUser}
+              user={users[expanded.user_id]}
+              isLiked={isLiked(likes, expanded.id)}
+              //
+              onLike={toggleLike(expanded.id)}
+            />
           </PostModal>
         )}
 
@@ -138,8 +147,6 @@ const mapStateToProps = ({ posts, likes, auth }) => ({
 const mapDispatchToProps = dispatch => ({ dispatch })
 
 const mergeProps = (state, dispatchProps, props) => {
-  console.log(state.likes)
-
   const getPosts = async params => {
     dispatchProps.dispatch(startListFetch())
     await dispatchProps.dispatch(fetchPosts(params))

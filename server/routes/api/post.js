@@ -137,7 +137,8 @@ module.exports = router => {
     const offset = Number(ctx.query.offset) || 0
     const programId = Number(ctx.query.programId) || null
     const userId = ctx.session.user ? ctx.session.user.id : (Number(ctx.query.user) || null)
-    let authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
+    const postsId = has(ctx.query, 'by_post_id') ? ctx.query.by_post_id.split(',') : null
+    const authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
 
     // не показывать удаленные посты
     let where = {
@@ -149,6 +150,9 @@ module.exports = router => {
 
     // посты по программе
     if (programId) where.programId = programId
+
+    // может быть мы хотим выбрать конкретный пост
+    if (postsId) where.id = { $in: postsId }
 
     let posts = await getPostList({ where, offset })
 

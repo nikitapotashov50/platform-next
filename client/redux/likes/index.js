@@ -17,13 +17,13 @@ const manageLike = async (id, action = 'post') => {
 
 // add like to post
 export const addLike = createAction('likes/POST_LIKE_ADD', async id => {
-  await manageLike(id, 'post')
+  manageLike(id, 'post')
   return { id }
 })
 
 // remove like to post
 export const removeLike = createAction('likes/POST_LIKE_REMOVE', async id => {
-  await manageLike(id, 'delete')
+  manageLike(id, 'delete')
   return { id }
 })
 
@@ -38,10 +38,12 @@ export default handleActions({
   }),
   // todo доделать
   [removeLike]: (state, { payload }) => {
-    console.log('payload id ', payload)
+    let tmp = [ ...(state.posts || []) ]
+    remove(tmp, n => n === payload.id)
+
     return {
       ...state,
-      posts: remove([ ...(state.posts || []) ], n => n === payload.id)
+      posts: tmp
     }
   },
   // fetch likes form posts result
