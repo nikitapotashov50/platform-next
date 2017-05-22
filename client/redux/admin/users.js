@@ -1,8 +1,8 @@
+
 import axios from 'axios'
 import qs from 'query-string'
 import { handleActions, createAction } from 'redux-actions'
-import { server } from '../../../config'
-//
+
 const defaultState = {
   items: [],
   limit: 30,
@@ -10,14 +10,12 @@ const defaultState = {
   total: 0
 }
 
-//
 export const fill = createAction('admin/users/FILL_ITEMS', items => ({ items }))
 
-//
 export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset = 0, limit = defaultState.limit, ...props }) => {
   console.log(props)
   let query = qs.stringify({ limit, offset })
-  let { data } = await axios.get(`https://platform.molodost.bz/api/users/list?` + query)
+  let { data } = await axios.get(`${BACKEND_URL}/api/users/list?${query}`)
 
   if (data.status === 200) {
     return {
@@ -27,7 +25,6 @@ export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset
   } else throw new Error('Error')
 })
 
-//
 export default handleActions({
   [fill]: (state, { payload }) => ({
     ...state,

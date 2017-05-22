@@ -3,7 +3,6 @@ import axios from 'axios'
 import { bindActionCreators } from 'redux'
 import Waypoint from 'react-waypoint'
 
-import config from '../config'
 import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
@@ -25,7 +24,6 @@ class IndexPage extends Component {
   }
 
   static async getInitialProps ({ store, req, query }) {
-    const baseURL = `https://platform.molodost.bz`
     const state = store.getState()
 
     let params = { user: state.auth.user }
@@ -33,7 +31,7 @@ class IndexPage extends Component {
       params.by_author_id = state.auth.subscriptions.join(',')
     }
 
-    const { data } = await axios.get(`${baseURL}/api/post`, { params })
+    const { data } = await axios.get(`${BACKEND_URL}/api/post`, { params })
 
     store.dispatch(loadPosts(data))
   }

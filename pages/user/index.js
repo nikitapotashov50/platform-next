@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import Waypoint from 'react-waypoint'
 
-import { server } from '../../config'
 import Page from '../../client/hocs/Page'
 import UserProfile from '../../client/hocs/UserProfile'
 
@@ -24,10 +23,9 @@ class UserPage extends Component {
   }
 
   static async getInitialProps ({ store, ...ctx }) {
-    const baseURL = `https://platform.molodost.bz`
     const state = store.getState()
 
-    const { data } = await axios.get(`${baseURL}/api/post`, {
+    const { data } = await axios.get(`${BACKEND_URL}/api/post`, {
       params: {
         by_author_id: state.profile.user.id,
         user: state.auth.user

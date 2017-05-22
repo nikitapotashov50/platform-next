@@ -21,45 +21,42 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
             </div>
           </div>
 
-          <div className="Products">
-          <a className="Products__schedule-title" target="_self" href="http://molodost.bz/shop/">
+          <div className='Products'>
+            <a className='Products__schedule-title' target='_self' href='http://molodost.bz/shop/'>
               Ближайшие программы
-             
+
           </a>
 
-          <div className="Products__schedule-list">
-              
+            <div className='Products__schedule-list'>
 
-              <a className="Products__link" target="_blank" href="http://molodost.bz/coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_ceh_07042017">
-                  <div className="Products__date">
-                      <div className="Products__date-day">17</div>
-                      <div className="Products__date-month">июн</div>
-                  </div>
+              <a className='Products__link' target='_blank' href='http://molodost.bz/coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_ceh_07042017'>
+                <div className='Products__date'>
+                  <div className='Products__date-day'>17</div>
+                  <div className='Products__date-month'>июн</div>
+                </div>
 
-                  <div className="Products__text">
-                      <div className="Products__title">ЦЕХ &mdash; Главная программа</div>
-                      <div className="Products__description">Двухмесяная программа</div>
-                     
-                  </div>
+                <div className='Products__text'>
+                  <div className='Products__title'>ЦЕХ &mdash; Главная программа</div>
+                  <div className='Products__description'>Двухмесяная программа</div>
+
+                </div>
               </a>
 
-              <a className="Products__link" target="_blank" href="http://molodost.bz/million_coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_mzs_07042017">
-                  <div className="Products__date">
-                      <div className="Products__date-day">20</div>
-                      <div className="Products__date-month">июн</div>
-                  </div>
+              <a className='Products__link' target='_blank' href='http://molodost.bz/million_coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_mzs_07042017'>
+                <div className='Products__date'>
+                  <div className='Products__date-day'>20</div>
+                  <div className='Products__date-month'>июн</div>
+                </div>
 
-                  <div className="Products__text">
-                      <div className="Products__title">Миллион за сто</div>
-                      <div className="Products__description">Главная ВИП программа</div>
-                     
-                  </div>
+                <div className='Products__text'>
+                  <div className='Products__title'>Миллион за сто</div>
+                  <div className='Products__description'>Главная ВИП программа</div>
+
+                </div>
               </a>
 
-              
+            </div>
           </div>
-      </div>
-
 
           {/* <Panel Header={<div className='panel__title'>Боковая панель</div>}>
             Здесь контент
@@ -94,7 +91,7 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
         background: -webkit-linear-gradient(top,rgba(30,87,153,0),rgba(0,0,0,.87));
         background: linear-gradient(180deg,rgba(30,87,153,0) 0,rgba(0,0,0,.87));
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#001e5799",endColorstr="#de000000",GradientType=0);
-        
+
         content: '';
       }
       .beta__title {
@@ -129,12 +126,12 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
         color: #9f9f9f;
         letter-spacing: 3px;
         text-decoration: none;
-        
+
       }
       .Products__schedule-title:hover, .Products__schedule-title:focus {
         color: #196aff;
         text-decoration: none;
-        
+
       }
 
       .Products__link, .Products__link:hover, .Products__link:focus {
@@ -170,7 +167,7 @@ const FeedLayout = ({ children, emptySide, Side = [] }) => (
         color: #0f0f0f;
         font-weight: 700;
         line-height: 15px;
-        
+
       }
 
       .Products__description {

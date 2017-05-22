@@ -1,17 +1,8 @@
 {
   "presets": [
     "./config/babel-preset.js"
+  ],
+  "plugins": [
+    ["transform-define", "./config/env-config.js"]
   ]
-  // "env": {
-  //   "development": {
-  //     "presets": ["next/babel"]
-  //   },
-  //   "production": {
-  //     "presets": ["next/babel"]
-  //   },
-  //   "test": {
-  //     "presets": ["es2015", "next/babel"],
-  //     "plugins": ["istanbul"]
-  //   }
-  // }
 }

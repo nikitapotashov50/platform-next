@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-import { server } from '../config'
 import PageHoc from '../client/hocs/Page'
 import FullPost from '../client/components/Post/Full'
 import DefaultLayout from '../client/layouts/default'
@@ -13,7 +12,7 @@ const PostPage = ({ post, comments }) => (
 )
 
 PostPage.getInitialProps = async ({ query }) => {
-  let { data } = await axios.get(`https://platform.molodost.bz/api/post/${query.postId}`)
+  let { data } = await axios.get(`${BACKEND_URL}/api/post/${query.postId}`)
   return {
     post: data.post,
     comments: data.comments

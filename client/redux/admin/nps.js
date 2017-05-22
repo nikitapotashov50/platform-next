@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import qs from 'query-string'
 import { handleActions, createAction } from 'redux-actions'
@@ -13,7 +14,7 @@ let defaultState = {
 // action creators
 export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type }, { limit, page }) => {
   let offset = page - 1
-  let { data } = await axios.get('https://platform.molodost.bz/api/feedback?' + qs.stringify({ type, limit, offset }))
+  let { data } = await axios.get(`${BACKEND_URL}/api/feedback?${qs.stringify({ type, limit, offset })}`)
 
   return {
     items: data.nps,
@@ -22,7 +23,7 @@ export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type
 })
 
 export const getNpsCities = createAction('admin/nps/GET_CITIES', async ({ type }) => {
-  let { data } = await axios.get('https://platform.molodost.bz/api/feedback/cities?' + qs.stringify({ type }))
+  let { data } = await axios.get(`${BACKEND_URL}/api/feedback/cities?${qs.stringify({ type })}`)
 
   return {
     items: data.cities
