@@ -90,5 +90,6 @@ TasksIndex.getInitialProps = async ctx => {
 }
 
 export default PageHoc(TasksIndex, {
-  title: 'Задания'
+  title: 'Задания',
+  accessRule: () => false
 })
