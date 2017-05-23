@@ -9,8 +9,7 @@ let defaultState = {
 //
 export const fill = createAction('user/programs/FILL_PROGRAMS', array => {
   let items = {}
-  let current = null
-  // let current = array.length ? array[0].id : null
+  let current = array.length ? array[0].id : null
 
   array.map(el => { items[el.id] = el })
   return { items, current }
