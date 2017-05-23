@@ -102,11 +102,14 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
           Body = <ErrorLayout code={__service.access.error} message={__service.access.message} />
         }
 
+        let pageTitle = title ? `${title} - БМ Платформа` : 'БМ Платформа'
+        if (__service.access.error) pageTitle = 'БМ Платформа'
+
         return (
           <I18nextProvider i18n={this.i18n}>
             <div>
               <Head>
-                <title>{title ? `${title} - БМ Платформа` : 'БМ Платформа'}</title>
+                <title>{pageTitle}</title>
                 <meta charSet='utf-8' />
                 <meta name='viewport' content='initial-scale=1.0, width=device-width' />
                 <link rel='icon' type='image/x-icon' href='/static/favicons/favicon.ico' />

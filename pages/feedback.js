@@ -126,7 +126,7 @@ FeedbackPage.getInitialProps = async (ctx) => ({
   type: (ctx.params && ctx.params.type) ? ctx.params.type : 'platform'
 })
 
-const accessRule = user => !!user
+const accessRule = user => false
 
 let translated = translate([ 'common' ])(FeedbackPage)
 

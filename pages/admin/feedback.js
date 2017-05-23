@@ -137,5 +137,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default Page(FeedbackResults, {
   title: 'NPS',
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  accessRule: () => false
 })
