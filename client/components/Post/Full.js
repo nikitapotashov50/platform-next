@@ -6,7 +6,6 @@ import PostSummary from './Summary'
 import TextWithImages from './TextWithImages'
 import CommentsList from '../Comment/List'
 
-
 export default ({ id, title, attachments = [], comments, content, user, loggedUser, created_at, isLiked = false, ...props }) => {
   let count = props.likes_count
 
