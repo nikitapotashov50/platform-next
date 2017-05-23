@@ -8,9 +8,11 @@ import Comment from './Comment'
 
 const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, total, fetching, isAll, expanded }) => {
   let btnText = !fetching ? (isAll ? 'Скрыть комментарии' : 'Показать больше') : 'Загрузка...'
+  let classes = [ 'comments' ]
+  if (total > 0 || expanded) classes.push('comments_footer')
 
   return (
-    <div className='comments comments_footer'>
+    <div className={classes.join(' ')}>
       { (total > 0) && (
         <div className='comments__block comments__block_list'>
           { (total > 3) && (
@@ -24,7 +26,7 @@ const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, to
       )}
 
       { (user && (total > 0 || expanded)) && (
-        <div className='comments__block comments__block__form'>
+        <div className='comments__block comments__block_form'>
           <Form user={user} postId={postId} expanded={expanded} />
         </div>
       )}
@@ -78,6 +80,7 @@ const mergeProps = (state, dispatchProps, props) => {
     //
     isAll,
     total,
+    footer: props.footer,
     postId: props.postId,
     expanded: props.expanded,
     //

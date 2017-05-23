@@ -42,6 +42,7 @@ class Post extends Component {
     const Footer = (
       <div>
         <PostSummary
+          liked={isLiked}
           onLike={onLike}
           isLogged={!!loggedUser}
           likes={likes + Number(isLiked)}

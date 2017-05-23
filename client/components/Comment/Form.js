@@ -88,7 +88,12 @@ class CommentForm extends Component {
 
         {/* TODO вынести стили в один файл */}
         <style jsx>{`
-          .post-comment {}
+          .post-comment {
+            box-sizing: border-box;
+
+            min-height: 50px;
+            padding: 10px 0;
+          }
           .post-comment__block {
             box-sizing: border-box;
 

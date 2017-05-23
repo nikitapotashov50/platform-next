@@ -38,6 +38,7 @@
     "mysql": "^2.13.0",
     "next": "^2.2.0",
     "next-redux-wrapper": "^1.1.2",
+    "nprogress": "^0.2.0",
     "numeral": "^1.5.3",
     "p-map": "^1.1.1",
     "passport": "^0.3.2",
@@ -121,7 +122,9 @@
     "*.js": "lint"
   },
   "standard": {
-    "globals": ["BACKEND_URL"]
+    "globals": [
+      "BACKEND_URL"
+    ]
   },
   "ava": {
     "require": [
