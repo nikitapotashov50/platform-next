@@ -87,11 +87,11 @@ export default handleActions({
       ...payload.query
     }
   }),
-  [clearList]: state => ({ ...state, posts: [] })
-  // [deletePost]: (state, action) => ({
-  //   ...state,
-  //   posts: state.posts.filter(post => post.id !== action.payload)
-  // })
+  [clearList]: state => ({ ...state, posts: [] }),
+  [deletePost]: (state, action) => ({
+    ...state,
+    posts: state.posts.filter(post => post.id !== action.payload)
+  })
   // [addLike]: (state, action) => {
   //   const postId = action.payload.post_id
   //   const posts = state.posts.map(post => {

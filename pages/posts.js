@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux'
 
 import PageHoc from '../client/hocs/Page'
+import ErrorLayout from '../client/layouts/error'
 import FullPost from '../client/components/Post/Full'
 import DefaultLayout from '../client/layouts/default'
 
@@ -9,7 +10,7 @@ import { addLike, removeLike } from '../client/redux/likes'
 import { clearList, fetchPosts, endListFetch, startListFetch } from '../client/redux/posts/index'
 
 const PostPage = ({ post, loggedUser, author, toggleLike, isLiked }) => {
-  if (!post) return null
+  if (!post) return <ErrorLayout code={404} message={'Запрашиваемой вами страницы не существует'} />
 
   return (
     <DefaultLayout>
@@ -51,7 +52,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 const mergeProps = (state, dispatch, props) => {
-  if (!props.post) return { ...props }
+  if (!props.post) return { ...props, ...state }
 
   let postId = props.post.id
 

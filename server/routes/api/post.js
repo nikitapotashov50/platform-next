@@ -93,7 +93,11 @@ const getPostList = async (params) => {
 const getUsersByIds = async ids => {
   let result = await cached.User.findAll({
     where: {
-      id: { $in: ids }
+      id: { $in: ids },
+      $or: {
+        id: { $in: ids },
+        '$Goals.is_closed$': false
+      }
     },
     attributes: [
       'id', 'picture_small', 'name', 'first_name', 'last_name',
@@ -101,9 +105,9 @@ const getUsersByIds = async ids => {
     ],
     include: [
       {
+        reuired: false,
         attributes: [],
-        model: models.Goal,
-        where: { is_closed: false }
+        model: models.Goal
       }
     ]
   })
@@ -113,7 +117,6 @@ const getUsersByIds = async ids => {
 
 module.exports = router => {
   router.get('/comments', async ctx => {
-    console.log(ctx.query)
     let idArray = ctx.query.idArray || ''
 
     let data = await models.Comment.findAll({
