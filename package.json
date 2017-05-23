@@ -103,6 +103,7 @@
     "nodemon": "^1.11.0",
     "nyc": "^10.3.0",
     "react-test-renderer": "^15.5.4",
+    "sequelize-cli": "^2.7.0",
     "snazzy": "^7.0.0",
     "standard": "^10.0.2",
     "supertest": "^3.0.0"

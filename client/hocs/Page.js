@@ -1391,7 +1391,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &__remove {
                                  top: 0;
                                  right: 0;
+                                 z-index: 2;
                                  position: absolute;
+
+                                 cursor: pointer;
                                }
                              }
 
