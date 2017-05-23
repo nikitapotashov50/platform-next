@@ -102,7 +102,7 @@ class AdminUsersPage extends Component {
 }
 
 // тут будет проверка через апи
-const accessRule = user => !!user
+const accessRule = user => false
 
 const mapStateToProps = state => ({
   users: state.users
