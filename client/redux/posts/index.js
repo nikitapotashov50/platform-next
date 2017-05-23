@@ -39,21 +39,11 @@ export const addPost = createAction('posts/POST_ADD', async post => {
   }
 })
 
+/** Post removal */
 export const deletePost = createAction('posts/POST_DELETE', async id => {
   await axios.delete(`/api/post/${id}`)
   return id
 })
-
-// post interactions
-// export const addLike = createAction('posts/ADD_LIKE', async id => {
-//   const { data } = await axios.post(`/api/post/${id}/like`)
-//   return { ...data, post_id: id }
-// })
-
-// export const removeLike = createAction('posts/REMOVE_LIKE', async id => {
-//   const { data } = await axios.delete(`/api/post/${id}/like`)
-//   return { ...data, post_id: id }
-// })
 
 // reducer functions
 const toggleFetchFlag = (state, flag) => ({
@@ -97,11 +87,11 @@ export default handleActions({
       ...payload.query
     }
   }),
-  [clearList]: state => ({ ...state, posts: [] })
-  // [deletePost]: (state, action) => ({
-  //   ...state,
-  //   posts: state.posts.filter(post => post.id !== action.payload)
-  // })
+  [clearList]: state => ({ ...state, posts: [] }),
+  [deletePost]: (state, action) => ({
+    ...state,
+    posts: state.posts.filter(post => post.id !== action.payload)
+  })
   // [addLike]: (state, action) => {
   //   const postId = action.payload.post_id
   //   const posts = state.posts.map(post => {

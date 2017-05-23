@@ -1,15 +1,15 @@
 import DefaultLayout from './default'
 // import Panel from '../components/Panel'
 
-const FeedLayout = ({ children, emptySide, Side = [] }) => (
+const FeedLayout = ({ children, emptySide, Side = [], wide = false }) => (
   <DefaultLayout>
     <div className='feed'>
-      <div className='feed__left'>
+      <div className={[ 'feed__left', wide ? 'feed__left_wide' : '' ].join(' ')}>
         {children}
       </div>
 
       { !emptySide && (
-        <div className='feed__right'>
+        <div className={[ 'feed__right', wide ? 'feed__right_narrow' : '' ].join(' ')}>
           { (Side.length > 0) && Side.map(el => (
             <div key={Math.random()}>{el}</div>
           ))}

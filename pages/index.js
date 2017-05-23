@@ -17,6 +17,9 @@ class IndexPage extends Component {
     let { auth, user } = store.getState()
 
     let params = { programId: user.programs.current || null }
+
+    if (req) params.user = req.session.user ? req.session.user.id : null
+
     if (query.tab === 'subscriptions' && auth.user) params.by_author_id = auth.subscriptions.join(',')
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)

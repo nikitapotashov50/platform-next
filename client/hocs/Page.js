@@ -240,10 +240,14 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  display: inline-block;
                                }
 
-                               &__left { width: 66%; }
+                               &__left {
+                                 width: 66%;
+                                 &_wide { width: 80%; }
+                               }
                                &__right {
                                  width: 33%;
-                               }
+                                 &_narrow { width: 20%; }
+                                }
                              }
 
                              .user-page {
@@ -403,6 +407,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  }
                                  &_padding {
                                    &_small { padding: 15px; }
+                                   &_smallest { padding: 10px 15px; }
                                  }
                                }
                                &__footer {
@@ -1238,9 +1243,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .post-full {
                                box-sizing: border-box;
 
-                               padding: 20px;
                                margin: 0 auto;
                                max-width: 800px;
+                               padding: 20px 20px 10px;
                                /* max-width: 50rem; */
 
                                background: #fff;
@@ -1288,32 +1293,30 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .comments {
                                box-sizing: border-box;
-                               margin: 0 auto;
+                               
+                               margin: 0 -15px;
                                max-width: 800px;
-                               padding: 15px 32px 30px 20px;
+                               padding: 0;
 
                                background: #fff;
 
                                &_footer {
-                                 padding: 0;
-                                 margin: 0 -15px;
-
-                                 &_expanded {
-                                   margin-top: 10px;
-                                   padding-top: 10px;
-                                   border-top: 1px solid rgb(235, 235, 235);
-                                 }
+                                 margin-bottom: -10px;
                                }
 
                                &__block {
-                                 margin-top: 10px;
-                                 padding: 10px 15px 0;
+                                 margin: 10px 0;
+                                 padding-left: 15px;
+                                 padding-right: 15px;
                                  border-top: 1px solid rgb(235, 235, 235);
-                               }
-                                 list {
-                                 padding-bottom: 10px;
-                                 margin-bottom: 10px;
-                                 border-bottom: 1px solid rgb(235, 235, 235);
+
+                                 &_list {
+                                   padding-top: 10px;
+                                   padding-bottom: 10px;
+                                 }
+                                 &_form {
+                                   margin-bottom: 0;
+                                 }
                                }
 
                                &__form {
@@ -1373,6 +1376,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              .comment {
+                               min-height: 40px;
                                padding-left: 50px;
                                margin-bottom: 20px;
 
@@ -1387,7 +1391,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &__remove {
                                  top: 0;
                                  right: 0;
+                                 z-index: 2;
                                  position: absolute;
+
+                                 cursor: pointer;
                                }
                              }
 

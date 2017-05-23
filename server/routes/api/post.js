@@ -1,5 +1,5 @@
 const pMap = require('p-map')
-const { has, uniq } = require('lodash')
+const { has, uniq, pick } = require('lodash')
 const { models, cached, orm } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -40,7 +40,7 @@ const getPostList = async (params) => {
       required: false,
       duplicating: false,
       as: 'likes',
-      attributes: [ 'id' ],
+      attributes: [ 'id', 'user_id' ],
       model: models.Like,
       through: {
         attributes: []
@@ -93,7 +93,11 @@ const getPostList = async (params) => {
 const getUsersByIds = async ids => {
   let result = await cached.User.findAll({
     where: {
-      id: { $in: ids }
+      id: { $in: ids },
+      $or: {
+        id: { $in: ids },
+        '$Goals.is_closed$': false
+      }
     },
     attributes: [
       'id', 'picture_small', 'name', 'first_name', 'last_name',
@@ -101,9 +105,9 @@ const getUsersByIds = async ids => {
     ],
     include: [
       {
+        reuired: false,
         attributes: [],
-        model: models.Goal,
-        where: { is_closed: false }
+        model: models.Goal
       }
     ]
   })
@@ -113,7 +117,6 @@ const getUsersByIds = async ids => {
 
 module.exports = router => {
   router.get('/comments', async ctx => {
-    console.log(ctx.query)
     let idArray = ctx.query.idArray || ''
 
     let data = await models.Comment.findAll({
@@ -136,7 +139,9 @@ module.exports = router => {
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
     const programId = Number(ctx.query.programId) || null
-    let authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
+    const userId = ctx.session.user ? ctx.session.user.id : (Number(ctx.query.user) || null)
+    const postsId = has(ctx.query, 'by_post_id') ? ctx.query.by_post_id.split(',') : null
+    const authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
 
     // не показывать удаленные посты
     let where = {
@@ -149,21 +154,34 @@ module.exports = router => {
     // посты по программе
     if (programId) where.programId = programId
 
+    // может быть мы хотим выбрать конкретный пост
+    if (postsId) where.id = { $in: postsId }
+
     let posts = await getPostList({ where, offset })
 
     let postIds = []
     let userIds = []
     let commentIds = []
+    let liked = []
 
     let realPosts = posts.map(el => {
       postIds.push(el.id)
       userIds.push(el.user_id)
 
-      if (el.comments) {
-        el.comments.slice(-3).map(el => { commentIds.push(el.id) })
+      if (el.comments) el.comments.slice(-3).map(comEl => { commentIds.push(comEl.id) })
+      if (el.likes && userId) {
+        el.likes.map(likeEl => {
+          if (userId === likeEl.user_id) liked.push(el.id)
+        })
       }
 
-      return el
+      return Object.assign(
+        {},
+        pick(el, [ 'id', 'title', 'content', 'created_at', 'attachments', 'comments', 'user_id' ]),
+        {
+          'likes_count': (el.likes || []).length
+        }
+      )
     })
 
     let comments = await cached.Comment.findAll({
@@ -186,9 +204,10 @@ module.exports = router => {
     ctx.body = {
       status: 200,
       result: {
+        users,
+        liked,
         comments,
-        posts: realPosts,
-        users
+        posts: realPosts
       }
     }
   })

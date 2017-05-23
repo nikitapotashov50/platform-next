@@ -1,10 +1,12 @@
 import axios from 'axios'
+import { uniq, remove } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
+
+import { fetchPosts } from '../posts/index'
 
 /** default */
 const defaultState = {
-  items: [],
-  fetching: null
+  posts: []
 }
 
 /** actions */
@@ -14,32 +16,42 @@ const manageLike = async (id, action = 'post') => {
 }
 
 // add like to post
-export const addLike = createAction('posts/ADD_LIKE', async id => {
-  await manageLike(id, 'post')
+export const addLike = createAction('likes/POST_LIKE_ADD', async id => {
+  manageLike(id, 'post')
   return { id }
 })
 
 // remove like to post
-export const removeLike = createAction('posts/REMOVE_LIKE', async id => {
-  await manageLike(id, 'delete')
+export const removeLike = createAction('likes/POST_LIKE_REMOVE', async id => {
+  manageLike(id, 'delete')
   return { id }
 })
 
 /** reducer */
 export default handleActions({
-  [addLike]: (state, { p }) => ({
+  [addLike]: (state, { payload }) => ({
     ...state,
-    items: [
-      ...state.items,
-      p.id
+    posts: [
+      ...state.posts,
+      payload.id
     ]
   }),
   // todo доделать
-  [removeLike]: (state, action) => {
-    let tmp = { ...state.items }
+  [removeLike]: (state, { payload }) => {
+    let tmp = [ ...(state.posts || []) ]
+    remove(tmp, n => n === payload.id)
+
     return {
       ...state,
-      items: tmp
+      posts: tmp
     }
-  }
+  },
+  // fetch likes form posts result
+  [fetchPosts]: (state, { payload }) => ({
+    ...state,
+    posts: uniq([
+      ...state.posts,
+      ...(payload.liked || [])
+    ])
+  })
 }, defaultState)

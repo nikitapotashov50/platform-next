@@ -38,6 +38,7 @@
     "mysql": "^2.13.0",
     "next": "^2.2.0",
     "next-redux-wrapper": "^1.1.2",
+    "nprogress": "^0.2.0",
     "numeral": "^1.5.3",
     "p-map": "^1.1.1",
     "passport": "^0.3.2",
@@ -102,6 +103,7 @@
     "nodemon": "^1.11.0",
     "nyc": "^10.3.0",
     "react-test-renderer": "^15.5.4",
+    "sequelize-cli": "^2.7.0",
     "snazzy": "^7.0.0",
     "standard": "^10.0.2",
     "supertest": "^3.0.0"
@@ -121,7 +123,9 @@
     "*.js": "lint"
   },
   "standard": {
-    "globals": ["BACKEND_URL"]
+    "globals": [
+      "BACKEND_URL"
+    ]
   },
   "ava": {
     "require": [
