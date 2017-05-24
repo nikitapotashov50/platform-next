@@ -9,9 +9,12 @@ import { I18nextProvider } from 'react-i18next'
 
 import { auth, refresh, cookieExists } from '../redux/auth'
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { fill as fillPrograms } from '../redux/user/programs'
 >>>>>>> update
+=======
+>>>>>>> lint fix
 import { restrictAccess, allowAccess } from '../redux/error'
 
 import initStore from '../redux/store'
