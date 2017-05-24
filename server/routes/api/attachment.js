@@ -3,6 +3,8 @@ const koaBody = require('koa-body')
 const pify = require('pify')
 const AWS = require('aws-sdk')
 const shortid = require('shortid')
+const sharp = require('sharp')
+
 const config = require('../../../config')
 // const { models } = require('../../models')
 
@@ -22,10 +24,14 @@ module.exports = router => {
 
       const fileData = await pify(fs.readFile)(file.path)
 
+      const rotatedImage = await sharp(fileData)
+        .rotate()
+        .toBuffer()
+
       const uploadParams = {
         Bucket: 'bm-platform',
         Key: `${shortid.generate()}-${file.name}`,
-        Body: fileData,
+        Body: rotatedImage,
         ContentType: file.type
       }
 

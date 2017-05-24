@@ -88,6 +88,7 @@
     "require-all": "^2.2.0",
     "sequelize": "^3.30.4",
     "sequelize-redis-cache": "^2.0.0",
+    "sharp": "^0.17.3",
     "shortid": "^2.2.8",
     "slate": "^0.19.29",
     "sql-template-strings": "^2.2.2",
