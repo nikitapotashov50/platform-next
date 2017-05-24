@@ -51,22 +51,22 @@ const getPostList = async (params) => {
       model: models.Attachment,
       attributes: [ 'id', 'name', 'path' ],
       as: 'attachments'
-    },
-    {
-      duplicating: false,
-      required: true,
-      model: models.Program,
-      attributes: [],
-      through: {
-        attributes: []
-      }
     }
   ]
 
-  const data = await models.Post.findAll({
+  let rawPostIdData = await models.Post.findAndCountAll({
     where,
-    attributes: [
-      'id', 'title', 'content', 'created_at', 'user_id'
+    attributes: [ 'id' ],
+    include: [
+      {
+        duplicating: false,
+        required: true,
+        model: models.Program,
+        attributes: [],
+        through: {
+          attributes: []
+        }
+      }
     ],
     limit,
     offset: offset * limit,

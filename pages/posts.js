@@ -11,6 +11,8 @@ import { fetchPosts, endListFetch, startListFetch } from '../client/redux/posts/
 
 import { getInitialProps } from '../client/utils/Post/list'
 
+import { getInitialProps } from '../client/utils/Post/list'
+
 class PostPage extends Component {
   async componentWillReceiveProps (nextProps) {
     if (nextProps.program !== this.props.program) await this.props.getPosts({ programId: nextProps.program })
