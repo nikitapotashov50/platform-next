@@ -24,7 +24,7 @@ export default ({ money, subscribeButtons = false, date, user, small, noOccupati
         <div className='user-inline__title-block'>
           { user && (
             <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
-              <a className='user-inline__title'>{user.first_name + ' ' + user.last_name}</a>
+              <a className='user-inline__title'>{user.first_name + ' ' + (user.last_name || '')}</a>
             </Link>
           )}
 

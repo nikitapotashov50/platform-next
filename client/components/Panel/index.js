@@ -52,7 +52,7 @@ export default props => {
 
       { SubHeader && (
         <PanelSubHeader {...subHeaderStyles}>
-          <SubHeader />
+          {SubHeader}
         </PanelSubHeader>
       )}
 

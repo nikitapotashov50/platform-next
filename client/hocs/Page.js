@@ -502,6 +502,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  padding: 0 8px;
                                  line-height: 28px;
 
+                                 position: absolute;
+                                 top: 10px;
+                                 right: 10px;
+
+                                 width: 30%;
+
                                  font-size: 13px;
                                  background: #fefefe;
                                  border: 1px solid #cacaca;

@@ -12,14 +12,30 @@ const SpeakersRating = ({speakers}) => (
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Павел Гительман</td>
-        <td>91.2</td>
-        <td>84.68</td>
-        <td>85.48</td>
-        <td>87.12</td>
-      </tr>
+      {speakers.sort((a, b) => +a.nps < +b.nps).map(speaker => {
+        return (
+          <tr key={speaker.name}>
+            <td>{speaker.name}</td>
+            <td>{speaker.r1}</td>
+            <td>{speaker.r2}</td>
+            <td>{speaker.r3}</td>
+            <td>{speaker.nps}</td>
+          </tr>
+        )
+      })}
     </tbody>
+    <style jsx>{`
+      table {
+        width: 100%;
+      }
+      td {
+        padding: 3px;
+        border: 1px solid lightgray;
+      }
+      thead td {
+        text-align: center;
+      }
+    `}</style>
   </table>
 )
 
