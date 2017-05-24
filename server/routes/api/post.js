@@ -82,7 +82,8 @@ const getPostList = async (params) => {
     where: {
       id: { $in: postIds }
     },
-    include
+    include,
+    order: [['created_at', 'desc']]
   })
 
   return { posts, postIds, count: rawPostIdData.count }
