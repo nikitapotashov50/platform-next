@@ -1,5 +1,5 @@
 const services = require('../../services')
-const { models, cached } = require('../../models')
+const { models } = require('../../models')
 
 module.exports = router => {
   router.post('/login', async ctx => {

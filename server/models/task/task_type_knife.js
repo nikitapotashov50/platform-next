@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
   const KnifeTask = sequelize.define(
     'KnifeTask',
     {
+      price: {
+        type: DataTypes.BIGINT
+      }
     },
     {
       tableName: 'tasks',
