@@ -90,7 +90,7 @@ class Post extends Component {
           <div className='post-preview'>
             <a className='post-preview__title' onClick={onExpand}>{title}</a>
             <TextWithImages text={content} />
-            { (attachments.length > 0) && <Attachments items={attachments} />}
+            { (attachments && attachments.length > 0) && <Attachments items={attachments} />}
           </div>
         </Panel>
       </div>

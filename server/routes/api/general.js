@@ -1,3 +1,4 @@
+const moment = require('moment')
 const services = require('../../services')
 const { models, cached } = require('../../models')
 
@@ -5,6 +6,109 @@ module.exports = router => {
   router.post('/login', async ctx => {
     ctx.body = {
       ok: true
+    }
+  })
+
+  router.get('/refactor', async ctx => {
+    let defaultProgram = await models.Program.findOne({
+      where: {
+        alias: { '$like': 'default' }
+      }
+    })
+
+    let oldPrograms = await models.Program.findAll({
+      where: {
+        alias: { $in: [ 'ceh-23', 'mzs-17' ] }
+      }
+    })
+
+    if (!defaultProgram) {
+      defaultProgram = await models.Program.create({
+        alias: 'default',
+        title: 'Общая лента',
+        is_enabled: true,
+        start_at: moment('2015-01-01').format('YYYY-MM-DD HH:mm:ss'),
+        finish_at: moment('2115-01-01').format('YYYY-MM-DD HH:mm:ss')
+      })
+    }
+
+    await models.Program.create({
+      alias: 'ceh-24',
+      title: 'ЦЕХ 24',
+      is_enabled: true,
+      start_at: moment('2015-06-17').format('YYYY-MM-DD HH:mm:ss'),
+      finish_at: moment('2015-08-17').format('YYYY-MM-DD HH:mm:ss')
+    })
+
+    await models.Program.create({
+      alias: 'mzs-18',
+      title: 'МЗС 18',
+      is_enabled: true,
+      start_at: moment('2015-06-20').format('YYYY-MM-DD HH:mm:ss'),
+      finish_at: moment('2015-08-20').format('YYYY-MM-DD HH:mm:ss')
+    })
+
+    let users = await models.User.findAll()
+
+    await Promise.all(users.map(user => {
+      return new Promise(async (resolve, reject) => {
+        await user.addPrograms([ defaultProgram ])
+        resolve()
+      })
+    }))
+
+    let programPosts = await models.Post.findAll({
+      attributes: [ 'id' ],
+      where: {
+        '$Programs.id$': { $eq: null },
+        created_at: { $lte: new Date('2017-05-01 00:00:00') }
+      },
+      include: [
+        {
+          model: models.Program
+        }
+      ],
+      order: [
+        [ 'created_at', 'desc' ]
+      ]
+    })
+
+    await Promise.all(programPosts.map(async el => {
+      return new Promise(async (resolve, reject) => {
+        await el.addPrograms(oldPrograms)
+        resolve()
+      })
+    }))
+
+    let allPosts = await models.Post.findAll({
+      attributes: [ 'id' ],
+      where: {
+        '$Programs.id$': { $eq: null },
+        created_at: { $gte: new Date('2017-05-01 00:00:00') }
+      },
+      include: [
+        {
+          model: models.Program
+        }
+      ],
+      order: [
+        [ 'created_at', 'desc' ]
+      ]
+    })
+
+    await Promise.all(allPosts.map(async el => {
+      return new Promise(async (resolve, reject) => {
+        await el.addPrograms([ defaultProgram ])
+        resolve()
+      })
+    }))
+
+    ctx.body = {
+      status: 200,
+      result: {
+        defaultProgram,
+        oldPrograms
+      }
     }
   })
 
@@ -76,10 +180,10 @@ module.exports = router => {
         status: 404
       }
     } else {
-      let groups = user.get('Groups')
-      let subscriptions = user.get('Subscriptions')
-      let subscribers = user.get('Subscribers')
-      let goal = user.get('Goals')
+      let groups = user.Groups
+      let subscriptions = user.Subscriptions
+      let subscribers = user.Subscribers
+      let goal = user.Goals
 
       ctx.body = {
         user,

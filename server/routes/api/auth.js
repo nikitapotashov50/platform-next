@@ -1,5 +1,5 @@
 const { pick } = require('lodash')
-const { models } = require('../../models')
+const { models, cached } = require('../../models')
 
 const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
@@ -72,14 +72,10 @@ module.exports = router => {
 
       if (BMAccess) {
         user = await getUser(email)
-        if (!user) {
-          user = await createUserBasedOnBM(BMAccess)
-        }
+        if (!user) user = await createUserBasedOnBM(BMAccess)
       }
-
       ctx.session = user
     }
-
     ctx.body = user
   })
 
@@ -158,6 +154,34 @@ module.exports = router => {
       ctx.body = dbUser
     } catch (e) {
       ctx.throw(400, e.message)
+    }
+  })
+
+  router.post('/refresh', async ctx => {
+    let { userId } = ctx.request.body
+
+    let programs = await cached.Program.findAll({
+      attributes: [ 'id', 'alias', 'title' ],
+      where: {
+        '$Users.id$': userId,
+        is_enabled: true
+      },
+      include: [
+        {
+          model: models.User,
+          attributes: [],
+          through: {
+            attributes: []
+          }
+        }
+      ]
+    })
+
+    ctx.body = {
+      status: 200,
+      result: {
+        programs
+      }
     }
   })
 }

@@ -12,6 +12,7 @@ const removeElement = (array, el) => {
 let defaultState = {
   user: null,
   isLogged: false,
+  goal: {},
   subscriptions: [],
   blackList: [],
   cookieExists: false
@@ -21,6 +22,13 @@ let defaultState = {
 export const auth = createAction('auth/LOGIN', (user, isRestored = false) => ({ ...user, isRestored }))
 export const logout = createAction('auth/LOGOUT')
 export const cookieExists = createAction('auth/cookieExists')
+
+//
+export const refresh = createAction('auth/REFRESH', async (userId, serverPath = '') => {
+  let { data } = await axios.post(serverPath + '/api/auth/refresh', { userId })
+
+  return data.result
+})
 
 //
 export const updateInfo = createAction('auth/UPDATE_INFO')
@@ -62,6 +70,7 @@ export default handleActions({
 
     return {
       ...state,
+      goal: payload.goal || {},
       user: payload.user,
       blackList: payload.blackList,
       subscriptions: subs,

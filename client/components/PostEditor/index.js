@@ -243,10 +243,15 @@ class PostEditor extends Component {
   }
 }
 
+const mapStateToProps = ({ user, auth }) => ({
+  isLogged: auth.isLogged,
+  program: user.programs.current || null
+})
+
 const mapDispatchToProps = dispatch => bindActionCreators({
   addPost
 }, dispatch)
 
 const wrappedComponent = clickOutside(PostEditor)
 
-export default connect(() => ({}), mapDispatchToProps)(wrappedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(wrappedComponent)

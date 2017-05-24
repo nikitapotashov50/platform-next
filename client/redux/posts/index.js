@@ -5,6 +5,7 @@ import { handleActions, createAction } from 'redux-actions'
 export const defaultState = {
   posts: [],
   query: {},
+  total: 0,
   fething: false
 }
 
@@ -64,6 +65,7 @@ export default handleActions({
       ...state.users,
       ...(action.payload.users || {})
     },
+    total: action.payload.total,
     offset: action.payload.offset
   }),
   [addPost]: (state, { payload }) => ({

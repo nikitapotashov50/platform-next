@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
@@ -30,7 +30,8 @@ class HeaderRegisteredMenu extends Component {
   }
 
   async changeProgram (e) {
-    this.props.dispatch(changeCurrentProgram(e.target.value))
+    let val = e.target.value
+    this.props.dispatch(changeCurrentProgram(val.length ? val : null))
   }
 
   drawPrograms (items) {
@@ -45,18 +46,18 @@ class HeaderRegisteredMenu extends Component {
 
   render () {
     let { menu } = this.state
-    let {className, user/*, programs */} = this.props // eslint-disable-line standard/object-curly-even-spacing
+    let {className, user, programs} = this.props
 
     return (
       <div className={[ className ].join(' ')}>
-        {/* ПЕРЕКЛЮЧАЛКА ПРОГРАММЫ
-          { !isEmpty(programs.items) && (
+
+        { !isEmpty(programs.items) && (
           <li className='user-menu__item user-menu__item_hoverable'>
             <select onChange={this.changeProgram} value={programs.current || ''}>
-              {this.drawPrograms(programs.items)}
+              {this.drawPrograms(programs.items || [])}
             </select>
           </li>
-        )} */}
+        )}
 
         <li className='user-menu__item user-menu__item_hoverable' onClick={this.toggleMenu.bind(this, !menu)}>
           <UserImage small user={user} />
