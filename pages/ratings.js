@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import { loadRatings, loadSpeakers } from '../client/redux/ratings'
+import Waypoint from 'react-waypoint'
+import { loadRatings, loadSpeakers, searchUsers, loadMore } from '../client/redux/ratings'
 
 import PageHoc from '../client/hocs/Page'
 import Panel from '../client/components/Panel'
 import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
 import GroupInline from '../client/components/Group/Inline'
+import UserInline from '../client/components/User/Inline'
 import PanelSearch from '../client/components/PanelSearch'
 import SpeakersRating from '../client/components/Rating/Speakers'
 
@@ -15,8 +17,9 @@ const menuItems = [
   { href: '/ratings?tab=tens', path: '/ratings/tens', title: 'Десятки', code: 'tens' },
   { href: '/ratings?tab=hundreds', path: '/ratings/hundreds', title: 'Сотни', code: 'hundreds' },
   { href: '/ratings?tab=polks', path: '/ratings/polks', title: 'Полки', code: 'polks' },
+  { href: '/ratings?tab=cities', path: '/ratings/cities', title: 'Города', code: 'cities' },
   { href: '/ratings?tab=coaches', path: '/ratings/coaches', title: 'Тренера', code: 'coaches' },
-  { href: '/ratings?tab=speakers', path: '/ratings/speakers', title: 'Спикеры', code: 'speakes' }
+  { href: '/ratings?tab=speakers', path: '/ratings/speakers', title: 'Спикеры', code: 'speakers' }
 ]
 
 const subMenu = [
@@ -28,53 +31,55 @@ const subMenu = [
 class RatingsPage extends Component {
   constructor () {
     super()
-    this.handleSearchInput = this.handleSearchInput.bind(this)
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.loadMore = this.loadMore.bind(this)
+    this.state = {
+      searchInput: '',
+      offset: 0
+    }
   }
 
   componentDidMount () {
-    this.props.loadRatings(this.props.url.query.tab, this.props.program)
-    this.props.loadSpeakers(this.props.program)
+    this.props.loadRatings({
+      tab: this.props.url.query.tab,
+      program: this.props.program,
+      userId: this.props.userId
+    })
+    this.props.loadSpeakers({ program: this.props.program })
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.url.query.tab !== this.props.url.query.tab) {
-      if (nextProps.url.query.tab === 'all') {
-        this.props.loadRatings('all', this.props.program)
-      }
-      if (nextProps.url.query.tab === 'tens') {
-        this.props.loadRatings('tens', this.props.program)
-      }
-      if (nextProps.url.query.tab === 'hundreds') {
-        this.props.loadRatings('hundreds', this.props.program)
-      }
-      if (nextProps.url.query.tab === 'polks') {
-        this.props.loadRatings('polks', this.props.program)
-      }
-      // пока еще не реализовано
-      // if (nextProps.url.query.tab === 'polk') {
-      //   this.props.loadRatings('polk', this.props.program, nextProps.url.query.id)
-      // }
-      if (nextProps.url.query.tab === 'coaches') {
-        this.props.loadRatings('coaches', this.props.program)
-      }
-      if (nextProps.url.query.tab === 'myten') {
-        this.props.loadRatings('myten', this.props.program, this.props.userId)
-      }
-      if (nextProps.url.query.tab === 'mygroup') {
-        this.props.loadRatings('mygroup', this.props.program, this.props.userId)
-      }
-      if (nextProps.url.query.tab === 'speakers') {
-        this.props.loadSpeakers(this.props.program)
-      }
+    if (nextProps.url.query.tab !== this.props.url.query.tab && nextProps.url.query.tab === 'speakers') {
+      return this.props.loadSpeakers({ program: this.props.program })
     }
-    if (this.props.program !== nextProps.program) {
-      this.props.loadRatings(this.props.url.query.tab, nextProps.program)
+    if (nextProps.url.query.tab !== this.props.url.query.tab || nextProps.program !== this.props.program) {
+      return this.props.loadRatings({
+        tab: nextProps.url.query.tab !== this.props.url.query.tab ? nextProps.url.query.tab : this.props.url.query.tab,
+        program: this.props.program !== nextProps.program ? nextProps.program : this.props.program,
+        userId: this.props.userId
+      })
     }
   }
 
-  handleSearchInput (event) {
+  handleChange (e) {
+    this.setState({ searchInput: e.target.value })
+  }
+
+  handleSearchSubmit (event) {
     event.preventDefault()
-    this.props.loadRatings('search', this.props.program, this.searchInput.value)
+    this.props.searchUsers({
+      program: this.props.program,
+      searchInput: this.state.searchInput
+    })
+  }
+
+  loadMore () {
+    this.setState({offset: this.state.offset + 1}, () => this.props.loadMore({
+      program: this.props.program,
+      searchInput: this.state.searchInput,
+      offset: this.state.offset
+    }))
   }
 
   render () {
@@ -106,37 +111,41 @@ class RatingsPage extends Component {
     let panelProps = { subHeaderStyles, menuStyles: { noBorder: true } }
 
     panelProps.Menu = () => <PanelMenu items={menuItems} selected={this.props.url.query.tab || 'index'} />
-    panelProps.SubHeader = () => {
-      if (['all', 'myten', 'mygroup'].includes(this.props.url.query.tab) || !this.props.url.query.tab) {
-        return (
-          <div>
-            <PanelMenu items={subMenu} selected={this.props.url.query.tab || 'all'} />
-            <PanelSearch placeholder={'Поиск по имени'} searchInput={e => (this.searchInput = e)} onSubmit={this.handleSearchInput} />
-          </div>
-        )
-      }
-      return null
-    }
+    panelProps.SubHeader = ['all', 'myten', 'mygroup'].includes(this.props.url.query.tab) || !this.props.url.query.tab ? (
+      <div>
+        <PanelMenu items={subMenu} selected={this.props.url.query.tab || 'all'} />
+        <PanelSearch
+          placeholder={'Поиск по имени/нише'}
+          searchInput={this.state.searchInput}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSearchSubmit} />
+      </div>
+    ) : null
     if (this.props.url.query.tab === 'speakers') {
       return (
         <FeedLayout>
           <Panel {...panelProps}>
-            <SpeakersRating speakers={this.props.speakers} />
+            <div className='rating-list'>
+              <SpeakersRating speakers={this.props.speakers} />
+            </div>
           </Panel>
         </FeedLayout>
       )
     }
+
     return (
       <FeedLayout>
-        <Panel {...panelProps}>
+        <Panel {...panelProps} >
           <div className='rating-list'>
-            {this.props.ratings.map(rating => (<div className='rating-list__item' key={rating.id}>
-              <GroupInline money={rating.money}
-                picture={rating.picture_small}
-                title={rating.title || rating.first_name + ' ' + rating.last_name}
-                link={link(rating)}
-                small />
-            </div>))}
+            {this.props.ratings.map(rating => (
+              <div className='rating-list__item' key={rating.id}>
+                {rating.first_name ? <UserInline user={rating} /> : <GroupInline money={rating.money}
+                  picture={rating.picture_small}
+                  title={rating.title}
+                  link={link(rating)}
+                  small />}
+              </div>))}
+            {this.state.searchInput && <Waypoint onEnter={this.loadMore} />}
           </div>
         </Panel>
       </FeedLayout>
@@ -151,24 +160,13 @@ export default PageHoc(RatingsPage, {
     userId: state.auth.user.id,
     program: state.user.programs.current,
     ratings: state.ratings.ratings,
-    speakers: state.ratings.speakers
+    speakers: state.ratings.speakers,
+    offset: state.ratings.offset
   }),
   mapDispatchToProps: dispatch => bindActionCreators({
     loadRatings,
-    loadSpeakers
+    loadSpeakers,
+    searchUsers,
+    loadMore
   }, dispatch)
 })
-
-// <div class="panel-menu" slot="menu">
-//         <div class="panel-menu__item panel-menu__item_bordered" v-for="(item, key) in categories">
-//           <nuxt-link :class="{ 'panel-menu__link': true, 'panel-menu__link_active': key === tab }" :to="{ name: 'rating-category', params: { category: item.path || key  } }">{{ item.title }}</nuxt-link >
-//         </div>
-//       </div>
-//       <div class="panel-menu" v-if="subCategories" slot="sub-header">
-//         <div class="panel-menu__item" v-for="(item, key) in subCategories">
-//           <nuxt-link :class="{ 'panel-menu__link': true, 'panel-menu__link_active': key === tab }" :to="{ name: 'rating-category', params: { category: item.path || key  } }">{{ item.title }}</nuxt-link >
-//         </div>
-//         <div class="panel-search">
-//           <input class="panel-search__input" type="text" placeholder="Поиск по имени" />
-//         </div>
-//       </div>

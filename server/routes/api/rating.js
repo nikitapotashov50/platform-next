@@ -8,6 +8,7 @@ const findUsers = join => models.User.findAll({
     'first_name',
     'last_name',
     'picture_small',
+    [ orm.col('Goals.occupation'), 'occupation' ],
     [ orm.fn('sum', orm.col('Incomes.amount')), 'money' ],
     [ orm.fn('count', orm.col('Incomes.id')), 'income_count' ]
   ],
@@ -16,12 +17,18 @@ const findUsers = join => models.User.findAll({
       attributes: [],
       model: models.Income
     },
+    {
+      as: 'Goals',
+      attributes: [],
+      model: models.Goal
+    },
     join
   ],
   group: [
     orm.col('id'),
     orm.col('name'),
-    orm.col('first_name')
+    orm.col('first_name'),
+    orm.col('Goals.occupation')
   ],
   order: 'money desc',
   limit: 100,
@@ -59,7 +66,7 @@ const findGroups = (program, type) => {
 
 module.exports = router => {
   // список всех рейтингов
-  router.get('/all/:program', async ctx => {
+  router.get('/all/:program/:userId', async ctx => {
     const { program } = ctx.params
     const join = {
       required: true,
@@ -74,8 +81,10 @@ module.exports = router => {
     ctx.body = data
   })
 
-  router.get('/search/:program/:searchInput', async ctx => {
-    const { program, searchInput } = ctx.params
+  router.get('/search/:program/:searchInput/:offset', async ctx => {
+    const limit = 20
+    const { program, searchInput, offset } = ctx.params
+    console.log(offset)
     const data = await models.User.findAll({
       attributes: [
         'id',
@@ -83,6 +92,7 @@ module.exports = router => {
         'first_name',
         'last_name',
         'picture_small',
+        [ orm.col('Goals.occupation'), 'occupation' ],
         [ orm.fn('sum', orm.col('Incomes.amount')), 'money' ],
         [ orm.fn('count', orm.col('Incomes.id')), 'income_count' ]
       ],
@@ -99,12 +109,18 @@ module.exports = router => {
           through: {
             attributes: []
           }
+        },
+        {
+          as: 'Goals',
+          attributes: [],
+          model: models.Goal
         }
       ],
       group: [
         orm.col('id'),
         orm.col('name'),
-        orm.col('first_name')
+        orm.col('first_name'),
+        orm.col('Goals.occupation')
       ],
       order: 'money desc',
       where: {
@@ -116,6 +132,11 @@ module.exports = router => {
           },
           {
             last_name: {
+              $like: `%${searchInput}%`
+            }
+          },
+          {
+            '$Goals.occupation$': {
               $like: `%${searchInput}%`
             }
           },
@@ -137,7 +158,8 @@ module.exports = router => {
           }
         ]
       },
-      limit: 100,
+      limit,
+      offset: limit * +offset,
       subQuery: false
     })
     ctx.body = data
@@ -219,23 +241,38 @@ module.exports = router => {
   })
 
   // рейтинг десяток
-  router.get('/tens/:program', async ctx => {
+  router.get('/tens/:program/:userId', async ctx => {
     const { program } = ctx.params
     const data = await findGroups(program, 'ten')
     ctx.body = data
   })
 
   // рейтинг сотен
-  router.get('/hundreds/:program', async ctx => {
+  router.get('/hundreds/:program/:userId', async ctx => {
     const { program } = ctx.params
     const data = await findGroups(program, 'hundred')
     ctx.body = data
   })
 
   // рейтинг полков
-  router.get('/polks/:program', async ctx => {
+  router.get('/polks/:program/:userId', async ctx => {
     const { program } = ctx.params
     const data = await findGroups(program, 'polk')
+    ctx.body = data
+  })
+
+  // рейтинг городов
+  router.get('/cities/:program/:userId', async ctx => {
+    const { program } = ctx.params
+    const [data] = await orm.query(`
+      SELECT SUM(amount) AS money, users_programs.city_id AS id, cities.name AS title FROM users
+      LEFT JOIN incomes ON users.id = incomes.user_id
+      LEFT JOIN users_programs ON users.id = users_programs.user_id
+      INNER JOIN cities ON users_programs.city_id = cities.id
+      WHERE program_id = ${program}
+      GROUP BY id
+      ORDER BY money DESC
+    `)
     ctx.body = data
   })
 
@@ -246,7 +283,7 @@ module.exports = router => {
   // })
 
   // рейтинг тренеров
-  router.get('/coaches/:program', async ctx => {
+  router.get('/coaches/:program/:userId', async ctx => {
     const { program } = ctx.params
     const myProgramGroups = await findGroups(program)
     ctx.body = myProgramGroups
