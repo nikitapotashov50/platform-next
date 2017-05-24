@@ -20,7 +20,7 @@ class IndexPage extends Component {
 
     if (req) params.user = req.session.user ? req.session.user.id : null
 
-    if (query.tab === 'subscriptions' && auth.user) params.by_author_id = auth.subscriptions.join(',')
+    if (query.tab === 'subscriptions' && auth.user) params.by_author_id = (user.subscriptions || []).join(',')
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)
 
@@ -54,6 +54,6 @@ export default Page(IndexPage, {
   mapStateToProps: ({ auth, user }) => ({
     user: auth.user,
     program: user.programs.current,
-    subscriptions: auth.subscriptions
+    subscriptions: user.subscriptions || []
   })
 })

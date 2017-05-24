@@ -34,18 +34,6 @@ export const refresh = createAction('auth/REFRESH', async (userId, serverPath = 
 export const updateInfo = createAction('auth/UPDATE_INFO')
 
 // interactions
-export const subscribeToUser = createAction('auth/SUBSCRIBE_TO_USER', async id => {
-  let { status } = await axios.post('/api/me/interact/subscribe', { id }, { withCredentials: true })
-  if (status === 200) return { id }
-  return {}
-})
-
-export const unsubscribeFromUser = createAction('auth/UNSUBSCRIBE_FROM_USER', async id => {
-  let { status } = await axios.put('/api/me/interact/subscribe', { id }, { withCredentials: true })
-  if (status === 200) return { id }
-  return {}
-})
-
 export const addToBlackList = createAction('auth/BLACK_LIST_ADD', async id => {
   let { status } = await axios.post('/api/me/interact/block', { id }, { withCredentials: true })
   if (status === 200) return { id }
@@ -60,24 +48,14 @@ export const removeFromBlackList = createAction('auth/BLACK_LIST_REMOVE', async 
 
 // reducer
 export default handleActions({
-  [auth]: (state, { payload }) => {
-    let subs = []
-    if (payload.subscriptions) {
-      payload.subscriptions.map(el => {
-        subs.push(el.id)
-      })
-    }
-
-    return {
-      ...state,
-      goal: payload.goal || {},
-      user: payload.user,
-      blackList: payload.blackList,
-      subscriptions: subs,
-      isLogged: true,
-      cookieExists: payload.isRestored
-    }
-  },
+  [auth]: (state, { payload }) => ({
+    ...state,
+    goal: payload.goal || {},
+    user: payload.user,
+    blackList: payload.blackList,
+    isLogged: true,
+    cookieExists: payload.isRestored
+  }),
   [logout]: (state, action) => ({
     ...defaultState
   }),
@@ -94,14 +72,6 @@ export default handleActions({
     }
   }),
   //
-  [subscribeToUser]: (state, { payload }) => ({
-    ...state,
-    subscriptions: payload.id ? [ ...state.subscriptions, payload.id ] : [ ...state.subscriptions ]
-  }),
-  [unsubscribeFromUser]: (state, { payload }) => ({
-    ...state,
-    subscriptions: [ ...removeElement(state.subscriptions, payload.id) ]
-  }),
   [addToBlackList]: (state, { payload }) => ({
     ...state,
     blackList: [ ...state.blackList, payload.id ]

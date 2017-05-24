@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { subscribeToUser, unsubscribeFromUser, addToBlackList, removeFromBlackList } from '../redux/auth'
+import { addToBlackList, removeFromBlackList } from '../redux/auth'
+import { subscribeToUser, unsubscribeFromUser } from '../redux/user/subscriptions'
 
 import DefaultLayout from './default'
 import Panel from '../components/Panel'
@@ -15,7 +16,9 @@ import { take, shuffle } from 'lodash'
 
 class UserLayout extends Component {
   render () {
-    let { user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children } = this.props
+    let { user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, toggleSubscription, children } = this.props
+    // isBlocked, toggleBlock,
+
     let panelBodyStyles = { padding: 'small' }
 
     let bgImageStyles = {}
@@ -31,7 +34,7 @@ class UserLayout extends Component {
 
               { showButtons && (
                 <div className='up-header__buttons'>
-                  <button className={[ 'up-header__button', isBlocked ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleBlock}>Блокировать</button>
+                  {/* <button className={[ 'up-header__button', isBlocked ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleBlock}>Блокировать</button> */}
                   <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleSubscription}>Подписаться</button>
                 </div>
               ) }
@@ -86,11 +89,11 @@ class UserLayout extends Component {
   }
 }
 
-const mapStateToProps = ({ profile, auth }) => ({
+const mapStateToProps = ({ profile, auth, user }) => ({
   ...profile,
   me: auth.user,
   isBlocked: profile.user && auth.blackList ? (auth.blackList.indexOf(profile.user.id) !== -1) : false,
-  isSubscribed: profile.user && auth.subscriptions ? (auth.subscriptions.indexOf(profile.user.id) !== -1) : false
+  isSubscribed: ((user.subscriptions || []).indexOf(profile.user.id) !== -1) || false
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

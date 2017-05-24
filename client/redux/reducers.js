@@ -13,6 +13,8 @@ import ratings from './ratings'
 import nps from './admin/nps'
 
 import programs from './user/programs'
+import subscriptions from './user/subscriptions'
+
 import users from './admin/users'
 
 export default combineReducers({
@@ -31,6 +33,7 @@ export default combineReducers({
   }),
   // session user data
   user: combineReducers({
-    programs
+    programs,
+    subscriptions
   })
 })
