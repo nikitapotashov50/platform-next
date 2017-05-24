@@ -10,6 +10,8 @@ import { loadMore } from '../client/redux/posts/comments'
 import { addLike, removeLike } from '../client/redux/likes'
 import { clearList, fetchPosts, endListFetch, startListFetch } from '../client/redux/posts/index'
 
+import { getInitialProps } from '../client/utils/Post/list'
+
 class PostPage extends Component {
   async componentWillReceiveProps (nextProps) {
     if (nextProps.program !== this.props.program) await this.props.getPosts({ programId: nextProps.program })
@@ -37,17 +39,9 @@ PostPage.getInitialProps = async ({ query, store, req, ...ctx }) => {
 
   if (req) params.user = req.session.user ? req.session.user.id : null
 
-  store.dispatch(clearList())
-  store.dispatch(startListFetch())
-  let { payload } = await store.dispatch(fetchPosts(params, BACKEND_URL))
-  store.dispatch(endListFetch())
+  await getInitialProps(store.dispatch, params, BACKEND_URL)
 
-  let post = (payload.posts || [])[0]
-  let author = post ? (payload.users[post.user_id] || null) : null
-
-  if (post) await loadMore(post.comments.map(el => el.id))
-
-  return { post, author, postId: query.postId }
+  return { postId: query.postId }
 }
 
 const mapStateToProps = ({ likes, auth, user, posts }) => ({
