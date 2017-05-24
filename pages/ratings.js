@@ -40,24 +40,30 @@ class RatingsPage extends Component {
     }
   }
 
+  static getInitialProps (ctx) {
+    return {
+      queryId: ctx.query.id || null
+    }
+  }
+
   componentDidMount () {
     this.props.loadRatings({
       tab: this.props.url.query.tab,
       program: this.props.program,
-      userId: this.props.userId
+      id: this.props.queryId || this.props.userId
     })
     this.props.loadSpeakers({ program: this.props.program })
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.url.query.tab !== this.props.url.query.tab && nextProps.url.query.tab === 'speakers') {
-      return this.props.loadSpeakers({ program: this.props.program })
+      return this.props.loadSpeakers({ program: nextProps.program === this.props.program ? this.props.program : nextProps.program })
     }
     if (nextProps.url.query.tab !== this.props.url.query.tab || nextProps.program !== this.props.program) {
-      return this.props.loadRatings({
+      this.props.loadRatings({
         tab: nextProps.url.query.tab !== this.props.url.query.tab ? nextProps.url.query.tab : this.props.url.query.tab,
         program: this.props.program !== nextProps.program ? nextProps.program : this.props.program,
-        userId: this.props.userId
+        id: ['ten', 'hundred', 'polk'].includes(nextProps.url.query.tab) ? nextProps.url.query.id : this.props.userId
       })
     }
   }

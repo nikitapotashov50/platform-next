@@ -271,16 +271,75 @@ module.exports = router => {
       INNER JOIN cities ON users_programs.city_id = cities.id
       WHERE program_id = ${program}
       GROUP BY id
-      ORDER BY money DESC
+      ORDER BY money DESC;
     `)
     ctx.body = data
   })
 
-  // список сотен в полке, пока не реализовано
-  // router.get('/polk/:program/:polkId', async ctx => {
-  //   const { program, polkId } = ctx.params
-  //   ctx.body = data
-  // })
+  // список сотен в полке
+  router.get('/polk/:program/:polkId', async ctx => {
+    const { program, polkId } = ctx.params
+    const data = await models.Group.findAll({
+      attributes: ['id', 'money', 'is_blocked', 'title'],
+      include: [
+        {
+          attributes: [],
+          as: 'Programs',
+          model: models.Program,
+          where: { id: program }
+        },
+        {
+          model: models.GameGroup,
+          where: {
+            type: 'hundred',
+            parent_id: polkId
+          },
+          as: 'GameGroups'
+        }
+      ],
+      order: 'money desc'
+    })
+    ctx.body = data
+  })
+
+    // список десяток в сотне
+  router.get('/hundred/:program/:hundredId', async ctx => {
+    const { program, hundredId } = ctx.params
+    const data = await models.Group.findAll({
+      attributes: ['id', 'money', 'is_blocked', 'title'],
+      include: [
+        {
+          attributes: [],
+          as: 'Programs',
+          model: models.Program,
+          where: { id: program }
+        },
+        {
+          model: models.GameGroup,
+          where: {
+            type: 'ten',
+            parent_id: hundredId
+          },
+          as: 'GameGroups'
+        }
+      ],
+      order: 'money desc'
+    })
+    ctx.body = data
+  })
+
+  // список юзеров в десятке
+  router.get('/ten/:program/:tenId', async ctx => {
+    const { tenId } = ctx.params
+    const join = {
+      attributes: [],
+      model: models.Group,
+      as: 'Groups',
+      where: { id: tenId }
+    }
+    const data = await findUsers(join)
+    ctx.body = data
+  })
 
   // рейтинг тренеров
   router.get('/coaches/:program/:userId', async ctx => {
