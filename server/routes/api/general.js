@@ -1,6 +1,6 @@
 const moment = require('moment')
 const services = require('../../services')
-const { models } = require('../../models')
+const { models, cached } = require('../../models')
 
 module.exports = router => {
   router.post('/login', async ctx => {
@@ -107,7 +107,7 @@ module.exports = router => {
       status: 200,
       result: {
         defaultProgram,
-        oldPrograms
+        programPosts
       }
     }
   })
@@ -132,7 +132,7 @@ module.exports = router => {
   })
 
   router.get('/user/:username', async ctx => {
-    let user = await models.User.findOne({
+    let user = await cached.User.findOne({
       where: {
         name: ctx.params.username
       },
