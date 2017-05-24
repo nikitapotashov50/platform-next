@@ -8,6 +8,10 @@ import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
 import { auth, refresh, cookieExists } from '../redux/auth'
+<<<<<<< HEAD
+=======
+import { fill as fillPrograms } from '../redux/user/programs'
+>>>>>>> update
 import { restrictAccess, allowAccess } from '../redux/error'
 
 import initStore from '../redux/store'

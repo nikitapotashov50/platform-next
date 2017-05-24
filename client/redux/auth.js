@@ -26,7 +26,6 @@ export const cookieExists = createAction('auth/cookieExists')
 //
 export const refresh = createAction('auth/REFRESH', async (userId, serverPath = '') => {
   let { data } = await axios.post(serverPath + '/api/auth/refresh', { userId })
-
   return data.result
 })
 

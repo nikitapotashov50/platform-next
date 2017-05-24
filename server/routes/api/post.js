@@ -30,9 +30,6 @@ let initPostRoutes = async (ctx, next) => {
 const getPostList = async (params) => {
   let { where, offset, limit = 7 } = params
 
-  let programId = where.programId || null
-  delete where.programId
-
   let include = [
     {
       required: false,
@@ -42,22 +39,32 @@ const getPostList = async (params) => {
       attributes: [ 'id' ]
     },
     {
+      required: false,
+      duplicating: false,
       as: 'likes',
       attributes: [ 'id', 'user_id' ],
       model: models.Like
     },
     {
+      required: false,
+      duplicating: false,
       model: models.Attachment,
-      attributes: ['id', 'name', 'path'],
+      attributes: [ 'id', 'name', 'path' ],
       as: 'attachments'
     },
     {
+      duplicating: false,
+      required: true,
       model: models.Program,
-      where: { id: programId }
+      attributes: [],
+      through: {
+        attributes: []
+      }
     }
   ]
 
-  const data = await cached.Post.findAndCountAll({
+  const data = await models.Post.findAll({
+    where,
     attributes: [
       'id', 'title', 'content', 'created_at', 'user_id'
     ],
@@ -76,7 +83,9 @@ const getPostList = async (params) => {
       id: { $in: postIds }
     },
     include,
-    order: [['created_at', 'desc']]
+    order: [
+      ['created_at', 'desc']
+    ]
   })
 
   return { posts, postIds, count: rawPostIdData.count }

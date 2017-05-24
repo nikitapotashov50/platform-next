@@ -107,7 +107,7 @@ module.exports = router => {
       status: 200,
       result: {
         defaultProgram,
-        programPosts
+        oldPrograms
       }
     }
   })
