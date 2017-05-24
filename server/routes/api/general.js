@@ -132,7 +132,7 @@ module.exports = router => {
   })
 
   router.get('/user/:username', async ctx => {
-    let user = await cached.User.findOne({
+    let user = await models.User.findOne({
       where: {
         name: ctx.params.username
       },
