@@ -11,6 +11,8 @@ const dbConfig = require('../../config').db
  * @type {module}
  */
 
+let excludeList = [ 'views', 'config', 'migrations', 'task' ]
+
 let redisClient = redis.createClient(6379, 'localhost')
 let sequelize = new Sequelize(dbConfig.uri, {
   // logging: () => {},
@@ -27,7 +29,7 @@ let cached = {}
 fs.readdirSync(__dirname)
   .filter(file => file.match(new RegExp(/^((?!(index.js)).)*$/)))
   .forEach(file => {
-    if (file !== 'views' && file !== 'config' && file !== 'migrations') {
+    if (excludeList.indexOf(file) === -1) {
       let model = sequelize['import'](path.join(__dirname, file))
       db[model.name] = model
     }

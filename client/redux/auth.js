@@ -12,6 +12,7 @@ const removeElement = (array, el) => {
 let defaultState = {
   user: null,
   isLogged: false,
+  goal: {},
   subscriptions: [],
   blackList: [],
   cookieExists: false
@@ -62,6 +63,7 @@ export default handleActions({
 
     return {
       ...state,
+      goal: payload.goal || {},
       user: payload.user,
       blackList: payload.blackList,
       subscriptions: subs,
