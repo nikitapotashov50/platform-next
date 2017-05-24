@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "bm_platform",
+    "database": "platform_new",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
