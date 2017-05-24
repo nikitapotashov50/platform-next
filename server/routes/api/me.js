@@ -50,6 +50,16 @@ module.exports = router => {
     }
   })
 
+  router.bridge('/program', router => {
+    router.put('/changeCurrent', ctx => {
+      ctx.session.currentProgram = ctx.request.body.programId
+      console.log('sucess', ctx.session.currentProgram)
+      ctx.body = {
+        status: 200
+      }
+    })
+  })
+
   router.bridge('/goal', [ initGoal ], router => {
     router.get('/', ctx => {
       ctx.body = {

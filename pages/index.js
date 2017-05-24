@@ -35,6 +35,8 @@ class IndexPage extends Component {
 
     if (tab === 'subscriptions') params.by_author_id = this.props.subscriptions.join(',')
 
+    console.log(params)
+
     return (
       <FeedLayout>
         {this.props.user && <PostEditor />}
@@ -51,7 +53,7 @@ export default Page(IndexPage, {
   title: 'Отчеты',
   mapStateToProps: ({ auth, user }) => ({
     user: auth.user,
-    program: user.programs.current || null,
+    program: user.programs.current,
     subscriptions: auth.subscriptions
   })
 })

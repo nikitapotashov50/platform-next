@@ -7,7 +7,7 @@ import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
 import { I18nextProvider } from 'react-i18next'
 
-import { auth, cookieExists } from '../redux/auth'
+import { auth, refresh, cookieExists } from '../redux/auth'
 import { fill as fillPrograms } from '../redux/user/programs'
 import { restrictAccess, allowAccess } from '../redux/error'
 
@@ -46,7 +46,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.user && ctx.req.session.user.id) {
             ctx.store.dispatch(auth(ctx.req.session))
-            ctx.store.dispatch(fillPrograms(ctx.req.session.programs || []))
+            await ctx.store.dispatch(refresh(ctx.req.session.user.id, BACKEND_URL))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
         }
 
@@ -76,8 +76,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
           if (data.user && data.user.id) {
             this.props.dispatch(auth(data, true))
-            this.props.dispatch(fillPrograms(data.programs || []))
-          }
+            await this.props.dispatch(refresh(data.user.id))
+          } else this.props.dispatch(restrictAccess('Страница недоступна'))
         }
       }
 

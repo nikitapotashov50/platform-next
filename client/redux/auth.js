@@ -24,6 +24,13 @@ export const logout = createAction('auth/LOGOUT')
 export const cookieExists = createAction('auth/cookieExists')
 
 //
+export const refresh = createAction('auth/REFRESH', async (userId, serverPath = '') => {
+  let { data } = await axios.post(serverPath + '/api/auth/refresh', { userId })
+
+  return data.result
+})
+
+//
 export const updateInfo = createAction('auth/UPDATE_INFO')
 
 // interactions

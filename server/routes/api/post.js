@@ -30,43 +30,50 @@ let initPostRoutes = async (ctx, next) => {
 const getPostList = async (params) => {
   let { where, offset, limit = 7 } = params
 
-  let programId = where.programId || null
-  delete where.programId
-
   let include = [
     {
+      required: false,
+      duplicating: false,
       as: 'comments',
       model: models.Comment,
       attributes: [ 'id' ]
     },
     {
+      required: false,
+      duplicating: false,
       as: 'likes',
       attributes: [ 'id', 'user_id' ],
       model: models.Like
     },
     {
+      required: false,
+      duplicating: false,
       model: models.Attachment,
-      attributes: ['id', 'name', 'path'],
+      attributes: [ 'id', 'name', 'path' ],
       as: 'attachments'
     },
     {
+      duplicating: false,
+      required: true,
       model: models.Program,
-      where: { id: programId }
+      attributes: [],
+      through: {
+        attributes: []
+      }
     }
   ]
 
-  const data = await cached.Post.findAndCountAll({
+  const data = await models.Post.findAll({
+    where,
     attributes: [
       'id', 'title', 'content', 'created_at', 'user_id'
     ],
-    order: [
-      [ 'created_at', 'desc' ]
-    ],
     include,
-    where,
     limit,
     offset: offset * limit,
-    subquery: false
+    order: [
+      [ 'created_at', 'desc' ]
+    ]
   })
 
   return data
@@ -117,6 +124,7 @@ module.exports = router => {
       }
     }
   })
+
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
@@ -127,21 +135,18 @@ module.exports = router => {
     const userId = ctx.session.user ? ctx.session.user.id : (Number(ctx.query.user) || null)
 
     // не показывать удаленные посты
-    let where = {
-      is_blocked: false
-    }
+    let where = { is_blocked: false }
 
     // посты конкретного юзера
     if (authors) where.user_id = { $in: authors }
 
     // посты по программе
-    if (programId) where.programId = programId
+    if (programId) where['$Programs.id$'] = programId
 
     // может быть мы хотим выбрать конкретный пост
     if (postsId) where.id = { $in: postsId }
 
-    let result = await getPostList({ where, offset })
-    let posts = result.rows
+    let posts = await getPostList({ where, offset })
 
     let postIds = []
     let userIds = []
@@ -162,9 +167,7 @@ module.exports = router => {
       return Object.assign(
         {},
         pick(el, [ 'id', 'title', 'content', 'created_at', 'attachments', 'comments', 'user_id' ]),
-        {
-          'likes_count': (el.likes || []).length
-        }
+        { 'likes_count': (el.likes || []).length }
       )
     })
 
@@ -191,8 +194,7 @@ module.exports = router => {
         users,
         liked,
         comments,
-        posts: realPosts,
-        total: result.count
+        posts: realPosts
       }
     }
   })
