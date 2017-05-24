@@ -1094,13 +1094,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                    border: 0 none;
                                    height: 59px;
                                    padding: 0 5px;
-                                   width: 70px;
+                                   width: 120px;
 
                                     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32" height="24" viewBox="0 0 32 24"><polygon points="0,0 32,0 16,24" style="fill: rgb%28138, 138, 138%29"></polygon></svg>');
-                                 background-size: 9px 6px;
-                                 background-position: 100%;
-                                 background-origin: content-box;
-                                 background-repeat: no-repeat;
+                                  background-size: 9px 6px;
+                                  background-position: 100%;
+                                  background-origin: content-box;
+                                  background-repeat: no-repeat;
 
                                  }
 

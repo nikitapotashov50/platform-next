@@ -51,24 +51,23 @@ const getPostList = async (params) => {
       model: models.Attachment,
       attributes: [ 'id', 'name', 'path' ],
       as: 'attachments'
-    },
-    {
-      duplicating: false,
-      required: true,
-      model: models.Program,
-      attributes: [],
-      through: {
-        attributes: []
-      }
     }
   ]
 
-  const data = await models.Post.findAll({
+  let rawPostIdData = await models.Post.findAndCountAll({
     where,
-    attributes: [
-      'id', 'title', 'content', 'created_at', 'user_id'
+    attributes: [ 'id' ],
+    include: [
+      {
+        duplicating: false,
+        required: true,
+        model: models.Program,
+        attributes: [],
+        through: {
+          attributes: []
+        }
+      }
     ],
-    include,
     limit,
     offset: offset * limit,
     order: [
@@ -76,7 +75,17 @@ const getPostList = async (params) => {
     ]
   })
 
-  return data
+  let postIds = rawPostIdData.rows.map(el => el.id)
+
+  let posts = await cached.Post.findAll({
+    attrubutes: [ 'id', 'title', 'created_at', 'user_id', 'content' ],
+    where: {
+      id: { $in: postIds }
+    },
+    include
+  })
+
+  return { posts, postIds, count: rawPostIdData.count }
 }
 
 const getUsersByIds = async ids => {
@@ -146,15 +155,14 @@ module.exports = router => {
     // может быть мы хотим выбрать конкретный пост
     if (postsId) where.id = { $in: postsId }
 
-    let posts = await getPostList({ where, offset })
+    let data = await getPostList({ where, offset })
 
-    let postIds = []
+    let { count, posts } = data
     let userIds = []
     let commentIds = []
     let liked = []
 
     let realPosts = posts.map(el => {
-      postIds.push(el.id)
       userIds.push(el.user_id)
 
       if (el.comments) el.comments.slice(-3).map(comEl => { commentIds.push(comEl.id) })
@@ -191,10 +199,11 @@ module.exports = router => {
     ctx.body = {
       status: 200,
       result: {
+        posts: realPosts,
         users,
         liked,
         comments,
-        posts: realPosts
+        total: count
       }
     }
   })
