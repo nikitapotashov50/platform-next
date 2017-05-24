@@ -30,6 +30,9 @@ let initPostRoutes = async (ctx, next) => {
 const getPostList = async (params) => {
   let { where, offset, limit = 7 } = params
 
+  let programId = where.programId || null
+  delete where.programId
+
   let include = [
     {
       as: 'comments',
@@ -37,43 +40,22 @@ const getPostList = async (params) => {
       attributes: [ 'id' ]
     },
     {
-      required: false,
-      duplicating: false,
       as: 'likes',
       attributes: [ 'id', 'user_id' ],
-      model: models.Like,
-      through: {
-        attributes: []
-      }
+      model: models.Like
     },
     {
-      required: false,
-      duplicating: false,
       model: models.Attachment,
       attributes: ['id', 'name', 'path'],
-      as: 'attachments',
-      through: {
-        attributes: []
-      }
+      as: 'attachments'
+    },
+    {
+      model: models.Program,
+      where: { id: programId }
     }
   ]
 
-  if (where.programId) {
-    let programId = where.programId
-    delete where.programId
-
-    include.push({
-      required: true,
-      attributes: [],
-      where: { id: programId },
-      model: models.Program,
-      through: {
-        attributes: []
-      }
-    })
-  }
-
-  const data = await cached.Post.findAll({
+  const data = await cached.Post.findAndCountAll({
     attributes: [
       'id', 'title', 'content', 'created_at', 'user_id'
     ],
@@ -138,10 +120,11 @@ module.exports = router => {
   // список всех постов
   router.get('/', async ctx => {
     const offset = Number(ctx.query.offset) || 0
-    const programId = Number(ctx.query.programId) || null
-    const userId = ctx.session.user ? ctx.session.user.id : (Number(ctx.query.user) || null)
+    const programId = has(ctx.query, 'programId') ? Number(ctx.query.programId) || null : null
     const postsId = has(ctx.query, 'by_post_id') ? ctx.query.by_post_id.split(',') : null
     const authors = has(ctx.query, 'by_author_id') ? ctx.query.by_author_id.split(',') : null
+
+    const userId = ctx.session.user ? ctx.session.user.id : (Number(ctx.query.user) || null)
 
     // не показывать удаленные посты
     let where = {
@@ -157,7 +140,8 @@ module.exports = router => {
     // может быть мы хотим выбрать конкретный пост
     if (postsId) where.id = { $in: postsId }
 
-    let posts = await getPostList({ where, offset })
+    let result = await getPostList({ where, offset })
+    let posts = result.rows
 
     let postIds = []
     let userIds = []
@@ -207,7 +191,8 @@ module.exports = router => {
         users,
         liked,
         comments,
-        posts: realPosts
+        posts: realPosts,
+        total: result.count
       }
     }
   })
@@ -232,6 +217,14 @@ module.exports = router => {
     })
 
     await created.addAttachments(attachments)
+
+    if (postData.program) {
+      let program = await models.Program.findOne({
+        where: { id: Number(postData.program) }
+      })
+
+      if (program) await created.addPrograms([ program ])
+    }
 
     const data = await models.Post.findOne({
       where: {

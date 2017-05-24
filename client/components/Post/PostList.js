@@ -74,7 +74,7 @@ class PostList extends Component {
   }
 
   render () {
-    const { posts = [], users = {}, fetching, removePost, toggleLike, loggedUser, likes } = this.props
+    const { posts = [], users = {}, fetching, removePost, toggleLike, loggedUser, likes, total } = this.props
     const { expanded } = this.state
 
     let postCount = posts.length
@@ -96,7 +96,7 @@ class PostList extends Component {
           />
         ))}
 
-        { postCount > 0 && (
+        { (postCount > 0 && total > postCount) && (
           <div className='posts-load-more' onClick={this.loadMore}>
             <Waypoint onEnter={this.loadMore} />
           </div>

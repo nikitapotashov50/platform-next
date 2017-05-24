@@ -14,10 +14,6 @@ import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 import { take, shuffle } from 'lodash'
 
 class UserLayout extends Component {
-  shouldComponentUpdate () {
-    return false
-  }
-
   render () {
     let { user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, isBlocked, toggleBlock, toggleSubscription, children } = this.props
     let panelBodyStyles = { padding: 'small' }
