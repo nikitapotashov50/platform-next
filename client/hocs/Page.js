@@ -1864,6 +1864,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
 
+                               .user-menu {
+
+                                  &__item {
+                                    select {
+                                      width: 70px;
+                                    }
+                                  }
+
+                               }
+
+
                                .post-modal {
 
                                &__content {
