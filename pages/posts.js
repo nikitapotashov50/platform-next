@@ -6,9 +6,8 @@ import ErrorLayout from '../client/layouts/error'
 import FullPost from '../client/components/Post/Full'
 import DefaultLayout from '../client/layouts/default'
 
-import { loadMore } from '../client/redux/posts/comments'
 import { addLike, removeLike } from '../client/redux/likes'
-import { clearList, fetchPosts, endListFetch, startListFetch } from '../client/redux/posts/index'
+import { fetchPosts, endListFetch, startListFetch } from '../client/redux/posts/index'
 
 import { getInitialProps } from '../client/utils/Post/list'
 
