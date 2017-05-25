@@ -1,5 +1,5 @@
 import ErrorLayout from '../layouts/error'
-import { getUser, getInfo } from '../redux/profile'
+import { getUser } from '../redux/profile'
 
 export default Next => {
   const UserProfileHoc = ({ user, ...props }) => {
