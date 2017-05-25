@@ -169,9 +169,7 @@ module.exports = router => {
     // может быть мы хотим выбрать конкретный пост
     if (postsId) where.id = { $in: postsId }
 
-    let data = await getPostList({ where, offset })
-
-    let { total, posts } = data
+    let { total, posts } = await getPostList({ where, offset })
 
     let liked = []
     let userIds = []
