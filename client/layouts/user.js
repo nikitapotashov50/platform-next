@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { addToBlackList, removeFromBlackList } from '../redux/auth'
+import { getInfo, fetchEnd, fetchStart } from '../redux/profile'
 import { subscribeToUser, unsubscribeFromUser } from '../redux/user/subscriptions'
 
 import DefaultLayout from './default'
@@ -12,17 +13,23 @@ import UserProfileGoal from '../components/User/ProfileGoal'
 import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
-import { take, shuffle } from 'lodash'
+import { take, shuffle, pick } from 'lodash'
 
 class UserLayout extends Component {
+  async componentWillMount () {
+    await this.props.getInfo()
+  }
+
   render () {
-    let { user, groups, showButtons, goal, subscribers, subscriptions, isSubscribed, toggleSubscription, children } = this.props
+    let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, children } = this.props
     // isBlocked, toggleBlock,
 
     let panelBodyStyles = { padding: 'small' }
 
     let bgImageStyles = {}
     if (user.picture_large) bgImageStyles.backgroundImage = `url(${user.picture_large})`
+
+    let goal = pick(user, [ 'occupation', 'a', 'b', 'fact' ])
 
     return (
       <DefaultLayout>
@@ -55,15 +62,15 @@ class UserLayout extends Component {
               {/* Подписчики */}
               { (subscribers.length !== 0) && (
                 <Panel bodyStyles={panelBodyStyles}>
-                  <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title='Подписчики' />
+                  <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title={'Подписчики (' + this.props.subscribers_total + ')'} />
                 </Panel>
               )}
 
               {/* Подписки */}
-              { (subscriptions.length !== 0) && (
+              { (subscriptions && subscriptions > 0) && (
                 <Panel bodyStyles={panelBodyStyles}>
                   <div className='user-side-panel'>
-                    <div className='user-side-panel__title'>Подписки ({subscriptions.length})</div>
+                    <div className='user-side-panel__title'>Подписки ({subscriptions})</div>
                   </div>
                 </Panel>
               )}
@@ -100,7 +107,10 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   subscribe: subscribeToUser,
   unsubscribe: unsubscribeFromUser,
   block: addToBlackList,
-  unblock: removeFromBlackList
+  unblock: removeFromBlackList,
+  getInfo,
+  fetchEnd,
+  fetchStart
 }, dispatch)
 
 const mergeProps = (state, dispatch, props) => {
@@ -108,9 +118,17 @@ const mergeProps = (state, dispatch, props) => {
   const toggleBlock = () => state.isBlocked ? dispatch.unblock(userId) : dispatch.block(userId)
   const toggleSubscription = () => state.isSubscribed ? dispatch.unsubscribe(userId) : dispatch.subscribe(userId)
 
+  const getInfo = async () => {
+    dispatch.fetchStart()
+    await dispatch.getInfo(state.user.id)
+    dispatch.fetchEnd()
+  }
+
   return {
     ...props,
     ...state,
+    //
+    getInfo,
     toggleBlock,
     toggleSubscription,
     showButtons: userId && state.me && (userId !== state.me.id)
