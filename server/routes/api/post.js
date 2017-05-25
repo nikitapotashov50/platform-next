@@ -1,5 +1,5 @@
 const pMap = require('p-map')
-const { has, uniq, pick } = require('lodash')
+const { has, uniq, pick, union } = require('lodash')
 const { models, cached, orm } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
@@ -33,28 +33,31 @@ const getPostList = async (params) => {
   let include = [
     {
       required: false,
-      duplicating: false,
       as: 'comments',
       model: models.Comment,
       attributes: [ 'id' ]
     },
     {
       required: false,
-      duplicating: false,
       as: 'likes',
       attributes: [ 'id', 'user_id' ],
-      model: models.Like
+      model: models.Like,
+      through: {
+        attributes: []
+      }
     },
     {
       required: false,
-      duplicating: false,
       model: models.Attachment,
       attributes: [ 'id', 'name', 'path' ],
-      as: 'attachments'
+      as: 'attachments',
+      through: {
+        attributes: []
+      }
     }
   ]
 
-  let rawPostIdData = await models.Post.findAndCountAll({
+  let rawPostIdData = await cached.Post.findAndCountAll({
     where,
     attributes: [ 'id' ],
     include: [
@@ -75,17 +78,29 @@ const getPostList = async (params) => {
     ]
   })
 
-  let postIds = rawPostIdData.rows.map(el => el.id)
+  let posts = []
+  if (rawPostIdData.rows.length > 0) {
+    posts = await cached.Post.findAll({
+      attributes: [ 'id', 'title', 'created_at', 'user_id', 'content' ],
+      where: {
+        id: { $in: rawPostIdData.rows.map(el => el.id) }
+      },
+      include,
+      order: [
+        [ 'created_at', 'desc' ]
+      ]
+    })
+  }
 
-  let posts = await cached.Post.findAll({
-    attrubutes: [ 'id', 'title', 'created_at', 'user_id', 'content' ],
-    where: {
-      id: { $in: postIds }
-    },
-    include
+  return { posts, total: rawPostIdData.count }
+}
+
+
+const getCommentsByIds = ids => {
+  return cached.Comment.findAll({
+    attributes: [ 'id', 'content', 'user_id', 'created_at' ],
+    where: { id: { $in: ids } }
   })
-
-  return { posts, postIds, count: rawPostIdData.count }
 }
 
 const getUsersByIds = async ids => {
@@ -157,20 +172,17 @@ module.exports = router => {
 
     let data = await getPostList({ where, offset })
 
-    let { count, posts } = data
+    let { total, posts } = data
+
+    let liked = []
     let userIds = []
     let commentIds = []
-    let liked = []
 
-    let realPosts = posts.map(el => {
+    posts = posts.map(el => {
       userIds.push(el.user_id)
 
       if (el.comments) el.comments.slice(-3).map(comEl => { commentIds.push(comEl.id) })
-      if (el.likes && userId) {
-        el.likes.map(likeEl => {
-          if (userId === likeEl.user_id) liked.push(el.id)
-        })
-      }
+      if (el.likes && userId) union(liked, el.likes.filter(like => userId === like.user_id).map(() => el.id))
 
       return Object.assign(
         {},
@@ -179,32 +191,27 @@ module.exports = router => {
       )
     })
 
-    let comments = await cached.Comment.findAll({
-      attributes: [ 'id', 'content', 'user_id', 'created_at' ],
-      where: { id: { $in: commentIds } }
-    })
-
+    let comments = []
+    if (commentIds.length > 0) comments = await getCommentsByIds(commentIds)
     comments = comments.reduce((acc, item) => {
       acc[item.id] = item
       userIds.push(item.user_id)
       return acc
     }, {})
 
-    let usersArr = await getUsersByIds(uniq(userIds))
-    let users = usersArr.reduce((acc, item) => {
+    let users = []
+    if (userIds.length > 0) users = await getUsersByIds(uniq(userIds))
+    users = users.reduce((acc, item) => {
       acc[item.id] = item
       return acc
     }, {})
 
+    userIds = null
+    commentIds = null
+
     ctx.body = {
       status: 200,
-      result: {
-        posts: realPosts,
-        users,
-        liked,
-        comments,
-        total: count
-      }
+      result: { users, posts, liked, comments, total }
     }
   })
 
@@ -358,7 +365,6 @@ module.exports = router => {
           result: { data: 'ok' }
         }
       } catch (e) {
-        console.log(e)
         ctx.body = {
           status: 500
         }
