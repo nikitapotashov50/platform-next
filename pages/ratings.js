@@ -56,14 +56,15 @@ class RatingsPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.url.query.tab !== this.props.url.query.tab && nextProps.url.query.tab === 'speakers') {
+    if ((nextProps.url.query.tab !== this.props.url.query.tab || nextProps.program !== this.props.program) && nextProps.url.query.tab === 'speakers') {
       return this.props.loadSpeakers({ program: nextProps.program === this.props.program ? this.props.program : nextProps.program })
     }
     if (nextProps.url.query.tab !== this.props.url.query.tab || nextProps.program !== this.props.program) {
+      this.setState({searchInput: ''})
       this.props.loadRatings({
         tab: nextProps.url.query.tab !== this.props.url.query.tab ? nextProps.url.query.tab : this.props.url.query.tab,
         program: this.props.program !== nextProps.program ? nextProps.program : this.props.program,
-        id: ['ten', 'hundred', 'polk'].includes(nextProps.url.query.tab) ? nextProps.url.query.id : this.props.userId
+        id: ['ten', 'hundred', 'polk', 'city', 'coach'].includes(nextProps.url.query.tab) ? nextProps.url.query.id : this.props.userId
       })
     }
   }
@@ -108,6 +109,12 @@ class RatingsPage extends Component {
           path: `/ratings/coach/${rating.id}`
         }
       }
+      if (rating.type === 'city') {
+        return {
+          href: `/ratings?tab=city&id=${rating.id}`,
+          path: `/ratings/city/${rating.id}`
+        }
+      }
       return {
         href: '', path: ''
       }
@@ -120,11 +127,13 @@ class RatingsPage extends Component {
     panelProps.SubHeader = ['all', 'myten', 'mygroup'].includes(this.props.url.query.tab) || !this.props.url.query.tab ? (
       <div>
         <PanelMenu items={subMenu} selected={this.props.url.query.tab || 'all'} />
-        <PanelSearch
-          placeholder={'Поиск по имени/нише'}
-          searchInput={this.state.searchInput}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSearchSubmit} />
+        {this.props.url.query.tab === 'all' &&
+          <PanelSearch
+            placeholder={'Поиск по имени/нише'}
+            searchInput={this.state.searchInput}
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSearchSubmit} />
+        }
       </div>
     ) : null
     if (this.props.url.query.tab === 'speakers') {
@@ -161,7 +170,7 @@ class RatingsPage extends Component {
 
 export default PageHoc(RatingsPage, {
   title: 'Рейтинги',
-  accessRule: () => false,
+  accessRule: () => true,
   mapStateToProps: state => ({
     userId: state.auth.user.id,
     program: state.user.programs.current,

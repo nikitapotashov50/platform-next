@@ -29,7 +29,7 @@ export default ({ money, picture, title, small, description, link }) => {
         </div>
       </div>
 
-      { money && (<div className='user-inline__money'>{formatMoney(money)} ₽</div>)}
+      <div className='user-inline__money'>{formatMoney(money || 0)} ₽</div>
     </div>
   )
 }

@@ -81,6 +81,7 @@ module.exports = router => {
     ctx.body = data
   })
 
+  // рейтинг по строке поиска
   router.get('/search/:program/:searchInput/:offset', async ctx => {
     const limit = 20
     const { program, searchInput, offset } = ctx.params
@@ -211,6 +212,7 @@ module.exports = router => {
       attributes: ['id'],
       include: [
         {
+          required: true,
           model: models.CoachGroup,
           as: 'CoachGroups'
         },
@@ -254,6 +256,16 @@ module.exports = router => {
     ctx.body = data
   })
 
+  // SELECT groups.id, groups.title, groups.money, cities.name FROM groups
+  // INNER JOIN programs_groups ON programs_groups.group_id = groups.id
+  // INNER JOIN groups_game ON groups_game.group_id = groups.id
+  // INNER JOIN users ON groups.leader_id = users.id
+  // INNER JOIN users_programs ON users_programs.user_id = users.id
+  // LEFT JOIN cities ON users_programs.city_id = cities.id
+  // WHERE programs_groups.program_id = 1
+  // AND groups_game.type = 'polk'
+  // GROUP BY groups.id, cities.name
+  // LIMIT 50;
   // рейтинг полков
   router.get('/polks/:program/:userId', async ctx => {
     const { program } = ctx.params
@@ -265,7 +277,7 @@ module.exports = router => {
   router.get('/cities/:program/:userId', async ctx => {
     const { program } = ctx.params
     const [data] = await orm.query(`
-      SELECT SUM(amount) AS money, users_programs.city_id AS id, cities.name AS title FROM users
+      SELECT SUM(incomes.amount) AS money, users_programs.city_id AS id, cities.name AS title FROM users
       LEFT JOIN incomes ON users.id = incomes.user_id
       LEFT JOIN users_programs ON users.id = users_programs.user_id
       INNER JOIN cities ON users_programs.city_id = cities.id
@@ -273,6 +285,28 @@ module.exports = router => {
       GROUP BY id
       ORDER BY money DESC;
     `)
+    const res = data.map(row => Object.assign({}, row, {type: 'city'}))
+    ctx.body = res
+  })
+
+  // рейтинг по городу
+  router.get('/city/:program/:cityId', async ctx => {
+    const { program, cityId } = ctx.params
+    const join = {
+      required: true,
+      attributes: [ 'id' ],
+      model: models.Program,
+      where: {
+        id: program
+      },
+      through: {
+        attributes: [],
+        where: {
+          city_id: cityId
+        }
+      }
+    }
+    const data = await findUsers(join)
     ctx.body = data
   })
 
@@ -302,7 +336,7 @@ module.exports = router => {
     ctx.body = data
   })
 
-    // список десяток в сотне
+  // список десяток в сотне
   router.get('/hundred/:program/:hundredId', async ctx => {
     const { program, hundredId } = ctx.params
     const data = await models.Group.findAll({
@@ -348,6 +382,20 @@ module.exports = router => {
     ctx.body = myProgramGroups
   })
 
+   // рейтинг по тренерской группе
+  router.get('/coach/:program/:groupId', async ctx => {
+    const { groupId } = ctx.params
+    const join = {
+      attributes: [],
+      model: models.Group,
+      as: 'Groups',
+      where: { id: groupId }
+    }
+    const data = await findUsers(join)
+    ctx.body = data
+  })
+
+  // рейтинг спикеров
   router.get('/speakers/:program', async ctx => {
     const { data } = await axios(`http://tgbiz.ru/telegram/bots/api/molodostbzbot_spk_x3Bnq0.php?event=${ctx.params.program === '1' ? '2' : '1'}`)
     ctx.body = data

@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
           model: 'group',
           field: 'id'
         }
+      },
+      subleader_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
       }
     },
     {
@@ -26,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
         associate: (models) => {
           // Группы привязана к родительской записи - к самой группе
           CoachGroup.belongsTo(models.Group, { foreignKey: { field: 'group_id', primaryKey: true, allowNull: false } })
+
+                    // у группы есть лидер
+          CoachGroup.belongsTo(models.User, { foreignKey: 'subleader_id', as: 'Subleader' })
         }
       }
     }
