@@ -1,5 +1,5 @@
 const { pick } = require('lodash')
-const { models, cached } = require('../../models')
+const { models } = require('../../models')
 
 const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
@@ -160,7 +160,7 @@ module.exports = router => {
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
 
-    let programs = await cached.Program.findAll({
+    let programs = await models.Program.findAll({
       attributes: [ 'id', 'alias', 'title' ],
       where: {
         '$Users.id$': userId,

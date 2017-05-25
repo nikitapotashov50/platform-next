@@ -1,6 +1,6 @@
 const pMap = require('p-map')
 const { has, uniq, pick, union } = require('lodash')
-const { models, cached, orm } = require('../../models')
+const { models, orm } = require('../../models')
 
 let initPostRoutes = async (ctx, next) => {
   try {
@@ -57,7 +57,7 @@ const getPostList = async (params) => {
     }
   ]
 
-  let rawPostIdData = await cached.Post.findAndCountAll({
+  let rawPostIdData = await models.Post.findAndCountAll({
     where,
     attributes: [ 'id' ],
     include: [
@@ -80,7 +80,7 @@ const getPostList = async (params) => {
 
   let posts = []
   if (rawPostIdData.rows.length > 0) {
-    posts = await cached.Post.findAll({
+    posts = await models.Post.findAll({
       attributes: [ 'id', 'title', 'created_at', 'user_id', 'content' ],
       where: {
         id: { $in: rawPostIdData.rows.map(el => el.id) }
@@ -96,14 +96,14 @@ const getPostList = async (params) => {
 }
 
 const getCommentsByIds = ids => {
-  return cached.Comment.findAll({
+  return models.Comment.findAll({
     attributes: [ 'id', 'content', 'user_id', 'created_at' ],
     where: { id: { $in: ids } }
   })
 }
 
 const getUsersByIds = async ids => {
-  let result = await cached.User.findAll({
+  let result = await models.User.findAll({
     where: {
       id: { $in: ids },
       $or: {
