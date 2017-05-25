@@ -1,12 +1,12 @@
-import axios from 'axios'
-import { getUserInfo, userNotFound } from '../redux/profile'
 import ErrorLayout from '../layouts/error'
+import { getUser } from '../redux/profile'
 
 export default Next => {
   const UserProfileHoc = ({ user, ...props }) => {
     if (!user) {
       return <ErrorLayout code={404} message={'Пользователь не найден'} />
     }
+
     return <Next {...props} user={user} />
   }
 
@@ -15,15 +15,9 @@ export default Next => {
     let state = ctx.store.getState()
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
-      let { data } = await axios.get(`${BACKEND_URL}/api/user/${query.username}`)
-
-      if (data.user) {
-        ctx.store.dispatch(getUserInfo(data))
-        return Next.getInitialProps(ctx)
-      } else ctx.store.dispatch(userNotFound())
-    } else if (state.profile.user) {
-      return Next.getInitialProps(ctx)
-    }
+      let { payload } = await ctx.store.dispatch(getUser(query.username))
+      if (payload.user && payload.user.id) return Next.getInitialProps(ctx)
+    } else if (state.profile.user) return Next.getInitialProps(ctx)
   }
 
   return UserProfileHoc
