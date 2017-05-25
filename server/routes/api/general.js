@@ -1,4 +1,3 @@
-const moment = require('moment')
 const services = require('../../services')
 const { models, cached } = require('../../models')
 
@@ -145,34 +144,34 @@ module.exports = router => {
             is_closed: 0
           }
         },
-        // {
-        //   required: false,
-        //   as: 'Groups',
-        //   model: models.Group,
-        //   where: { is_blocked: 0 },
-        //   attributes: [ 'title', 'id' ],
-        //   through: {
-        //     attributes: []
-        //   }
-        // },
-        // {
-        //   required: false,
-        //   as: 'Subscriptions',
-        //   model: models.User,
-        //   attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
-        //   through: {
-        //     attributes: []
-        //   }
-        // },
-        // {
-        //   required: false,
-        //   as: 'Subscribers',
-        //   model: models.User,
-        //   attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
-        //   through: {
-        //     attributes: []
-        //   }
-        // }
+        {
+          required: false,
+          as: 'Groups',
+          model: models.Group,
+          where: { is_blocked: 0 },
+          attributes: [ 'title', 'id' ],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          required: false,
+          as: 'Subscriptions',
+          model: models.User,
+          attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          required: false,
+          as: 'Subscribers',
+          model: models.User,
+          attributes: [ 'name', 'picture_small', 'last_name', 'first_name', 'id' ],
+          through: {
+            attributes: []
+          }
+        }
       ]
     })
 
@@ -181,17 +180,12 @@ module.exports = router => {
         status: 404
       }
     } else {
-      // let groups = user.Groups
-      // let subscriptions = user.Subscriptions
-      // let subscribers = user.Subscribers
-      let goal = user.Goals
-
       ctx.body = {
         user,
-        goal,
-        // groups,
-        // subscriptions,
-        // subscribers
+        goal: user.Goals,
+        groups: user.Groups,
+        subscriptions: user.Subscriptions,
+        subscribers: user.Subscribers
       }
     }
   })

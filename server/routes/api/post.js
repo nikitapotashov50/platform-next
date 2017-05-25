@@ -95,20 +95,6 @@ const getPostList = async (params) => {
   return { posts, total: rawPostIdData.count }
 }
 
-<<<<<<< HEAD
-  let posts = await cached.Post.findAll({
-    attrubutes: [ 'id', 'title', 'created_at', 'user_id', 'content' ],
-    where: {
-      id: { $in: postIds }
-    },
-    include,
-    order: [
-      ['created_at', 'desc']
-    ]
-  })
-=======
->>>>>>> update
-
 const getCommentsByIds = ids => {
   return cached.Comment.findAll({
     attributes: [ 'id', 'content', 'user_id', 'created_at' ],
