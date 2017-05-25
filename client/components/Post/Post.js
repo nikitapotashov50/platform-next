@@ -82,7 +82,8 @@ class Post extends Component {
           headerStyles={{ noBorder: true, npBottomPadding: true }}
           Options={() => Options}
           withAnimation={added}
-          showOptions={this.state.showPostMenu}
+          showPostMenu={this.state.showPostMenu}
+          showPostMenuButton={myPost}
           toggleOptions={() => {
             this.setState({ showPostMenu: true })
           }}

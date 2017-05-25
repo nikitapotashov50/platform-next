@@ -7,7 +7,7 @@ import PanelBody from './Body'
 import PanelHeader from './Header'
 import PanelSubHeader from './SubHeader'
 
-export default props => {
+const Panel = props => {
   let { noMargin, noBorder, margin, withAnimation } = props
   let containerClasses = [ 'panel' ]
 
@@ -21,7 +21,7 @@ export default props => {
   let { children, noBody, bodyStyles = {} } = props
   let { Menu, menuStyles } = props
   let { Footer } = props
-  let { Options, toggleOptions, showOptions } = props
+  let { Options, toggleOptions, showPostMenu, showPostMenuButton } = props
 
   let footerArray = null
   if (Footer) footerArray = isArray(Footer) ? Footer : [ Footer ]
@@ -29,9 +29,9 @@ export default props => {
   return (
     <div className={containerClasses.join(' ')}>
 
-      { Options && (
+      { showPostMenuButton && Options && (
         <div className='panel__options'>
-          <div className={classNames('panel__options_button', {'panel__options_button_active': showOptions})} onClick={toggleOptions}>
+          <div className={classNames('panel__options_button', {'panel__options_button_active': showPostMenu})} onClick={toggleOptions}>
             <EllipsisIcon />
           </div>
           <Options />
@@ -87,3 +87,5 @@ export default props => {
     </div>
   )
 }
+
+export default Panel
