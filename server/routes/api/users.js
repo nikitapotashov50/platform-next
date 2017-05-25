@@ -148,7 +148,7 @@ module.exports = router => {
 
       ctx.body = {
         status: 200,
-        result: { subscriptions: data[0].count }
+        result: { subscriptions: data[0] ? data[0].count : 0 }
       }
     })
   })

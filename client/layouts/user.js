@@ -67,7 +67,7 @@ class UserLayout extends Component {
               )}
 
               {/* Подписки */}
-              { (subscriptions && subscriptions > 0) && (
+              { (subscriptions > 0) && (
                 <Panel bodyStyles={panelBodyStyles}>
                   <div className='user-side-panel'>
                     <div className='user-side-panel__title'>Подписки ({subscriptions})</div>
