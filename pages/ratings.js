@@ -170,7 +170,7 @@ class RatingsPage extends Component {
 
 export default PageHoc(RatingsPage, {
   title: 'Рейтинги',
-  accessRule: () => true,
+  accessRule: () => false,
   mapStateToProps: state => ({
     userId: state.auth.user.id,
     program: state.user.programs.current,
