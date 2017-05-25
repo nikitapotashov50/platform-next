@@ -66,5 +66,7 @@ export default handleActions({
   }),
   [userNotFound]: (state, action) => ({
     ...defaultState
-  })
+  }),
+  [fetchEnd]: state => ({ ...state, fetching: false }),
+  [fetchStart]: state => ({ ...state, fetching: true })
 }, defaultState)

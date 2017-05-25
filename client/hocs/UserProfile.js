@@ -1,5 +1,5 @@
 import ErrorLayout from '../layouts/error'
-import { getUser } from '../redux/profile'
+import { getUser, getInfo } from '../redux/profile'
 
 export default Next => {
   const UserProfileHoc = ({ user, ...props }) => {
@@ -16,7 +16,10 @@ export default Next => {
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
       let { payload } = await ctx.store.dispatch(getUser(query.username))
-      if (payload.user && payload.user.id) return Next.getInitialProps(ctx)
+      if (payload.user && payload.user.id) {
+        ctx.store.dispatch(getInfo(payload.user.id))
+        return Next.getInitialProps(ctx)
+      }
     } else if (state.profile.user) return Next.getInitialProps(ctx)
   }
 
