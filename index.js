@@ -5,6 +5,7 @@ const next = require('next')
 const bunyan = require('bunyan')
 const cors = require('koa2-cors')
 // const CSRF = require('koa-csrf')
+const cache = require('koa-redis-cache')
 const helmet = require('koa-helmet')
 const bodyParser = require('koa-bodyparser')
 const session = require('koa-session')
@@ -35,6 +36,13 @@ client.prepare().then(() => {
     httpOnly: true,
     signed: true
   }, server))
+
+  // server.use(cache({
+  //   expire: 5,
+  //   routes: [
+  //     '/api/post'
+  //   ]
+  // }))
 
   server.use(async (ctx, next) => {
     ctx.__next = client

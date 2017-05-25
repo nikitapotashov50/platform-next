@@ -47,7 +47,7 @@ fs.readdirSync(path.join(__dirname, './views'))
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db)
-    cached[modelName] = cacher(sequelize, redisClient).model(modelName).ttl(5)
+    cached[modelName] = cacher(sequelize, redisClient).model(modelName).ttl(10)
   }
 })
 
