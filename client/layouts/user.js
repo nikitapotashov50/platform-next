@@ -16,12 +16,8 @@ import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 import { take, shuffle, pick } from 'lodash'
 
 class UserLayout extends Component {
-  async componentWillMount () {
-    await this.props.getInfo()
-  }
-
   render () {
-    let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, children } = this.props
+    let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
     // isBlocked, toggleBlock,
 
     let panelBodyStyles = { padding: 'small' }
@@ -60,27 +56,31 @@ class UserLayout extends Component {
               {/* Цель */}
               { goal && <UserProfileGoal goal={goal} />}
 
-              {/* Подписчики */}
-              { (subscribers.length !== 0) && (
-                <Panel bodyStyles={panelBodyStyles}>
-                  <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title={'Подписчики (' + this.props.subscribers_total + ')'} />
-                </Panel>
-              )}
+              { !fetching && (
+                <div>
+                  {/* Подписчики */}
+                  { (subscribers.length !== 0) && (
+                    <Panel bodyStyles={panelBodyStyles}>
+                      <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title={'Подписчики (' + this.props.subscribers_total + ')'} />
+                    </Panel>
+                  )}
 
-              {/* Подписки */}
-              { (subscriptions > 0) && (
-                <Panel bodyStyles={panelBodyStyles}>
-                  <div className='user-side-panel'>
-                    <div className='user-side-panel__title'>Подписки ({subscriptions})</div>
-                  </div>
-                </Panel>
-              )}
+                  {/* Подписки */}
+                  { (subscriptions > 0) && (
+                    <Panel bodyStyles={panelBodyStyles}>
+                      <div className='user-side-panel'>
+                        <div className='user-side-panel__title'>Подписки ({subscriptions})</div>
+                      </div>
+                    </Panel>
+                  )}
 
-              {/* Группы */}
-              { (groups.length !== 0) && (
-                <Panel bodyStyles={panelBodyStyles}>
-                  <UserProfileGroups groups={groups} />
-                </Panel>
+                  {/* Группы */}
+                  { (groups.length !== 0) && (
+                    <Panel bodyStyles={panelBodyStyles}>
+                      <UserProfileGroups groups={groups} />
+                    </Panel>
+                  )}
+                </div>
               )}
 
               {/* Ищу могу */}
