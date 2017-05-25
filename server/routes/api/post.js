@@ -95,7 +95,6 @@ const getPostList = async (params) => {
   return { posts, total: rawPostIdData.count }
 }
 
-
 const getCommentsByIds = ids => {
   return cached.Comment.findAll({
     attributes: [ 'id', 'content', 'user_id', 'created_at' ],
