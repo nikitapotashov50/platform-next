@@ -19,7 +19,8 @@ class PostEditor extends Component {
       content: '',
       previewImages: [],
       attachments: [],
-      dropzoneActive: false
+      dropzoneActive: false,
+      buttonDisabled: false
     }
 
     this.handleContentChange = this.handleContentChange.bind(this)
@@ -28,10 +29,13 @@ class PostEditor extends Component {
     this.expand = this.expand.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
     this.clearForm = this.clearForm.bind(this)
+    this.toggleButtonState = this.toggleButtonState.bind(this)
   }
 
   async createPost (e) {
     e.preventDefault()
+
+    this.toggleButtonState() // disable create button
 
     const { program } = this.props
     const { title, content, attachments } = this.state
@@ -41,7 +45,16 @@ class PostEditor extends Component {
     const post = { title, content, attachments, program }
 
     await this.props.addPost(post)
+
+    this.toggleButtonState() // enable create button
+
     this.clearForm()
+  }
+
+  toggleButtonState () {
+    this.setState({
+      buttonDisabled: !this.state.buttonDisabled
+    })
   }
 
   clearForm () {
@@ -160,7 +173,14 @@ class PostEditor extends Component {
               </div>
 
               <div>
-                <button className='myBtn' onClick={this.createPost} type='submit' tabIndex='4'><span title='Запостить как '>Отправить</span></button>
+                <button
+                  disabled={this.state.buttonDisabled}
+                  className='myBtn'
+                  onClick={this.createPost}
+                  type='submit'
+                  tabIndex='4'>
+                  Отправить
+                </button>
               </div>
             </div>
           )}
