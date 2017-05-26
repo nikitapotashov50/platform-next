@@ -17,6 +17,8 @@ const routes = require('./server/routes')
 const dev = process.env.NODE_ENV !== 'production'
 const client = next({ dev })
 
+require('./server/mongo')
+
 client.prepare().then(() => {
   const server = new Koa()
   const log = bunyan.createLogger({ name: 'platform' })
