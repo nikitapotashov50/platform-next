@@ -5,8 +5,10 @@ import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
 import { isEmpty } from 'lodash'
+import md5 from 'blueimp-md5'
 import CameraIcon from 'react-icons/lib/fa/camera'
 import RemoveButton from 'react-icons/lib/fa/close'
+import pMap from 'p-map'
 import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
@@ -62,7 +64,8 @@ class PostEditor extends Component {
       expanded: false,
       title: '',
       content: '',
-      files: []
+      previewImages: [],
+      attachments: []
     })
   }
 
@@ -102,7 +105,7 @@ class PostEditor extends Component {
       <Dropzone
         disableClick
         ref={node => { this.dropzoneRef = node }}
-        multiple={false}
+        multiple
         style={{}}
         onDragEnter={() => {
           this.setState({ dropzoneActive: true })
@@ -110,28 +113,30 @@ class PostEditor extends Component {
         onDragLeave={() => {
           this.setState({ dropzoneActive: false })
         }}
-        onDrop={async ([file]) => {
+        onDrop={async files => {
           this.setState({
-            previewImages: [...this.state.previewImages, Object.assign({}, file, { name: file.name, loading: true })],
+            previewImages: [
+              ...this.state.previewImages,
+              ...files.map(file => ({ ...file, loading: true }))
+            ],
             expanded: true,
             dropzoneActive: false
           })
 
-          const formData = new window.FormData()
-          formData.append('file', file)
+          await pMap(files, async file => {
+            const formData = new window.FormData()
+            formData.append('file', file)
+            formData.append('hash', md5(file.preview))
+            const { data } = await axios.post('/api/attachment', formData)
 
-          const { data } = await axios.post('/api/attachment', formData)
-
-          const attachment = {
-            key: data.key,
-            url: data.url
-          }
-
-          this.setState({
-            previewImages: this.state.previewImages.map(f => {
-              return f.name === file.name ? Object.assign({}, f, { loading: false }) : f
-            }),
-            attachments: [...this.state.attachments, attachment]
+            this.setState({
+              previewImages: this.state.previewImages.map(image => {
+                return md5(image.preview) === md5(file.preview)
+                  ? { ...image, loading: false }
+                  : image
+              }),
+              attachments: [...this.state.attachments, data]
+            })
           })
         }}
       >
@@ -155,8 +160,9 @@ class PostEditor extends Component {
                   <div className='preview-image-remove' onClick={() => {
                     this.setState({
                       previewImages: this.state.previewImages.filter(f => f.preview !== file.preview),
-                      attachments: this.state.attachments.filter(f => f.key !== file.name)
+                      attachments: this.state.attachments.filter(f => f.hash !== md5(file.preview))
                     })
+                    window.URL.revokeObjectURL(file.preview)
                   }}><RemoveButton /></div>
                   <img src={file.preview} className='preview-image' />
                 </div>
@@ -243,6 +249,7 @@ class PostEditor extends Component {
             color: #196aff;
             cursor: pointer;
             margin-right: 20px;
+            border: 1px solid #e1e3e4;
           }
 
           .dropzone-overlay {

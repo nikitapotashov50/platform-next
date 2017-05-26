@@ -18,6 +18,8 @@ module.exports = router => {
 
     try {
       const { file } = ctx.request.body.files
+      const { hash } = ctx.request.body.fields
+
       const fileData = await pify(fs.readFile)(file.path)
 
       const uploadParams = {
@@ -30,9 +32,9 @@ module.exports = router => {
       const uploadedFile = await s3.upload(uploadParams).promise()
 
       ctx.body = {
-        ok: true,
         url: uploadedFile.Location,
-        key: file.name
+        key: file.name,
+        hash
       }
     } catch (e) {
       ctx.body = {
