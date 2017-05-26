@@ -88,7 +88,11 @@ class PostEditor extends Component {
   }
 
   handleClickOutside () {
-    if (this.state.title || this.state.content || !isEmpty(this.state.files)) return
+    if (
+      this.state.title ||
+      this.state.content ||
+      !isEmpty(this.state.attachments)
+    ) return
 
     this.setState({
       expanded: false
@@ -168,23 +172,27 @@ class PostEditor extends Component {
             <textarea className={textareaClasses.join(' ')} value={content} onChange={this.handleContentChange} placeholder={'Написать отчет за сегодня'} rows={expanded ? 8 : 1} onFocus={this.expand} />
           </div>
 
-          { expanded && !isEmpty(this.state.previewImages) && (
-            <div className='attachments'>
+          {expanded && !isEmpty(this.state.previewImages) && (
+            <div className='attachments-container'>
               {this.state.previewImages.map(file => (
-                <div key={file.preview} style={{ width: '300px', position: 'relative' }}>
-                  {file.loading && <div className='preview-image-progress'>Загрузка</div>}
-                  <div className='preview-image-remove' onClick={() => {
-                    this.setState({
-                      previewImages: this.state.previewImages.filter(f => f.preview !== file.preview),
-                      attachments: this.state.attachments.filter(f => f.hash !== md5(file.preview))
-                    })
-                    window.URL.revokeObjectURL(file.preview)
-                  }}><RemoveButton /></div>
-                  <img src={file.preview} className='preview-image' />
+                <div key={md5(file.preview)} style={{ position: 'relative' }}>
+                  <a>
+                    {file.loading && <div className='preview-image-progress'>Загрузка</div>}
+                    <div className='preview-image-remove' onClick={() => {
+                      this.setState({
+                        previewImages: this.state.previewImages.filter(f => f.preview !== file.preview),
+                        attachments: this.state.attachments.filter(f => f.hash !== md5(file.preview))
+                      })
+                      window.URL.revokeObjectURL(file.preview)
+                    }}>
+                      <RemoveButton />
+                    </div>
+                    <img src={file.preview} style={{ cursor: 'pointer' }} />
+                  </a>
                 </div>
               ))}
             </div>
-          ) }
+          )}
 
           {expanded && (
             <div className='post-editor-footer'>
@@ -245,6 +253,8 @@ class PostEditor extends Component {
             color: #fefefe;
             background: rgba(0,0,0,0.4);
             z-index: 2;
+            font-size: 16px;
+            font-weight: bold;
           }
 
           .preview-image-remove {
@@ -293,6 +303,33 @@ class PostEditor extends Component {
             display: flex;
             justify-content: center;
             align-items: center;
+          }
+
+          .attachments-container {
+            background: #fff;
+            border-radius: 3px 3px 0 0;
+            border: solid #e1e3e4;
+            border-width: 0 0 1px 0;
+            padding: 10px;
+            display: flex;
+            flex-flow: row wrap;
+          }
+
+          .attachments-container > div {
+            flex: auto;
+            width: 150px;
+            margin: 2px;
+          }
+
+          .attachments-container > div a {
+            flex-grow: 1;
+            flex-basis: 125px;
+            max-width: 200px;
+          }
+
+          .attachments-container > div img {
+            width: 100%;
+            height: 100%;
           }
         `}</style>
       </Dropzone>
