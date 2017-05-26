@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import Lightbox from 'react-image-lightbox-universal'
+import { startsWith, endsWith } from 'lodash'
+import PDFFileIcon from 'react-icons/lib/fa/file-pdf-o'
+import WordFileIcon from 'react-icons/lib/fa/file-word-o'
+import FileIcon from 'react-icons/lib/fa/file-text-o'
 
 const defaultState = { index: 0, isOpen: false }
 
@@ -9,7 +13,9 @@ class PostAttachments extends Component {
 
     this.state = { ...defaultState }
 
-    this.images = (this.props.items || []).map(x => ({ src: x.path }))
+    this.images = (this.props.items || [])
+      .filter(x => startsWith(x.mime, '"image'))
+      .map(x => ({ src: x.path }))
 
     this.open = this.open.bind(this)
     this.navigate = this.navigate.bind(this)
@@ -31,6 +37,15 @@ class PostAttachments extends Component {
     }
   }
 
+  getIcon (mime) {
+    if (endsWith(mime, 'pdf"')) {
+      return <PDFFileIcon />
+    } else if (endsWith(mime, 'wordprocessingml.document"')) {
+      return <WordFileIcon />
+    }
+    return <FileIcon />
+  }
+
   render () {
     let { items } = this.props
 
@@ -43,11 +58,18 @@ class PostAttachments extends Component {
     return (
       <div>
         <div className='attachments-container'>
-          {items.map((attachment, index) => (
+          {items.filter(x => startsWith(x.mime, '"image')).map((attachment, index) => (
             <div key={attachment.id}>
               <a onClick={this.open(index)}>
                 <img src={attachment.path} style={{ cursor: 'pointer' }} />
               </a>
+            </div>
+          ))}
+        </div>
+        <div className='attachments-container'>
+          {items.filter(x => startsWith(x.mime, '"application')).map(attachment => (
+            <div key={attachment.id} className='attachment-doc'>
+              {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
             </div>
           ))}
         </div>
@@ -66,7 +88,6 @@ class PostAttachments extends Component {
 
         <style jsx>{`
           .attachments-container {
-            font-size: 0;
             display: flex;
             flex-flow: row wrap;
           }
@@ -86,6 +107,17 @@ class PostAttachments extends Component {
           .attachments-container div img {
             width: 100%;
             height: 100%;
+          }
+
+          .attachment-doc {
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 3px;
+            /*margin: 5px;*/
+          }
+
+          .attachment-doc:hover {
+            background: #f5f7fa;
           }
 
           @media screen and (max-width: 400px) {
