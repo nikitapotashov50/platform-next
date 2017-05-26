@@ -107,13 +107,23 @@ class PostEditor extends Component {
         ref={node => { this.dropzoneRef = node }}
         multiple
         style={{}}
-        onDragEnter={() => {
-          this.setState({ dropzoneActive: true })
+        onDragEnter={event => {
+          const dataTransfer = event.dataTransfer
+          // prevent dragging and dropping elements on the page
+          if (!(dataTransfer.types && (dataTransfer.types.indexOf ? dataTransfer.types.indexOf('Files') !== -1 : dataTransfer.types.contains('Files')))) {
+            this.setState({ dropzoneActive: false })
+          } else {
+            this.setState({ dropzoneActive: true })
+          }
         }}
         onDragLeave={() => {
           this.setState({ dropzoneActive: false })
         }}
         onDrop={async files => {
+          if (files.length === 0) {
+            return
+          }
+
           this.setState({
             previewImages: [
               ...this.state.previewImages,
@@ -142,6 +152,12 @@ class PostEditor extends Component {
       >
 
         <div className='reply-form'>
+          {this.state.dropzoneActive && (
+            <div className='drop-overlay'>
+              <div>Перенесите сюда файлы, чтобы прикрепить их к записи</div>
+            </div>
+          )}
+
           { expanded && (
           <div className='panel panel_margin_small'>
             <input className='reply-form__input reply-form__input_text_big' value={title} onChange={this.handleTitleChange} type='text' placeholder='Заголовок отчета' />
@@ -190,8 +206,13 @@ class PostEditor extends Component {
               </div>
             </div>
           )}
+        </div>
 
-          <style jsx>{`
+        <style jsx>{`
+          .reply-form {
+            position: relative;
+          }
+
           .attachments {
             background: #fff;
             border-radius: 3px 3px 0 0;
@@ -252,19 +273,28 @@ class PostEditor extends Component {
             border: 1px solid #e1e3e4;
           }
 
-          .dropzone-overlay {
+          .drop-overlay {
             position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            padding: 2.5em 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(12, 0, 255, 0.9);
             text-align: center;
             color: #fff;
+            z-index: 5;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 3px;
+          }
+
+          .drop-overlay div {
+            border: 1px dashed #fff;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         `}</style>
-        </div>
       </Dropzone>
     )
   }
