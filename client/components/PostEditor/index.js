@@ -4,9 +4,10 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import clickOutside from 'react-click-outside'
 import Dropzone from 'react-dropzone'
-import { isEmpty } from 'lodash'
+import { isEmpty, startsWith } from 'lodash'
 import md5 from 'blueimp-md5'
 import CameraIcon from 'react-icons/lib/fa/camera'
+import FileIcon from 'react-icons/lib/fa/file-text-o'
 import RemoveButton from 'react-icons/lib/fa/close'
 import pMap from 'p-map'
 import { addPost } from '../../redux/posts'
@@ -20,6 +21,7 @@ class PostEditor extends Component {
       title: '',
       content: '',
       previewImages: [],
+      documents: [],
       attachments: [],
       dropzoneActive: false,
       buttonDisabled: false
@@ -131,7 +133,17 @@ class PostEditor extends Component {
           this.setState({
             previewImages: [
               ...this.state.previewImages,
-              ...files.map(file => ({ ...file, loading: true }))
+              ...files
+                .filter(file => startsWith(file.type, 'image/'))
+                .map(file => ({ ...file, loading: true }))
+            ],
+            documents: [
+              ...this.state.documents,
+              ...files
+                .filter(file => startsWith(file.type, 'application/'))
+                .map(file => ({
+                  ...file, name: file.name, loading: true
+                }))
             ],
             expanded: true,
             dropzoneActive: false
@@ -148,6 +160,11 @@ class PostEditor extends Component {
                 return md5(image.preview) === md5(file.preview)
                   ? { ...image, loading: false }
                   : image
+              }),
+              documents: this.state.documents.map(doc => {
+                return md5(doc.preview) === md5(file.preview)
+                  ? { ...doc, loading: false, path: data.url }
+                  : doc
               }),
               attachments: [...this.state.attachments, data]
             })
@@ -173,7 +190,7 @@ class PostEditor extends Component {
           </div>
 
           {expanded && !isEmpty(this.state.previewImages) && (
-            <div className='attachments-container'>
+            <div className='attachments-image-container'>
               {this.state.previewImages.map(file => (
                 <div key={md5(file.preview)} style={{ position: 'relative' }}>
                   <a>
@@ -193,12 +210,34 @@ class PostEditor extends Component {
               ))}
             </div>
           )}
+          {expanded && !isEmpty(this.state.documents) && (
+            <div className='attachments-document-container'>
+              {this.state.documents.map(file => (
+                <div key={md5(file.preview)} style={{ position: 'relative' }}>
+                  {file.loading && <div className='preview-image-progress'>Загрузка</div>}
+                  <div className='preview-image-remove' onClick={() => {
+                    this.setState({
+                      documents: this.state.documents.filter(f => f.preview !== file.preview),
+                      attachments: this.state.attachments.filter(f => f.hash !== md5(file.preview))
+                    })
+                    window.URL.revokeObjectURL(file.preview)
+                  }}>
+                    <RemoveButton />
+                  </div>
+                  <FileIcon /> <a href={file.path}>{file.name}</a>
+                </div>
+              ))}
+            </div>
+          )}
 
           {expanded && (
             <div className='post-editor-footer'>
               <div>
                 <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
                   <CameraIcon />
+                </button>
+                <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
+                  <FileIcon />
                 </button>
               </div>
 
@@ -221,14 +260,14 @@ class PostEditor extends Component {
             position: relative;
           }
 
-          .attachments {
+          /*.attachments {
             background: #fff;
             border-radius: 3px 3px 0 0;
             border: solid #e1e3e4;
             border-width: 0 0 1px 0;
             padding: 10px;
             display: flex;
-          }
+          }*/
 
           .preview-image {
             max-width: 100%;
@@ -305,31 +344,39 @@ class PostEditor extends Component {
             align-items: center;
           }
 
-          .attachments-container {
+          .attachments-image-container, .attachments-document-container {
             background: #fff;
-            border-radius: 3px 3px 0 0;
-            border: solid #e1e3e4;
-            border-width: 0 0 1px 0;
+            border-radius: 3px;
+            border: 1px solid #e1e3e4;
             padding: 10px;
             display: flex;
             flex-flow: row wrap;
           }
 
-          .attachments-container > div {
+          .attachments-image-container > div {
             flex: auto;
             width: 150px;
             margin: 2px;
           }
 
-          .attachments-container > div a {
+          .attachments-image-container > div a {
             flex-grow: 1;
             flex-basis: 125px;
             max-width: 200px;
           }
 
-          .attachments-container > div img {
+          .attachments-image-container > div img {
             width: 100%;
             height: 100%;
+          }
+
+          .attachments-document-container > div {
+            border: 1px solid #e1e3e4;
+            border-radius: 3px;
+            padding: 10px 25px 10px 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            margin: 5px;
           }
         `}</style>
       </Dropzone>

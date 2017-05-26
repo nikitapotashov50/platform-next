@@ -49,7 +49,7 @@ const getPostList = async (params) => {
     {
       required: false,
       model: models.Attachment,
-      attributes: [ 'id', 'name', 'path' ],
+      attributes: [ 'id', 'name', 'path', 'mime' ],
       as: 'attachments',
       through: {
         attributes: []
@@ -226,7 +226,8 @@ module.exports = router => {
     const attachments = await pMap(postData.attachments, async attachment => {
       const result = await models.Attachment.create({
         name: attachment.key,
-        path: attachment.url
+        path: attachment.url,
+        mime: attachment.mime
       })
       return result
     })
@@ -249,7 +250,7 @@ module.exports = router => {
       include: [
         {
           model: models.Attachment,
-          attributes: ['id', 'name', 'path'],
+          attributes: ['id', 'name', 'path', 'mime'],
           as: 'attachments',
           through: {
             attributes: []

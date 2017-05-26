@@ -4,6 +4,7 @@ const pify = require('pify')
 const AWS = require('aws-sdk')
 const shortid = require('shortid')
 const sharp = require('sharp')
+const { startsWith } = require('lodash')
 const config = require('../../../config')
 
 AWS.config.update({
@@ -22,14 +23,18 @@ module.exports = router => {
 
       const fileData = await pify(fs.readFile)(file.path)
 
-      const rotatedImage = await sharp(fileData)
-        .rotate()
-        .toBuffer()
+      let fileToUpload = fileData
+
+      if (startsWith(file.type, 'image/')) {
+        fileToUpload = await sharp(fileData)
+          .rotate()
+          .toBuffer()
+      }
 
       const uploadParams = {
         Bucket: 'bm-platform',
         Key: `${shortid.generate()}-${file.name}`,
-        Body: rotatedImage,
+        Body: fileToUpload,
         ContentType: file.type
       }
 
@@ -38,7 +43,8 @@ module.exports = router => {
       ctx.body = {
         url: uploadedFile.Location,
         key: file.name,
-        hash
+        hash,
+        mime: file.type
       }
     } catch (e) {
       ctx.body = {
