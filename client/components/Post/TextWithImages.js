@@ -21,7 +21,7 @@ class TextWithImages extends Component {
   getContent (text) {
     const maxSize = 500
 
-    if (text.length < maxSize) return
+    if (text.length < maxSize || text.length - maxSize < (maxSize / 3)) return
 
     const shortContent = truncate(text, {
       length: maxSize,
