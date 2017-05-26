@@ -37,12 +37,12 @@ class PostEditor extends Component {
   async createPost (e) {
     e.preventDefault()
 
-    this.toggleButtonState() // disable create button
-
     const { program } = this.props
     const { title, content, attachments } = this.state
 
     if (!title || !content) return
+
+    this.toggleButtonState() // disable create button
 
     const post = { title, content, attachments, program }
 
