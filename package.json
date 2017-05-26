@@ -120,7 +120,8 @@
     "prepush": "npm run lint",
     "build": "next build",
     "prod": "NODE_ENV=production node index.js",
-    "update-snapshots": "NODE_ENV=test ava --update-snapshots"
+    "update-snapshots": "NODE_ENV=test ava --update-snapshots",
+    "sequelize": "sequelize"
   },
   "lint-staged": {
     "*.js": "lint"
