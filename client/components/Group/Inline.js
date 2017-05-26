@@ -4,7 +4,7 @@ import numeral from 'numeral'
 
 const formatMoney = money => numeral(money).format('0,0')
 
-export default ({ money, picture, title, small, description, link }) => {
+export default ({ money, picture, title, small, description, link, city }) => {
   let bodyClasses = [ 'user-inline__body' ]
   let { href, path } = link
 
@@ -26,6 +26,9 @@ export default ({ money, picture, title, small, description, link }) => {
           )}
 
           { !title && <span className='user-inline__title'>Annonymous</span>}
+        </div>
+        <div className='user-inline__info'>
+          { city || null }
         </div>
       </div>
 

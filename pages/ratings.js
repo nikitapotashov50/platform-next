@@ -109,6 +109,12 @@ class RatingsPage extends Component {
           path: `/ratings/coach/${rating.id}`
         }
       }
+      if (['ten', 'hundred', 'polk'].includes(rating.type)) {
+        return {
+          href: `/ratings?tab=${rating.type}&id=${rating.id}`,
+          path: `/ratings/${rating.type}/${rating.id}`
+        }
+      }
       if (rating.type === 'city') {
         return {
           href: `/ratings?tab=city&id=${rating.id}`,
@@ -158,6 +164,7 @@ class RatingsPage extends Component {
                   picture={rating.picture_small}
                   title={rating.title}
                   link={link(rating)}
+                  city={rating.city || null}
                   small />}
               </div>))}
             {this.state.searchInput && <Waypoint onEnter={this.loadMore} />}
@@ -170,7 +177,7 @@ class RatingsPage extends Component {
 
 export default PageHoc(RatingsPage, {
   title: 'Рейтинги',
-  accessRule: () => false,
+  accessRule: () => true,
   mapStateToProps: state => ({
     userId: state.auth.user.id,
     program: state.user.programs.current,

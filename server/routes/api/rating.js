@@ -35,33 +35,21 @@ const findUsers = join => models.User.findAll({
   subQuery: false
 })
 
-const findGroups = (program, type) => {
-  const join = type ? {
-    model: models.GameGroup,
-    where: {
-      type
-    },
-    as: 'GameGroups'
-  } : {
-    required: true,
-    model: models.CoachGroup,
-    as: 'CoachGroups'
-  }
-
-  return models.Group.findAll({
-    attributes: ['id', 'money', 'is_blocked', 'title'],
-    include: [
-      {
-        attributes: [],
-        as: 'Programs',
-        model: models.Program,
-        where: { id: program }
-      },
-      join
-    ],
-    order: 'money desc',
-    limit: 100
-  })
+const findGameGroups = async (program, type) => {
+  const [data] = await orm.query(`
+    SELECT groups.id, groups.title, groups.money, groups_game.type, cities.name AS city FROM groups
+    INNER JOIN programs_groups ON programs_groups.group_id = groups.id
+    INNER JOIN groups_game ON groups_game.group_id = groups.id
+    INNER JOIN users ON groups.leader_id = users.id
+    INNER JOIN users_programs ON users_programs.user_id = users.id
+    LEFT JOIN cities ON users_programs.city_id = cities.id
+    WHERE programs_groups.program_id = ${program}
+    AND groups_game.type = '${type}'
+    ORDER BY groups.money DESC
+    LIMIT 50;
+  `)
+  const ids = data.map(row => row.id)
+  return data.filter((row, i) => i === ids.indexOf(row.id))
 }
 
 module.exports = router => {
@@ -245,31 +233,21 @@ module.exports = router => {
   // рейтинг десяток
   router.get('/tens/:program/:userId', async ctx => {
     const { program } = ctx.params
-    const data = await findGroups(program, 'ten')
+    const data = await findGameGroups(program, 'ten')
     ctx.body = data
   })
 
   // рейтинг сотен
   router.get('/hundreds/:program/:userId', async ctx => {
     const { program } = ctx.params
-    const data = await findGroups(program, 'hundred')
+    const data = await findGameGroups(program, 'hundred')
     ctx.body = data
   })
 
-  // SELECT groups.id, groups.title, groups.money, cities.name FROM groups
-  // INNER JOIN programs_groups ON programs_groups.group_id = groups.id
-  // INNER JOIN groups_game ON groups_game.group_id = groups.id
-  // INNER JOIN users ON groups.leader_id = users.id
-  // INNER JOIN users_programs ON users_programs.user_id = users.id
-  // LEFT JOIN cities ON users_programs.city_id = cities.id
-  // WHERE programs_groups.program_id = 1
-  // AND groups_game.type = 'polk'
-  // GROUP BY groups.id, cities.name
-  // LIMIT 50;
   // рейтинг полков
   router.get('/polks/:program/:userId', async ctx => {
     const { program } = ctx.params
-    const data = await findGroups(program, 'polk')
+    const data = await findGameGroups(program, 'polk')
     ctx.body = data
   })
 
@@ -378,11 +356,28 @@ module.exports = router => {
   // рейтинг тренеров
   router.get('/coaches/:program/:userId', async ctx => {
     const { program } = ctx.params
-    const myProgramGroups = await findGroups(program)
-    ctx.body = myProgramGroups
+    const data = await models.Group.findAll({
+      attributes: ['id', 'money', 'is_blocked', 'title'],
+      include: [
+        {
+          attributes: [],
+          as: 'Programs',
+          model: models.Program,
+          where: { id: program }
+        },
+        {
+          required: true,
+          model: models.CoachGroup,
+          as: 'CoachGroups'
+        }
+      ],
+      order: 'money desc',
+      limit: 100
+    })
+    ctx.body = data
   })
 
-   // рейтинг по тренерской группе
+  // рейтинг по тренерской группе
   router.get('/coach/:program/:groupId', async ctx => {
     const { groupId } = ctx.params
     const join = {
