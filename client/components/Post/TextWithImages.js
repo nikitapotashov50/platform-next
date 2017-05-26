@@ -8,31 +8,6 @@ class TextWithImages extends Component {
     this.state = {
       showFull: false
     }
-
-    this.getTextAndImages = this.getTextAndImages.bind(this)
-    this.getShortText = this.getShortText.bind(this)
-  }
-
-  getShortText (text) {
-    const maxSize = 500
-
-    if (text.length < maxSize || text.length - maxSize < (maxSize / 3)) {
-      return {
-        text,
-        short: false
-      }
-    }
-
-    const shortContent = truncate(text, {
-      length: maxSize,
-      separator: '\n',
-      omission: ''
-    })
-
-    return {
-      text: shortContent,
-      short: true
-    }
   }
 
   getTextAndImages (text) {
@@ -58,26 +33,33 @@ class TextWithImages extends Component {
   }
 
   render () {
+    const maxSize = 500
     const { showFull } = this.state
     const [content, images] = this.getTextAndImages(this.props.text)
-    const { short, text } = this.getShortText(content)
 
     return (
       <div className='display-linebreak'>
-
-        <div className='display-linebreak'>
-          <div>{(showFull || !short) && text}</div>
-          {short && (
-            <div>
-              <a className='show-more-text' onClick={() => {
-                this.setState({
-                  showFull: true
-                })
-              }}>Показать полностью</a>
-            </div>
-          )}
-          <div>{images}</div>
-        </div>
+        {!showFull ? (<div>
+          {(content.length < maxSize || content.length - maxSize < (maxSize / 3))
+            ? content
+            : (
+              <div>
+                <div>{truncate(content, {
+                  length: maxSize,
+                  separator: '\n',
+                  omission: ''
+                })}</div>
+                <div>
+                  <a className='show-more-text' onClick={() => {
+                    this.setState({
+                      showFull: true
+                    })
+                  }}>Показать полностью</a>
+                </div>
+              </div>
+            )}
+        </div>) : content}
+        <div>{images}</div>
 
         <style jsx>{`
           .display-linebreak {
@@ -90,40 +72,6 @@ class TextWithImages extends Component {
         `}</style>
       </div>
     )
-
-    // return (
-    //   <div className='display-linebreak'>
-    //     {this.state.shortContent ? (
-    //       <div>
-    //         <div>{this.state.shortContent}</div>
-    //         <div>
-    //           <a className='show-more-text' onClick={() => {
-    //             this.setState({
-    //               shortContent: null
-    //             })
-    //           }}>Показать полностью</a>
-    //         </div>
-    //       </div>
-    //     ) : (
-    //       <div>{this.state.content}</div>
-    //     )}
-    //     {this.state.longText
-    //       ? this.getContent(this.props.text)
-    //       : this.props.text
-    //     }
-    //     {this.state.images}
-    //     <style jsx>{`
-    //       .display-linebreak {
-    //         white-space: pre-line;
-    //       }
-    //
-    //       .show-more-text {
-    //         cursor: pointer;
-    //         font-weight: bold;
-    //       }
-    //     `}</style>
-    //   </div>
-    // )
   }
 }
 
