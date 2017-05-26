@@ -4,9 +4,7 @@ const pify = require('pify')
 const AWS = require('aws-sdk')
 const shortid = require('shortid')
 const sharp = require('sharp')
-
 const config = require('../../../config')
-// const { models } = require('../../models')
 
 AWS.config.update({
   accessKeyId: config.aws.access_key_id,
