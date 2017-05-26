@@ -40,6 +40,20 @@ export const addPost = createAction('posts/POST_ADD', async post => {
   }
 })
 
+/** edit post */
+export const updatePost = createAction('posts/UPDATE_POST', async (id, data) => {
+  await axios.put(`/api/post/${id}`, {
+    title: data.title,
+    content: data.content
+  }, {
+    withCredentials: true
+  })
+  return {
+    id,
+    data
+  }
+})
+
 /** Post removal */
 export const deletePost = createAction('posts/POST_DELETE', async id => {
   await axios.delete(`/api/post/${id}`)
@@ -93,6 +107,15 @@ export default handleActions({
   [deletePost]: (state, action) => ({
     ...state,
     posts: state.posts.filter(post => post.id !== action.payload)
+  }),
+  [updatePost]: (state, action) => ({
+    ...state,
+    posts: state.posts.map(post => {
+      if (post.id === action.payload.id) {
+        return { ...post, ...action.payload.data }
+      }
+      return post
+    })
   })
   // [addLike]: (state, action) => {
   //   const postId = action.payload.post_id
