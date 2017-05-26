@@ -11,23 +11,7 @@ module.exports = router => {
   })
 
   router.get('/test', async ctx => {
-    // let user = new mongoose.models.Users({ email: 'paperdoll.msk@gmail.com', 'name': 'bm-paperdoll', first_name: 'Степан', 'last_name': 'Юринов' })
-    // user = await user.save()
-
-    // let data = await mongoose.models.PostTypes.find()
     let data2 = await mongoose.models.Program.findOne({ _id: 1 }).populate('classes')
-
-    // let data3 = new mongoose.models.ProgramClass({
-    //   title: 'Занятие 2',
-    //   date: new Date(),
-    //   program: data2
-    // })
-
-    // await data3.save()
-    // data2.classes.push(data3)
-    // await data2.save()
-
-    // ctx.log.info(data2)
 
     ctx.body = { data2 }
   })
