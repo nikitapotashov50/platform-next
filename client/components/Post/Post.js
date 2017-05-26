@@ -6,8 +6,8 @@ import PostSummary from './Summary'
 import Comments from '../Comment/List'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
-
 import Attachments from './Attachments'
+import EditPost from './EditPost'
 
 class Post extends Component {
   constructor (props) {
@@ -15,7 +15,8 @@ class Post extends Component {
     this.state = {
       showPostMenu: false,
       showCommentForm: false,
-      likes: props.likes_count - Number(props.isLiked || false)
+      likes: props.likes_count - Number(props.isLiked || false),
+      editPost: false
     }
 
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
@@ -28,7 +29,7 @@ class Post extends Component {
   }
 
   handleEditButtonClick () {
-    console.log('edit post')
+    this.setState({ editPost: true })
   }
 
   handleOptionButtonClick () {
@@ -89,8 +90,22 @@ class Post extends Component {
           }}
         >
           <div className='post-preview'>
-            <a className='post-preview__title' onClick={onExpand}>{title}</a>
-            <TextWithImages text={content} />
+            {this.state.editPost ? (
+              <EditPost
+                title={title}
+                content={content}
+                id={this.props.id}
+                exitEdit={() => {
+                  this.setState({
+                    editPost: false
+                  })
+                }} />
+            ) : (
+              <div>
+                <a className='post-preview__title' onClick={onExpand}>{title}</a>
+                <TextWithImages text={content} />
+              </div>
+            )}
             { (attachments && attachments.length > 0) && <Attachments items={attachments} />}
           </div>
         </Panel>

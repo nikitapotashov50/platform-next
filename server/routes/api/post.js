@@ -293,6 +293,20 @@ module.exports = router => {
       }
     })
 
+    router.put('/', async ctx => {
+      if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
+      if (ctx.session.user.id !== ctx.__.post.user.id) throw new Error('Access denied')
+
+      const { title, content } = ctx.request.body
+
+      await ctx.__.post.update({
+        title,
+        content
+      })
+
+      ctx.statusCode = 200
+    })
+
     // удаление поста
     router.delete('/', async ctx => {
       if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
