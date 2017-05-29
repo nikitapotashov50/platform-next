@@ -9,7 +9,6 @@ import md5 from 'blueimp-md5'
 import CameraIcon from 'react-icons/lib/fa/camera'
 import FileIcon from 'react-icons/lib/fa/file-text-o'
 import RemoveButton from 'react-icons/lib/fa/close'
-import pMap from 'p-map'
 import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
@@ -149,7 +148,7 @@ class PostEditor extends Component {
             dropzoneActive: false
           })
 
-          await pMap(files, async file => {
+          await files.map(async file => {
             const formData = new window.FormData()
             formData.append('file', file)
             formData.append('hash', md5(file.preview))
