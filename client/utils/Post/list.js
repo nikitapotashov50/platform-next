@@ -10,10 +10,11 @@ export const getInitialProps = async (dispatch, params, serverPath) => {
   return {}
 }
 
-export const mapStateToProps = ({ posts, likes, auth }) => ({
+export const mapStateToProps = ({ posts, users, likes, auth }) => ({
   ...posts.posts,
+  users,
   likes: likes.posts || [],
-  loggedUser: auth.user ? auth.user.id : null
+  loggedUser: auth.user ? auth.user._id : null
 })
 
 export const mapDispatchToProps = dispatch => ({ dispatch })

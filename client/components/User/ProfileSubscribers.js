@@ -8,7 +8,7 @@ export default ({ items, title }) => (
       <div className='followers-tiles'>
 
         { items && items.map(user => (
-          <Link href={'/user?username=' + user.name} as={'/@' + user.name} key={'user-profile-subscribes-' + user.id}>
+          <Link href={'/user?username=' + user.name} as={'/@' + user.name} key={'user-profile-subscribes-' + user._id}>
             <a className='followers-tiles__item'>
               <div className='followers-tiles__image' data-name={user.first_name + ' ' + user.last_name} style={{ backgroundImage: `url(${user.picture_small})` }} />
             </a>

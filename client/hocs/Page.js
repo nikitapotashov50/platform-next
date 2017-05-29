@@ -43,9 +43,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req && ctx.isServer) {
-          if (ctx.req.session.user && ctx.req.session.user.id) {
-            ctx.store.dispatch(auth(ctx.req.session))
-            await ctx.store.dispatch(refresh(ctx.req.session.user.id, BACKEND_URL))
+          if (ctx.req.session.user && ctx.req.session.user._id) {
+            ctx.store.dispatch(auth({
+              user: ctx.req.session.user,
+              currentProgram: ctx.req.session.currentProgram,
+              isRestored: ctx.req.session.isRestored
+            }))
+            await ctx.store.dispatch(refresh(ctx.req.session.user._id, BACKEND_URL))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
         }
 
@@ -73,16 +77,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
         if (this.props.__service.hash && !this.props.__service.user) {
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
 
-          if (data.user && data.user.id) {
+          if (data.user && data.user._id) {
             this.props.dispatch(auth(data, true))
-            await this.props.dispatch(refresh(data.user.id))
+            await this.props.dispatch(refresh(data.user._id))
           } else this.props.dispatch(restrictAccess('Страница недоступна'))
         }
       }
 
       componentWillReceiveProps ({ __service, ...nextProps }) {
         let flag = (__service.user && this.props.__service.user)
-          ? (__service.user.id !== this.props.__service.user.id)
+          ? (__service.user._id !== this.props.__service.user._id)
           : (__service.user !== this.props.__service.user)
 
         if (flag && accessRule && isFunction(accessRule)) {

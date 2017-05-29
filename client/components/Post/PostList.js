@@ -78,7 +78,7 @@ class PostList extends Component {
     return (
       <OverlayLoader loading={fetching}>
         { postCount > 0 && posts.map((post, index) => (
-          <Post key={post.id} {...post} loggedUser={loggedUser} user={users[post.user_id]} isLiked={isLiked(likes, post.id)} onLike={toggleLike(post.id)} onRemove={removePost(post.id)} onExpand={this.onPostExpand(post, index)} />
+          <Post key={post._id} {...post} loggedUser={loggedUser} user={users[post.userId]} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
         ))}
 
         { (postCount > 0 && total > postCount) && (
@@ -94,7 +94,7 @@ class PostList extends Component {
         {/* Модалка с постом */}
         { !!expanded && (
           <PostModal isOpened={!!expanded} onPaginate={this.onPostPaginate} onClose={this.onPostExpand(null)}>
-            <PostFull {...expanded} loggedUser={loggedUser} user={users[expanded.user_id]} isLiked={isLiked(likes, expanded.id)} onLike={toggleLike(expanded.id)} />
+            <PostFull {...expanded} loggedUser={loggedUser} user={users[expanded.userId]} isLiked={isLiked(likes, expanded._id)} onLike={toggleLike(expanded._id)} />
           </PostModal>
         )}
 

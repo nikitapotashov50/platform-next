@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   },
     {
-      tableName: 'cities_view',
+      tableName: 'cities',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       timestamps: true,

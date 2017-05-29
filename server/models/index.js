@@ -15,7 +15,7 @@ let excludeList = [ 'views', 'config', 'migrations', 'task' ]
 
 // let redisClient = redis.createClient(6379, 'localhost')
 let sequelize = new Sequelize(dbConfig.uri, {
-  // logging: () => {},
+  logging: () => {},
   dialect: 'mysql',
   dialectOptions: {
     charset: 'utf8mb4'

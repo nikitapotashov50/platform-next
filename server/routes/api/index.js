@@ -12,6 +12,9 @@ const usersRoutes = require('./users')
 const attachmentRoutes = require('./attachment')
 const chatRoutes = require('./chat')
 
+const mongoTest = require('./mongo')
+const mongoMigrate = require('./migrate')
+
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
     let User = await models.User.findOne({
@@ -38,6 +41,9 @@ module.exports = router => {
   router.bridge('/me', [ initMeRoutes ], meRoutes)
   router.bridge('/attachment', attachmentRoutes)
   router.bridge('/chat', chatRoutes)
+
+  router.bridge('/mongo', mongoTest)
+  router.bridge('/migrate', mongoMigrate)
 
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)

@@ -37,7 +37,7 @@ class Post extends Component {
   }
 
   getFooter () {
-    let { id, loggedUser, comments = [], onLike, isLiked } = this.props
+    let { _id, loggedUser, comments = [], onLike, isLiked } = this.props
     let { showCommentForm, likes } = this.state
 
     const Footer = (
@@ -50,7 +50,7 @@ class Post extends Component {
           onComment={this.handleCommentButtonClick}
         />
 
-        <Comments ids={comments} postId={id} expanded={showCommentForm} />
+        <Comments ids={comments} postId={_id} expanded={showCommentForm} />
       </div>
     )
 
@@ -63,7 +63,8 @@ class Post extends Component {
 
     let Footer = this.getFooter()
 
-    const myPost = this.props.loggedUser && this.props.loggedUser === user.id
+    const myPost = false
+    // const myPost = this.props.loggedUser && this.props.loggedUser === user._id
 
     const Options = myPost && showPostMenu ? (
       <Menu
@@ -79,7 +80,7 @@ class Post extends Component {
       <div>
         <Panel
           Footer={Footer}
-          Header={<UserInline user={user} date={this.props.created_at} />}
+          Header={<UserInline user={user} date={this.props.created} />}
           headerStyles={{ noBorder: true, npBottomPadding: true }}
           Options={() => Options}
           withAnimation={added}
