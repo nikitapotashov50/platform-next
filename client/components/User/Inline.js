@@ -45,7 +45,7 @@ export default ({ money, subscribeButtons = false, date, user, small, noOccupati
         </div>
       )}
 
-      { user && (<div className='user-inline__money'>{formatMoney(user.money)} ₽</div>)}
+      { user && money && (<div className='user-inline__money'>{formatMoney(user.money)} ₽</div>)}
     </div>
   )
 }
