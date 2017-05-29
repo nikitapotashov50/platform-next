@@ -14,7 +14,6 @@ import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
-
 class UserLayout extends Component {
   render () {
     let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props

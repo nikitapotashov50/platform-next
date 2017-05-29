@@ -4,8 +4,6 @@ const mongoose = require('mongoose')
 const { is, startFinish } = require('../utils/common')
 const defaults = require('../utils/defaults')
 
-const ObjectId = mongoose.Schema.Types.ObjectId
-
 const model = new mongoose.Schema(extend({
   _id: { type: Number, unique: true },
   alias: { type: String, required: true, unique: true },

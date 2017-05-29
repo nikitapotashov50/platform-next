@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend, isArray, uniq, pick, isObject } = require('lodash')
+const { extend, isArray, uniq, pick } = require('lodash')
 const { is } = require('../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
