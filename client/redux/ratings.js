@@ -8,7 +8,7 @@ export const defaultState = {
 }
 
 export const loadRatings = createAction('ratings/LOAD_RATINGS', async params => {
-  const { data } = await axios.get(`http://${server.host}:${server.port}/api/rating/${params.tab || 'all'}/${params.program}/${params.userId}`)
+  const { data } = await axios.get(`http://${server.host}:${server.port}/api/rating/${params.tab || 'all'}/${params.program}/${params.id}`)
   return data
 })
 

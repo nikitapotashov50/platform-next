@@ -29,8 +29,15 @@ const SpeakersRating = ({speakers}) => (
         width: 100%;
       }
       td {
-        padding: 3px;
-        border: 1px solid lightgray;
+        color: #1f1f1f;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        line-height: 50px;
+        text-align: center;
+      }
+      td:first-child {
+        text-align: left;
       }
       thead td {
         text-align: center;
