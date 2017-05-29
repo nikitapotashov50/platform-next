@@ -16,8 +16,8 @@ export default Next => {
 
     if (!state.profile.user || (state.profile.user.name !== query.username)) {
       let { payload } = await ctx.store.dispatch(getUser(query.username))
-      if (payload.user && payload.user.id) {
-        ctx.store.dispatch(getInfo(payload.user.id))
+      if (payload.user && payload.user._id) {
+        // ctx.store.dispatch(getInfo(payload.user._id))
         return Next.getInitialProps(ctx)
       }
     } else if (state.profile.user) return Next.getInitialProps(ctx)

@@ -11,7 +11,7 @@ const defaultState = {
 
 /** actions */
 const manageLike = async (id, action = 'post') => {
-  const { data } = await axios[action](`/api/post/${id}/like`)
+  const { data } = await axios[action](`/api/mongo/posts/${id}/like`)
   return data
 }
 

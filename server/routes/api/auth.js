@@ -1,62 +1,38 @@
-const { pick } = require('lodash')
-const { models } = require('../../models')
+const { pick, extend } = require('lodash')
+// const { models } = require('../../models')
+
+const mongoose = require('mongoose')
 
 const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
 const getUser = async email => {
-  let rawUser = await models.User.findOne({
-    attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
-    where: { email },
-    include: [
-      {
-        required: false,
-        model: models.Program,
-        attributes: [ 'id', 'title', 'alias', 'start_at', 'finish_at' ],
-        through: {
-          attributes: [ 'is_activated' ]
-        }
-      },
-      {
-        required: false,
-        model: models.User,
-        as: 'Subscriptions',
-        attributes: [ 'id', 'name' ],
-        through: {
-          attributes: []
-        }
-      },
-      {
-        required: false,
-        model: models.User,
-        as: 'BlackList',
-        attributes: [ 'id', 'name' ],
-        through: {
-          attributes: []
-        }
-      }
-    ]
-  })
+  let user = await mongoose.models.Users.findOne({ email })
 
-  if (!rawUser) return null
+  if (!user) return null
 
   return {
-    user: pick(rawUser, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ]),
-    programs: rawUser.get('Programs'),
-    blackList: rawUser.get('BlackList'),
-    subscriptions: rawUser.get('Subscriptions')
+    user: pick(user, [ '_id', 'last_name', 'first_name', 'picture_small', 'name' ])
   }
 }
 
 const createUserBasedOnBM = async accessToken => {
   let BMInfo = await getMyInfo(accessToken)
-  let user = await models.User.create({
-    first_name: BMInfo.firstName,
-    last_name: BMInfo.lastName,
-    birthday: BMInfo.birthDate,
+
+  let userData = {
     email: BMInfo.email,
     name: BMInfo.userId,
+    last_name: BMInfo.lastName,
+    first_name: BMInfo.firstName,
     picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
-  })
+  }
+
+  let userMeta = {
+    birthday: BMInfo.birthDate
+  }
+
+  let user = await mongoose.models.Users.create(userData)
+  await user.updateMeta(userMeta)
+  await user.addProgram(3, {})
 
   return { user }
 }
@@ -81,9 +57,7 @@ module.exports = router => {
 
   router.post('/logout', ctx => {
     ctx.session = {}
-    ctx.body = {
-      status: 200
-    }
+    ctx.body = { status: 200 }
   })
 
   router.post('/recover', async ctx => {
@@ -96,9 +70,7 @@ module.exports = router => {
 
       await getBMRecovery(email, BMAccess.access_token)
 
-      ctx.body = {
-        status: 200
-      }
+      ctx.body = { status: 200 }
     } catch (e) {
       ctx.body = {
         status: 500,
@@ -160,27 +132,23 @@ module.exports = router => {
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
 
-    let programs = await models.Program.findAll({
-      attributes: [ 'id', 'alias', 'title' ],
-      where: {
-        '$Users.id$': userId,
-        is_enabled: true
-      },
-      include: [
-        {
-          model: models.User,
-          attributes: [],
-          through: {
-            attributes: []
-          }
-        }
-      ]
-    })
+    let user = await mongoose.models.Users
+      .findOne({
+        _id: userId
+      })
+      .select('programs.roleId programs.programId subscriptions')
+      .populate({
+        path: 'programs.programId',
+        select: '_id alias title'
+      })
+
+    let programs = user.programs.map(el => extend({}, { role: el.roleId }, el.programId))
 
     ctx.body = {
       status: 200,
       result: {
-        programs
+        programs,
+        subscriptions: user.subscriptions
       }
     }
   })

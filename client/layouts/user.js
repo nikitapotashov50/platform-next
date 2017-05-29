@@ -1,9 +1,9 @@
+import { pick } from 'lodash'
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { addToBlackList, removeFromBlackList } from '../redux/auth'
-import { getInfo, fetchEnd, fetchStart } from '../redux/profile'
 import { subscribeToUser, unsubscribeFromUser } from '../redux/user/subscriptions'
 
 import DefaultLayout from './default'
@@ -13,7 +13,7 @@ import UserProfileGoal from '../components/User/ProfileGoal'
 import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
-import { take, shuffle, pick } from 'lodash'
+
 
 class UserLayout extends Component {
   render () {
@@ -60,7 +60,7 @@ class UserLayout extends Component {
                   {/* Подписчики */}
                   { (subscribers.length !== 0) && (
                     <Panel bodyStyles={panelBodyStyles}>
-                      <UserProfileSubscribers items={take(shuffle(subscribers), 6)} title={'Подписчики (' + this.props.subscribers_total + ')'} />
+                      <UserProfileSubscribers items={subscribers} title={'Подписчики (' + this.props.subscribers_total + ')'} />
                     </Panel>
                   )}
 
@@ -99,39 +99,29 @@ class UserLayout extends Component {
 const mapStateToProps = ({ profile, auth, user }) => ({
   ...profile,
   me: auth.user,
-  isBlocked: profile.user && auth.blackList ? (auth.blackList.indexOf(profile.user.id) !== -1) : false,
-  isSubscribed: ((user.subscriptions || []).indexOf(profile.user.id) !== -1) || false
+  isBlocked: profile.user && auth.blackList ? (auth.blackList.indexOf(profile.user._id) !== -1) : false,
+  isSubscribed: ((user.subscriptions || []).indexOf(profile.user._id) !== -1) || false
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   subscribe: subscribeToUser,
   unsubscribe: unsubscribeFromUser,
   block: addToBlackList,
-  unblock: removeFromBlackList,
-  getInfo,
-  fetchEnd,
-  fetchStart
+  unblock: removeFromBlackList
 }, dispatch)
 
 const mergeProps = (state, dispatch, props) => {
-  let userId = state.user ? state.user.id : null
+  let userId = state.user ? state.user._id : null
   const toggleBlock = () => state.isBlocked ? dispatch.unblock(userId) : dispatch.block(userId)
   const toggleSubscription = () => state.isSubscribed ? dispatch.unsubscribe(userId) : dispatch.subscribe(userId)
-
-  const getInfo = async () => {
-    dispatch.fetchStart()
-    await dispatch.getInfo(state.user.id)
-    dispatch.fetchEnd()
-  }
 
   return {
     ...props,
     ...state,
     //
-    getInfo,
     toggleBlock,
     toggleSubscription,
-    showButtons: userId && state.me && (userId !== state.me.id)
+    showButtons: userId && state.me && (userId !== state.me._id)
   }
 }
 

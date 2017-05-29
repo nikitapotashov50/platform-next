@@ -1,14 +1,17 @@
-const { Schema } = require('mongoose')
+const { extend } = require('lodash')
 
-const is = new Schema(
-  {
-    enabled: { type: Boolean, default: true, required: true },
-    created: { type: Date, default: Date.now, required: true },
-    updated: { type: Date, default: Date.now, required: true }
-  },
-  {
-    _id: false
-  }
-)
+const created = {
+  created: { type: Date, default: Date.now, required: true },
+  updated: { type: Date, default: Date.now, required: true }
+}
 
-module.exports = { is }
+const is = extend(created, {
+  enabled: { type: Boolean, default: true, required: true }
+})
+
+const startFinish = {
+  start_at: { type: Date, default: null },
+  finish_at: { type: Date, default: null }
+}
+
+module.exports = { is, created, startFinish }

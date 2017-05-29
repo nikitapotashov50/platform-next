@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import { handleActions, createAction } from 'redux-actions'
 
 import { refresh, auth } from '../auth'
@@ -32,8 +31,8 @@ export const changeCurrent = createAction('user/programs/CHANGE_PROGRAM', async 
 const fillPrograms = (state, payload) => {
   let current
   let items = (payload.programs || []).reduce((acc, item) => {
-    acc[item.id] = item
-    if (item.alias === 'default') current = item.id
+    acc[item._id] = item
+    if (item.alias === 'default') current = item._id
     return acc
   }, {})
 

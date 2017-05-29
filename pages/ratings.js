@@ -157,7 +157,7 @@ export default PageHoc(RatingsPage, {
   title: 'Рейтинги',
   accessRule: () => false,
   mapStateToProps: state => ({
-    userId: state.auth.user.id,
+    userId: state.auth.user._id,
     program: state.user.programs.current,
     ratings: state.ratings.ratings,
     speakers: state.ratings.speakers,

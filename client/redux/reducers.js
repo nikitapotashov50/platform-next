@@ -12,10 +12,13 @@ import ratings from './ratings'
 
 import nps from './admin/nps'
 
+import info from './user/info'
 import programs from './user/programs'
 import subscriptions from './user/subscriptions'
 
-import users from './admin/users'
+import taskItems from './tasks'
+
+import users from './users'
 
 export default combineReducers({
   nps,
@@ -33,7 +36,11 @@ export default combineReducers({
   }),
   // session user data
   user: combineReducers({
+    info,
     programs,
     subscriptions
+  }),
+  tasks: combineReducers({
+    items: taskItems
   })
 })

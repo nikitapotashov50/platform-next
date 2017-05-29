@@ -1,6 +1,6 @@
-import { pick } from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { uniq } from 'lodash'
 import { loadMore, fetchStart, fetchEnd, reduce, remove } from '../../redux/posts/comments'
 
 import Form from './Form'
@@ -20,7 +20,10 @@ const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, to
           )}
 
           { ids.map(el => {
-            if (comments[el]) return <Comment key={'comment-' + el} {...comments[el]} currentUser={user.id} user={users[comments[el].user_id]} remove={remove(el)} />
+            if (comments[el]) {
+              let author = users[comments[el].userId]
+              return <Comment key={'comment-' + comments[el]._id} {...comments[el]} currentUser={user._id} user={author} remove={remove(comments[el]._id)} />
+            }
           })}
         </div>
       )}
@@ -34,10 +37,10 @@ const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, to
   )
 }
 
-const mapStateToProps = ({ posts, auth }) => ({
+const mapStateToProps = ({ posts, auth, users }) => ({
   currentUser: auth.user,
   comments: posts.comments,
-  users: posts.posts.users
+  users
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -49,22 +52,20 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 const mergeProps = (state, dispatchProps, props) => {
-  let ids = [ ...props.ids.map(el => el.id), ...(state.comments.added[props.postId] ? state.comments.added[props.postId] : []) ]
-
-  let comments = pick(state.comments.items, ids)
-  let userIds = []
-
-  for (var i in comments) { userIds.push(comments[i].user_id) }
+  let ids = uniq([ ...props.ids, ...(state.comments.added[props.postId] || []) ])
+  let comments = (state.comments.items[props.postId] || []).reduce((object, item) => {
+    object[item._id] = item
+    return object
+  }, {})
 
   let moreComments = async () => {
     dispatchProps.fetchStart(props.postId)
-
-    await dispatchProps.loadMore(ids.slice(0, ids.length - 3))
+    await dispatchProps.loadMore(props.postId)
     dispatchProps.fetchEnd()
   }
 
   let lessComments = () => {
-    dispatchProps.reduce(ids.slice(0, ids.length - 3))
+    dispatchProps.reduce(props.postId, 3)
   }
 
   let remove = id => async () => {
@@ -84,8 +85,8 @@ const mergeProps = (state, dispatchProps, props) => {
     postId: props.postId,
     expanded: props.expanded,
     //
+    users: state.users,
     user: state.currentUser,
-    users: pick(state.users, userIds),
     //
     remove,
     loadMore: isAll ? lessComments : moreComments,

@@ -18,9 +18,9 @@ class IndexPage extends Component {
 
     let params = { programId: user.programs.current || null }
 
-    if (req) params.user = req.session.user ? req.session.user.id : null
+    if (req) params.user = req.session.user ? req.session.user._id : null
 
-    if (query.tab === 'subscriptions' && auth.user) params.by_author_id = (user.subscriptions || []).join(',')
+    if (query.tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)
 
@@ -33,7 +33,7 @@ class IndexPage extends Component {
     let params = { programId: program }
     let pathname = { href: url.pathname + '?tab=' + tab, path: tab ? ('/feed/' + tab) : '/' }
 
-    if (tab === 'subscriptions') params.by_author_id = this.props.subscriptions.join(',')
+    if (tab === 'subscriptions') params.authorIds = this.props.subscriptions.join(',')
 
     return (
       <FeedLayout>

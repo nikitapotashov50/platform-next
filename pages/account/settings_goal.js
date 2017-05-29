@@ -18,7 +18,7 @@ class AccountSettings extends Component {
       options = { withCredentials: true }
     }
 
-    let { data } = await axios.get(`${BACKEND_URL}/api/me/goal`, options)
+    let { data } = await axios.get(`${BACKEND_URL}/api/mongo/me/goal`, options)
 
     return {
       goal: data.result.goal
@@ -81,7 +81,7 @@ class AccountSettings extends Component {
     } else {
       await this.setState(state => { state.errors = {} })
 
-      await axios.put(`${BACKEND_URL}/api/me/goal`, data, { withCredentials: true })
+      await axios.put(`${BACKEND_URL}/api/mongo/me/goal`, data, { withCredentials: true })
 
       setTimeout(() => {
         this.setState(state => { state.fetching = false })
