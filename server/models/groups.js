@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         type: DataTypes.INTEGER
       },
+      // ID лидера
+      leader_id: {
+        type: DataTypes.INTEGER
+      },
       // тип группы
       type: {
         defaultvalue: null,
