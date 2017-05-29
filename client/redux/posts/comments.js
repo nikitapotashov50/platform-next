@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { omit } from 'lodash'
 import { fetchPosts } from './index'
 import { handleActions, createAction } from 'redux-actions'
 

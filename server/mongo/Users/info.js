@@ -26,7 +26,6 @@ const model = new mongoose.Schema(extend({
 
 model.index({ 'userId': 1 }, { unique: true })
 
-
 model.statics.getOrCreate = async function (userId) {
   let model = this
   let meta = await model.findOne({ userId })
