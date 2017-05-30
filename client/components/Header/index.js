@@ -3,8 +3,8 @@ import HeaderRight from './HeaderRight'
 import { connect } from 'react-redux'
 
 let menu = [
-  { url: '/', title: 'Отчеты', as: '/', code: 'index' }
-  // { url: '/tasks', title: 'Задания' },
+  { url: '/', title: 'Отчеты', as: '/', code: 'index' },
+  { url: '/tasks', title: 'Задания' }
   // { url: '/ratings', title: 'Рейтинг' }
 ]
 

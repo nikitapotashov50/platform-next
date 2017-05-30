@@ -8,9 +8,7 @@ const { models } = require('mongoose')
 const initMeRoutes = async (ctx, next) => {
   try {
     if (!ctx.session || !ctx.session.user) throw new Error('no user')
-
     let user = await models.Users.findOne({ _id: ctx.session.user._id })
-
     if (!user) throw new Error('no user found')
 
     ctx.__.me = user
@@ -29,7 +27,7 @@ module.exports = router => {
   router.bridge('/me', [ initMeRoutes ], meRoutes)
   router.bridge('/posts', postRoutes)
   router.bridge('/users', usersRoutes)
-  router.bridge('/myTasks', [], tasksRoutes)
+  router.bridge('/myTasks', [ initMeRoutes ], tasksRoutes)
 
   // router.get('/groups', async ctx => {
   //   let data = await models.Group

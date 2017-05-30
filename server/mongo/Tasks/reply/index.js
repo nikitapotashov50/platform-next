@@ -14,25 +14,39 @@ const model = new mongoose.Schema(extend({
   replyTypeId: { type: Number, ref: 'TaskReplyTypes' }
 }, is))
 
+model.virtual('verification', {
+  ref: 'TaskVerification',
+  localField: '_id',
+  foreignField: 'taskReplyId'
+})
+
 model.statics.ReplyTypes = require('./type')
 
-model.statics.initDefaults = async function (defaults) {
+/** ----------------------- MODEL STATICS ----------------------- */
+
+/**
+ * get reply info
+ */
+model.statics.getInfo = async function (idArray = [], user) {
   let model = this
-
-  await Promise.all(defaults.map(reply => {
-    return new Promise(async (resolve, reject) => {
-      let user = await mongoose.models.Users.findOne({ name: reply.userName })
-      let task = await mongoose.models.Task.findOne()
-      console.log(task)
-
-      let data = pick(reply, [ 'title', 'content' ])
-      await model.create(extend(data, {
-        userId: user._id,
-        taskId: task._id
-      }))
-      resolve()
+  let list = await model
+    .find({
+      taskId: { $in: idArray },
+      userId: user._id
     })
-  }))
+    .select('_id title content postId taskId verification')
+    .populate({
+      path: 'verification',
+      select: '_id status'
+    })
+
+  return list
+}
+
+/** ----------------------- MODEL METHODS ----------------------- */
+
+model.methods.getStatus = async function () {
+  let reply = this
 }
 
 module.exports = mongoose.model('TaskReply', model)

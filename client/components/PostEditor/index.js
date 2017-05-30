@@ -13,6 +13,12 @@ import ReactPlayer from 'react-player'
 import AddVideoButton from './AddVideoButton'
 import { addPost } from '../../redux/posts'
 
+import marked from 'marked'
+
+marked.setOptions({
+  breaks: true
+})
+
 class PostEditor extends Component {
   constructor (props) {
     super(props)

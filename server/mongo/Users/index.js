@@ -170,4 +170,72 @@ model.methods.getSessionInfo = function () {
   return pick(this, [ '_id', 'last_name', 'first_name', 'picture_small', 'name' ])
 }
 
+/** --------------------- GROUPS -------------------- */
+
+model.methods.getGroups = async function (params = {}, select = null) {
+  let user = this
+  let query = mongoose.models.Group
+    .find(extend(
+      { users: { $in: [ user._id ] } },
+      params
+    ))
+
+  if (select) query.select(select)
+
+  return query
+}
+
+/** --------------------- TASKS --------------------- */
+
+/**
+ * GET TASKS
+ * this function retrieves all tasks for user depending on current program
+ */
+model.methods.getTasks = async function (programId, params = {}) {
+  let user = this
+  let groups = await user.getGroups({}, '_id')
+
+  return mongoose.models.Task
+    .find(extend(
+      {
+        $or: [
+          { targetProgram: Number(programId), 'target.model': null, 'target.item': null },
+          { targetProgram: Number(programId), 'target.model': 'Users', 'target.item': user._id },
+          { targetProgram: Number(programId), 'target.model': 'Group', 'target.item': { $in: groups.map(el => el._id) } }
+        ],
+        enabled: true
+      },
+      params
+    ))
+    .select('_id title content start_at finish_at')
+}
+
+/**
+ * GET REPLIED TASKS
+ * get list of tasks in current program, which replies contains current user's replies
+ */
+model.methods.getRepliedTasks = async function (programId) {
+  let user = this
+
+  let params = {
+    'replies.userId': { $in: [ user._id ] }
+  }
+
+  return user.getTasks(programId, params)
+}
+
+/**
+ * GET ACTIVE (NOT REPLIED) TASKS
+ * get list of tasks in current program, where are no replies from current user exists
+ */
+model.methods.getActiveTasks = async function (programId) {
+  let user = this
+
+  let params = {
+    'replies.userId': { $nin: [ user._id ] }
+  }
+
+  return user.getTasks(programId, params)
+}
+
 module.exports = mongoose.model('Users', model)
