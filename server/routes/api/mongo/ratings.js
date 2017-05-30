@@ -14,7 +14,7 @@ module.exports = router => {
       })
       .limit(3)
     const goal = res[1].goals[0]
-    ctx.body = goal.addIncome
+    ctx.body = goal
   })
 
   router.post('/', async ctx => {
