@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend, pick } = require('lodash')
+const { extend } = require('lodash')
 const { is } = require('../../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -47,6 +47,7 @@ model.statics.getInfo = async function (idArray = [], user) {
 
 model.methods.getStatus = async function () {
   let reply = this
+  return reply
 }
 
 module.exports = mongoose.model('TaskReply', model)

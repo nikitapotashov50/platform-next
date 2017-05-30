@@ -73,7 +73,7 @@ module.exports = router => {
           enabled: true
         })
 
-      let status = await reply.getStatus()
+      // let status = await reply.getStatus()
 
       ctx.body = {
         status: 200,
