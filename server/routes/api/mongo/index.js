@@ -2,6 +2,7 @@ let meRoutes = require('./me')
 let postRoutes = require('./posts')
 let usersRoutes = require('./users')
 let tasksRoutes = require('./tasks')
+let ratingsRoutes = require('./ratings')
 
 const { models } = require('mongoose')
 
@@ -28,6 +29,7 @@ module.exports = router => {
   router.bridge('/posts', postRoutes)
   router.bridge('/users', usersRoutes)
   router.bridge('/myTasks', [ initMeRoutes ], tasksRoutes)
+  router.bridge('/ratings', ratingsRoutes)
 
   // router.get('/groups', async ctx => {
   //   let data = await models.Group
