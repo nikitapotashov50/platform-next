@@ -243,9 +243,9 @@ model.methods.addIncome = async function (amount, programId) {
 
   let user = this
   let goal = await mongoose.models.Goal.getActiveForUser(user._id)
-  await goal.addIncome(amount, programId)
+  let income = await goal.addIncome(amount, programId)
 
-  return user
+  return income
 }
 
 /** --------------------- GOALS --------------------- */
