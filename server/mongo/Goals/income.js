@@ -8,7 +8,7 @@ const model = new mongoose.Schema(extend({
   amount: { type: Number, required: true },
   confirmed: { type: Boolean, default: false },
   //
-  userId: { type: ObjectId, ref: 'Users' },
+  userId: { type: ObjectId, ref: 'Users', required: true },
   programId: { type: Number, ref: 'Program' }
 }, created))
 

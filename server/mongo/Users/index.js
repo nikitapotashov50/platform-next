@@ -103,16 +103,6 @@ model.methods.updateInfo = async function (data) {
   return user
 }
 
-model.methods.addGoal = async function (data, add) {
-  let user = this
-  let goal = await mongoose.models.Goal.addToUser(user._id, data, add)
-
-  user.goals.addToSet(goal)
-  await user.save()
-
-  return user
-}
-
 model.methods.getSubscribers = async function (limit = null) {
   let user = this
   let params = {
@@ -236,6 +226,42 @@ model.methods.getActiveTasks = async function (programId) {
   }
 
   return user.getTasks(programId, params)
+}
+
+/** --------------------- INCOMES --------------------- */
+
+/**
+ * ADD INCOME
+ * adds income to user's active goal to specified program
+ */
+model.methods.addIncome = async function (amount, programId) {
+  if (!amount) throw new Error('argument amount is not specified')
+  if (!programId) throw new Error('argument programId is not specified')
+
+  let program = await mongoose.models.Program.findOne({ _id: programId })
+  if (!program) throw new Error(`no program with programId equals ${programId} found`)
+
+  let user = this
+  let goal = await mongoose.models.Goal.getActiveForUser(user._id)
+  await goal.addIncome(amount, programId)
+
+  return user
+}
+
+/** --------------------- GOALS --------------------- */
+
+/**
+ * ADD GOAL
+ * adds goal to user
+ */
+model.methods.addGoal = async function (data, add) {
+  let user = this
+  let goal = await mongoose.models.Goal.addToUser(user._id, data, add)
+
+  user.goals.addToSet(goal)
+  await user.save()
+
+  return user
 }
 
 module.exports = mongoose.model('Users', model)

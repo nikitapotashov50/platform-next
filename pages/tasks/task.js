@@ -12,8 +12,8 @@ import OverlayLoader from '../../client/components/OverlayLoader'
 // replies
 import GoalReply from '../../client/components/Tasks/Reply/goal'
 
-import { getTask, reply } from '../../client/redux/task/task'
-import { getReply } from '../../client/redux/task/reply'
+import { getTask } from '../../client/redux/task/task'
+import { getReply, postReply } from '../../client/redux/task/reply'
 
 class TaskPage extends Component {
   constructor (props) {
@@ -49,22 +49,20 @@ class TaskPage extends Component {
   async submit (e) {
     e.preventDefault()
 
-    this.setState(state => { state.fetchign = true })
-    await this.props.dispatch(reply(this.props.task.info._id, this.state.reply))
+    this.setState(state => { state.fetching = true })
+    await this.props.dispatch(postReply(this.props.task._id, this.state.reply))
     this.setState(state => {
-      state.fetchign = false
+      state.fetching = false
       state.success = true
     })
   }
 
   render () {
     let { replyForm, fetching, success } = this.state
-    let { task, replyOpened, reply } = this.props
+    let { task, replyOpened, reply, replyStatus } = this.props
 
     let openedFlag = replyOpened || replyForm
     let isReplied = reply || success
-
-    console.log(reply)
 
     return (
       <FeedLayout wide emptySide>
@@ -94,12 +92,19 @@ class TaskPage extends Component {
             </Button>
           </OverlayLoader>
         )}
-        { isReplied && (
-          <Panel>
-            { success && (<div>Ваш ответ отправлен на проверку</div>) }
-            <div>
-              { reply.title }
-            </div>
+
+        { (isReplied && success) && (<div>Ваш ответ отправлен на проверку</div>) }
+
+        { (isReplied && replyStatus) && (
+          <div>
+            <h2>Статус проверки {replyStatus.title}</h2>
+          </div>
+        )}
+
+        { (isReplied && reply) && (
+          <Panel Header={<div className='panel__title'>Ваш ответ</div>}>
+            {reply.title}
+            {reply.content}
           </Panel>
         )}
 
@@ -119,7 +124,8 @@ TaskPage.getInitialProps = async ctx => {
 
 const mapStateToProps = ({ task }) => ({
   task: task.info,
-  reply: task.reply.info
+  reply: task.reply.info,
+  replyStatus: task.reply.info ? task.reply.status : null
 })
 
 export default PageHoc(TaskPage, {

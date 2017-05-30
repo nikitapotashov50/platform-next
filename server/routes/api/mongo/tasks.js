@@ -1,21 +1,8 @@
 const { models } = require('mongoose')
 const { pick, extend } = require('lodash')
-// const mongoose = require('mongoose')
-
-// const ObjectId = mongoose.Types.ObjectId
-
-let defaultReplies = [
-  {
-    title: 'Я ответил',
-    content: 'Ответ на задание',
-    userName: 'bm-paperdoll',
-    task: 'Тестовое задание'
-  }
-]
 
 const initTask = async (ctx, next) => {
   try {
-    // if (!ObjectId.isValid(ctx.params.taskId)) throw { status: 404, message: 'Task not found' } // eslint-disable-line no-throw-literal
     let task = await models.Task.findOne({ _id: ctx.params.taskId })
     if (!task) throw { status: 404, message: 'Task not found' } // eslint-disable-line no-throw-literal
 
@@ -29,6 +16,24 @@ const initTask = async (ctx, next) => {
 }
 
 module.exports = router => {
+  router.get('/defaults', async ctx => {
+    // await models.TaskReply.initDefaults(defaultReplies)
+
+    // ctx.body = {
+    //   status: 200
+    // }
+    try {
+      let user = await models.Users.findOne({ name: 'bm-paperdoll' })
+      await user.addIncome(10000, 3)
+      ctx.body = { status: 200 }
+    } catch (e) {
+      console.log(e)
+      ctx.body = {
+        status: 500,
+        message: e
+      }
+    }
+  })
   router.get('/', async ctx => {
     let programId = ctx.query.programId
     try {
@@ -73,11 +78,15 @@ module.exports = router => {
           enabled: true
         })
 
-      // let status = await reply.getStatus()
+      let status = null
+      if (reply) {
+        let statusData = await reply.getStatus()
+        status = statusData.status
+      }
 
       ctx.body = {
         status: 200,
-        result: { reply }
+        result: { reply, status }
       }
     })
 
@@ -106,13 +115,5 @@ module.exports = router => {
         }
       }
     })
-  })
-
-  router.get('/defaults', async ctx => {
-    await models.TaskReply.initDefaults(defaultReplies)
-
-    ctx.body = {
-      status: 200
-    }
   })
 }
