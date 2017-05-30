@@ -50,7 +50,7 @@ class TaskPage extends Component {
     e.preventDefault()
 
     this.setState(state => { state.fetchign = true })
-    let data = await this.props.dispatch(reply(this.props.task.info._id, this.state.reply))
+    await this.props.dispatch(reply(this.props.task.info._id, this.state.reply))
     this.setState(state => {
       state.fetchign = false
       state.success = true
