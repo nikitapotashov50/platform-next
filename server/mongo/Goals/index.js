@@ -18,17 +18,43 @@ const model = new mongoose.Schema(extend({
 
 model.statics.Income = require('./income')
 
+/** ------------------- MODEL STATICS ------------------- */
+
 model.statics.addToUser = async function (userId, data, add) {
   data = pick(extend(data, add), [ 'a', 'b', 'occupation', 'category', 'created', 'closed' ])
   let goal = await this.create(extend(data, { userId }))
   return goal
 }
 
+model.statics.getActiveForUser = async function (userId) {
+  let model = this
+  return model.findOne({ userId, closed: false }).sort({ created: -1 })
+}
+
+/** ------------------- MODEL METHODS ------------------- */
+
 model.methods.update = async function (data) {
   let goal = this
   goal = extend(goal, pick(data, [ 'a', 'b', 'occupation', 'closed', 'start_at', 'finish_at' ]))
   await goal.save()
   return goal
+}
+
+/**
+ * ADD INCOME
+ * adds income to user's goal
+ */
+model.methods.addIncome = async function (amount, programId) {
+  let goal = this
+  let income = await mongoose.models.Income.create({
+    amount,
+    programId,
+    userId: goal.userId
+  })
+
+  goal.incomes.addToSet(income)
+
+  return goal.save()
 }
 
 module.exports = mongoose.model('Goal', model)

@@ -86,7 +86,8 @@ model.methods.addReply = async function (user, post, add = {}) {
       replyTypeId: task.replyTypeId
     }
   )
-  let reply = await mongoose.models.TaskReply.create(taskData)
+
+  let reply = await mongoose.models.TaskReply.makeReply(taskData)
 
   task.replies.addToSet({
     userId: user._id,
