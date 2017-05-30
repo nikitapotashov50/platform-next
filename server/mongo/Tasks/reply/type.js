@@ -18,6 +18,6 @@ const defaultTypes = {
   report: { _id: 4, title: 'Написать отчет', enabled: true }
 }
 
-module.exports = mongoose.model('TaskReplyTypes', model)
+module.exports = mongoose.model('TaskReplyType', model)
 
-mongoose.models.TaskReplyTypes.defaults(defaultTypes)
+mongoose.models.TaskReplyType.defaults(defaultTypes)

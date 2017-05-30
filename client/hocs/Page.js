@@ -361,6 +361,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  color: #1f1f1f;
                                  font-size: 21px;
                                  font-weight: 700;
+
+                                 &_small {
+                                   font-size: 18px;
+                                   line-height: 22px;
+                                  }
                                }
 
                                &__header {
@@ -1238,6 +1243,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__link {
+                                 box-sizing: border-box;
+
                                  margin: 0 !important;
                                  padding: 0 !important;
                                  height: 59px !important;
@@ -1249,6 +1256,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
+
+                                 &:hover, &_active {
+                                   color: #196aff;
+                                   border-bottom: 1px solid #196aff;
+                                 }
                                }
                              }
 

@@ -9,6 +9,12 @@ import CameraIcon from 'react-icons/lib/fa/camera'
 import RemoveButton from 'react-icons/lib/fa/close'
 import { addPost } from '../../redux/posts'
 
+import marked from 'marked'
+
+marked.setOptions({
+  breaks: true
+})
+
 class PostEditor extends Component {
   constructor (props) {
     super(props)
@@ -38,7 +44,7 @@ class PostEditor extends Component {
 
     if (!title || !content) return
 
-    const post = { title, content, attachments, program }
+    const post = { title, content: marked(content), attachments, program }
 
     await this.props.addPost(post)
     this.clearForm()

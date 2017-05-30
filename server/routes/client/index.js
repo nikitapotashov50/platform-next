@@ -1,3 +1,6 @@
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
+
 module.exports = router => {
   router.get('/reports', async ctx => {
     await ctx.__next.render(ctx.req, ctx.res, '/')
@@ -27,6 +30,13 @@ module.exports = router => {
       router.get('/:id', async ctx => {
         await ctx.__next.render(ctx.req, ctx.res, '/ratings', Object.assign({}, ctx.params, ctx.query))
       })
+    })
+  })
+
+  router.bridge('/tasks', router => {
+    router.get('/:id', async ctx => {
+      if (!ObjectId.isValid(ctx.params.id)) console.log('wrong object id')
+      await ctx.__next.render(ctx.req, ctx.res, '/tasks/task', Object.assign({}, ctx.params, ctx.query))
     })
   })
 

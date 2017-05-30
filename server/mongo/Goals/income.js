@@ -5,12 +5,11 @@ const { created } = require('../utils/common')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
-  ammount: { type: Number, required: true },
-  is_confirmed: { type: Boolean, default: false },
+  amount: { type: Number, required: true },
+  confirmed: { type: Boolean, default: false },
   //
-  created,
-  //
-  userId: { type: ObjectId, ref: 'Users' }
+  userId: { type: ObjectId, ref: 'Users' },
+  programId: { type: Number, ref: 'Program' }
 }, created))
 
 module.exports = mongoose.model('Income', model)

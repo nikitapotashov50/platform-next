@@ -23,7 +23,7 @@ const TextWithImages = ({ text }) => {
 
   return (
     <div className='display-linebreak'>
-      {content}
+      <div dangerouslySetInnerHTML={{ __html: content }} />
       {images}
       <style jsx>{`
         .display-linebreak {

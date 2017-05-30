@@ -17,6 +17,7 @@ import programs from './user/programs'
 import subscriptions from './user/subscriptions'
 
 import taskItems from './tasks'
+import task from './task'
 
 import users from './users'
 
@@ -42,5 +43,6 @@ export default combineReducers({
   }),
   tasks: combineReducers({
     items: taskItems
-  })
+  }),
+  task
 })

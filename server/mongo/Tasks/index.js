@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend } = require('lodash')
+const { extend, pick } = require('lodash')
 const { is, startFinish } = require('../utils/common')
 const defaults = require('../utils/defaults')
 
@@ -12,7 +12,12 @@ const model = new mongoose.Schema(extend({
   userId: { type: ObjectId, ref: 'Users' },
   replyTypeId: { type: Number, ref: 'TaskReplyTypes' },
   //
-  replies: [ { type: ObjectId, ref: 'TaskReply' } ],
+  replies: [
+    {
+      userId: { type: ObjectId, ref: 'Users' },
+      replyId: { type: ObjectId, ref: 'TaskReply' }
+    }
+  ],
   targetProgram: { type: Number, ref: 'Program' },
   target: {
     model: { type: String, enum: [ 'Group', 'Users' ] },
@@ -64,6 +69,37 @@ model.statics.initDefaults = async function (defaults) {
   }))
 }
 
+/** ------------------------ MODEL STATICS ------------------------ */
+
+/** ------------------------ MODEL METHODS ------------------------ */
+
+/** ----------------------- ADD REPLY METHOD ---------------------- */
+
+model.methods.addReply = async function (user, post, add = {}) {
+  let task = this
+  let taskData = extend(
+    pick(post, [ 'title', 'content' ]),
+    {
+      postId: post._id,
+      userId: user._id,
+      taskId: task._id,
+      replyTypeId: task.replyTypeId
+    }
+  )
+  let reply = await mongoose.models.TaskReply.create(taskData)
+
+  task.replies.addToSet({
+    userId: user._id,
+    replyId: reply._id
+  })
+
+  await task.save()
+
+  return reply
+}
+
 module.exports = mongoose.model('Task', model)
 
-mongoose.models.Task.initDefaults(defaultTasks)
+/** --------------------- DEFAULTS INITIATION ---------------------- */
+
+// mongoose.models.Task.initDefaults(defaultTasks)
