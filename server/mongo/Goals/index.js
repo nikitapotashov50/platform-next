@@ -53,8 +53,9 @@ model.methods.addIncome = async function (amount, programId) {
   })
 
   goal.incomes.addToSet(income)
+  await goal.save()
 
-  return goal.save()
+  return income
 }
 
 module.exports = mongoose.model('Goal', model)

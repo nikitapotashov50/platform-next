@@ -17,17 +17,14 @@ const initTask = async (ctx, next) => {
 
 module.exports = router => {
   router.get('/defaults', async ctx => {
-    // await models.TaskReply.initDefaults(defaultReplies)
-
-    // ctx.body = {
-    //   status: 200
-    // }
     try {
       let user = await models.Users.findOne({ name: 'bm-paperdoll' })
-      await user.addIncome(10000, 3)
-      ctx.body = { status: 200 }
+      let income = await user.addIncome(10000, 3)
+      ctx.body = {
+        status: 200,
+        result: { income }
+      }
     } catch (e) {
-      console.log(e)
       ctx.body = {
         status: 500,
         message: e
