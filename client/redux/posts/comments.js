@@ -17,14 +17,14 @@ const defaultState = {
 
 // add comment
 export const add = createAction('comments/COMMENT_ADD', async (content, postId) => {
-  const { data } = await axios.post(`/api/mongo/posts/${postId}/comments`, { content })
-
+  const { data } = await axios.post(`/api/mongo/posts/${postId}/comments`, { content }, { withCredentials: true })
+  console.log(data)
   return { postId, comment: data.result.comment, users: data.result.users }
 })
 
 // remove comment
 export const remove = createAction('comments/COMMENT_REMOVE', async (id, postId) => {
-  let { data } = await axios.delete(`/api/mongo/posts/${postId}/comments/${id}`)
+  let { data } = await axios.delete(`/api/mongo/posts/${postId}/comments/${id}`, {}, { withCredentials: true })
   return data.status === 200 ? { id, postId } : {}
 })
 

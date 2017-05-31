@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { extend, pick } = require('lodash')
-const { created } = require('../../utils/common')
+const { is } = require('../../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -10,8 +10,9 @@ const model = new mongoose.Schema(extend({
   action: { type: String, required: true },
   //
   userId: { type: ObjectId, ref: 'Users' },
-  goalId: { type: ObjectId, ref: 'Goal' }
-}, created))
+  goalId: { type: ObjectId, ref: 'Goal' },
+  reportId: { type: ObjectId, ref: 'TaskReport' }
+}, is))
 
 /**
  *

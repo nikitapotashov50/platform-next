@@ -1,6 +1,6 @@
 const { models } = require('mongoose')
 const { pick } = require('lodash')
-const { keyObj } = require('../../../controllers/common')
+const { keyObj, initMeRoutes } = require('../../../controllers/common')
 
 const initPost = async (ctx, next) => {
   let post = await models.Post.findOne({ _id: ctx.params.id })
@@ -17,7 +17,7 @@ const initPost = async (ctx, next) => {
 
 const getLiked = (postIds, userId) => {
   return new Promise(async (resolve, reject) => {
-    if (userId) resolve([])
+    if (!userId) resolve([])
     else {
       let liked = await models.Like.find({
         userId: userId,
@@ -38,13 +38,13 @@ const getReplies = postIds => {
         enabled: true,
         postId: { $in: postIds }
       })
-      .select('specific title postId')
-      .populate('specific.item')
+      .select('specific title postId replyTypeId')
+      .populate([ 'specific.item', 'replyTypeId' ])
       .cache(40)
       .lean()
 
     resolve(replies.reduce((obj, item) => {
-      if (item.specific) obj[item.postId] = { type: item.specific.model, data: item.specific.item }
+      if (item.specific) obj[item.postId] = { type: item.replyTypeId.code, data: item.specific.item }
       return obj
     }, {}))
   })
@@ -139,39 +139,24 @@ module.exports = router => {
       }
     })
 
-    router.bridge('/like', router => {
+    router.bridge('/like', [ initMeRoutes ], router => {
       router.post('/', async ctx => {
         try {
-          ctx.log.info(ctx.session.user._id)
-          if (!ctx.session.user || !ctx.session.user._id) throw new Error('Access denied')
-          let user = await models.Users.findOne({ _id: ctx.session.user._id })
-          if (!user) throw new Error('Access denied')
-          ctx.log.info(`user id is ${user._id}`)
-          await ctx.__.post.addLike(user._id)
+          await ctx.__.post.addLike(ctx.__.me._id)
 
           ctx.body = { status: 200 }
         } catch (e) {
-          ctx.body = {
-            status: 500,
-            message: e
-          }
+          ctx.body = { status: 500, message: e }
         }
       })
 
       router.delete('/', async ctx => {
         try {
-          if (!ctx.session.user || !ctx.session.user._id) throw new Error('Access denied')
-          let user = await models.Users.findOne({ _id: ctx.session.user._id })
-          if (!user) throw new Error('Access denied')
-
-          await ctx.__.post.removeLike(user._id)
+          await ctx.__.post.removeLike(ctx.__.me._id)
 
           ctx.body = { status: 200 }
         } catch (e) {
-          ctx.body = {
-            status: 500,
-            message: e
-          }
+          ctx.body = { status: 500, message: e }
         }
       })
     })

@@ -11,9 +11,9 @@ const model = new mongoose.Schema(extend({
   userId: { type: ObjectId, ref: 'Users' },
   postId: { type: ObjectId, ref: 'Posts' },
   taskId: { type: ObjectId, ref: 'Tasks' },
-  replyTypeId: { type: Number, ref: 'TaskReplyTypes' },
+  replyTypeId: { type: Number, ref: 'TaskReplyType' },
   specific: {
-    model: { type: String, enum: [ 'Goal', 'Task' ] },
+    model: { type: String, enum: [ 'Goal', 'Task', 'TaskReport' ] },
     item: { type: ObjectId, refPath: 'specific.model' }
   }
 }, is))

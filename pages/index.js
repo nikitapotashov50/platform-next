@@ -8,8 +8,10 @@ import Panel from '../client/components/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
 const menuItems = [
-  { href: '/', path: '/', title: 'Новое', code: 'index' },
-  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' }
+  { href: '/', path: '/', title: 'Актуальное', code: 'index' },
+  { href: '/?tab=new', path: '/feed/new', title: 'Новое', code: 'new' },
+  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' },
+  { href: '/?tab=groups', path: '/feed/groups', title: 'Моя десятка', code: 'groups' }
 ]
 
 class IndexPage extends Component {

@@ -6,6 +6,7 @@ import PostFooter from './Preview/Footer'
 import Panel from '../Panel'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
+import TaskContent from '../Tasks/replyContent/index'
 import Attachments from './Attachments'
 import EditPost from './EditPost'
 
@@ -17,6 +18,7 @@ class Post extends Component {
       showCommentForm: false,
       likes: props.likes_count - Number(props.isLiked || false),
       editPost: false
+      likes: props.post.likes_count - Number(props.post.isLiked || false)
     }
 
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
@@ -37,9 +39,9 @@ class Post extends Component {
   }
 
   getFooter () {
-    let { _id, loggedUser, comments = [], onLike, isLiked } = this.props
+    let { post, loggedUser, onLike, isLiked } = this.props
     let { showCommentForm, likes } = this.state
-    let footerProps = { _id, loggedUser, comments, onLike, isLiked, showCommentForm, likes }
+    let footerProps = { _id: post._id, loggedUser, comments: post.comments, onLike, isLiked, showCommentForm, likes }
 
     const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
 
@@ -68,6 +70,9 @@ class Post extends Component {
       )
     } else headerStyles.npBottomPadding = true
 
+    let TaskReply = null
+    if (reply && reply.type) TaskReply = TaskContent[reply.type]
+
     return (
       <div>
         <Panel
@@ -82,6 +87,7 @@ class Post extends Component {
         >
           <div className='post-preview'>
             { !reply && (<a className='post-preview__title' onClick={onExpand}>{post.title}</a>) }
+            { reply && (<TaskReply data={reply.data} />)}
             <TextWithImages text={post.content} />
             { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
           </div>
