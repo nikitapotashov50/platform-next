@@ -180,8 +180,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              a {
+                               transition: color $transition-time;
+
                                color: #0c00ff;
                                text-decoration: none;
+                               &:hover {
+                                 color: color(#0c00ff b(+40%));
+                               }
                              }
 
                              h1, h2, h3, h4, h5, h6 {
@@ -208,7 +213,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              textarea:-moz-placeholder {color:#9f9f9f;}
                              textarea:-ms-input-placeholder {color:#9f9f9f;}
 
-
                              button {
                                border: none;
                                outline: none;
@@ -217,6 +221,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .pull-right {
                                text-align: right;
+                             }
+
+                             .text-center {
+                               text-align: center;
                              }
 
                              .noscroll {

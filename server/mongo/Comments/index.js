@@ -38,6 +38,7 @@ model.statics.getForPost = async function (post, { limit, offset, reversed }) {
       enabled: true
     })
     .select('_id content userId created')
+    .lean()
     .cache(60)
 
   if (limit && reversed && post.comments.length >= limit) {

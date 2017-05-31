@@ -9,7 +9,7 @@ export const getTask = createAction('task/GET_TASK', async (taskId, options) => 
   let params = { withCredentials: true }
   if (options.headers) params.headers = options.headers
 
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/myTasks/${taskId}`, params)
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${taskId}`, params)
   return data.result
 })
 

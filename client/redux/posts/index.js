@@ -4,6 +4,7 @@ import { handleActions, createAction } from 'redux-actions'
 /** default state  */
 export const defaultState = {
   posts: [],
+  replies: {},
   query: {},
   total: 0,
   fething: false
@@ -73,8 +74,12 @@ export default handleActions({
     posts: [
       // тут добавляем посты в конец списка
       ...(payload.offset ? state.posts : []),
-      ...payload.posts
+      ...(payload.posts || [])
     ],
+    replies: {
+      ...(payload.offset ? state.replies : {}),
+      ...(payload.replies || {})
+    },
     total: payload.total,
     offset: payload.offset
   }),

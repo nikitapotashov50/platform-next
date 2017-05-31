@@ -20,7 +20,20 @@ model.statics.Income = require('./income')
 
 /** ------------------- MODEL STATICS ------------------- */
 
+/**
+ * ADD GOAL TO USER
+ * adds goal to user
+ */
 model.statics.addToUser = async function (userId, data, add) {
+  // first find previuos goal for this user
+  let previousGoal = await mongoose.models.Goal.findOne({
+    userId,
+    closed: false,
+    enabled: true
+  })
+  // then close it if there is one
+  if (previousGoal) await previousGoal.close()
+
   data = pick(extend(data, add), [ 'a', 'b', 'occupation', 'category', 'created', 'closed' ])
   let goal = await this.create(extend(data, { userId }))
   return goal
@@ -28,7 +41,8 @@ model.statics.addToUser = async function (userId, data, add) {
 
 model.statics.getActiveForUser = async function (userId) {
   let model = this
-  return model.findOne({ userId, closed: false }).sort({ created: -1 })
+  let [ goal ] = await model.find({ userId, closed: false, enabled: true }).limit(1).sort({ created: -1 })
+  return goal
 }
 
 /** ------------------- MODEL METHODS ------------------- */
@@ -38,6 +52,12 @@ model.methods.update = async function (data) {
   goal = extend(goal, pick(data, [ 'a', 'b', 'occupation', 'closed', 'start_at', 'finish_at' ]))
   await goal.save()
   return goal
+}
+
+model.methods.close = async function () {
+  let goal = this
+  goal.closed = true
+  return goal.save()
 }
 
 /**

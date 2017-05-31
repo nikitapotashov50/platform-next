@@ -11,9 +11,16 @@ const model = new mongoose.Schema(extend({
 
 model.statics.defaults = defaults
 
+model.statics.populateFieldsByType = {
+  default: [],
+  task: [],
+  goal: [ 'a', 'b', 'occupation', '_id' ],
+  report: []
+}
+
 const defaultTypes = {
   default: { _id: 1, title: 'Выполнить задание', enabled: true },
-  task: { _id: 2, title: 'Поставить задания', enabled: true },
+  knife: { _id: 2, title: 'Поставить план-кинжал', enabled: true },
   goal: { _id: 3, title: 'Поставить цель', enabled: true },
   report: { _id: 4, title: 'Написать отчет', enabled: true }
 }

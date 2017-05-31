@@ -57,6 +57,8 @@ model.statics.getShortInfo = async function (idArray) {
         sort: { created: -1 }
       }
     })
+    .lean()
+    .cache(120)
 
   return list.map(user => {
     let refUser = pick(user, [ '_id', 'first_name', 'last_name', 'picture_small', 'name' ])
@@ -198,6 +200,10 @@ model.methods.getTasks = async function (programId, params = {}) {
       params
     ))
     .select('_id title content start_at finish_at')
+    .sort({ created: -1 })
+    .lean()
+    // .limit(4)
+    .cache(60)
 }
 
 /**
@@ -222,6 +228,20 @@ model.methods.getActiveTasks = async function (programId) {
   let user = this
 
   let params = {
+    'replies.userId': { $nin: [ user._id ] },
+    'type.model': { $ne: 'KnifePlan' }
+  }
+
+  return user.getTasks(programId, params)
+}
+
+model.methods.getKnifePlans = async function (programId) {
+  let user = this
+
+  let params = {
+    'type.model': 'KnifePlan',
+    'target.model': 'Users',
+    'target.item': user._id,
     'replies.userId': { $nin: [ user._id ] }
   }
 
@@ -261,7 +281,7 @@ model.methods.addGoal = async function (data, add) {
   user.goals.addToSet(goal)
   await user.save()
 
-  return user
+  return goal
 }
 
 module.exports = mongoose.model('Users', model)

@@ -70,7 +70,7 @@ class PostList extends Component {
   }
 
   render () {
-    const { posts = [], users = {}, fetching, removePost, toggleLike, loggedUser, likes, total } = this.props
+    const { posts = [], users = {}, replies = {}, fetching, removePost, toggleLike, loggedUser, likes, total } = this.props
     const { expanded } = this.state
 
     let postCount = posts.length
@@ -78,7 +78,7 @@ class PostList extends Component {
     return (
       <OverlayLoader loading={fetching}>
         { postCount > 0 && posts.map((post, index) => (
-          <Post key={post._id} {...post} loggedUser={loggedUser} user={users[post.userId]} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
+          <Post key={post._id} post={post} loggedUser={loggedUser} reply={replies[post._id]} user={users[post.userId]} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
         ))}
 
         { (postCount > 0 && total > postCount) && (

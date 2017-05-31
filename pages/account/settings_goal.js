@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { isEmpty } from 'lodash'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 
@@ -43,15 +44,7 @@ class AccountSettings extends Component {
     if (nextProps.url.query.tab !== this.props.url.query.tab) this.clear()
   }
 
-  async handleChange (field, e) {
-    if ([ 'a', 'b', 'occupation' ].indexOf(field) < 0) return
-
-    let value = e.target.value.replace(/(<([^>]+)>)/ig, '')
-
-    if ([ 'a', 'b' ].indexOf(field) > -1) {
-      value = value.replace(/[^0-9]+/g, '')
-    }
-
+  async handleChange (field, value) {
     this.setState(state => {
       state.affected[field] = value
     })
@@ -59,33 +52,20 @@ class AccountSettings extends Component {
 
   async submit (e) {
     e.preventDefault()
-    let errors = []
     this.setState(state => { state.fetching = true })
 
     let data = { ...this.props.goal, ...this.state.affected }
+    let errors = await GoalSettings.validate(data)
 
-    if (!data.a) errors.push({ field: 'a', message: 'Укажите точку А' })
-    if (!data.b) errors.push({ field: 'b', message: 'Укажите точку Б' })
-
-    if (!data.occupation || !data.occupation.length) errors.push({ field: 'occupation', message: 'Укажите свою нишу' })
-    if (parseInt(data.a) > parseInt(data.b)) errors.push({ field: 'a', message: 'Точка A не может быть больше точки Б' })
-
-    if (errors.length) {
-      let obj = {}
-      errors.map(el => { obj[el.field] = el.message })
-
+    if (!isEmpty(errors)) {
       this.setState(state => {
         state.fetching = false
-        state.errors = obj
+        state.errors = errors
       })
     } else {
       await this.setState(state => { state.errors = {} })
-
       await axios.put(`${BACKEND_URL}/api/mongo/me/goal`, data, { withCredentials: true })
-
-      setTimeout(() => {
-        this.setState(state => { state.fetching = false })
-      }, 500)
+      this.setState(state => { state.fetching = false })
     }
   }
 
