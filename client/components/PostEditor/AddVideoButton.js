@@ -28,8 +28,12 @@ class AddVideoButton extends Component {
               }}
               placeholder='Ссылка на видео (youtube, vimeo)' />
             <div className='buttons'>
-              <button>отмена</button>
-              <button onClick={() => add(this.state.value)}>добавить</button>
+              <button onClick={close}>отмена</button>
+              <button onClick={() => {
+                if (this.state.value) {
+                  add(this.state.value)
+                }
+              }}>добавить</button>
             </div>
 
             <style jsx>{`
