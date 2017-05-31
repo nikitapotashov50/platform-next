@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import PostMenu from './Preview/Menu'
+// import PostMenu from './Preview/Menu'
 import PostFooter from './Preview/Footer'
-import Menu from './Menu'
+// import Menu from './Menu'
 import Panel from '../Panel'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
@@ -47,12 +47,13 @@ class Post extends Component {
   }
 
   render () {
-    const { showPostMenu } = this.state
-    const { post, user, added, onExpand, onRemove, reply } = this.props
+    // const { showPostMenu } = this.state
+    const { post, user, added, onExpand, reply } = this.props
+    // onRemove
 
     let Footer = this.getFooter()
 
-    const myPost = this.props.loggedUser && this.props.loggedUser === user._id
+    // const myPost = this.props.loggedUser && this.props.loggedUser === user._id
     const Options = null
     // const Options = <PostMenu opened={myPost && showPostMenu} onDelete={onRemove} onEdit={this.handleEditButtonClick} onClose={this.handleOptionButtonClick} />
 
