@@ -13,7 +13,7 @@ export default ({ money, subscribeButtons = false, date, user, small, noOccupati
   return (
     <div className='user-inline'>
       { user && (
-        <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
+        <Link prefetch href={'/user?username=' + user.name} as={'/@' + user.name}>
           <a className={[ 'user-inline__image-link', small ? 'user-inline__image-link_small' : '' ].join(' ')}>
             <Img src={[ user.picture_small, '/static/img/user.png' ]} className={[ 'user-inline__image', small ? 'user-inline__image_small' : '' ].join(' ')} alt={`${user.first_name} ${user.last_name}`} />
           </a>
@@ -23,7 +23,7 @@ export default ({ money, subscribeButtons = false, date, user, small, noOccupati
       <div className={bodyClasses.join(' ')}>
         <div className='user-inline__title-block'>
           { user && (
-            <Link href={'/user?username=' + user.name} as={'/@' + user.name}>
+            <Link prefetch href={'/user?username=' + user.name} as={'/@' + user.name}>
               <a className='user-inline__title'>{user.first_name + ' ' + (user.last_name || '')}</a>
             </Link>
           )}
