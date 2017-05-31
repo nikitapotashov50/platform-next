@@ -5,13 +5,17 @@ const { is } = require('../../utils/common')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
+  title: { type: String },
+  content: { type: String },
   //
   userId: { type: ObjectId, ref: 'Users' },
   postId: { type: ObjectId, ref: 'Posts' },
   taskId: { type: ObjectId, ref: 'Tasks' },
-  replyTypeId: { type: Number, ref: 'TaskReplyTypes' }
+  replyTypeId: { type: Number, ref: 'TaskReplyTypes' },
+  specific: {
+    model: { type: String, enum: [ 'Goal', 'Task' ] },
+    item: { type: ObjectId, refPath: 'specific.model' }
+  }
 }, is))
 
 model.virtual('verification', {
@@ -70,7 +74,7 @@ model.methods.getStatus = async function () {
   let reply = this
 
   return mongoose.models.TaskVerification
-    .findOne({
+    .find({
       enabled: true,
       taskReplyId: reply._id
     })

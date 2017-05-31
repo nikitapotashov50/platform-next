@@ -23,6 +23,9 @@ const model = new mongoose.Schema(extend({
   visibility: { type: String, enum: visibilityTypes, default: 'all' }
 }, is))
 
+model.index({ 'programs': 1 })
+model.index({ 'userId': 1 })
+
 model.plugin(paginate)
 
 model.virtual('likesList', {
@@ -42,8 +45,10 @@ model.statics.getList = async function (params = {}, query = {}) {
 
   let options = {
     limit,
+    lean: true,
     page: offset,
-    sort: { created: -1 }
+    sort: { created: -1 },
+    select: '_id title content userId comments attachments likes_count'
   }
 
   let data = await model.paginate(params, options)

@@ -1,5 +1,6 @@
 import { bindActionCreators } from 'redux'
 
+import Panel from '../../client/components/Panel'
 import PageHoc from '../../client/hocs/Page'
 import FeedLayout from '../../client/layouts/feed'
 
@@ -15,14 +16,25 @@ const getLink = taskId => ({
 const TasksIndex = ({ tasks }) => {
   return (
     <FeedLayout wide emptySide>
+      { (tasks.knife.length > 0) && tasks.knife.map(el => (
+        <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
+      ))}
+
+      { (tasks.knife.length > 0) && (<div className='tasks-inline-header'>Задания</div>) }
+
       { (tasks.active.length > 0) && tasks.active.map(el => (
         <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
       ))}
+      { (!tasks.active.length) && (
+        <Panel>
+          <div className='text-center'>У вас нет активных заданий, отдыхайте.</div>
+        </Panel>
+      )}
 
       <div className='tasks-inline-header'>Выполнено</div>
 
       { (tasks.replied.length > 0) && tasks.replied.map(el => (
-        <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
+        <TaskPreview key={el._id} link={getLink(el._id)} task={el} completed status='pending' statusText='На проверке' />
       ))}
 
       <style jsx>{`

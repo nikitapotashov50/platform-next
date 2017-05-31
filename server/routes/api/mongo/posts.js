@@ -15,6 +15,41 @@ const initPost = async (ctx, next) => {
   }
 }
 
+const getLiked = (postIds, userId) => {
+  return new Promise(async (resolve, reject) => {
+    if (userId) resolve([])
+    else {
+      let liked = await models.Like.find({
+        userId: userId,
+        enabled: true,
+        'target.model': 'Post',
+        'target.item': { $in: postIds }
+      }).lean()
+
+      resolve(liked)
+    }
+  })
+}
+
+const getReplies = postIds => {
+  return new Promise(async (resolve, reject) => {
+    let replies = await models.TaskReply
+      .find({
+        enabled: true,
+        postId: { $in: postIds }
+      })
+      .select('specific title postId')
+      .populate('specific.item')
+      .cache(40)
+      .lean()
+
+    resolve(replies.reduce((obj, item) => {
+      if (item.specific) obj[item.postId] = { type: item.specific.model, data: item.specific.item }
+      return obj
+    }, {}))
+  })
+}
+
 module.exports = router => {
   router.get('/', async ctx => {
     let { programId = 3, authorIds, user } = ctx.query
@@ -39,29 +74,23 @@ module.exports = router => {
       userIds.push(post.userId)
     })
 
-    // достаем список постов, которые понравились
-    let liked = []
-    if (userId) {
-      liked = await models.Like.find({
-        userId: userId,
-        enabled: true,
-        'target.model': 'Post',
-        'target.item': { $in: postIds }
-      })
-    }
-
     // вытаскиваем пользователей из комментов
     Object.values(comments).map(pComments => {
       pComments.map(comment => { userIds.push(comment.userId) })
     })
 
-    let users = await models.Users.getShortInfo(userIds)
+    let [ replies, liked, users ] = await Promise.all([
+      getReplies(postIds),
+      getLiked(postIds, userId),
+      models.Users.getShortInfo(userIds)
+    ])
 
     ctx.body = {
       status: 200,
       result: {
         posts,
         total,
+        replies,
         comments,
         users: keyObj(users),
         liked: liked.map(el => el.target.item)

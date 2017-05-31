@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
+import PostMenu from './Preview/Menu'
+import PostFooter from './Preview/Footer'
 import Menu from './Menu'
 import Panel from '../Panel'
-import PostSummary from './Summary'
-import Comments from '../Comment/List'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
 
@@ -31,67 +31,57 @@ class Post extends Component {
     console.log('edit post')
   }
 
-  handleOptionButtonClick () {
-    this.setState({ showPostMenu: !this.state.showPostMenu })
+  handleOptionButtonClick (flag) {
+    this.setState({ showPostMenu: flag })
   }
 
   getFooter () {
     let { _id, loggedUser, comments = [], onLike, isLiked } = this.props
     let { showCommentForm, likes } = this.state
+    let footerProps = { _id, loggedUser, comments, onLike, isLiked, showCommentForm, likes }
 
-    const Footer = (
-      <div>
-        <PostSummary
-          liked={isLiked}
-          onLike={onLike}
-          isLogged={!!loggedUser}
-          likes={likes + Number(isLiked)}
-          onComment={this.handleCommentButtonClick}
-        />
-
-        <Comments ids={comments} postId={_id} expanded={showCommentForm} />
-      </div>
-    )
+    const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
 
     return Footer
   }
 
   render () {
     const { showPostMenu } = this.state
-    const { title, content, attachments, user, added, onExpand, onRemove } = this.props
+    const { post, user, added, onExpand, onRemove, reply } = this.props
 
     let Footer = this.getFooter()
 
-    const myPost = false
-    // const myPost = this.props.loggedUser && this.props.loggedUser === user._id
+    const myPost = this.props.loggedUser && this.props.loggedUser === user._id
+    const Options = null
+    // const Options = <PostMenu opened={myPost && showPostMenu} onDelete={onRemove} onEdit={this.handleEditButtonClick} onClose={this.handleOptionButtonClick} />
 
-    const Options = myPost && showPostMenu ? (
-      <Menu
-        onDelete={onRemove}
-        onEdit={this.handleEditButtonClick}
-        handleClickOutside={() => {
-          this.setState({ showPostMenu: false })
-        }}
-      />
-    ) : null
+    let headerStyles = { noBorder: true }
+    let SubHeader = null
+    if (reply) {
+      SubHeader = (
+        <div className='task-sub-header'>
+          <div className='task-sub-header__title'>Ответ на задание</div>
+          <span className='task-sub-header__link'>Задание</span>
+        </div>
+      )
+    } else headerStyles.npBottomPadding = true
 
     return (
       <div>
         <Panel
           Footer={Footer}
-          Header={<UserInline user={user} date={this.props.created} />}
-          headerStyles={{ noBorder: true, npBottomPadding: true }}
+          SubHeader={SubHeader}
+          headerStyles={headerStyles}
           Options={() => Options}
           withAnimation={added}
           showOptions={this.state.showPostMenu}
-          toggleOptions={() => {
-            this.setState({ showPostMenu: true })
-          }}
+          Header={<UserInline user={user} date={this.props.created} />}
+          toggleOptions={this.handleOptionButtonClick.bind(true)}
         >
           <div className='post-preview'>
-            <a className='post-preview__title' onClick={onExpand}>{title}</a>
-            <TextWithImages text={content} />
-            { (attachments && attachments.length > 0) && <Attachments items={attachments} />}
+            { !reply && (<a className='post-preview__title' onClick={onExpand}>{post.title}</a>) }
+            <TextWithImages text={post.content} />
+            { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
           </div>
         </Panel>
       </div>
