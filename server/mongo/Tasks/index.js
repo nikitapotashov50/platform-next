@@ -11,7 +11,7 @@ const model = new mongoose.Schema(extend({
   content: { type: String, required: true },
   //
   userId: { type: ObjectId, ref: 'Users' },
-  replyTypeId: { type: Number, ref: 'TaskReplyTypes' },
+  replyTypeId: { type: Number, ref: 'TaskReplyType' },
   //
   replies: [
     {
@@ -31,6 +31,7 @@ const model = new mongoose.Schema(extend({
 }, is, startFinish))
 
 model.statics.TaskReply = require('./reply')
+model.statics.TaskReport = require('./report')
 model.statics.KnifePlan = require('./types/knife')
 model.statics.TaskVerification = require('./verification')
 

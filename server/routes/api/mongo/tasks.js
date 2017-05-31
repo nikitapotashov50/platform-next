@@ -24,7 +24,6 @@ module.exports = router => {
         ctx.__.me.getActiveTasks(programId),
         ctx.__.me.getKnifePlans(programId)
       ])
-      console.log(knife)
 
       ctx.body = {
         status: 200,
@@ -124,6 +123,9 @@ module.exports = router => {
           let { task, plan } = await models.Task.createKnifePlan(ctx.__.me, pick(body, [ 'goal', 'price', 'action' ]), options)
           whatIfPlan = plan
           additional.specific = { model: 'Task', item: task }
+        } else if (ctx.__.task.replyTypeId === 4) {
+          let entry = await models.TaskReport.create(pick(body, [ 'action', 'fact' ]))
+          additional.specific = { model: 'TaskReport', item: entry }
         }
 
         let reply = await ctx.__.task.addReply(user, post, additional)

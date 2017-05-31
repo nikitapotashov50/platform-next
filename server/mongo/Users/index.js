@@ -183,7 +183,7 @@ model.methods.getGroups = async function (params = {}, select = null) {
  * GET TASKS
  * this function retrieves all tasks for user depending on current program
  */
-model.methods.getTasks = async function (programId, params = {}) {
+model.methods.getTasks = async function (programId, params = {}, options = {}) {
   let user = this
   let groups = await user.getGroups({}, '_id')
 
@@ -202,7 +202,7 @@ model.methods.getTasks = async function (programId, params = {}) {
     .select('_id title content start_at finish_at')
     .sort({ created: -1 })
     .lean()
-    // .limit(4)
+    .limit(options.limit || null)
     .cache(60)
 }
 
@@ -217,7 +217,7 @@ model.methods.getRepliedTasks = async function (programId) {
     'replies.userId': { $in: [ user._id ] }
   }
 
-  return user.getTasks(programId, params)
+  return user.getTasks(programId, params, { limit: 4 })
 }
 
 /**
@@ -232,7 +232,7 @@ model.methods.getActiveTasks = async function (programId) {
     'type.model': { $ne: 'KnifePlan' }
   }
 
-  return user.getTasks(programId, params)
+  return user.getTasks(programId, params, { limit: 7 })
 }
 
 model.methods.getKnifePlans = async function (programId) {

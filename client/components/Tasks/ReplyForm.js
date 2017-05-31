@@ -1,4 +1,6 @@
+import qs from 'query-string'
 import { isEmpty } from 'lodash'
+import Router from 'next/router'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
@@ -23,6 +25,7 @@ class TaskReply extends Component {
       success: false
     }
 
+    this.alreadyOpened = false
     this.submit = this.submit.bind(this)
     this.toggleForm = this.toggleForm.bind(this)
     this.onAddChange = this.onAddChange.bind(this)
@@ -48,6 +51,12 @@ class TaskReply extends Component {
   }
 
   toggleForm (flag) {
+    if (!this.alreadyOpened) {
+      let route = Router.router
+      let query = qs.stringify({ id: route.query.id, reply: true })
+      Router.replace(route.pathname + `?${query}`, route.asPath + '?reply', { shallow: true })
+      this.alreadyOpened = true
+    }
     this.setState(state => { state.showForm = flag })
   }
 
@@ -61,7 +70,6 @@ class TaskReply extends Component {
     const { replyType, opened } = this.props
     const { fetching, errors, reply, showForm, success } = this.state
 
-    console.log(replyType)
     const AddForm = Replies[replyType]
 
     const openedFlag = opened || showForm

@@ -117,9 +117,8 @@ model.methods.addLike = async function (userId, add = {}) {
   await mongoose.models.Like.addToPost(post._id, userId, add)
 
   post.likes_count = post.likes_count + 1
-  await post.save()
 
-  return post
+  return post.save()
 }
 
 model.methods.removeLike = async function (userId) {
