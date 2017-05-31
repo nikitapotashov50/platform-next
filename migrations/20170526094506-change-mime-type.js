@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    queryInterface.changeColumn(
+    return queryInterface.changeColumn(
       'attachments',
       'mime',
       {
@@ -12,7 +12,7 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-    queryInterface.changeColumn(
+    return queryInterface.changeColumn(
       'attachments',
       'mime',
       {

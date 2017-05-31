@@ -71,6 +71,8 @@
     "react-images": "^0.5.2",
     "react-loaders": "^2.5.0",
     "react-onclickoutside": "^5.11.1",
+    "react-player": "^0.18.0",
+    "react-popover": "^0.4.9",
     "react-redux": "^5.0.4",
     "react-slick": "^0.14.11",
     "react-string-replace": "^0.4.0",

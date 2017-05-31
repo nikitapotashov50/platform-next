@@ -9,6 +9,8 @@ import md5 from 'blueimp-md5'
 import CameraIcon from 'react-icons/lib/fa/camera'
 import FileIcon from 'react-icons/lib/fa/file-text-o'
 import RemoveButton from 'react-icons/lib/fa/close'
+import ReactPlayer from 'react-player'
+import AddVideoButton from './AddVideoButton'
 import { addPost } from '../../redux/posts'
 
 class PostEditor extends Component {
@@ -21,9 +23,11 @@ class PostEditor extends Component {
       content: '',
       previewImages: [],
       documents: [],
+      videos: [],
       attachments: [],
       dropzoneActive: false,
-      buttonDisabled: false
+      buttonDisabled: false,
+      showAddVideoPopover: false
     }
 
     this.handleContentChange = this.handleContentChange.bind(this)
@@ -92,7 +96,8 @@ class PostEditor extends Component {
     if (
       this.state.title ||
       this.state.content ||
-      !isEmpty(this.state.attachments)
+      !isEmpty(this.state.attachments) ||
+      this.state.showAddVideoPopover
     ) return
 
     this.setState({
@@ -108,17 +113,24 @@ class PostEditor extends Component {
 
     return (
       <Dropzone
+        accept={this.state.accept}
         disableClick
         ref={node => { this.dropzoneRef = node }}
         multiple
         style={{}}
+        onFileDialogCancel={() => {
+          this.setState({ accept: null })
+        }}
         onDragEnter={event => {
           const dataTransfer = event.dataTransfer
           // prevent dragging and dropping elements on the page
           if (!(dataTransfer.types && (dataTransfer.types.indexOf ? dataTransfer.types.indexOf('Files') !== -1 : dataTransfer.types.contains('Files')))) {
             this.setState({ dropzoneActive: false })
           } else {
-            this.setState({ dropzoneActive: true })
+            this.setState({
+              accept: null,
+              dropzoneActive: true
+            })
           }
         }}
         onDragLeave={() => {
@@ -209,6 +221,7 @@ class PostEditor extends Component {
               ))}
             </div>
           )}
+
           {expanded && !isEmpty(this.state.documents) && (
             <div className='attachments-document-container'>
               {this.state.documents.map(file => (
@@ -229,13 +242,55 @@ class PostEditor extends Component {
             </div>
           )}
 
+          {expanded && !isEmpty(this.state.videos) && (
+            <div className='attachments-video-container'>
+              {this.state.videos.map(video => (
+                <div key={md5(video)} style={{ position: 'relative' }}>
+                  <ReactPlayer url={video} width='100%' />
+                </div>
+              ))}
+            </div>
+          )}
+
           {expanded && (
             <div className='post-editor-footer'>
-              <div>
-                <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
+              <div className='attach-buttons'>
+                <button className='attach-button' type='button' onClick={() => {
+                  this.setState({
+                    accept: 'image/*'
+                  }, () => this.dropzoneRef.open())
+                }}>
                   <CameraIcon />
                 </button>
-                <button className='attach-button' type='button' onClick={() => { this.dropzoneRef.open() }}>
+                <AddVideoButton
+                  isOpen={this.state.showAddVideoPopover}
+                  close={() => {
+                    this.setState({
+                      showAddVideoPopover: false
+                    })
+                  }}
+                  toggle={() => {
+                    this.setState({
+                      showAddVideoPopover: !this.state.showAddVideoPopover
+                    })
+                  }}
+                  add={url => {
+                    this.setState({
+                      videos: [
+                        ...this.state.videos,
+                        url
+                      ],
+                      attachments: [
+                        ...this.state.attachments,
+                        { type: 'video', url }
+                      ]
+                    })
+                  }} />
+                <button className='attach-button' type='button' onClick={() => {
+                  this.setState({
+                    accept: null
+                  }, () => this.dropzoneRef.open())
+                }}>
                   <FileIcon />
                 </button>
               </div>
@@ -308,6 +363,10 @@ class PostEditor extends Component {
 
           .preview-image-remove:hover {
             color: #fff;
+          }
+
+          .attach-buttons {
+            display: flex;
           }
 
           .attach-button {

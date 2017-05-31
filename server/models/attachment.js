@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       mime: {
-        type: DataTypes.JSON
+        type: DataTypes.STRING
+      },
+      type: {
+        type: DataTypes.ENUM('image', 'document', 'video')
       }
     },
     {

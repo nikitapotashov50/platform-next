@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import Lightbox from 'react-image-lightbox-universal'
-import { startsWith, endsWith } from 'lodash'
+import { endsWith } from 'lodash'
 import PDFFileIcon from 'react-icons/lib/fa/file-pdf-o'
 import WordFileIcon from 'react-icons/lib/fa/file-word-o'
 import FileIcon from 'react-icons/lib/fa/file-text-o'
+import ReactPlayer from 'react-player'
 
 const defaultState = { index: 0, isOpen: false }
 
@@ -14,7 +15,7 @@ class PostAttachments extends Component {
     this.state = { ...defaultState }
 
     this.images = (this.props.items || [])
-      .filter(x => startsWith(x.mime, '"image'))
+      .filter(x => x.type === 'image')
       .map(x => ({ src: x.path }))
 
     this.open = this.open.bind(this)
@@ -58,7 +59,7 @@ class PostAttachments extends Component {
     return (
       <div>
         <div className='attachments-container'>
-          {items.filter(x => startsWith(x.mime, '"image')).map((attachment, index) => (
+          {items.filter(x => x.type === 'image').map((attachment, index) => (
             <div key={attachment.id}>
               <a onClick={this.open(index)}>
                 <img src={attachment.path} style={{ cursor: 'pointer' }} />
@@ -67,7 +68,14 @@ class PostAttachments extends Component {
           ))}
         </div>
         <div className='attachments-container'>
-          {items.filter(x => startsWith(x.mime, '"application')).map(attachment => (
+          {items.filter(x => x.type === 'video').map(attachment => (
+            <div key={attachment.id} className='attachment-video'>
+              <ReactPlayer url={attachment.path} width='100%' />
+            </div>
+          ))}
+        </div>
+        <div className='attachments-container'>
+          {items.filter(x => x.type === 'document').map(attachment => (
             <div key={attachment.id} className='attachment-doc'>
               {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
             </div>

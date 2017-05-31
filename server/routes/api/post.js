@@ -49,7 +49,7 @@ const getPostList = async (params) => {
     {
       required: false,
       model: models.Attachment,
-      attributes: [ 'id', 'name', 'path', 'mime' ],
+      attributes: [ 'id', 'name', 'path', 'mime', 'type' ],
       as: 'attachments',
       through: {
         attributes: []
@@ -224,6 +224,14 @@ module.exports = router => {
     })
 
     const attachments = await pMap(postData.attachments, async attachment => {
+      if (attachment.type === 'video') {
+        const result = await models.Attachment.create({
+          path: attachment.url,
+          type: 'video'
+        })
+        return result
+      }
+
       const result = await models.Attachment.create({
         name: attachment.key,
         path: attachment.url,
@@ -250,7 +258,7 @@ module.exports = router => {
       include: [
         {
           model: models.Attachment,
-          attributes: ['id', 'name', 'path', 'mime'],
+          attributes: ['id', 'name', 'path', 'mime', 'type'],
           as: 'attachments',
           through: {
             attributes: []
