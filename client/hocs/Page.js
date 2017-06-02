@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
-import { isFunction } from 'lodash'
+import { isFunction, omit, isEqual } from 'lodash'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'
@@ -85,13 +85,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
       }
 
       componentWillReceiveProps ({ __service, ...nextProps }) {
-        let flag = (__service.user && this.props.__service.user)
-          ? (__service.user._id !== this.props.__service.user._id)
-          : (__service.user !== this.props.__service.user)
+        if (accessRule && isFunction(accessRule)) {
+          let flag = (__service.user && this.props.__service.user)
+            ? (__service.user._id !== this.props.__service.user._id)
+            : (__service.user !== this.props.__service.user)
 
-        if (flag && accessRule && isFunction(accessRule)) {
-          if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Страница недоступна'))
-          else nextProps.dispatch(allowAccess())
+          if (flag) {
+            if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Страница недоступна'))
+            else nextProps.dispatch(allowAccess())
+          }
         }
       }
 

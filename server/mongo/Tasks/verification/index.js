@@ -14,4 +14,19 @@ const model = new mongoose.Schema(extend({
 
 model.statics.VerificationStatuses = require('./status')
 
+model.statics.getLastForReplies = async function (params = {}) {
+  let model = this
+  let list = await model.aggregate([
+    { $match: params },
+    { $sort: { created: 1 } },
+    { $group: {
+      _id: '$taskReplyId',
+      date: { $last: '$created' },
+      status: { $addToSet: '$status' }
+    }}
+  ])
+
+  return list
+}
+
 module.exports = mongoose.model('TaskVerification', model)

@@ -84,4 +84,14 @@ model.methods.getStatus = async function () {
     .sort({ created: -1 })
 }
 
+/**
+ * get list of non verified tasks
+ */
+model.statics.getNotVerified = async function (programId) {
+  // 1. Найдем все ответы на задания, у которых не стоит статус проверки 3 или 4
+  let list = await mongoose.models.TaskVerification.getLastForReplies()
+
+  return list
+}
+
 module.exports = mongoose.model('TaskReply', model)

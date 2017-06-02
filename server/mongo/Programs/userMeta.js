@@ -10,6 +10,7 @@ const model = new mongoose.Schema(extend({
   is_activated: { type: Boolean, default: false },
   //
   cityId: { type: ObjectId, ref: 'City' },
+  roleId: { type: Number, ref: 'ProgramRoles' },
   userId: { type: ObjectId, ref: 'Users', required: true },
   programId: { type: Number, ref: 'Program', required: true }
 }, is))

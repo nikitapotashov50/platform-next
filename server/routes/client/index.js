@@ -1,6 +1,3 @@
-const mongoose = require('mongoose')
-const ObjectId = mongoose.Types.ObjectId
-
 module.exports = router => {
   router.get('/reports', async ctx => {
     await ctx.__next.render(ctx.req, ctx.res, '/')
@@ -33,9 +30,14 @@ module.exports = router => {
     })
   })
 
+  router.bridge('/feedback', router => {
+    router.get('/:type', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/feedback', Object.assign({}, ctx.params, ctx.query))
+    })
+  })
+
   router.bridge('/tasks', router => {
     router.get('/:id', async ctx => {
-      if (!ObjectId.isValid(ctx.params.id)) console.log('wrong object id')
       await ctx.__next.render(ctx.req, ctx.res, '/tasks/task', Object.assign({}, ctx.params, ctx.query))
     })
   })
@@ -46,12 +48,8 @@ module.exports = router => {
     })
 
     router.bridge('/feedback', router => {
-      router.get('/', async ctx => {
-        await ctx.__next.render(ctx.req, ctx.res, '/admin/feedback', Object.assign({}, ctx.params, ctx.query, { type: 'program' }))
-      })
-
       router.get('/:type', async ctx => {
-        if ([ 'platform', 'coach', 'program' ].indexOf(ctx.params.type) === -1) console.log('404')
+        if ([ 'platform', 'class', 'program', 'coach' ].indexOf(ctx.params.type) === -1) console.log('404')
 
         await ctx.__next.render(ctx.req, ctx.res, '/admin/feedback', Object.assign({}, ctx.params, ctx.query))
       })

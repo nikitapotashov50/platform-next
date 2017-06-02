@@ -132,17 +132,34 @@ module.exports = router => {
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
 
-    let user = await mongoose.models.Users
-      .findOne({
+    let [ user ] = await mongoose.models.Users
+      .find({
         _id: userId
       })
-      .select('programs.roleId programs.programId subscriptions')
-      .populate({
-        path: 'programs.programId',
-        select: '_id alias title'
-      })
+      .limit(1)
+      .select('programs subscriptions')
 
-    let programs = user.programs.map(el => extend({}, { role: el.roleId }, el.programId))
+    let rawPrograms = await mongoose.models.ProgramUserMeta
+      .find({
+        _id: { $in: user.programs.map(el => el.meta) || [] }
+      })
+      .populate([
+        {
+          path: 'programId',
+          select: 'alias title _id'
+        },
+        {
+          path: 'roleId',
+          select: 'code'
+        }
+      ])
+
+    let programs = rawPrograms.map(el => ({
+      _id: el.programId._id,
+      role: el.roleId.code,
+      alias: el.programId.alias,
+      title: el.programId.title
+    }))
 
     ctx.body = {
       status: 200,

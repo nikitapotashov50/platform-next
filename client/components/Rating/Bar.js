@@ -3,7 +3,7 @@ export default ({ maxRate = 10, noValues, onChange, inline = false, rate, ...pro
   if (inline) classes.push('rating-bar_inline')
 
   const onStarClick = (index, e) => {
-    if (onChange) onChange(index, e)
+    if (onChange) onChange(index)
   }
 
   let stars = []

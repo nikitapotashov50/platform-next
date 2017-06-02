@@ -19,9 +19,12 @@ import subscriptions from './user/subscriptions'
 import taskItems from './tasks'
 import task from './task'
 
+import admin from './admin'
 import users from './users'
+import volunteer from './volunteer'
+import feedback from './feedback'
 
-export default combineReducers({
+export default asyncReducers => combineReducers({
   nps,
   auth,
   error,
@@ -30,6 +33,8 @@ export default combineReducers({
   users,
   // likes
   likes,
+  //
+  admin,
   // posts & comments
   posts: combineReducers({
     posts,
@@ -44,5 +49,8 @@ export default combineReducers({
   tasks: combineReducers({
     items: taskItems
   }),
-  task
+  task,
+  volunteer,
+  feedback,
+  ...asyncReducers
 })
