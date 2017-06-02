@@ -1,20 +1,23 @@
-
 import axios from 'axios'
-import qs from 'query-string'
 import { handleActions, createAction } from 'redux-actions'
 
 const defaultState = {
   items: [],
-  limit: 30,
-  offset: 0,
-  total: 0
+  total: 0,
+  query: {
+    limit: 30,
+    offset: 0,
+    search: ''
+  },
+  current: null
 }
 
-export const fill = createAction('admin/users/FILL_ITEMS', items => ({ items }))
+// export const fill = createAction('admin/users/FILL_ITEMS', items => ({ items }))
 
-export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset = 0, limit = defaultState.limit, ...props }) => {
-  let query = qs.stringify({ limit, offset })
-  let { data } = await axios.get(`${BACKEND_URL}/api/users/list?${query}`)
+export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset = 0, limit = defaultState.limit, search, ...props }, options = {}) => {
+  options.params = { limit, offset, searchString: props.searchString }
+  options.withCredentials = true
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/admin/users/list`, options)
 
   if (data.status === 200) {
     return {
@@ -24,14 +27,50 @@ export const fetchUsers = createAction('admin/users/FILL_ITEMS', async ({ offset
   } else throw new Error('Error')
 })
 
+export const queryUpdate = createAction('admin/users/UPDATE_QUERY', (query, rewrite = false) => ({ query, rewrite }))
+
+//
+export const getUserInfo = createAction('admin/user/GET_INFO', async (userId, options = {}) => {
+  options.withCredentials = true
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/admin/users/${userId}`, options)
+
+  if (data.status === 200) {
+    return { user: data.result.user }
+  } else throw new Error('Error')
+})
+
+export const clearUserInfo = createAction('admin/user/CLEAR_INFO')
+
+export const updateUserInf = createAction('admin/user/UPDATE_INFO', async (type, params, options = {}) => {
+  options.withCredentials = true
+  let { data } = await axios.put(`${BACKEND_URL}/api/mongo/admin/users/${params.userId}`, options)
+  console.log(data)
+  if (data.status === 200) {
+    return {}
+  }
+})
+
 export default handleActions({
-  [fill]: (state, { payload }) => ({
+  [fetchUsers]: (state, { payload }) => {
+    return ({
+      ...state,
+      items: payload.items,
+      total: payload.total
+    })
+  },
+  [queryUpdate]: (state, { payload }) => ({
     ...state,
-    items: payload.items
+    query: {
+      ...(payload.rewrite ? defaultState.query : state.query),
+      ...payload.query
+    }
   }),
-  [fetchUsers]: (state, { payload }) => ({
+  [getUserInfo]: (state, { payload }) => ({
     ...state,
-    items: payload.items,
-    total: payload.total
+    current: (payload.user || {})
+  }),
+  [clearUserInfo]: (state, { payload }) => ({
+    ...state,
+    current: null
   })
 }, defaultState)

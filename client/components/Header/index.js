@@ -8,24 +8,30 @@ let menu = [
   // { url: '/ratings', title: 'Рейтинг' }
 ]
 
-const Header = ({ pathname, dispatch, isLogged }) => (
-  <header className='app-header noPrint'>
-    <div className='app-header__wrap'>
+const Header = ({ pathname, dispatch, isLogged, role }) => {
+  let addMenu = []
+  if (role === 'volunteer') addMenu.push({ url: '/volunteer', title: 'Волонтерство' })
 
-      <div className='app-header__block app-header__block_menu'>
-        <Menu items={menu} selected={'index'} withLogo pathname={pathname} />
+  return (
+    <header className='app-header noPrint'>
+      <div className='app-header__wrap'>
+
+        <div className='app-header__block app-header__block_menu'>
+          <Menu items={[ ...menu, ...addMenu ]} selected={'index'} withLogo pathname={pathname} />
+        </div>
+
+        <div className='app-header__block app-header__block_menu'>
+          <HeaderRight dispatch={dispatch} isLogged={isLogged} />
+        </div>
+
       </div>
+    </header>
+  )
+}
 
-      <div className='app-header__block app-header__block_menu'>
-        <HeaderRight dispatch={dispatch} isLogged={isLogged} />
-      </div>
-
-    </div>
-  </header>
-)
-
-const mapStateToProps = state => ({
-  isLogged: state.auth.isLogged
+const mapStateToProps = ({ auth, user }) => ({
+  isLogged: auth.isLogged,
+  role: (user.programs.items ? user.programs.items[user.programs.current].role : null)
 })
 
 export default connect(mapStateToProps)(Header)

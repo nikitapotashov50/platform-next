@@ -18,6 +18,8 @@ const defaultRoles = {
   speaker: { _id: 4, title: 'Спикер', enabled: true }
 }
 
+model.statics.rolesByCode = defaultRoles
+
 module.exports = mongoose.model('ProgramRoles', model)
 
 mongoose.models.ProgramRoles.defaults(defaultRoles)

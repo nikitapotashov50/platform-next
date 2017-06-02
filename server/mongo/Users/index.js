@@ -29,6 +29,7 @@ const model = new mongoose.Schema(extend({
 }, is))
 
 model.index({ 'name': 1, 'email': 1 }, { unique: true })
+// model.index({ name: 'text', first_name: 'text', last_name: 'text' })
 
 model.virtual('subscriptionsCount').get(function () {
   return this.subscriptions.length
@@ -67,6 +68,8 @@ model.statics.getShortInfo = async function (idArray) {
   })
 }
 
+/** ------------------- PROGRAMS ------------------- */
+
 /** add program to user */
 model.methods.addProgram = async function (programId, options, roleId = 3) {
   let user = this
@@ -78,6 +81,20 @@ model.methods.addProgram = async function (programId, options, roleId = 3) {
 
   return user
 }
+
+model.methods.getProgramCity = async function (programId, withName = false) {
+  let user = this
+  let [ meta ] = await mongoose.models.ProgramUserMeta
+    .find({ programId, userId: user._id, enabled: true })
+    .select('cityId')
+    .limit(1)
+    .sort({ created: -1 })
+
+  if (!withName) return meta.cityId
+  return meta
+}
+
+//
 
 model.methods.updateMeta = async function (data) {
   let user = this
@@ -136,6 +153,15 @@ model.methods.getGroups = async function (limit = null) {
 
   return { list, total }
 }
+
+/** --------------------- ACCESS -------------------- */
+
+model.methods.checkAccess = function (access) {
+  let role = mongoose.models.UserRole.roles[access]
+  return this.role === role._id
+}
+
+/** ------------------ SUBSCRIPTIONS ----------------- */
 
 model.methods.addSubscription = async function (subscription) {
   let user = this
@@ -284,4 +310,38 @@ model.methods.addGoal = async function (data, add) {
   return goal
 }
 
+/** ---------------------- NPS ---------------------- */
+
+// TODO: add view to user profile
+model.methods.addNPS = async function (data, author, programId) {
+  return mongoose.models.NPS.addToUser(data, author, this._id, programId)
+}
+
+/** ------------------- MIGRATIONS ------------------- */
+
+model.statics.migrateProgramRole = async function () {
+  let model = this
+  let users = await model.find()
+
+  await Promise.all(users.map(user => {
+    return new Promise(async (resolve, reject) => {
+      await Promise.all(user.programs.map(program => {
+        return new Promise(async (resolve, reject) => {
+          let role = program.roleId
+          let [ meta ] = await mongoose.models.ProgramUserMeta.find({ _id: program.meta }).limit(1)
+
+          meta.roleId = role
+          await meta.save()
+
+          resolve()
+        })
+      }))
+      resolve()
+    })
+  }))
+}
+
+
 module.exports = mongoose.model('Users', model)
+
+// mongoose.models.Users.migrateProgramRole()

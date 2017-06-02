@@ -1,136 +1,117 @@
+import { pick, isEmpty } from 'lodash'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../client/components/PanelMenu'
 import PageHoc from '../client/hocs/Page'
 import Panel from '../client/components/Panel'
 import FeedLayout from '../client/layouts/feed'
 
-import Button from '../client/elements/Button'
-import RatingBar from '../client/components/Rating/Bar'
-import OverlayLoader from '../client/components/OverlayLoader'
+import FeedbackForm from '../client/components/Feedback/Form'
+import FeedbackReplies from '../client/components/Feedback/Replies'
 
-const menuItems = [
-  { code: 'platfrom', href: '/', path: '/', title: 'О платформе' }
-]
+import { initFeedback, fetchEnd, fetchStart, submiFeedback } from '../client/redux/feedback' // eslint-disable-line
+
+const menuItems = {
+  class: { code: 'class', href: '/feedback?type=class', path: '/feedback/class', title: 'О занятии' },
+  program: { code: 'program', href: '/feedback?type=program', path: '/feedback/program', title: 'О программе' },
+  platform: { code: 'platform', href: '/feedback', path: '/feedback', title: 'О платформе' }
+}
 
 class FeedbackPage extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      content: '',
-      scores: [ 0, 0, 0 ],
+      reply: {
+        content: '',
+        score: [ 0, 0, 0 ]
+      },
       errors: {},
-      fetching: false
+      submitted: false
     }
 
+    this.submit = this.submit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleScoreChange = this.handleScoreChange.bind(this)
   }
 
-  handleChange (e) {
-    let val = e.target.value
+  handleChange (field, value, num) {
     this.setState(state => {
-      state.content = val.replace(/(<([^>]+)>)/ig, '')
+      if (field === 'score') state.reply.score[num] = value
+      else state.reply[field] = value
     })
-  }
-
-  handleScoreChange (score) {
-    return async (value, e) => {
-      e.preventDefault()
-
-      await this.setState(state => {
-        state.scores[score] = value
-      })
-    }
   }
 
   async submit (e) {
     e.preventDefault()
-    let errors = []
+    let { reply } = this.state
 
-    if (!this.state.content) errors.push({ type: 'content', value: 'Напишите текст отзыва' })
-    else if (this.state.content.length < 15) errors.push({ type: 'content', value: 'Сообщение должно содержать минимум 15 симовлов' })
+    let errors = FeedbackForm.validate(reply)
 
-    if (errors.length) {
-      this.pushErrors(errors)
+    if (!isEmpty(errors)) {
+      this.setState(state => { state.errors = errors })
       return
     }
 
-    await this.setState(state => {
-      state.errors = {}
-      state.fetching = true
-    })
-
-    this.setState(state => {
-      state.fetching = false
-    })
-  }
-
-  async pushErrors (errors) {
-    await this.setState(state => {
-      let obj = {}
-      errors.map(el => { obj[el.type] = el.value })
-
-      state.errors = obj
-    })
+    await this.setState(state => { state.errors = {} })
+    await this.props.submit(reply)
   }
 
   render () {
-    let { content, scores, errors, fetching } = this.state
-    let { t, type } = this.props
+    let { reply, errors } = this.state
+    let { t, type, fetching, info } = this.props
 
-    let Footer = <Button onClick={this.submit.bind(this)}>Отправить отзыв</Button>
+    let ReplyData = this.props.reply ? FeedbackReplies[type] : null
+    let menu = pick(menuItems, this.props.types)
 
     return (
       <FeedLayout emptySide>
-        <Panel noBody noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={'platfrom'} />} />
+        <Panel noBody noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={Object.values(menu)} selected={type} />} />
 
-        <Panel
-          Header={<div className='panel__title'>Оставьте отзыв о платформе</div>}
-          Footer={Footer}
-        >
-          <OverlayLoader loading={fetching}>
-            <div className='post-preview'>
-              <textarea className='' value={content} onChange={this.handleChange} rows={7} placeholder={'Написать отзыв, минимум 15 символов'} />
-              { errors.content && <span>{errors.content}</span>}
-            </div>
-
-            <br />
-
-            <div className='nps-result'>
-              <div className='nps-result__row'>
-                <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[0]} inline noValues onChange={this.handleScoreChange(0)} />
-              </div>
-
-              <div className='nps-result__row'>
-                <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[1]} inline noValues onChange={this.handleScoreChange(1)} />
-              </div>
-
-              <div className='nps-result__row'>
-                <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_1`)}</div>
-                <RatingBar className='nps-result__row-value' rate={scores[2]} inline noValues onChange={this.handleScoreChange(2)} />
-              </div>
-            </div>
-          </OverlayLoader>
-        </Panel>
+        { !ReplyData && (<FeedbackForm t={t} data={reply} type={type} errors={errors} fetching={fetching} onSubmit={this.submit} onChange={this.handleChange} />)}
+        { ReplyData && (<ReplyData data={info} />)}
       </FeedLayout>
     )
   }
 }
 
-FeedbackPage.getInitialProps = async (ctx) => ({
-  type: (ctx.params && ctx.params.type) ? ctx.params.type : 'platform'
-})
+FeedbackPage.getInitialProps = async (ctx) => {
+  let headers = null
+  let type = ctx.query.type || 'platform'
 
-const accessRule = user => false
+  if (ctx.req) headers = ctx.req.headers
+  await ctx.store.dispatch(initFeedback(type, { headers }))
+  return { type }
+}
+
+const mapStateToProps = ({ feedback }) => ({ ...feedback })
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  initFeedback,
+  fetchEnd,
+  fetchStart,
+  submiFeedback
+}, dispatch)
+
+const mergeProps = (state, dispatch, props) => {
+  const submit = async data => {
+    dispatch.fetchStart()
+    await dispatch.submiFeedback(props.type, data)
+    dispatch.fetchEnd()
+  }
+
+  return { submit, ...state, ...props }
+}
+
+const accessRule = user => !!user
 
 let translated = translate([ 'common' ])(FeedbackPage)
 
 export default PageHoc(translated, {
   title: 'Оставить отзыв',
-  accessRule
+  accessRule,
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
 })
