@@ -1,6 +1,7 @@
-import axios from 'axios'
+// import axios from 'axios'
 
-import { handleActions, createAction } from 'redux-actions'
+import { handleActions } from 'redux-actions'
+// createAction
 
 // default state
 let defaultState = {}

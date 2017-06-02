@@ -9,7 +9,7 @@ export default ({ program, role, meta, onChange }) => (
         <option value={'speaker'}>Спикер</option>
       </select>
     </div>
-    
+
     <style jsx>{`
       .um-program {
         padding: 10px 0;

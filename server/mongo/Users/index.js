@@ -341,7 +341,6 @@ model.statics.migrateProgramRole = async function () {
   }))
 }
 
-
 module.exports = mongoose.model('Users', model)
 
 // mongoose.models.Users.migrateProgramRole()

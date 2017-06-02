@@ -4,7 +4,7 @@ export default ({ program, role, meta, onEdit }) => (
     <div className='um-program__body'>
       {meta.roleId} (<a onClick={onEdit}>изменить</a>)
     </div>
-    
+
     <style jsx>{`
       .um-program {
         padding: 10px 0;
