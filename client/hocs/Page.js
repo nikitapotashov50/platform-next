@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import numeral from 'numeral'
-import { isFunction, omit, isEqual } from 'lodash'
+import { isFunction } from 'lodash'
 import React, { Component } from 'react'
 import withRedux from 'next-redux-wrapper'
 import Head from 'next/head'

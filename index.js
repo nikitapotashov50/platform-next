@@ -13,12 +13,12 @@ const koaBunyanLogger = require('koa-bunyan-logger')
 const ms = require('ms')
 const config = require('./config')
 const routes = require('./server/routes')
-const LRUCache = require('lru-cache')
+// const LRUCache = require('lru-cache')
 
-const ssrCache = new LRUCache({
-  max: 100,
-  maxAge: 1000 * 60 * 60 // 1hour
-})
+// const ssrCache = new LRUCache({
+//   max: 100,
+//   maxAge: 1000 * 60 * 60 // 1hour
+// })
 
 const dev = process.env.NODE_ENV !== 'production'
 const client = next({ dev })
