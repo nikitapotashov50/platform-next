@@ -88,9 +88,7 @@ model.methods.getStatus = async function () {
  * get list of non verified tasks
  */
 model.statics.getNotVerified = async function () {
-  let model = this
-
-  
+  // let model = this
   // let list = await mongoose.models.TaskVerification.getLastForReplies()
   // // 2. Вытащим все ответы с наполнением
   // return model
