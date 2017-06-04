@@ -2,7 +2,7 @@ import { translate } from 'react-i18next'
 
 import SideMenu from '../SideMenu'
 import FeedLayout from '../../layouts/feed'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 
 let tabs = [
   { code: 'main', href: '/account/settings', path: '/account/settings' },

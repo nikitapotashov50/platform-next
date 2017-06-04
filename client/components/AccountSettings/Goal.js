@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import Form from '../../elements/PanelForm'
 
 const isUndef = value => (typeof value === 'undefined')
 
@@ -18,21 +19,9 @@ const GoalSettings = ({ t, errors, data, affected, onChange }) => {
 
   return (
     <form className='panel-form'>
-      <div className='panel-form__row'>
-        <label className='panel-form__label'>{t('account.settings.goal.fields.occupation')}</label>
-        <textarea className='panel-form__input panel-form__input_textarea' value={isUndef(affected.occupation) ? data.occupation || '' : affected.occupation} onChange={changeValue.bind(this, 'occupation', onChange)} type='text' />
-        { errors.occupation && <div className='panel-form__error'>{errors.occupation}</div> }
-      </div>
-      <div className='panel-form__row'>
-        <label className='panel-form__label'>{t('account.settings.goal.fields.a')}</label>
-        <input className='panel-form__input' value={numeral(a || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'a', onChange)} />
-        { errors.a && <div className='panel-form__error'>{errors.a}</div> }
-      </div>
-      <div className='panel-form__row'>
-        <label className='panel-form__label'>{t('account.settings.goal.fields.b')}</label>
-        <input className='panel-form__input' value={numeral(b || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'b', onChange)} />
-        { errors.b && <div className='panel-form__error'>{errors.b}</div> }
-      </div>
+      <Form.Block id={'goal-occupation'} error={errors.occupation} value={isUndef(affected.occupation) ? data.occupation || '' : affected.occupation} onChange={changeValue.bind(this, 'occupation', onChange)} label={t('account.settings.goal.fields.occupation')} textarea />
+      <Form.Block id={'goal-a'} error={errors.a} value={numeral(a || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'a', onChange)} label={t('account.settings.goal.fields.a')} />
+      <Form.Block id={'goal-b'} error={errors.b} value={numeral(b || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'b', onChange)} label={t('account.settings.goal.fields.b')} />
     </form>
   )
 }

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 import Link from 'next/link'
 
 export default ({ task, link, completed = false, status = null, statusText = null }) => (

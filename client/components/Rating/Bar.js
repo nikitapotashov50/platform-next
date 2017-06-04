@@ -7,7 +7,7 @@ export default ({ maxRate = 10, noValues, onChange, inline = false, rate, ...pro
   }
 
   let stars = []
-  for (var i = 1; i < maxRate; i++) {
+  for (var i = 1; i <= maxRate; i++) {
     stars.push(
       <span className='rating-star' key={'star-' + i} onClick={onStarClick.bind(this, i)}>
         { (i <= rate) ? <span>&#9733;</span> : <span>&#9734;</span> }

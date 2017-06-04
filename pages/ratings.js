@@ -4,7 +4,7 @@ import Waypoint from 'react-waypoint'
 import { loadRatings, loadSpeakers, searchUsers, loadMore } from '../client/redux/ratings'
 
 import PageHoc from '../client/hocs/Page'
-import Panel from '../client/components/Panel'
+import Panel from '../client/elements/Panel'
 import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
 import GroupInline from '../client/components/Group/Inline'

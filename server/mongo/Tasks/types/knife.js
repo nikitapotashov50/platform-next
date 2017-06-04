@@ -9,9 +9,9 @@ const model = new mongoose.Schema(extend({
   price: { type: String, default: '' },
   action: { type: String, required: true },
   //
-  userId: { type: ObjectId, ref: 'Users' },
-  goalId: { type: ObjectId, ref: 'Goal' },
-  reportId: { type: ObjectId, ref: 'TaskReport' }
+  userId: { type: ObjectId, ref: 'Users', index: true },
+  goalId: { type: ObjectId, ref: 'Goal', index: true },
+  reportId: { type: ObjectId, ref: 'TaskReport', index: true }
 }, is))
 
 /**

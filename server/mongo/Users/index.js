@@ -258,7 +258,7 @@ model.methods.getActiveTasks = async function (programId) {
     'type.model': { $ne: 'KnifePlan' }
   }
 
-  return user.getTasks(programId, params, { limit: 7 })
+  return user.getTasks(programId, params, {})
 }
 
 model.methods.getKnifePlans = async function (programId) {

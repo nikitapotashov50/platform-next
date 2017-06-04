@@ -4,7 +4,7 @@ import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
-import Panel from '../client/components/Panel'
+import Panel from '../client/elements/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
 const menuItems = [

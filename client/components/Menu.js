@@ -15,10 +15,13 @@ const Menu = ({ items, withLogo = false, pathname }) => (
 
     { items.map(el => (
       <li
-        className={classNames('menu__item', { menu__item_active: pathname === el.url })}
+        className={classNames('menu__item', { menu__item_active: pathname === ('/' + el.url) })}
         key={'menu-' + el.url}>
         <Link href={el.url} as={el.as} prefetch>
-          <a className='menu__link'>{el.title}</a>
+          <a className={[ 'menu__link', el.notify ? 'menu__link_notify' : '' ].join(' ')}>
+            {el.title}
+            { el.notify && (<span className='menu__notify'>{el.notify}</span>)}
+          </a>
         </Link>
       </li>
     )) }

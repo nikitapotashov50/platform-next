@@ -1,5 +1,4 @@
 import DefaultLayout from './default'
-// import Panel from '../components/Panel'
 
 const FeedLayout = ({ children, emptySide, Side = [], wide = false }) => (
   <DefaultLayout>
@@ -8,61 +7,60 @@ const FeedLayout = ({ children, emptySide, Side = [], wide = false }) => (
         {children}
       </div>
 
-      { !emptySide && (
-        <div className={[ 'feed__right', wide ? 'feed__right_narrow' : '' ].join(' ')}>
-          { (Side.length > 0) && Side.map(el => (
-            <div key={Math.random()}>{el}</div>
-          ))}
+      <div className={[ 'feed__right', wide ? 'feed__right_narrow' : '' ].join(' ')}>
+        { (Side.length > 0) && Side.map(el => (
+          <div key={Math.random()}>{el}</div>
+        ))}
 
-          <div className='beta'>
-            <div className='beta__overflow'>
-              <div className='beta__title'>Это beta-версия нового поколения IT-платформы БМ</div>
-              <div className='beta__desc'>Теперь система сама будет вести вас до результата. Нейросеть приведет вас к вашей точке B.</div>
+        { !emptySide && (
+          <div>
+            <div className='beta'>
+              <div className='beta__overflow'>
+                <div className='beta__title'>Это beta-версия нового поколения IT-платформы БМ</div>
+                <div className='beta__desc'>Теперь система сама будет вести вас до результата. Нейросеть приведет вас к вашей точке B.</div>
+              </div>
             </div>
-          </div>
 
-          <div className='Products'>
-            <a className='Products__schedule-title' target='_self' href='http://molodost.bz/shop/'>
-              Ближайшие программы
+            <div className='Products'>
+              <a className='Products__schedule-title' target='_self' href='http://molodost.bz/shop/'>Ближайшие программы</a>
 
-          </a>
+              <div className='Products__schedule-list'>
 
-            <div className='Products__schedule-list'>
+                <a className='Products__link' target='_blank' href='http://molodost.bz/coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_ceh_07042017'>
+                  <div className='Products__date'>
+                    <div className='Products__date-day'>17</div>
+                    <div className='Products__date-month'>июн</div>
+                  </div>
 
-              <a className='Products__link' target='_blank' href='http://molodost.bz/coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_ceh_07042017'>
-                <div className='Products__date'>
-                  <div className='Products__date-day'>17</div>
-                  <div className='Products__date-month'>июн</div>
-                </div>
+                  <div className='Products__text'>
+                    <div className='Products__title'>ЦЕХ &mdash; Главная программа</div>
+                    <div className='Products__description'>Двухмесяная программа</div>
 
-                <div className='Products__text'>
-                  <div className='Products__title'>ЦЕХ &mdash; Главная программа</div>
-                  <div className='Products__description'>Двухмесяная программа</div>
+                  </div>
+                </a>
 
-                </div>
-              </a>
+                <a className='Products__link' target='_blank' href='http://molodost.bz/million_coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_mzs_07042017'>
+                  <div className='Products__date'>
+                    <div className='Products__date-day'>20</div>
+                    <div className='Products__date-month'>июн</div>
+                  </div>
 
-              <a className='Products__link' target='_blank' href='http://molodost.bz/million_coaching/?utm_source=bmplatform&utm_medium=partner&utm_campaign=platform_mzs_07042017'>
-                <div className='Products__date'>
-                  <div className='Products__date-day'>20</div>
-                  <div className='Products__date-month'>июн</div>
-                </div>
+                  <div className='Products__text'>
+                    <div className='Products__title'>Миллион за сто</div>
+                    <div className='Products__description'>Главная ВИП программа</div>
 
-                <div className='Products__text'>
-                  <div className='Products__title'>Миллион за сто</div>
-                  <div className='Products__description'>Главная ВИП программа</div>
+                  </div>
+                </a>
 
-                </div>
-              </a>
-
+              </div>
             </div>
-          </div>
 
-          {/* <Panel Header={<div className='panel__title'>Боковая панель</div>}>
-            Здесь контент
-          </Panel> */}
-        </div>
-      ) }
+            {/* <Panel Header={<div className='panel__title'>Боковая панель</div>}>
+              Здесь контент
+            </Panel> */}
+          </div>
+        ) }
+      </div>
     </div>
     <style jsx>{`
       .beta {

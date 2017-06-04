@@ -8,13 +8,13 @@ const model = new mongoose.Schema(extend({
   title: { type: String },
   content: { type: String },
   //
-  userId: { type: ObjectId, ref: 'Users' },
-  postId: { type: ObjectId, ref: 'Posts' },
-  taskId: { type: ObjectId, ref: 'Tasks' },
-  replyTypeId: { type: Number, ref: 'TaskReplyType' },
+  userId: { type: ObjectId, ref: 'Users', index: true },
+  postId: { type: ObjectId, ref: 'Post', index: true },
+  taskId: { type: ObjectId, ref: 'Task', index: true },
+  replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
   specific: {
     model: { type: String, enum: [ 'Goal', 'Task', 'TaskReport' ] },
-    item: { type: ObjectId, refPath: 'specific.model' }
+    item: { type: ObjectId, refPath: 'specific.model', index: true }
   }
 }, is))
 
@@ -87,11 +87,26 @@ model.methods.getStatus = async function () {
 /**
  * get list of non verified tasks
  */
-model.statics.getNotVerified = async function (programId) {
-  // 1. Найдем все ответы на задания, у которых не стоит статус проверки 3 или 4
-  let list = await mongoose.models.TaskVerification.getLastForReplies()
+model.statics.getNotVerified = async function () {
+  let model = this
 
-  return list
+  
+  // let list = await mongoose.models.TaskVerification.getLastForReplies()
+  // // 2. Вытащим все ответы с наполнением
+  // return model
+  //   .find({
+  //     _id: { $in: list },
+  //     enabled: true
+  //   })
+  //   .populate([
+  //     {
+  //       path: 'postId',
+  //       select: 'title content attachments _id'
+  //     },
+  //     'specific.item'
+  //   ])
+  //   .sort({ created: -1 })
+  //   .lean()
 }
 
 module.exports = mongoose.model('TaskReply', model)

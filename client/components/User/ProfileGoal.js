@@ -1,5 +1,5 @@
 import numeral from 'numeral'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 
 const UserGoal = ({ goal }) => {
   let overwhelmed = false

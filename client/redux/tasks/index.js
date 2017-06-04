@@ -4,8 +4,16 @@ import { handleActions, createAction } from 'redux-actions'
 const defaultState = {
   active: [],
   replied: [],
-  knife: []
+  knife: [],
+  count: null
 }
+
+export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
+  options.withCredentials = true
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/count`, options)
+  console.log(data)
+  return data.result
+})
 
 export const getTasks = createAction('tasks/GET_LIST', async (programId, options = {}) => {
   let params = {
@@ -25,7 +33,12 @@ export const getTasks = createAction('tasks/GET_LIST', async (programId, options
 })
 
 export default handleActions({
+  [getActiveCount]: (state, { payload }) => ({
+    ...state,
+    count: payload.count
+  }),
   [getTasks]: (state, { payload }) => ({
+    ...state,
     active: payload.active,
     replied: payload.replied,
     knife: payload.knife

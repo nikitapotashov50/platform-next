@@ -10,8 +10,8 @@ const model = new mongoose.Schema(extend({
   title: { type: String, required: true },
   content: { type: String, required: true },
   //
-  userId: { type: ObjectId, ref: 'Users' },
-  replyTypeId: { type: Number, ref: 'TaskReplyType' },
+  userId: { type: ObjectId, ref: 'Users', index: true },
+  replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
   //
   replies: [
     {
@@ -19,14 +19,14 @@ const model = new mongoose.Schema(extend({
       replyId: { type: ObjectId, ref: 'TaskReply' }
     }
   ],
-  targetProgram: { type: Number, ref: 'Program' },
+  targetProgram: { type: Number, ref: 'Program', index: true },
   target: {
     model: { type: String, enum: [ 'Group', 'Users' ] },
-    item: { type: ObjectId, refPath: 'target.model' }
+    item: { type: ObjectId, refPath: 'target.model', index: true }
   },
   type: {
     model: { type: String, enum: [ 'KnifePlan' ] },
-    item: { type: ObjectId, refPath: 'target.model' }
+    item: { type: ObjectId, refPath: 'target.model', index: true }
   }
 }, is, startFinish))
 
@@ -39,17 +39,57 @@ model.statics.defaults = defaults
 
 let defaultTasks = [
   {
-    title: 'Тестовое задание',
+    title: 'Поставить план-кинжал',
     content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 1,
+    replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
     finish_at: new Date('2017-06-03')
   },
   {
-    title: 'Тестовое задание 2',
+    title: 'Поставить план-кинжал',
     content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 1,
+    replyTypeId: 2,
+    targetProgram: 2,
+    start_at: new Date('2017-05-27'),
+    finish_at: new Date('2017-06-03')
+  },
+  {
+    title: 'Поставить план-кинжал',
+    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    replyTypeId: 2,
+    targetProgram: 3,
+    start_at: new Date('2017-05-27'),
+    finish_at: new Date('2017-06-03')
+  },
+  {
+    title: 'Поставить цель',
+    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    replyTypeId: 3,
+    targetProgram: 3,
+    start_at: new Date('2017-05-27'),
+    finish_at: new Date('2017-06-03')
+  },
+  {
+    title: 'Поставить цель',
+    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    replyTypeId: 3,
+    targetProgram: 2,
+    start_at: new Date('2017-05-27'),
+    finish_at: new Date('2017-06-03')
+  },
+  {
+    title: 'Поставить ПК',
+    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    replyTypeId: 2,
+    targetProgram: 2,
+    start_at: new Date('2017-05-27'),
+    finish_at: new Date('2017-06-03')
+  },
+  {
+    title: 'Поставить ПК',
+    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
     finish_at: new Date('2017-06-10')
@@ -117,6 +157,22 @@ model.statics.createKnifePlan = async function (user, data, options = {}) {
   let task = await model.create(taskData)
 
   return { task, plan }
+}
+
+/**
+ * TODO: add user target and gorup target param
+ */
+model.statics.getRejectedCount = async function (userId, programId) {
+  let model = this
+  return model.aggregate([
+    { $match: {
+      targetProgram: programId,
+      'replies.userId': userId
+    }},
+    { $project: {
+      replyId: '$replies.replyId'
+    }}
+  ])
 }
 
 /** ------------------------ MODEL METHODS ------------------------ */

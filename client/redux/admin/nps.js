@@ -8,13 +8,25 @@ let defaultState = {
   items: [],
   cities: [],
   limit: 40,
-  count: null
+  count: null,
+  filters: {}
 }
 
 // action creators
-export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type }, { limit, page }) => {
-  let offset = page - 1
-  let { data } = await axios.get(`${BACKEND_URL}/api/feedback?${qs.stringify({ type, limit, offset })}`)
+export const getFilters = createAction('admin/nps/GET_FILTERS', async ({ type }, options = {}) => {
+  options.params = { type }
+  options.withCredentials = true
+})
+
+export const getTotal = createAction('admin/nps/GET_TOTAL', async ({ type }, options = {}) => {
+  options.params = { type }
+  options.withCredentials = true
+})
+
+export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type }, { limit, page }, options = {}) => {
+  options.params = { offset: page - 1, limit, type }
+  options.withCredentials = true
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/nps`, options)
 
   return {
     items: data.nps,

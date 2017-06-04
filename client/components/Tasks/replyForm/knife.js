@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import Form from '../../../elements/PanelForm/index'
 
 /**
  * цель в деньгах
@@ -21,21 +22,9 @@ const TaskReplyForm = ({ errors, affected, onChange }) => {
 
   return (
     <form className='panel-form'>
-      <div className='panel-form__row'>
-        <label className='panel-form__label' htmlFor='knife-action'>Целевое действие на неделю</label>
-        <textarea className='panel-form__input panel-form__input_textarea' id='knife-action' value={affected.action || ''} onChange={changeValue.bind(this, 'action', onChange)} type='text' />
-        { errors.action && <div className='panel-form__error'>{errors.action}</div> }
-      </div>
-      <div className='panel-form__row'>
-        <label className='panel-form__label' htmlFor='knife-goal'>Цель в деньгах</label>
-        <input className='panel-form__input panel-form__input_textarea' id='knife-goal' value={numeral(goal || 0).format('0,0')} onChange={changeValue.bind(this, 'goal', onChange)} type='text' />
-        { errors.goal && <div className='panel-form__error'>{errors.goal}</div> }
-      </div>
-      <div className='panel-form__row'>
-        <label className='panel-form__label' htmlFor='knife-price'>Цена слова</label>
-        <input className='panel-form__input panel-form__input_textarea' id='knife-price' value={affected.price || ''} onChange={changeValue.bind(this, 'price', onChange)} type='text' />
-        { errors.price && <div className='panel-form__error'>{errors.price}</div> }
-      </div>
+      <Form.Block label='Целевое действие на неделю' id='knife-action' value={affected.action || ''} error={errors.action} onChange={changeValue.bind(this, 'action', onChange)} textarea />
+      <Form.Block label='Цель в деньгах' id='knife-goal' value={numeral(goal || 0).format('0,0')} error={errors.goal} onChange={changeValue.bind(this, 'goal', onChange)} />
+      <Form.Block label='Цена слова' id='knife-price' value={affected.price || ''} error={errors.price} onChange={changeValue.bind(this, 'price', onChange)} />
     </form>
   )
 }

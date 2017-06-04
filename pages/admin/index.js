@@ -1,4 +1,4 @@
-import Panel from '../../client/components/Panel'
+import Panel from '../../client/elements/Panel'
 import Page from '../../client/hocs/Page'
 
 import AdminLayout from '../../client/layouts/admin'

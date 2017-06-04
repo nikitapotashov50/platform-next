@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux'
 
-import Panel from '../../client/components/Panel'
+import Panel from '../../client/elements/Panel'
 import PageHoc from '../../client/hocs/Page'
 import FeedLayout from '../../client/layouts/feed'
 

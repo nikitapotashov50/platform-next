@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../client/components/PanelMenu'
 import PageHoc from '../client/hocs/Page'
-import Panel from '../client/components/Panel'
+import Panel from '../client/elements/Panel'
 import FeedLayout from '../client/layouts/feed'
 
 import FeedbackForm from '../client/components/Feedback/Form'

@@ -3,15 +3,16 @@ import HeaderRight from './HeaderRight'
 import { connect } from 'react-redux'
 
 let menu = [
-  { url: '/', title: 'Отчеты', as: '/', code: 'index' },
-  { url: '/tasks', title: 'Задания' }
+  { url: '/', title: 'Отчеты', as: '/', code: 'index' }
   // { url: '/ratings', title: 'Рейтинг' }
 ]
 
-const Header = ({ pathname, dispatch, isLogged, role }) => {
-  let addMenu = []
-  if (role === 'volunteer') addMenu.push({ url: '/volunteer', title: 'Волонтерство' })
+const Header = ({ pathname, dispatch, isLogged, role, taskCount }) => {
+  let addMenu = [
+    { url: '/tasks', title: 'Задания', notify: taskCount }
+  ]
 
+  if (role === 'volunteer') addMenu.push({ url: '/volunteer', title: 'Волонтерство' })
   return (
     <header className='app-header noPrint'>
       <div className='app-header__wrap'>
@@ -29,8 +30,9 @@ const Header = ({ pathname, dispatch, isLogged, role }) => {
   )
 }
 
-const mapStateToProps = ({ auth, user }) => ({
+const mapStateToProps = ({ auth, user, tasks }) => ({
   isLogged: auth.isLogged,
+  taskCount: tasks.items.count,
   role: (user.programs.items ? user.programs.items[user.programs.current].role : null)
 })
 

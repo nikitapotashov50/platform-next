@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 // import PostMenu from './Preview/Menu'
 import PostFooter from './Preview/Footer'
 // import Menu from './Menu'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
 import TextWithImages from './TextWithImages'
 import TaskContent from '../Tasks/replyContent/index'
@@ -74,25 +74,23 @@ class Post extends Component {
     if (reply && reply.type) TaskReply = TaskContent[reply.type]
 
     return (
-      <div>
-        <Panel
-          Footer={Footer}
-          SubHeader={SubHeader}
-          headerStyles={headerStyles}
-          Options={() => Options}
-          withAnimation={added}
-          showOptions={this.state.showPostMenu}
-          Header={<UserInline user={user} date={this.props.created} />}
-          toggleOptions={this.handleOptionButtonClick.bind(true)}
-        >
-          <div className='post-preview'>
-            { !reply && (<a className='post-preview__title' onClick={onExpand}>{post.title}</a>) }
-            { reply && (<TaskReply data={reply.data} />)}
-            <TextWithImages text={post.content} />
-            { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
-          </div>
-        </Panel>
-      </div>
+      <Panel
+        Footer={Footer}
+        SubHeader={SubHeader}
+        headerStyles={headerStyles}
+        Options={() => Options}
+        withAnimation={added}
+        showOptions={this.state.showPostMenu}
+        Header={<UserInline user={user} date={this.props.created} />}
+        toggleOptions={this.handleOptionButtonClick.bind(true)}
+      >
+        <div className='post-preview'>
+          { !reply && (<a className='post-preview__title' onClick={onExpand}>{post.title}</a>) }
+          { reply && (<TaskReply data={reply.data} />)}
+          <TextWithImages text={post.content} />
+          { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
+        </div>
+      </Panel>
     )
   }
 }

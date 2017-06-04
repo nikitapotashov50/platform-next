@@ -1,4 +1,4 @@
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 import RatingBar from '../Rating/Bar'
 import UserInline from '../User/Inline'
 

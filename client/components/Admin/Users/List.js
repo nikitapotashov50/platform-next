@@ -1,9 +1,9 @@
 import ListEntry from './ListEntry'
 import Pager from '../../Pager'
-import Panel from '../../Panel'
+import Panel from '../../../elements/Panel'
 
 import PanelSearch from '../../PanelSearch'
-import PanelTitle from '../../Panel/Title'
+import PanelTitle from '../../../elements/Panel/Title'
 
 export default ({ users, query, total, onExpand, onSearch }) => {
   let SubHeader = (

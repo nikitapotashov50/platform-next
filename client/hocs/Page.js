@@ -9,6 +9,7 @@ import { I18nextProvider } from 'react-i18next'
 
 import { auth, refresh, cookieExists } from '../redux/auth'
 import { restrictAccess, allowAccess } from '../redux/error'
+import { getActiveCount } from '../redux/tasks/index'
 
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
@@ -50,6 +51,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
               isRestored: ctx.req.session.isRestored
             }))
             await ctx.store.dispatch(refresh(ctx.req.session.user._id, BACKEND_URL))
+            ctx.store.dispatch(getActiveCount({ headers: ctx.req.headers }))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
         }
 
@@ -1254,9 +1256,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                &__link {
                                  box-sizing: border-box;
+                                 transition: border $transition-time;
 
                                  margin: 0 !important;
-                                 padding: 0 !important;
+                                 padding: 0;
                                  height: 59px !important;
                                  line-height: 59px !important;
 
@@ -1266,11 +1269,37 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
+                                 border-bottom: 1px solid transparent;
 
                                  &:hover, &_active {
                                    color: #196aff;
-                                   border-bottom: 1px solid #196aff;
+                                   border-bottom-color: #196aff;
                                  }
+
+                                 &_notify {
+                                   position: relative;
+                                   padding-right: 30px;
+                                 }
+                               }
+
+                               &__notify {
+                                 border-radius: 50%;
+
+                                 top: 0;
+                                 right: 0;
+                                 bottom: 0;
+                                 position: absolute;
+                    
+                                 width: 23px;
+                                 height: 23px;
+                                 margin: auto;
+                                 display: block;
+                                 line-height: 22px;
+
+                                 color: #fff;
+                                 font-size: 10px;
+                                 text-align: center;
+                                 background-color: #e1430b;
                                }
                              }
 
