@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
 import Page from '../../client/hocs/Page'
-import Panel from '../../client/components/Panel'
+import Panel from '../../client/elements/Panel'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import GoalSettings from '../../client/components/AccountSettings/Goal'
 

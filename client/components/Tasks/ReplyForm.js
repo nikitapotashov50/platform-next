@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
-import Panel from '../Panel'
-import PanelTitle from '../Panel/Title'
+import Panel from '../../elements/Panel'
+import PanelTitle from '../../elements/Panel/Title'
 
 import Replies from './replyForm/index'
 import Button from '../../elements/Button'

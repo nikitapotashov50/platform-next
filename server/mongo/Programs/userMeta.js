@@ -6,6 +6,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
   price: { type: Number, default: null },
+  status: { type: String, enum: [ 'usual', 'vip' ] },
   activated_at: { type: Date, default: null },
   is_activated: { type: Boolean, default: false },
   //

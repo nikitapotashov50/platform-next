@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import Post from './Post'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 import PostFull from './Full'
 import PostModal from './Modal'
 import OverlayLoader from '../OverlayLoader'

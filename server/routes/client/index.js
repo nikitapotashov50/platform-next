@@ -36,6 +36,12 @@ module.exports = router => {
     })
   })
 
+  router.bridge('/volunteer/tasks', router => {
+    router.get('/:type', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/volunteer/tasks', Object.assign({}, ctx.params, ctx.query))
+    })
+  })
+
   router.bridge('/tasks', router => {
     router.get('/:id', async ctx => {
       await ctx.__next.render(ctx.req, ctx.res, '/tasks/task', Object.assign({}, ctx.params, ctx.query))

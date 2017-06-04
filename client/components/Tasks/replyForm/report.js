@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import Form from '../../../elements/PanelForm/index'
 
 /**
  * цель в деньгах
@@ -21,16 +22,8 @@ const TaskReportForm = ({ errors, affected, onChange }) => {
 
   return (
     <form className='panel-form'>
-      <div className='panel-form__row'>
-        <label className='panel-form__label'>Факт в деньгах</label>
-        <input className='panel-form__input panel-form__input_textarea' value={numeral(Number(fact) || 0).format('0,0')} onChange={changeValue.bind(this, 'fact', onChange)} type='text' />
-        { errors.fact && <div className='panel-form__error'>{errors.fact}</div> }
-      </div>
-      <div className='panel-form__row'>
-        <label className='panel-form__label'>Ключевое действие, которое принесло вам деньги</label>
-        <textarea className='panel-form__input panel-form__input_textarea' value={affected.action || ''} onChange={changeValue.bind(this, 'action', onChange)} />
-        { errors.action && <div className='panel-form__error'>{errors.action}</div> }
-      </div>
+      <Form.Block label='Факт в деньгах' error={errors.fact} value={numeral(Number(fact) || 0).format('0,0')} onChange={changeValue.bind(this, 'fact', onChange)} />
+      <Form.Block label='Ключевое действие, которое принесло вам деньги' error={errors.action} value={affected.action || ''} onChange={changeValue.bind(this, 'action', onChange)} textarea />
     </form>
   )
 }

@@ -30,8 +30,24 @@ module.exports = router => {
         result: { active, replied, knife }
       }
     } catch (e) {
-      console.log(e)
       ctx.body = { status: 500, message: e }
+    }
+  })
+
+  router.get('/count', async ctx => {
+    try {
+      let count = await models.Task.count({
+        targetProgram: ctx.session.currentProgram,
+        'replies.userId': { $nin: [ ctx.__.me._id ] }
+      })
+      // let wow = await models.Task.getRejectedCount(ctx.__.me._id, ctx.session.currentProgram)
+      ctx.body = {
+        status: 200,
+        result: { count }
+      }
+    } catch (e) {
+      console.log(e)
+      ctx.body = { status: 500 }
     }
   })
 

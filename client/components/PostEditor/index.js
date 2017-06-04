@@ -44,10 +44,15 @@ class PostEditor extends Component {
 
     if (!title || !content) return
 
-    const post = { title, content: marked(content), attachments, program }
+    const post = { title, content, attachments, program }
 
-    await this.props.addPost(post)
-    this.clearForm()
+    let tags = []
+    console.log(post.content.replace(/(^|\W)(#[a-z\d][\w-]*)/gi, function (i, k, j) {
+      tags.push(j)
+      return ` <a href='/search/${j}'>${j}</a>`
+    }))
+    // await this.props.addPost(post)
+    // this.clearForm()
   }
 
   clearForm () {

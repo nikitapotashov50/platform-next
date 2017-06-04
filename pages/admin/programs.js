@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import PageHoc from '../../client/hocs/Page'
-import Panel from '../../client/components/Panel'
+import Panel from '../../client/elements/Panel'
 import DefaultLayout from '../../client/layouts/default'
 
 const AdminPrograms = ({ data }) => (

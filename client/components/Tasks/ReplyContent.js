@@ -1,5 +1,5 @@
-import Panel from '../Panel'
-import PanelTitle from '../Panel/Title'
+import Panel from '../../elements/Panel'
+import PanelTitle from '../../elements/Panel/Title'
 
 import Content from './replyContent/index'
 

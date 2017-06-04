@@ -7,7 +7,7 @@ import { addToBlackList, removeFromBlackList } from '../redux/auth'
 import { subscribeToUser, unsubscribeFromUser } from '../redux/user/subscriptions'
 
 import DefaultLayout from './default'
-import Panel from '../components/Panel'
+import Panel from '../elements/Panel'
 
 import UserProfileGoal from '../components/User/ProfileGoal'
 import UserProfileBadge from '../components/User/ProfileBadge'
