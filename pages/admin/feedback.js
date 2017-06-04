@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
 // import NpsRightMenu from '../../client/components/NPS/RightMenu'
-import NpsOverall from '../../client/components/NPS/Overall'
+// import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
 import NpsList from '../../client/components/NPS/List'
