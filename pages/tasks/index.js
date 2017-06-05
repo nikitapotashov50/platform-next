@@ -27,7 +27,7 @@ const TasksIndex = ({ tasks }) => {
       ))}
       { (!tasks.active.length) && (
         <Panel>
-          <div className='text-center'>У вас нет активных заданий, отдыхайте.</div>
+          <div className='text-center'>У вас нет активных заданий.</div>
         </Panel>
       )}
 

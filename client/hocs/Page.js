@@ -195,7 +195,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                color: #0c00ff;
                                text-decoration: none;
                                &:hover {
-                                 color: color(#0c00ff b(+40%));
+                                 color: color(#196aff);
                                }
                              }
 
@@ -369,7 +369,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  &_small { margin-bottom: 10px; }
                                  &_negative { margin-bottom: -2px; }
                                }
-                               &_no_border { border-bottom: none; }
+                               &_no_border { border-bottom: none; border-radius: 3px 3px 0 0; }
                                &_no_margin { margin-bottom: 0; }
 
                                &__title {
@@ -449,6 +449,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
                              }
 
+                             .panel:first-child {
+                                  border-radius: 0 0 3px 3px;
+                                }
+
                              .task-sub-header {
                                &__title {
                                  line-height: 15px;
@@ -479,15 +483,23 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .panel-menu {
                                position: relative;
                                margin: 0 10px;
+                               display: block;
+                               height: 50px;
+                              
+                               
 
                                &__item {
-                                 margin: 0 10px;
+                                 margin: 0 5px 0 10px;
                                  vertical-align: top;
-                                 display: inline-block;
+                                 float: left;
                                }
 
                                &__link {
                                  box-sizing: border-box;
+                                 
+                                 position: relative;
+                                 z-index: 10;
+                                 margin-bottom:-1px;
 
                                  display: block;
                                  padding-top: 2px;
@@ -498,11 +510,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  border-bottom: 2px solid transparent;
 
-                                 &:hover, &:active, &_active { color: #0c00ff; }
+                                 &:hover, &:active, &_active { color: #196aff; }
                                }
 
                                &__item_bordered &__link {
-                                 &:hover, &:active, &_active { border-bottom-color: #0c00ff; }
+                                 &:hover, &:active, &_active { border-bottom-color: #196aff; }
                                }
                              }
 
@@ -591,10 +603,27 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  }
                                }
                                &__error {
-                                 padding: 10px 20px;
+                                 padding: 10px 15px;
+                                  /* border-top: 1px solid #eee; */
+                                  background: #f12a4a;
+                                  border-radius: 3px;
+                                  margin: 0 20px 10px;
+                                  color: #fff;
 
-                                 border-top: 1px solid #eee;
                                }
+
+                              
+                                 &__error:before {
+                                  content: ' ';
+                                  position: relative;
+                                  width: 0;
+                                  height: 0;
+                                  left: -15px;
+                                  top: -5px;
+                                  border: 15px solid;
+                                  border-color:  transparent transparent #f12a4a #f12a4a ;
+                                }
+                               
                                &__fake-input {
                                  padding: 0 20px 10px;
                                }
@@ -816,6 +845,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                    background: svg("edit", "[fill]: #7f7f7f;") 16px 16px no-repeat #fff;
                                    background-size: 17px 17px;
                                  }
+                               }
+
+                               .panel {
+                                 border-radius: 3px;
                                }
                              }
 
@@ -1242,6 +1275,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
                              }
 
+                             .app-header:first-child {
+                               
+                             }
+
                              .menu {
                                margin: 0;
                                width: 100%;
@@ -1256,7 +1293,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  padding: 0 10px;
 
                                  &_no {
-                                   &_padding-left { padding-left: 0; }
+                                   &_padding-left { padding-left: 0; margin-right: 10px; }
                                  }
                                }
 
@@ -1275,11 +1312,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
-                                 border-bottom: 1px solid transparent;
+                                 border-bottom: 2px solid transparent;
 
-                                 &:hover, &_active {
+                                 &_active {
                                    color: #196aff;
                                    border-bottom-color: #196aff;
+                                 }
+
+                                 &:hover {
+                                   color: #196aff;
                                  }
 
                                  &_notify {
@@ -1885,6 +1926,21 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  border-radius: 0;
                                }
 
+                               .panel-menu {
+                                 height: 50px;
+                                 
+                                  white-space: nowrap;
+                                  overflow-x: auto;
+                                  overflow-y: hidden;
+                                  -webkit-overflow-scrolling: touch;
+                                  -ms-overflow-style: -ms-autohiding-scrollbar; 
+                                  margin-bottom: 0;
+                               }
+
+                                .panel-menu ::-webkit-scrollbar {
+                                   display: none; 
+                                }
+
 
                                .user-sub-menu {
 
@@ -1928,8 +1984,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                .user-menu {
 
                                   &__item {
+
+                                    padding: 0 8px;
+                                     
                                     select {
-                                      width: 70px;
+                                      /*  width: 70px; */
+                                      display: none;
+                                     
                                     }
                                   }
 
