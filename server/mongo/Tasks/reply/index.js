@@ -13,7 +13,7 @@ const model = new mongoose.Schema(extend({
   taskId: { type: ObjectId, ref: 'Task', index: true },
   replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
   specific: {
-    model: { type: String, enum: [ 'Goal', 'Task', 'TaskReport' ] },
+    model: { type: String, enum: [ 'Goal', 'KnifePlan', 'TaskReport' ] },
     item: { type: ObjectId, refPath: 'specific.model', index: true }
   }
 }, is))
@@ -53,9 +53,84 @@ model.statics.makeReply = async function (data) {
   // создаем ответ
   let reply = await model.create(data)
   // добавляем статус к ответу
-  await reply.addStatus('pending')
+  if (reply.replyTypeId === 4) await reply.addStatus('pending')
+  else await reply.addStatus('approved')
 
   return reply
+}
+
+model.statics.getByPostIds = async function (postIds) {
+  let model = this
+  // return new Promise(async (resolve, reject) => {
+  return model
+    .find({
+      enabled: true,
+      postId: { $in: postIds }
+    })
+    .select('specific title postId replyTypeId')
+    .populate([ 'specific.item', 'replyTypeId' ])
+    // .cache(40)
+    .lean()
+
+    // resolve(replies.reduce(async (obj, item) => {
+    //   if (item.specific) obj[item.postId] = { type: item.replyTypeId.code, data: item.specific.item }
+    //   return obj
+    // }, {}))
+  // })
+}
+
+model.statics.getNotVerified = async function (programId) {
+  return mongoose.models.Task.aggregate([
+    { $match: {
+      targetProgram: Number(programId),
+      replyTypeId: 4
+    }},
+    { $project: {
+      _id: 1,
+      title: 1
+    }},
+    { $lookup: {
+      from: 'taskreplies',
+      localField: '_id',
+      foreignField: 'taskId',
+      as: 'reply'
+    }},
+    { $unwind: '$reply' },
+    { $project: {
+      task: {
+        _id: '$_id',
+        title: '$title'
+      },
+      reply: '$reply._id',
+      _id: 0
+    }},
+    { $lookup: {
+      from: 'taskverifications',
+      localField: 'reply',
+      foreignField: 'taskReplyId',
+      as: 'verifications'
+    }},
+    { $unwind: '$verifications' },
+    { $sort: {
+      'verifications.created': 1
+    }},
+    { $group: {
+      _id: {
+        reply: '$reply',
+        task: '$task'
+      },
+      verification: { $last: '$verifications' }
+    }},
+    { $match: {
+      'verification.status': { $nin: [ 3, 4 ] }
+    }},
+    { $project: {
+      _id: 0,
+      task: '$_id.task',
+      reply: '$_id.reply',
+      status: '$verification'
+    }}
+  ])
 }
 
 /** ----------------------- MODEL METHODS ----------------------- */
@@ -84,27 +159,13 @@ model.methods.getStatus = async function () {
     .sort({ created: -1 })
 }
 
-/**
- * get list of non verified tasks
- */
-model.statics.getNotVerified = async function () {
-  // let model = this
-  // let list = await mongoose.models.TaskVerification.getLastForReplies()
-  // // 2. Вытащим все ответы с наполнением
-  // return model
-  //   .find({
-  //     _id: { $in: list },
-  //     enabled: true
-  //   })
-  //   .populate([
-  //     {
-  //       path: 'postId',
-  //       select: 'title content attachments _id'
-  //     },
-  //     'specific.item'
-  //   ])
-  //   .sort({ created: -1 })
-  //   .lean()
+model.methods.approve = async function (data, user) {
+  let reply = this
+  return mongoose.models.TaskVerification.add('approved', { reply, user, data })
+}
+model.methods.reject = async function (data, user) {
+  let reply = this
+  return mongoose.models.TaskVerification.add('rejected', { reply, user, data })
 }
 
 module.exports = mongoose.model('TaskReply', model)

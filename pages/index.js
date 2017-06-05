@@ -38,7 +38,7 @@ class IndexPage extends Component {
     if (tab === 'subscriptions') params.authorIds = this.props.subscriptions.join(',')
 
     return (
-      <FeedLayout>
+      <FeedLayout menuItem='index'>
         {this.props.user && <PostEditor />}
 
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} />

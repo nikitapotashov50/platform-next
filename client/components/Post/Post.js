@@ -38,11 +38,12 @@ class Post extends Component {
   }
 
   getFooter () {
-    let { post, loggedUser, onLike, isLiked } = this.props
-    let { showCommentForm, likes } = this.state
-    let footerProps = { _id: post._id, loggedUser, comments: post.comments, onLike, isLiked, showCommentForm, likes }
+    // let { post, loggedUser, onLike, isLiked } = this.props
+    // let { showCommentForm, likes } = this.state
+    // let footerProps = { _id: post._id, loggedUser, comments: post.comments, onLike, isLiked, showCommentForm, likes }
 
-    const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
+    const Footer = null
+    // const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
 
     return Footer
   }

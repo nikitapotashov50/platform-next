@@ -36,14 +36,12 @@ module.exports = router => {
 
   router.get('/count', async ctx => {
     try {
-      let count = await models.Task.count({
-        targetProgram: ctx.session.currentProgram,
-        'replies.userId': { $nin: [ ctx.__.me._id ] }
-      })
-      // let wow = await models.Task.getRejectedCount(ctx.__.me._id, ctx.session.currentProgram)
+      let count = await models.TaskVerification.getRejectedRepliesCount(ctx.__.me._id, ctx.session.currentProgram)
+
       ctx.body = {
         status: 200,
         result: { count }
+
       }
     } catch (e) {
       console.log(e)
@@ -111,45 +109,18 @@ module.exports = router => {
       }
     })
 
+    // TODO: Объединить все в один метод
     router.post('/reply', async ctx => {
       let body = ctx.request.body
       let user = ctx.__.me
 
-      let data = extend(pick(body, [ 'content' ]), { program: ctx.__.task.targetProgram })
-
       try {
-        let isReplied = await ctx.__.task.checkReply(ctx.__.me)
-        if (isReplied) throw new Error('already replied')
-
-        data.title = ctx.__.task.title
-        let post = await models.Post.addPost(data, { user })
-
-        let additional = {}
-        let whatIfPlan = null
-
-        if (ctx.__.task.replyTypeId === 3) {
-          let entry = await ctx.__.me.addGoal(pick(body, [ 'a', 'b', 'occupation' ]))
-          additional.specific = { model: 'Goal', item: entry }
-        } else if (ctx.__.task.replyTypeId === 2) {
-          let options = {
-            title: 'План-кинжал на неделю',
-            content: body.action,
-            programId: ctx.__.task.targetProgram
-          }
-          let { task, plan } = await models.Task.createKnifePlan(ctx.__.me, pick(body, [ 'goal', 'price', 'action' ]), options)
-          whatIfPlan = plan
-          additional.specific = { model: 'Task', item: task }
-        } else if (ctx.__.task.replyTypeId === 4) {
-          let entry = await models.TaskReport.create(pick(body, [ 'action', 'fact' ]))
-          additional.specific = { model: 'TaskReport', item: entry }
-        }
-
-        let reply = await ctx.__.task.addReply(user, post, additional)
+        let { reply, specific } = await ctx.__.task.addReply(user, body)
         let [ statusData ] = await reply.getStatus()
 
         ctx.body = {
           status: 200,
-          result: { reply, specific: whatIfPlan || additional, status: statusData.status }
+          result: { reply, specific, status: statusData.status }
         }
       } catch (e) {
         ctx.log.info(e)

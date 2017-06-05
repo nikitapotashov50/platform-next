@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import PageHoc from '../../client/hocs/Page'
-import FeedLayout from '../../client/layouts/feed'
+import VolunteerLayout from '../../client/layouts/volunteer'
 
 class VolunteerPage extends Component {
   render () {
     return (
-      <FeedLayout emptySide Side={[]}>
-        123
-      </FeedLayout>
+      <VolunteerLayout emptySide Side={[]} />
     )
   }
 }

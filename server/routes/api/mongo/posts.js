@@ -80,17 +80,22 @@ module.exports = router => {
     })
 
     let [ replies, liked, users ] = await Promise.all([
-      getReplies(postIds),
+      models.TaskReply.getByPostIds(postIds),
       getLiked(postIds, userId),
       models.Users.getShortInfo(userIds)
     ])
 
+    replies = replies.reduce((obj, reply) => {
+      obj[reply.postId] = { type: reply.replyTypeId.code, data: reply.specific.item }
+      return obj
+    }, {})
+
     ctx.body = {
       status: 200,
       result: {
+        replies,
         posts,
         total,
-        replies,
         comments,
         users: keyObj(users),
         liked: liked.map(el => el.target.item)

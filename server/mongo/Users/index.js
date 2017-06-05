@@ -229,7 +229,7 @@ model.methods.getTasks = async function (programId, params = {}, options = {}) {
     .sort({ created: -1 })
     .lean()
     .limit(options.limit || null)
-    .cache(60)
+    // .cache(!options.noCache ? 60 : 1)
 }
 
 /**
@@ -271,7 +271,7 @@ model.methods.getKnifePlans = async function (programId) {
     'replies.userId': { $nin: [ user._id ] }
   }
 
-  return user.getTasks(programId, params)
+  return user.getTasks(programId, params, { noCache: true })
 }
 
 /** --------------------- INCOMES --------------------- */

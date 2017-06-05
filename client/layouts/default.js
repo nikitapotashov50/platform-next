@@ -7,12 +7,12 @@ Router.onRouteChangeStart = () => NProgress.start()
 Router.onRouteChangeComplete = () => NProgress.done()
 Router.onRouteChangeError = () => NProgress.done()
 
-const DefaultLayout = ({ children }) => (
+const DefaultLayout = ({ children, menuItem = null }) => (
   <div className='app'>
     <Head>
       <link rel='stylesheet' type='text/css' href='/static/postcss/nprogress.css' />
     </Head>
-    <Header />
+    <Header selected={menuItem} />
 
     <div className='app__content'>
       {children}

@@ -15,7 +15,7 @@ const getLink = taskId => ({
 
 const TasksIndex = ({ tasks }) => {
   return (
-    <FeedLayout wide emptySide>
+    <FeedLayout wide emptySide menuItem='tasks'>
       { (tasks.knife.length > 0) && tasks.knife.map(el => (
         <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
       ))}

@@ -27,6 +27,12 @@ const model = new mongoose.Schema(extend({
   type: {
     model: { type: String, enum: [ 'KnifePlan' ] },
     item: { type: ObjectId, refPath: 'target.model', index: true }
+  },
+  replyMeta: {
+    title: { type: String, default: '' },
+    content: { type: String },
+    start_at: { type: Date },
+    finish_at: { type: Date }
   }
 }, is, startFinish))
 
@@ -44,7 +50,12 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-03'),
+    replyMeta: {
+      title: 'План кинжал №1',
+      start_at: new Date('2017-06-03'),
+      finish_at: new Date('2017-06-10')
+    }
   },
   {
     title: 'Поставить план-кинжал',
@@ -55,12 +66,17 @@ let defaultTasks = [
     finish_at: new Date('2017-06-03')
   },
   {
-    title: 'Поставить план-кинжал',
+    title: 'Поставить план-кинжал!',
     content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
     replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-03'),
+    replyMeta: {
+      title: 'План кинжал №2',
+      start_at: new Date('2017-06-03'),
+      finish_at: new Date('2017-06-10')
+    }
   },
   {
     title: 'Поставить цель',
@@ -92,7 +108,12 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-10')
+    finish_at: new Date('2017-06-10'),
+    replyMeta: {
+      title: 'План кинжал №3',
+      start_at: new Date('2017-06-03'),
+      finish_at: new Date('2017-06-10')
+    }
   },
   {
     title: 'Тестовое задание 3',
@@ -140,7 +161,9 @@ model.statics.createKnifePlan = async function (user, data, options = {}) {
   let plan = await mongoose.models.KnifePlan.createPlan(targetId, data)
 
   // 3.
-  let today = moment()
+  let start = options.start_at ? options.start_at : moment().toISOString()
+  let finish = options.finish_at ? options.finish_at : moment().add(7, 'days').toISOString()
+
   let taskData = {
     title: options.title,
     content: options.content,
@@ -149,59 +172,81 @@ model.statics.createKnifePlan = async function (user, data, options = {}) {
     replyTypeId: 4,
     targetProgram: options.programId,
     type: { model: 'KnifePlan', item: plan._id },
-    start_at: today.toISOString(),
-    finish_at: today.add(7, 'days').toISOString()
+    start_at: start,
+    finish_at: finish,
+    replyMeta: {
+      title: 'Отчет: ' + options.title
+    }
   }
 
   // 4.
   let task = await model.create(taskData)
+  plan.taskId = task._id
+  await plan.save()
 
   return { task, plan }
-}
-
-/**
- * TODO: add user target and gorup target param
- */
-model.statics.getRejectedCount = async function (userId, programId) {
-  let model = this
-  return model.aggregate([
-    { $match: {
-      targetProgram: programId,
-      'replies.userId': userId
-    }},
-    { $project: {
-      replyId: '$replies.replyId'
-    }}
-  ])
 }
 
 /** ------------------------ MODEL METHODS ------------------------ */
 
 /** ----------------------- ADD REPLY METHOD ---------------------- */
 
-model.methods.addReply = async function (user, post, add = {}) {
+model.methods.addReply = async function (user, body) {
   let task = this
+  // 1. проверяеем был ли ответ от пользователя на это задание
+  let isReplied = await task.checkReply(user)
+  if (isReplied) throw new Error('already replied by user')
+
+  // 2. подготовка сущностей для создания и записи
+  let postInfo = extend(pick(body, [ 'content' ]), { program: task.targetProgram })
+  postInfo.title = task.replyMeta.title || task.title
+
+  //
+  let additional = {}
+
+  /**
+   * Ответы могут быть 4 типов
+   * 1. Простой ответ на задание
+   * 2. Постановка ПК (действие, цель, цена)
+   * 3. Постановка цели (А, Б, Ниша)
+   * 4. Отчет по ПК (действие, факт)
+   */
+  if (task.replyTypeId === 3) {
+    // постановка цели
+    let entry = await user.addGoal(pick(body, [ 'a', 'b', 'occupation' ]))
+    additional.specific = { model: 'Goal', item: entry }
+  } else if (task.replyTypeId === 2) {
+    // постановка ПК
+    let options = extend(pick(task.replyMeta, [ 'title', 'start_at', 'finish_at' ]), { content: body.action, programId: task.targetProgram })
+    let result = await mongoose.models.Task.createKnifePlan(user, pick(body, [ 'goal', 'price', 'action' ]), options)
+    additional.specific = { model: 'KnifePlan', item: result.plan }
+    postInfo.title = result.task.title
+  } else if (task.replyTypeId === 4) {
+    let [ knifePlan ] = await mongoose.models.KnifePlan.find({ _id: task.type.item }).limit(1).sort({ created: -1 })
+    let { report } = await knifePlan.closePlan(body, user, task.targetProgram)
+    additional.specific = { model: 'TaskReport', item: report }
+  } else {}
+
+  let post = await mongoose.models.Post.addPost(postInfo, { user })
+
   let taskData = extend(
-    pick(post, [ 'title', 'content' ]),
+    pick(postInfo, [ 'title', 'content' ]),
     {
       postId: post._id,
       userId: user._id,
       taskId: task._id,
       replyTypeId: task.replyTypeId
     },
-    add
+    additional
   )
 
   let reply = await mongoose.models.TaskReply.makeReply(taskData)
 
-  task.replies.addToSet({
-    userId: user._id,
-    replyId: reply._id
-  })
+  task.replies.addToSet({ userId: user._id, replyId: reply._id })
 
   await task.save()
 
-  return reply
+  return { reply, specific: additional }
 }
 
 model.methods.checkReply = async function (user) {
@@ -216,6 +261,8 @@ model.methods.checkReply = async function (user) {
 
   return reply
 }
+
+model.methods.createReport = async function () {}
 
 module.exports = mongoose.model('Task', model)
 

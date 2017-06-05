@@ -1,29 +1,25 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
-import PanelMenu from '../../client/components/PanelMenu'
-import RightMenu from '../../client/components/NPS/RightMenu'
-import Panel from '../../client/elements/Panel'
-import PanelTitle from '../../client/elements/Panel/Title'
+// import PanelTitle from '../../client/elements/Panel/Title'
 import PageHoc from '../../client/hocs/Page'
-import FeedLayout from '../../client/layouts/feed'
+import VolunteerLayout from '../../client/layouts/volunteer'
 
 import TaskReply from '../../client/components/Tasks/Check'
 
 import { restrictAccess } from '../../client/redux/error'
 import { getNotVerified, getTotalCount, verifyTask } from '../../client/redux/volunteer/tasks'
 
-const drawSide = items => items.map(el => ({
-  path: '/volunteer/' + el._id,
-  href: '/volunteer?task=' + el._id,
-  code: el._id,
-  title: el.title + ' (' + el.count + ')'
-}))
+// const drawSide = items => items.map(el => ({
+//   path: '/volunteer/' + el._id,
+//   href: '/volunteer?task=' + el._id,
+//   code: el._id,
+//   title: el.title + ' (' + el.count + ')'
+// }))
 
 let menuItems = [
   { code: 'reports', href: '', path: '', title: 'Отчеты по ПК' },
-  { code: 'plans', href: '', path: '', title: 'Постановка ПК' },
-  { code: 'tasks', href: '', path: '', title: 'Остальные задания' }
+  { code: 'plans', href: '', path: '', title: 'Постановка ПК' }
 ]
 
 class VolunteerPage extends Component {
@@ -39,22 +35,31 @@ class VolunteerPage extends Component {
 
   render () {
     let type = 'reports'
-    let { task, users } = this.props
-    let { items, count, verified } = this.props.tasks
+    let { users } = this.props
+    let { items, verified } = this.props.tasks
 
-    let sidePanel = (
-      <Panel Header={<PanelTitle small title='Задания по темам' />}>
-        <RightMenu items={drawSide(count)} selected={task} />
-      </Panel>
-    )
-
+    // let sidePanel = (
+    //   <Panel Header={<PanelTitle small title='Задания по темам' />}>
+    //     <RightMenu items={drawSide(count)} selected={task} />
+    //   </Panel>
+    // )
+    //  emptySide Side={[ sidePanel ]}
     return (
-      <FeedLayout emptySide Side={[ sidePanel ]}>
-        <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={type} />} />
-        { (items && items.length) && items.map(el => {
-          if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} post={el.postId} user={users[el.userId]} specific={el.specific} onVerify={this.props.onVerify(el._id)} />
-        })}
-      </FeedLayout>
+      <VolunteerLayout subMenu={menuItems} subSelected={type} selected={'tasks'}>
+        <div className='feed'>
+          <div className='feed__left'>
+            { (items && items.length) && items.map(el => {
+              if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} post={el.postId} user={users[el.userId]} specific={el.specific} onVerify={this.props.onVerify(el._id)} />
+            })}
+          </div>
+
+          {/* <div className='feed__right'>
+            { (Side.length > 0) && Side.map(el => (
+              <div key={Math.random()}>{el}</div>
+            ))}
+          </div> */}
+        </div>
+      </VolunteerLayout>
     )
   }
 }
