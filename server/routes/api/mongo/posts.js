@@ -31,25 +31,6 @@ const getLiked = (postIds, userId) => {
   })
 }
 
-const getReplies = postIds => {
-  return new Promise(async (resolve, reject) => {
-    let replies = await models.TaskReply
-      .find({
-        enabled: true,
-        postId: { $in: postIds }
-      })
-      .select('specific title postId replyTypeId')
-      .populate([ 'specific.item', 'replyTypeId' ])
-      .cache(40)
-      .lean()
-
-    resolve(replies.reduce((obj, item) => {
-      if (item.specific) obj[item.postId] = { type: item.replyTypeId.code, data: item.specific.item }
-      return obj
-    }, {}))
-  })
-}
-
 module.exports = router => {
   router.get('/', async ctx => {
     let { programId = 3, authorIds, user } = ctx.query

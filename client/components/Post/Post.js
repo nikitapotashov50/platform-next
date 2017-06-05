@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 // import PostMenu from './Preview/Menu'
-import PostFooter from './Preview/Footer'
+// import PostFooter from './Preview/Footer'
 // import Menu from './Menu'
 import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
@@ -37,15 +37,15 @@ class Post extends Component {
     this.setState({ showPostMenu: flag })
   }
 
+  /** TODO: разобраться что за хрень */
   getFooter () {
     // let { post, loggedUser, onLike, isLiked } = this.props
     // let { showCommentForm, likes } = this.state
     // let footerProps = { _id: post._id, loggedUser, comments: post.comments, onLike, isLiked, showCommentForm, likes }
 
-    const Footer = null
     // const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
 
-    return Footer
+    return null
   }
 
   render () {
