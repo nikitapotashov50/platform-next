@@ -1988,7 +1988,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                     padding: 0 8px;
                                      
                                     select {
-                                      /*  width: 70px; */
                                       display: none;
                                      
                                     }
