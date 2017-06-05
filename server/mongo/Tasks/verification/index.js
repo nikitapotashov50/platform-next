@@ -16,7 +16,7 @@ model.statics.VerificationStatuses = require('./status')
 
 model.statics.getLastForReplies = async function (params = {}) {
   let model = this
-  console.log(params)
+
   let list = await model.aggregate([
     { $group: {
       _id: '$taskReplyId',
@@ -58,11 +58,11 @@ model.statics.getLastForReplies = async function (params = {}) {
   return list
 }
 
-model.statics.add = async function (status, meta) {
-  if (!meta.user || !meta.reply) throw new Error('no required data specified')
-  let data = {}
-  return this.create({})
-}
+// model.statics.add = async function (status, meta) {
+//   if (!meta.user || !meta.reply) throw new Error('no required data specified')
+//   let data = {}
+//   return this.create({})
+// }
 
 // TODO: сделать этот метод рабочии
 model.statics.getRejectedRepliesCount = async function (userId, programId) {

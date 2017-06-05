@@ -49,7 +49,7 @@ class VolunteerPage extends Component {
         <div className='feed'>
           <div className='feed__left'>
             { (items && items.length) && items.map(el => {
-              if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} post={el.postId} user={users[el.userId]} specific={el.specific} onVerify={this.props.onVerify(el._id)} />
+              if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} task={el.taskId} post={el.postId} user={users[el.userId]} specific={el.specific} onVerify={this.props.onVerify(el._id)} />
             })}
           </div>
 

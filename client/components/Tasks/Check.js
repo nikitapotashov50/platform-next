@@ -4,10 +4,10 @@ import TaskSubHeader from '../Post/TaskSubHeader'
 import TextWithImages from '../Post/TextWithImages'
 import VerifyButtons from './VerifyButtons'
 
-export default ({ post, user, specific, created, onVerify }) => (
+export default ({ post, user, task, specific, created, onVerify }) => (
   <Panel
     Header={<UserInline user={user} date={created} />}
-    SubHeader={<TaskSubHeader title={post.title} />}
+    SubHeader={<TaskSubHeader title={task.title} />}
     Footer={<VerifyButtons onVerify={onVerify} />}
   >
     <div className='post-preview'>

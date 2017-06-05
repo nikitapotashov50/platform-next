@@ -1,5 +1,4 @@
 const { models } = require('mongoose')
-const { pick, extend } = require('lodash')
 
 const initTask = async (ctx, next) => {
   try {
