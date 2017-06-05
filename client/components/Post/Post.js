@@ -86,8 +86,8 @@ class Post extends Component {
         toggleOptions={this.handleOptionButtonClick.bind(true)}
       >
         <div className='post-preview'>
-          { !reply && (<a className='post-preview__title' onClick={onExpand}>{post.title}</a>) }
-          { reply && (<TaskReply data={reply.data} />)}
+          <a className='post-preview__title' onClick={onExpand}>{post.title}</a>
+          { (reply && TaskReply) && (<TaskReply data={reply.data} />)}
           <TextWithImages text={post.content} />
           { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
         </div>

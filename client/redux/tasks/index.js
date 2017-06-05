@@ -11,7 +11,7 @@ const defaultState = {
 export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
   options.withCredentials = true
   let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/count`, options)
-  console.log(data)
+
   return data.result
 })
 
@@ -20,15 +20,20 @@ export const getTasks = createAction('tasks/GET_LIST', async (programId, options
     params: { programId },
     withCredentials: true
   }
-
+  console.log(params)
   if (options.headers) params.headers = options.headers
 
   let { data } = await axios.get(BACKEND_URL + '/api/mongo/tasks', params)
 
-  return {
-    active: data.result.active || [],
-    replied: data.result.replied || [],
-    knife: data.result.knife || []
+  if (data.result) {
+    return {
+      active: data.result.active || [],
+      replied: data.result.replied || [],
+      knife: data.result.knife || []
+    }
+  } else {
+    console.log(data)
+    return data
   }
 })
 

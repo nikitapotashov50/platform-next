@@ -1,18 +1,13 @@
-const { pick } = require('lodash')
-// const { models } = require('../../models')
-
 const mongoose = require('mongoose')
 
 const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
 const getUser = async email => {
-  let user = await mongoose.models.Users.findOne({ email })
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean().cache(100)
 
   if (!user) return null
 
-  return {
-    user: pick(user, [ '_id', 'last_name', 'first_name', 'picture_small', 'name' ])
-  }
+  return { user }
 }
 
 const createUserBasedOnBM = async accessToken => {
@@ -43,16 +38,21 @@ module.exports = router => {
     let hash = ctx.cookies.get('molodost_hash')
     let BMAccess, user
 
-    if (hash && email) {
-      BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
+    try {
+      if (hash && email) {
+        BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
 
-      if (BMAccess) {
-        user = await getUser(email)
-        if (!user) user = await createUserBasedOnBM(BMAccess)
+        if (BMAccess) {
+          user = await getUser(email)
+          if (!user) user = await createUserBasedOnBM(BMAccess)
+        }
+        ctx.session = user
       }
-      ctx.session = user
+      ctx.body = user
+    } catch (e) {
+      console.log(e)
+      ctx.body = { status: 500, message: e }
     }
-    ctx.body = user
   })
 
   router.post('/logout', ctx => {
@@ -160,6 +160,8 @@ module.exports = router => {
       alias: el.programId.alias,
       title: el.programId.title
     }))
+
+    if (!ctx.session.currentProgram) ctx.session.currentProgram = 3
 
     ctx.body = {
       status: 200,

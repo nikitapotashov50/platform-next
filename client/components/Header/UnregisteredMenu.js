@@ -7,8 +7,7 @@ import AuthLogin from '../Auth/Login'
 import AuthSignup from '../Auth/Signup'
 import AuthRecovery from '../Auth/Recovery'
 
-import { auth } from '../../redux/auth'
-import { fill as fillPrograms } from '../../redux/user/programs'
+import { auth, refresh } from '../../redux/auth'
 
 let defaultCredentials = {
   email: '',
@@ -92,8 +91,8 @@ class HeaderUnregisteredMenu extends Component {
         state.modal = null
         state.credentials = { ...defaultCredentials }
       })
+      this.props.dispatch(refresh(data.user._id))
       this.props.dispatch(auth(data))
-      this.props.dispatch(fillPrograms(data.programs))
     } catch (error) {
       await this.setState(state => {
         state.fetching = false

@@ -67,7 +67,7 @@ module.exports = router => {
     ])
 
     replies = replies.reduce((obj, reply) => {
-      obj[reply.postId] = { type: reply.replyTypeId.code, data: reply.specific.item }
+      obj[reply.postId] = { type: reply.replyTypeId.code, data: reply.specific ? reply.specific.item : null }
       return obj
     }, {})
 
