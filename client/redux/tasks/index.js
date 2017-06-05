@@ -39,8 +39,8 @@ export default handleActions({
   }),
   [getTasks]: (state, { payload }) => ({
     ...state,
-    active: payload.active,
-    replied: payload.replied,
-    knife: payload.knife
+    active: payload.active || [],
+    replied: payload.replied || [],
+    knife: payload.knife || []
   })
 }, defaultState)
