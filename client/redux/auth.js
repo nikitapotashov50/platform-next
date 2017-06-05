@@ -56,9 +56,9 @@ export default handleActions({
   [logout]: (state, action) => ({
     ...defaultState
   }),
-  [cookieExists]: state => ({
+  [cookieExists]: (state, { payload = true }) => ({
     ...state,
-    cookieExists: true
+    cookieExists: payload
   }),
   //
   [addToBlackList]: (state, { payload }) => ({

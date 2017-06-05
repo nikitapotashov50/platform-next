@@ -35,10 +35,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
     }
   }
 
+  const realMspDispatch = dispatch => {
+    let disp = {}
+    if (mapDispatchToProps && isFunction(mapDispatchToProps)) disp = mapDispatchToProps(dispatch)
+    return { ...disp, dispatch }
+  }
+
   return withRedux(
     initStore,
     realMapStateToProps,
-    mapDispatchToProps,
+    realMspDispatch,
     mergeProps
   )(
     class DefaultPage extends Component {
@@ -82,7 +88,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
           if (data.user && data.user._id) {
             this.props.dispatch(auth(data, true))
             await this.props.dispatch(refresh(data.user._id))
-          } else this.props.dispatch(restrictAccess('Страница недоступна'))
+          } else this.props.dispatch(cookieExists(false))
         }
       }
 

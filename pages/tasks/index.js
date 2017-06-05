@@ -58,7 +58,8 @@ TasksIndex.getInitialProps = async ctx => {
 
   let headers = null
   if (ctx.req) headers = ctx.req.headers
-  await ctx.store.dispatch(getTasks(user.programs.current, { headers }))
+  let res = await ctx.store.dispatch(getTasks(user.programs.current, { headers }))
+  console.log(res)
   return {}
 }
 

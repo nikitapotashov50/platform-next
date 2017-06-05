@@ -9,7 +9,7 @@ let menu = [
 
 const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => {
   let addMenu = [
-    { url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount, code: 'tasks' }
+    { url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' }
   ]
   if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
@@ -30,10 +30,13 @@ const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => 
   )
 }
 
-const mapStateToProps = ({ auth, user, tasks }) => ({
-  isLogged: auth.isLogged,
-  taskCount: tasks.items.count,
-  role: (user.programs.items ? user.programs.items[user.programs.current].role : null)
-})
+const mapStateToProps = ({ auth, user, tasks }) => {
+  let role = (user.programs.items && user.programs.current) ? user.programs.items[user.programs.current].role : null
+  return {
+    role,
+    isLogged: auth.isLogged,
+    taskCount: tasks.items.count
+  }
+}
 
 export default connect(mapStateToProps)(Header)
