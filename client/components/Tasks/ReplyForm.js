@@ -76,7 +76,7 @@ class TaskReply extends Component {
 
     return (
       <OverlayLoader loading={fetching}>
-        { success && <div>Ваш ответ отправлен на проверку!</div>}
+        { (success && replyType === 'report') && <div>Ваш ответ отправлен на проверку!</div>}
 
         { !success && (
           <div>

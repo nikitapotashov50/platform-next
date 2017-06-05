@@ -7,18 +7,18 @@ let menu = [
   // { url: '/ratings', title: 'Рейтинг' }
 ]
 
-const Header = ({ pathname, dispatch, isLogged, role, taskCount }) => {
+const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => {
   let addMenu = [
-    { url: '/tasks', title: 'Задания', notify: taskCount }
+    { url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount, code: 'tasks' }
   ]
+  if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
-  if (role === 'volunteer') addMenu.push({ url: '/volunteer', title: 'Волонтерство' })
   return (
     <header className='app-header noPrint'>
       <div className='app-header__wrap'>
 
         <div className='app-header__block app-header__block_menu'>
-          <Menu items={[ ...menu, ...addMenu ]} selected={'index'} withLogo pathname={pathname} />
+          <Menu items={[ ...menu, ...addMenu ]} selected={selected} withLogo pathname={pathname} />
         </div>
 
         <div className='app-header__block app-header__block_menu'>

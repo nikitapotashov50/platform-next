@@ -9,9 +9,13 @@ const model = new mongoose.Schema(extend({
   price: { type: String, default: '' },
   action: { type: String, required: true },
   //
+  taskId: { type: ObjectId, ref: 'Task', index: true },
   userId: { type: ObjectId, ref: 'Users', index: true },
   goalId: { type: ObjectId, ref: 'Goal', index: true },
-  reportId: { type: ObjectId, ref: 'TaskReport', index: true }
+  reportId: { type: ObjectId, ref: 'TaskReport', index: true },
+  //
+  success: { type: Boolean, default: null },
+  confirmed: { type: Boolean, default: false }
 }, is))
 
 /**
@@ -32,6 +36,17 @@ model.statics.createPlan = async function (userId, data) {
   data.goalId = goal._id
 
   return model.create(data)
+}
+
+model.methods.closePlan = async function (data, user, programId) {
+  let plan = this
+
+  let report = await mongoose.models.TaskReport.makeReport(pick(data, [ 'action', 'fact' ]), user, programId)
+  plan.reportId = report._id
+  plan.success = (data.fact >= plan.goal)
+  await plan.save()
+
+  return { report, plan }
 }
 
 module.exports = mongoose.model('KnifePlan', model)

@@ -11,14 +11,14 @@ import { getTask } from '../../client/redux/task/task'
 import { getReply } from '../../client/redux/task/reply'
 
 const TaskPage = ({ task, replyOpened, reply, specific = null, replyStatus, isReplied }) => (
-  <FeedLayout wide emptySide>
+  <FeedLayout wide emptySide menuItem='tasks'>
     <TaskContent task={task} />
 
     { (!isReplied || !reply) && <TaskReply task={task} opened={replyOpened} /> }
 
     { (reply && replyStatus) && (
-      <div className='task-inline-status' data-prefix='Статус проверки'>
-        <div className='task-inline-status__title'>{replyStatus.title}</div>
+      <div className='task-inline-status'>
+        <div className='task-inline-status__title'>Задание {replyStatus.title.toLowerCase()}</div>
       </div>
     ) }
 

@@ -1,7 +1,7 @@
 import DefaultLayout from './default'
 
-const FeedLayout = ({ children, emptySide, Side = [], wide = false }) => (
-  <DefaultLayout>
+const FeedLayout = ({ children, menuItem = null, emptySide, Side = [], wide = false }) => (
+  <DefaultLayout menuItem={menuItem}>
     <div className='feed'>
       <div className={[ 'feed__left', wide ? 'feed__left_wide' : '' ].join(' ')}>
         {children}
