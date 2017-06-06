@@ -6,6 +6,8 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
   timezone: { type: Number },
+  radar_id: { type: Number },
+  radar_access_token: { type: String },
   remote_ip: { type: String, default: null },
   uid: { type: String, default: null },
   migration_id: { type: Number },
