@@ -59,8 +59,8 @@ class PostAttachments extends Component {
     return (
       <div>
         <div className='attachments-container'>
-          {items.filter(x => x.type === 'image').map((attachment, index) => (
-            <div key={attachment.id}>
+          {items.map((attachment, index) => (
+            <div key={attachment._id}>
               <a onClick={this.open(index)}>
                 <img src={attachment.path} style={{ cursor: 'pointer' }} />
               </a>

@@ -58,19 +58,11 @@ model.statics.getLastForReplies = async function (params = {}) {
   return list
 }
 
-// model.statics.add = async function (status, meta) {
-//   if (!meta.user || !meta.reply) throw new Error('no required data specified')
-//   let data = {}
-//   return this.create({})
-// }
-
-// TODO: сделать этот метод рабочии
+// TODO: сделать этот метод рабочии и добавить разделение по программе
 model.statics.getRejectedRepliesCount = async function (userId, programId) {
   let model = this
   let data = await model.aggregate([
-    { $match: {
-      userId
-    }}
+    { $match: { userId, status: 4 } }
   ])
 
   return data.length

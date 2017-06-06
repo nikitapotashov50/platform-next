@@ -49,4 +49,17 @@ model.methods.closePlan = async function (data, user, programId) {
   return { report, plan }
 }
 
+model.methods.confirmPlan = async function (status) {
+  let plan = this
+
+  let [ report ] = await mongoose.models.TaskReport.find({ _id: plan.reportId }).limit(1).populate('income')
+  if (!report) throw new Error('no report found')
+  if (!report.income) throw new Error('no income found')
+
+  await report.income.confirm(status)
+
+  plan.confirmed = status
+  return plan.save()
+}
+
 module.exports = mongoose.model('KnifePlan', model)

@@ -1,10 +1,10 @@
-export default ({ loading = false, children, full = false }) => (
+export default ({ loading = false, children, full = false, noLoader = false }) => (
   <div className={[ 'overlay-loader', full ? 'overlay-loader_full' : '' ].join(' ')}>
     {children}
 
     { loading && (
       <div className='overlay-loader__loader'>
-        <img className='overlay-loader__image' src='/static/img/loader.gif' alt='' />
+        { !noLoader && (<img className='overlay-loader__image' src='/static/img/loader.gif' alt='' />)}
       </div>
     )}
 

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend } = require('lodash')
+const { extend, isArray } = require('lodash')
 const { is } = require('../../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -12,6 +12,8 @@ const model = new mongoose.Schema(extend({
   postId: { type: ObjectId, ref: 'Post', index: true },
   taskId: { type: ObjectId, ref: 'Task', index: true },
   replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
+  //
+  status: [ { type: ObjectId, ref: 'TaskVerification' } ],
   specific: {
     model: { type: String, enum: [ 'Goal', 'KnifePlan', 'TaskReport' ] },
     item: { type: ObjectId, refPath: 'specific.model', index: true }
@@ -61,30 +63,38 @@ model.statics.makeReply = async function (data) {
 
 model.statics.getByPostIds = async function (postIds) {
   let model = this
-  // return new Promise(async (resolve, reject) => {
+
   return model
     .find({
       enabled: true,
       postId: { $in: postIds }
     })
-    .select('specific title postId replyTypeId')
-    .populate([ 'specific.item', 'replyTypeId' ])
+    .select('specific title postId taskId status replyTypeId')
+    .populate([
+      'specific.item',
+      'replyTypeId',
+      { path: 'taskId', select: 'title _id' },
+      {
+        path: 'status',
+        select: 'status',
+        options: {
+          limit: 1,
+          sort: { created: -1 }
+        }
+      }
+    ])
     // .cache(40)
     .lean()
-
-    // resolve(replies.reduce(async (obj, item) => {
-    //   if (item.specific) obj[item.postId] = { type: item.replyTypeId.code, data: item.specific.item }
-    //   return obj
-    // }, {}))
-  // })
 }
 
-model.statics.getNotVerified = async function (programId) {
+model.statics.getNotVerified = async function (params = {}) {
+  let { programId, title } = params
+  let match = { replyTypeId: 4 }
+  match.targetProgram = Number(programId)
+  if (title) match.title = title
+
   return mongoose.models.Task.aggregate([
-    { $match: {
-      targetProgram: Number(programId),
-      replyTypeId: 4
-    }},
+    { $match: match },
     { $project: {
       _id: 1,
       title: 1
@@ -129,20 +139,59 @@ model.statics.getNotVerified = async function (programId) {
       task: '$_id.task',
       reply: '$_id.reply',
       status: '$verification'
+    }},
+    { $sample: { size: 2 } }
+  ])
+}
+
+model.statics.getByStatus = function (status, params) {
+  let model = this
+  if (!isArray(status)) status = [ status ]
+
+  return model.aggregate([
+    { $match: params },
+    { $lookup: {
+      from: 'taskverifications',
+      localField: '_id',
+      foreignField: 'taskReplyId',
+      as: 'statuses'
+    }},
+    { $unwind: '$statuses' },
+    { $sort: {
+      _id: 1,
+      'statuses.created': 1
+    }},
+    { $group: {
+      _id: {
+        _id: '$_id',
+        taskId: '$taskId'
+      },
+      status: { $last: '$statuses' }
+    }},
+    { $match: {
+      'status.status': { $in: status }
+    }},
+    { $project: {
+      _id: '$_id._id',
+      taskId: '$_id.taskId',
+      status: '$status.status'
     }}
   ])
 }
 
 /** ----------------------- MODEL METHODS ----------------------- */
 
-model.methods.addStatus = async function (statusCode, params) {
+model.methods.addStatus = async function (statusCode, params = {}) {
   let reply = this
   let status = await mongoose.models.TaskVerificationStatus.findOne({ code: statusCode })
+  let data = { status: status._id, taskReplyId: reply._id }
 
-  return mongoose.models.TaskVerification.create({
-    status: status._id,
-    taskReplyId: reply._id
-  })
+  if (params.userId) data.userId = params.userId
+
+  let verify = await mongoose.models.TaskVerification.create(data)
+  reply.status.addToSet(verify)
+
+  return reply.save()
 }
 
 model.methods.getStatus = async function () {
@@ -159,13 +208,19 @@ model.methods.getStatus = async function () {
     .sort({ created: -1 })
 }
 
-model.methods.approve = async function (data, user) {
+model.methods.verify = async function (status, user) {
   let reply = this
-  return mongoose.models.TaskVerification.add('approved', { reply, user, data })
-}
-model.methods.reject = async function (data, user) {
-  let reply = this
-  return mongoose.models.TaskVerification.add('rejected', { reply, user, data })
+
+  if (reply.replyTypeId === 4) {
+    let [ task ] = await mongoose.models.Task.find({ _id: reply.taskId }).limit(1)
+    if (!task) throw new Error('no task found')
+    let [ plan ] = await mongoose.models.KnifePlan.find({ _id: task.type.item }).limit(1)
+    if (!plan) throw new Error('no plan found')
+
+    await plan.confirmPlan(status === 'approved')
+  }
+
+  return reply.addStatus(status, { userId: user._id })
 }
 
 module.exports = mongoose.model('TaskReply', model)

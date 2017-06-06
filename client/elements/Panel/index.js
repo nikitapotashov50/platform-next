@@ -34,7 +34,7 @@ const Panel = props => {
           <div className={classNames('panel__options_button', {'panel__options_button_active': showPostMenu})} onClick={toggleOptions}>
             <EllipsisIcon />
           </div>
-          <Options />
+          { showOptions && (<Options />) }
         </div>
       )}
 

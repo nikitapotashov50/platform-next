@@ -7,7 +7,7 @@ const onClick = (type, cb, e) => {
 
 export default ({ onVerify }) => (
   <div>
-    <Button onClick={onClick.bind(this, 'approve', onVerify)}>Принять</Button>
-    <Button onClick={onClick.bind(this, 'reject', onVerify)} type='reject'>Отклонить</Button>
+    <Button onClick={onClick.bind(this, 'approved', onVerify)}>Принять</Button>
+    <Button onClick={onClick.bind(this, 'rejected', onVerify)} type='reject'>Отклонить</Button>
   </div>
 )

@@ -11,6 +11,7 @@ const getReply = async (ctx, next) => {
     ctx.__.reply = reply
     await next()
   } catch (e) {
+    console.log(e)
     ctx.body = { status: 500, message: e }
   }
 }
@@ -18,10 +19,10 @@ const getReply = async (ctx, next) => {
 module.exports = router => {
   router.bridge('/tasks', router => {
     router.get('/list', async ctx => {
-      let { programId } = ctx.query
+      let { programId, title } = ctx.query
 
       try {
-        let data = await models.TaskReply.getNotVerified(programId)
+        let data = await models.TaskReply.getNotVerified({ programId, title })
 
         // TODO: убрать лишние поля из аггрегагции
         let replies = await models.TaskReply
@@ -35,7 +36,7 @@ module.exports = router => {
             { path: 'postId', select: 'title content' }
           ])
           .sort({ created: -1 })
-          // .lean()
+          .lean()
           // .cache(60)
 
         let users = await models.Users.getShortInfo(replies.map(el => el.userId))
@@ -48,7 +49,6 @@ module.exports = router => {
           }
         }
       } catch (e) {
-        console.log(e)
         ctx.body = { status: 500 }
       }
     })
@@ -71,31 +71,19 @@ module.exports = router => {
       }
     })
 
-    router.bridge('/:rplyId', [ getReply ], router => {
-      router.put('/approve', async ctx => {
-        let { body } = ctx.request
+    router.bridge('/:replyId/:status', [ getReply ], router => {
+      router.put('/', async ctx => {
         try {
-          let status = await ctx.__.reply.approve(body, ctx.__.me)
-          if (!status) throw new Error('somethidng goes worng')
+          let status = ctx.params.status
+          if ([ 'approved', 'rejected' ].indexOf(status) === -1) throw new Error('wrong status')
+          let result = await ctx.__.reply.verify(status, ctx.__.me)
+          if (!result) throw new Error('somethidng goes worng')
           ctx.body = {
-            status: 200, result: { status }
+            status: 200,
+            result: { status: result }
           }
         } catch (e) {
-          console.log(e)
-          ctx.body = { status: 500, message: e }
-        }
-      })
-
-      router.put('/reject', async ctx => {
-        let { body } = ctx.request
-        try {
-          let status = await ctx.__.reply.reject(body, ctx.__.me)
-          if (!status) throw new Error('somethidng goes worng')
-          ctx.body = {
-            status: 200, result: { status }
-          }
-        } catch (e) {
-          console.log(e)
+          ctx.log.info(e)
           ctx.body = { status: 500, message: e }
         }
       })

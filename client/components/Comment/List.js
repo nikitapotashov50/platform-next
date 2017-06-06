@@ -8,8 +8,9 @@ import Comment from './Comment'
 
 const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, total, fetching, isAll, expanded }) => {
   let btnText = !fetching ? (isAll ? 'Скрыть комментарии' : 'Показать больше') : 'Загрузка...'
+
   let classes = [ 'comments' ]
-  if (total > 0 || expanded) classes.push('comments_footer')
+  // if (total > 0 || expanded) classes.push('comments_footer')
 
   return (
     <div className={classes.join(' ')}>
@@ -20,10 +21,7 @@ const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, to
           )}
 
           { ids.map(el => {
-            if (comments[el]) {
-              let author = users[comments[el].userId]
-              return <Comment key={'comment-' + comments[el]._id} {...comments[el]} currentUser={user._id} user={author} remove={remove(comments[el]._id)} />
-            }
+            if (comments[el] && comments[el]._id) return <Comment key={'comment-' + comments[el]._id} {...comments[el]} currentUser={user._id} user={users[comments[el].userId]} remove={remove(comments[el]._id)} />
           })}
         </div>
       )}
@@ -43,34 +41,24 @@ const mapStateToProps = ({ posts, auth, users }) => ({
   users
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  remove,
-  reduce,
-  loadMore,
-  fetchEnd,
-  fetchStart
-}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ remove, reduce, loadMore, fetchEnd, fetchStart }, dispatch)
 
-const mergeProps = (state, dispatchProps, props) => {
+const mergeProps = (state, dispatch, props) => {
   let ids = uniq([ ...props.ids, ...(state.comments.added[props.postId] || []) ])
+
   let comments = (state.comments.items[props.postId] || []).reduce((object, item) => {
     object[item._id] = item
     return object
   }, {})
 
   let moreComments = async () => {
-    dispatchProps.fetchStart(props.postId)
-    await dispatchProps.loadMore(props.postId)
-    dispatchProps.fetchEnd()
+    dispatch.fetchStart(props.postId)
+    await dispatch.loadMore(props.postId)
+    dispatch.fetchEnd()
   }
 
-  let lessComments = () => {
-    dispatchProps.reduce(props.postId, 3)
-  }
-
-  let remove = id => async () => {
-    await dispatchProps.remove(id, props.postId)
-  }
+  let lessComments = () => { dispatch.reduce(props.postId, 3) }
+  let remove = id => async () => { await dispatch.remove(id, props.postId) }
 
   let total = ids.length
   let isAll = total <= Object.keys(comments).length
@@ -83,7 +71,7 @@ const mergeProps = (state, dispatchProps, props) => {
     total,
     footer: props.footer,
     postId: props.postId,
-    expanded: props.expanded,
+    expanded: state.comments.opened === props.postId,
     //
     users: state.users,
     user: state.currentUser,

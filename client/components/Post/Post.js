@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 
-// import PostMenu from './Preview/Menu'
-// import PostFooter from './Preview/Footer'
-// import Menu from './Menu'
+import PostMenu from './Preview/Menu'
+import PostFooter from './Preview/Footer'
+
+import TaskHeader from './Preview/Subheader'
 import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
+<<<<<<< HEAD
 import TextWithImages from './TextWithImages'
 import TaskContent from '../Tasks/replyContent/index'
 import Attachments from './Attachments'
 import EditPost from './EditPost'
+=======
+import PostBody from './Preview/Body'
+>>>>>>> update
 
 class Post extends Component {
   constructor (props) {
@@ -21,76 +26,54 @@ class Post extends Component {
       likes: props.post.likes_count - Number(props.post.isLiked || false)
     }
 
+    this.toggleOptions = this.toggleOptions.bind(this)
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
-    this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
-    this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
   }
 
-  handleCommentButtonClick () {
-    this.setState({ showCommentForm: true })
-  }
-
+<<<<<<< HEAD
   handleEditButtonClick () {
     this.setState({ editPost: true })
   }
+=======
+  handleEditButtonClick () { console.log('edit post') }
+>>>>>>> update
 
-  handleOptionButtonClick (flag) {
+  toggleOptions (flag) {
     this.setState({ showPostMenu: flag })
   }
 
-  /** TODO: разобраться что за хрень */
-  getFooter () {
-    // let { post, loggedUser, onLike, isLiked } = this.props
-    // let { showCommentForm, likes } = this.state
-    // let footerProps = { _id: post._id, loggedUser, comments: post.comments, onLike, isLiked, showCommentForm, likes }
-
-    // const Footer = <PostFooter {...footerProps} onComment={this.handleCommentButtonClick} />
-
-    return null
-  }
-
   render () {
-    // const { showPostMenu } = this.state
-    const { post, user, added, onExpand, reply } = this.props
-    // onRemove
+    const { likes, showPostMenu } = this.state
+    const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment } = this.props
 
-    let Footer = this.getFooter()
+    let Footer = <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} />
 
-    // const myPost = this.props.loggedUser && this.props.loggedUser === user._id
-    const Options = null
-    // const Options = <PostMenu opened={myPost && showPostMenu} onDelete={onRemove} onEdit={this.handleEditButtonClick} onClose={this.handleOptionButtonClick} />
+    let myPost = loggedUser === user._id
+
+    const Options = <PostMenu onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
 
     let headerStyles = { noBorder: true }
-    let SubHeader = null
-    if (reply) {
-      SubHeader = (
-        <div className='task-sub-header'>
-          <div className='task-sub-header__title'>Ответ на задание</div>
-          <span className='task-sub-header__link'>Задание</span>
-        </div>
-      )
-    } else headerStyles.npBottomPadding = true
 
-    let TaskReply = null
-    if (reply && reply.type) TaskReply = TaskContent[reply.type]
+    let SubHeader = null
+    if (reply) SubHeader = <TaskHeader {...reply} />
+    else headerStyles.npBottomPadding = true
 
     return (
       <Panel
+        noMargin
+        withAnimation={added}
+        //
         Footer={Footer}
         SubHeader={SubHeader}
+        Header={<UserInline user={user} date={post.created} />}
+        //
         headerStyles={headerStyles}
+        //
         Options={() => Options}
-        withAnimation={added}
-        showOptions={this.state.showPostMenu}
-        Header={<UserInline user={user} date={this.props.created} />}
-        toggleOptions={this.handleOptionButtonClick.bind(true)}
+        showOptions={myPost && showPostMenu}
+        toggleOptions={this.toggleOptions.bind(this, !showPostMenu)}
       >
-        <div className='post-preview'>
-          <a className='post-preview__title' onClick={onExpand}>{post.title}</a>
-          { (reply && TaskReply) && (<TaskReply data={reply.data} />)}
-          <TextWithImages text={post.content} />
-          { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
-        </div>
+        <PostBody post={post} reply={reply} onExpand={onExpand} />
       </Panel>
     )
   }

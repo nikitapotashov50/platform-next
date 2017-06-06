@@ -17,7 +17,7 @@ model.statics.makeReport = async function (data, user, programId) {
 
   let model = this
   data.fact = Number(data.fact)
-  console.log(data)
+
   let income = await user.addIncome(data.fact, programId)
   return model.create({ income, action: data.action, fact: data.fact })
 }

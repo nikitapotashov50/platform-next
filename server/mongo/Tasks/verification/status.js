@@ -18,6 +18,12 @@ const defaultTypes = {
   rejected: { _id: 4, title: 'Отклонено', enabled: true }
 }
 
+model.statics.getIdObject = function () {
+  let keyobj = {}
+  for (var i in defaultTypes) { keyobj[defaultTypes[i]._id] = i }
+  return keyobj
+}
+
 module.exports = mongoose.model('TaskVerificationStatus', model)
 
 mongoose.models.TaskVerificationStatus.defaults(defaultTypes)

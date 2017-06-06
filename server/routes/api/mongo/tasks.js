@@ -18,16 +18,45 @@ module.exports = router => {
   router.get('/', async ctx => {
     let programId = ctx.query.programId
     try {
-      let [ replied, active, knife ] = await Promise.all([
-        ctx.__.me.getRepliedTasks(programId),
+      let [ active, knife ] = await Promise.all([
         ctx.__.me.getActiveTasks(programId),
         ctx.__.me.getKnifePlans(programId)
       ])
 
       ctx.body = {
         status: 200,
-        result: { active, replied, knife }
+        result: { active, knife }
       }
+    } catch (e) {
+      ctx.body = { status: 500, message: e }
+    }
+  })
+
+  router.get('/rejected', async ctx => {
+    try {
+      let active = await ctx.__.me.getRepliedByStatus(ctx.query.programId, 4)
+
+      ctx.body = { status: 200, result: { active } }
+    } catch (e) {
+      ctx.body = { status: 500, message: e }
+    }
+  })
+
+  router.get('/approved', async ctx => {
+    try {
+      let active = await ctx.__.me.getRepliedByStatus(ctx.query.programId, 3)
+
+      ctx.body = { status: 200, result: { active } }
+    } catch (e) {
+      ctx.body = { status: 500, message: e }
+    }
+  })
+
+  router.get('/pending', async ctx => {
+    try {
+      let active = await ctx.__.me.getRepliedByStatus(ctx.query.programId, [ 1, 2 ])
+
+      ctx.body = { status: 200, result: { active } }
     } catch (e) {
       ctx.body = { status: 500, message: e }
     }
@@ -40,10 +69,8 @@ module.exports = router => {
       ctx.body = {
         status: 200,
         result: { count }
-
       }
     } catch (e) {
-      console.log(e)
       ctx.body = { status: 500 }
     }
   })

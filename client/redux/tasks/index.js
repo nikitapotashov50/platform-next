@@ -15,15 +15,15 @@ export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {
   return data.result
 })
 
-export const getTasks = createAction('tasks/GET_LIST', async (programId, options = {}) => {
+export const getTasks = createAction('tasks/GET_LIST', async (programId, type, options = {}) => {
   let params = {
     params: { programId },
     withCredentials: true
   }
-  console.log(params)
-  if (options.headers) params.headers = options.headers
+  let postfix = type !== 'current' ? type : ''
 
-  let { data } = await axios.get(BACKEND_URL + '/api/mongo/tasks', params)
+  if (options.headers) params.headers = options.headers
+  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${postfix}`, params)
 
   if (data.result) {
     return {

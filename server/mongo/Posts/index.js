@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { is } = require('../utils/common')
 const { extend, isArray } = require('lodash')
 const paginate = require('mongoose-paginate')
+const pMap = require('p-map')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -48,7 +49,11 @@ model.statics.getList = async function (params = {}, query = {}) {
     lean: true,
     page: offset,
     sort: { created: -1 },
-    select: '_id title content userId comments attachments likes_count'
+    select: '_id title content userId comments attachments likes_count',
+    populate: {
+      path: 'attachments',
+      select: '_id path name'
+    }
   }
 
   let data = await model.paginate(params, options)
@@ -58,6 +63,8 @@ model.statics.getList = async function (params = {}, query = {}) {
 
 model.statics.addPost = async function (data, { user, type = 'user' }) {
   let model = this
+  let attachments = data.attachments || []
+  if (data.attachments) delete data.attachments
 
   if (data.program) {
     if (!isArray(data.program)) data.program = [ data.program ]
@@ -75,7 +82,13 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   data.userId = user
   let post = await model.create(data)
 
-  return post
+  if (attachments && attachments.length > 0) {
+    await Promise.all(attachments.map(el => {
+      return mongoose.models.Attachment.addToPost(el, post, { userId: user })
+    }))
+  }
+
+  return post.save()
 }
 
 model.methods.addComment = async function (content, userId, add = {}) {

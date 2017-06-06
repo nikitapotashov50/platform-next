@@ -10,10 +10,13 @@ const defaultState = {
   // fetching will indicate which post is processing now
   fetching: null,
   // added is for newly added comments. It's an object, with the keys representing post ids, containing array of added commtents ids
-  added: {}
+  added: {},
+  opened: null
 }
 
 /** comment actions */
+// open form
+export const openForm = createAction('/comments/COMMENT_OPEN_FORM', postId => ({ postId }))
 
 // add comment
 export const add = createAction('comments/COMMENT_ADD', async (content, postId) => {
@@ -47,6 +50,10 @@ export const fetchEnd = createAction('comments/FETCH_END')
 
 /** reducer */
 export default handleActions({
+  [openForm]: (state, { payload }) => ({
+    ...state,
+    opened: payload.postId || null
+  }),
   [add]: (state, { payload }) => ({
     ...state,
     items: {

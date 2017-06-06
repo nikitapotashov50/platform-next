@@ -66,8 +66,16 @@ module.exports = router => {
       models.Users.getShortInfo(userIds)
     ])
 
+    let replyStatuses = models.TaskVerificationStatus.getIdObject()
+
     replies = replies.reduce((obj, reply) => {
-      obj[reply.postId] = { type: reply.replyTypeId.code, data: reply.specific ? reply.specific.item : null }
+      obj[reply.postId] = {
+        _id: reply.taskId._id,
+        title: reply.taskId.title,
+        type: reply.replyTypeId.code,
+        status: replyStatuses[reply.status[0].status],
+        data: reply.specific ? reply.specific.item : null
+      }
       return obj
     }, {})
 

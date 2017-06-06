@@ -233,17 +233,24 @@ model.methods.getTasks = async function (programId, params = {}, options = {}) {
 }
 
 /**
- * GET REPLIED TASKS
+ * GET TASKS WITH REPLY STATUS IN status
  * get list of tasks in current program, which replies contains current user's replies
  */
-model.methods.getRepliedTasks = async function (programId) {
+model.methods.getRepliedByStatus = async function (programId, status) {
   let user = this
 
   let params = {
     'replies.userId': { $in: [ user._id ] }
   }
 
-  return user.getTasks(programId, params, { limit: 4 })
+  let tasks = await user.getTasks(programId, params)
+  let replies = await mongoose.models.TaskReply.getByStatus(status, {
+    userId: user._id,
+    taskId: { $in: tasks.map(el => el._id) }
+  })
+  replies = replies.map(el => String(el.taskId))
+
+  return tasks.filter(el => replies.indexOf(String(el._id)) > -1)
 }
 
 /**

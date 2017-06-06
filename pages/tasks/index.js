@@ -1,10 +1,11 @@
 import { bindActionCreators } from 'redux'
 
 import Panel from '../../client/elements/Panel'
+import PanelMenu from '../../client/components/PanelMenu'
 import PageHoc from '../../client/hocs/Page'
 import FeedLayout from '../../client/layouts/feed'
 
-import TaskPreview from '../../client/components/Tasks/Preview'
+import TaskList from '../../client/components/Tasks/List/index'
 
 import { getTasks } from '../../client/redux/tasks/index'
 
@@ -13,42 +14,20 @@ const getLink = taskId => ({
   path: `/tasks/${taskId}`
 })
 
-const TasksIndex = ({ tasks }) => {
+const filters = [
+  { href: '/tasks', path: '/tasks', title: 'Текущие', code: 'current' },
+  { href: '/tasks?type=approved', path: '/tasks?type=approved', title: 'Выполненые', code: 'approved' },
+  { href: '/tasks?type=rejected', path: '/tasks?type=rejected', title: 'Отклоненные', code: 'rejected' },
+  { href: '/tasks?type=pending', path: '/tasks?type=pending', title: 'На проверке', code: 'pending' }
+]
+
+const TasksIndex = ({ tasks, type }) => {
+  let List = TaskList[type]
   return (
     <FeedLayout wide emptySide menuItem='tasks'>
-      { (tasks.knife.length > 0) && tasks.knife.map(el => (
-        <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
-      ))}
+      <Panel noBody noMargin noBorder Menu={() => <PanelMenu items={filters} selected={type} />} />
 
-      { (tasks.active.length > 0) && (<div className='tasks-inline-header'>Активные задания</div>) }
-
-      { (tasks.active.length > 0) && tasks.active.map(el => (
-        <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
-      ))}
-      { (!tasks.active.length) && (
-        <Panel>
-          <div className='text-center'>У вас нет активных заданий, отдыхайте.</div>
-        </Panel>
-      )}
-
-      <div className='tasks-inline-header'>Выполнено</div>
-
-      { (tasks.replied.length > 0) && tasks.replied.map(el => (
-        <TaskPreview key={el._id} link={getLink(el._id)} task={el} completed status='pending' statusText='На проверке' />
-      ))}
-
-      <style jsx>{`
-        .tasks-inline-header {
-          margin: 20px 0;
-
-          font-size: 11px;
-          font-weight: 600;
-          text-align: center;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          color: color(#ebebeb b(+50%));
-        }
-      `}</style>
+      <List tasks={tasks} getLink={getLink} />
     </FeedLayout>
   )
 }
@@ -57,10 +36,12 @@ TasksIndex.getInitialProps = async ctx => {
   let { user } = ctx.store.getState()
 
   let headers = null
+  let type = ctx.query.type || 'current'
+
   if (ctx.req) headers = ctx.req.headers
-  let res = await ctx.store.dispatch(getTasks(user.programs.current, { headers }))
-  console.log(res)
-  return {}
+  await ctx.store.dispatch(getTasks(user.programs.current, type, { headers }))
+
+  return { type: ctx.query.type || 'current' }
 }
 
 const mapStateToProps = ({ tasks }) => ({
@@ -73,7 +54,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 export default PageHoc(TasksIndex, {
   title: 'Задания',
-  accessRule: () => true,
+  accessRule: user => !!user,
   mapStateToProps,
   mapDispatchToProps
 })

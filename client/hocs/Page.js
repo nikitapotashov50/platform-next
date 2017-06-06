@@ -450,6 +450,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              .task-sub-header {
+                               position: relative;
+                              
                                &__title {
                                  line-height: 15px;
 
@@ -473,6 +475,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                  &:hover { color: #333; }
                                  &:visited, &:active { color: #777; }
+                               }
+
+                               &__status {
+                                 top: 0;
+                                 right: 0;
+                                 position: absolute;
                                }
                              }
 
@@ -1363,18 +1371,20 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .comments {
                                box-sizing: border-box;
                                
-                               margin: 0 -15px;
-                               max-width: 800px;
+                               /* margin: 0 -15px;
+                               margin-bottom: 15px;
+                               max-width: 800px; */
                                padding: 0;
+                               
 
                                background: #fff;
 
-                               &_footer {
+                               /* &_footer {
                                  margin-bottom: -10px;
-                               }
+                               } */
 
                                &__block {
-                                 margin: 10px 0;
+                                 /* margin: 10px 0; */
                                  padding-left: 15px;
                                  padding-right: 15px;
                                  border-top: 1px solid rgb(235, 235, 235);
@@ -1386,6 +1396,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  &_form {
                                    margin-bottom: 0;
                                  }
+                                 &:first-of-type { border-top: none }
                                }
 
                                &__form {
