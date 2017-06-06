@@ -135,7 +135,7 @@ class Chat extends Component {
               <button onClick={() => {
                 if (!this.state.newMessageText) return
                 this.props.sendMessage(
-                  this.props.currentChat,
+                  this.props.currentChat.payload,
                   this.state.newMessageText
                 )
                 this.scrollToEnd()
