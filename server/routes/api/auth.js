@@ -11,6 +11,13 @@ const getUser = async email => {
 
   if (!user) return null
 
+  const userMeta = await mongoose.models.UsersMeta.findOne({
+    userId: user._id
+  })
+
+  user.radar_id = userMeta.radar_id
+  user.radar_access_token = userMeta.radar_access_token
+
   return { user }
 }
 
@@ -127,6 +134,7 @@ module.exports = router => {
       } else if (!dbUser) throw new Error('No user found in our local database')
 
       ctx.session = dbUser
+
       ctx.body = dbUser
     } catch (e) {
       ctx.throw(400, e.message)
