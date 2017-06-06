@@ -20,7 +20,7 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
   }
 
   return (
-    <div key={messageId}>
+    <div key={messageId} className={classNames({ me: you && you.radar_id === userId })}>
       {isGroup ? ( // сообщение в групповом чате
         <div className='group'>
           <div className='group-left'>
@@ -31,11 +31,11 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
               <div className='group-username'>{userName}</div>
               <div className='time'>{moment.unix(date).format('HH:mm')}</div>
             </div>
-            <div>{text}</div>
+            <div className='text'>{text}</div>
           </div>
         </div>
       ) : ( // сообщение в одиночном чате
-        <div className={classNames('message', { me: you && you.radar_id === userId })}>{text}</div>
+        <div className='message text'>{text}</div>
       )}
 
       <style jsx>{`
@@ -80,9 +80,12 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
         }
 
         .me {
+          align-self: flex-end;
+        }
+
+        .me > .text {
           background: #0064FF;
           color: #fff;
-          align-self: flex-end;
         }
       `}</style>
     </div>
