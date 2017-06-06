@@ -21,7 +21,7 @@ const CommentsList = ({ user, postId, loadMore, remove, comments, ids, users, to
           )}
 
           { ids.map(el => {
-            if (comments[el] && comments[el]._id) return <Comment key={'comment-' + comments[el]._id} {...comments[el]} currentUser={user._id} user={users[comments[el].userId]} remove={remove(comments[el]._id)} />
+            if (comments[el] && comments[el]._id) return <Comment key={'comment-' + comments[el]._id} {...comments[el]} currentUser={user && user._id} user={users[comments[el].userId]} remove={remove(comments[el]._id)} />
           })}
         </div>
       )}
@@ -47,7 +47,9 @@ const mergeProps = (state, dispatch, props) => {
   let ids = uniq([ ...props.ids, ...(state.comments.added[props.postId] || []) ])
 
   let comments = (state.comments.items[props.postId] || []).reduce((object, item) => {
-    object[item._id] = item
+    if (item && item._id) {
+      object[item._id] = item
+    }
     return object
   }, {})
 
