@@ -76,5 +76,13 @@ export default handleActions({
       ...state.user,
       ...(payload.user || {})
     }
+  }),
+  [refresh]: (state, { payload }) => ({
+    ...state,
+    user: {
+      ...state.user,
+      radar_id: payload.radar_id,
+      radar_access: payload.radar_access
+    }
   })
 }, defaultState)

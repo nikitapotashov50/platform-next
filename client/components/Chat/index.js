@@ -28,7 +28,7 @@ class Chat extends Component {
   }
 
   getCurrentChat () {
-    const currentChat = this.props.chats.filter(chat => chat.chatId === this.props.currentChat)
+    const currentChat = this.props.chats.filter(chat => chat.chatId === this.props.currentChat.payload)
     return currentChat[0] || {}
   }
 
