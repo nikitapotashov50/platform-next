@@ -55,7 +55,9 @@ class HeaderRegisteredMenu extends Component {
 
   componentDidMount () {
     // this.props.getChatList()
-    // this.props.listen()
+    if (this.props.user.radar_access || this.props.isChatAuth) {
+      this.props.listen()
+    }
   }
 
   render () {

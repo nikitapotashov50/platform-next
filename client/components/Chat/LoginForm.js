@@ -11,7 +11,7 @@ class ChatLoginForm extends Component {
   }
 
   render () {
-    const { submit, onSuccess, onError } = this.props
+    const { submit } = this.props
 
     return (
       <div>
@@ -34,14 +34,19 @@ class ChatLoginForm extends Component {
             })
           }} />
 
-        <button onClick={async () => {
-          const action = await submit(this.state.password)
-          if (action.error) {
-            onError()
-          } else {
-            onSuccess()
-          }
-        }}>Начать использовать сообщения</button>
+        <button
+          onClick={() => {
+            submit(this.state.password)
+          }}
+          // onClick={async () => {
+          //   const action = await submit(this.state.password)
+          //   if (action.error) {
+          //     onError()
+          //   } else {
+          //     onSuccess()
+          //   }
+          // }}
+        >Начать использовать сообщения</button>
 
         <style jsx>{`
           button {

@@ -118,7 +118,7 @@ class Chat extends Component {
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <div className='message-list'>
               {this.getMessages().map(message => (
-                <Message {...message} isGroup={this.getCurrentChat().isGroup} />
+                <Message key={message.messageId} {...message} isGroup={this.getCurrentChat().isGroup} />
               ))}
             </div>
 
@@ -135,7 +135,7 @@ class Chat extends Component {
               <button onClick={() => {
                 if (!this.state.newMessageText) return
                 this.props.sendMessage(
-                  this.props.currentChat,
+                  this.props.currentChat.payload,
                   this.state.newMessageText
                 )
                 this.scrollToEnd()
