@@ -47,7 +47,7 @@ export default asyncReducers => combineReducers({
     programs,
     subscriptions
   }),
-  chat
+  chat,
   tasks: combineReducers({
     items: taskItems
   }),

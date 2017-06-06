@@ -6,14 +6,11 @@ import PostFooter from './Preview/Footer'
 import TaskHeader from './Preview/Subheader'
 import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
-<<<<<<< HEAD
 import TextWithImages from './TextWithImages'
 import TaskContent from '../Tasks/replyContent/index'
 import Attachments from './Attachments'
 import EditPost from './EditPost'
-=======
 import PostBody from './Preview/Body'
->>>>>>> update
 
 class Post extends Component {
   constructor (props) {
@@ -21,8 +18,7 @@ class Post extends Component {
     this.state = {
       showPostMenu: false,
       showCommentForm: false,
-      likes: props.likes_count - Number(props.isLiked || false),
-      editPost: false
+      editPost: false,
       likes: props.post.likes_count - Number(props.post.isLiked || false)
     }
 
@@ -30,13 +26,9 @@ class Post extends Component {
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
   }
 
-<<<<<<< HEAD
   handleEditButtonClick () {
     this.setState({ editPost: true })
   }
-=======
-  handleEditButtonClick () { console.log('edit post') }
->>>>>>> update
 
   toggleOptions (flag) {
     this.setState({ showPostMenu: flag })

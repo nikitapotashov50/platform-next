@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { is } = require('../utils/common')
 const { extend, isArray } = require('lodash')
 const paginate = require('mongoose-paginate')
+const moment = require('moment')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -58,6 +59,36 @@ model.statics.getList = async function (params = {}, query = {}) {
   let data = await model.paginate(params, options)
 
   return { total: data.total, posts: data.docs }
+}
+
+model.statics.getActual = async function (params, query = {}) {
+  let model = this
+  let { limit = 7, offset = 0, days = 7 } = query
+
+  params.created = { $gte: moment().subtract(days, 'days').toISOString() }
+  console.log(moment().subtract(days, 'days').toISOString())
+  // console.log(moment().toISOString(), moment().add(days, 'days').toISOString())
+
+  return model.aggregate([
+    { $match: params },
+    { $project: {
+      title: 1,
+      _id: 1,
+      created: 1,
+      content: 1,
+      userId: 1,
+      comments: 1,
+      attachments: 1,
+      likes_count: 1,
+      comment_count: { $multiply: [ { $size: '$comments' }, 2 ] }
+    }},
+    { $sort: {
+      likes_count: -1,
+      comment_count: -1
+    }},
+    { $limit: limit },
+    { $skip: limit * offset }
+  ])
 }
 
 model.statics.addPost = async function (data, { user, type = 'user' }) {

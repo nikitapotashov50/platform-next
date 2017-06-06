@@ -33,7 +33,7 @@ const getLiked = (postIds, userId) => {
 
 module.exports = router => {
   router.get('/', async ctx => {
-    let { programId = 3, authorIds, user } = ctx.query
+    let { programId = 3, authorIds, user, mode = 'new' } = ctx.query
 
     let params = {}
     params.programs = { $in: [ Number(programId) ] }
@@ -43,7 +43,16 @@ module.exports = router => {
 
     let options = pick(ctx.query, [ 'limit', 'offset' ])
 
-    let { total, posts } = await models.Post.getList(params, options)
+    let result = {}
+    let total = null
+    let posts = []
+
+    if (mode === 'new') {
+      result = await models.Post.getList(params, options)
+      posts = result.posts
+      total = result.total
+    } if (mode === 'actual') posts = await models.Post.getActual(params, options)
+
     let comments = await models.Comment.getForPosts(posts, { limit: 3, reversed: true })
 
     let userIds = []
