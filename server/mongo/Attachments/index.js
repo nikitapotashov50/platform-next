@@ -18,6 +18,7 @@ const model = new mongoose.Schema(extend({
   }
 }, is))
 
+<<<<<<< HEAD
 model.statics.addToPost = async function (data, post, add = {}) {
   let final = { name: data.key, path: data.url }
   final.target = { model: 'Post', item: post._id }
@@ -28,6 +29,11 @@ model.statics.addToPost = async function (data, post, add = {}) {
   post.attachments.addToSet(attachment)
   await post.save()
 
+=======
+model.statics.addToPost = async function (data, postId) {
+  data.target = { model: 'Post', item: postId }
+  let attachment = await this.create(data)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   return attachment
 }
 

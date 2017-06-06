@@ -77,6 +77,59 @@ export default ({ task, link, completed = false, status = null, statusText = nul
       .task-preview__button {
         color: #196aff;
       }
+<<<<<<< HEAD
+=======
+
+
+       /*  Мобильные стили */
+      @media screen and (max-width: 39.9375em) {
+
+        .task-preview {
+          display: block;
+          overflow: hidden;
+        }
+
+        .task-preview__block {
+        vertical-align: top;
+        display: inline;
+        }
+        .task-preview__block_title {
+          float: left;
+          
+         width: 100%;
+        }
+
+        .task-preview__block_status {
+          width: 50%;
+          border-left: 0 none;
+          float: left;
+          overflow: hidden;
+          padding: 20px 0 15px 0;
+          line-height: 0;
+          
+        }
+
+        .task-remaining:before {
+        display: inline;
+        float: left;
+        font-size: 12px;
+        font-weight: 500;
+    
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        content: attr(data-prefix);
+      }
+      .task-remaining {
+        font-size: 12px;
+        font-weight: 700;
+        padding-left: 50px;
+      }
+
+
+              
+
+      }
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     `}</style>
   </Panel>
 )

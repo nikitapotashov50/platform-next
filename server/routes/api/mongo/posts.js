@@ -33,7 +33,11 @@ const getLiked = (postIds, userId) => {
 
 module.exports = router => {
   router.get('/', async ctx => {
+<<<<<<< HEAD
     let { programId = 3, authorIds, user, mode = 'new' } = ctx.query
+=======
+    let { programId = 3, authorIds, user } = ctx.query
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 
     let params = {}
     params.programs = { $in: [ Number(programId) ] }
@@ -43,6 +47,7 @@ module.exports = router => {
 
     let options = pick(ctx.query, [ 'limit', 'offset' ])
 
+<<<<<<< HEAD
     let result = {}
     let total = null
     let posts = []
@@ -53,6 +58,9 @@ module.exports = router => {
       total = result.total
     } if (mode === 'actual') posts = await models.Post.getActual(params, options)
 
+=======
+    let { total, posts } = await models.Post.getList(params, options)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     let comments = await models.Comment.getForPosts(posts, { limit: 3, reversed: true })
 
     let userIds = []
@@ -75,6 +83,7 @@ module.exports = router => {
       models.Users.getShortInfo(userIds)
     ])
 
+<<<<<<< HEAD
     let replyStatuses = models.TaskVerificationStatus.getIdObject()
 
     replies = replies.reduce((obj, reply) => {
@@ -85,6 +94,10 @@ module.exports = router => {
         status: replyStatuses[reply.status[0].status],
         data: reply.specific ? reply.specific.item : null
       }
+=======
+    replies = replies.reduce((obj, reply) => {
+      obj[reply.postId] = { type: reply.replyTypeId.code, data: reply.specific ? reply.specific.item : null }
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
       return obj
     }, {})
 

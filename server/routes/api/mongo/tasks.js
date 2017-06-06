@@ -18,20 +18,30 @@ module.exports = router => {
   router.get('/', async ctx => {
     let programId = ctx.query.programId
     try {
+<<<<<<< HEAD
       let [ active, knife ] = await Promise.all([
+=======
+      let [ replied, active, knife ] = await Promise.all([
+        ctx.__.me.getRepliedTasks(programId),
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
         ctx.__.me.getActiveTasks(programId),
         ctx.__.me.getKnifePlans(programId)
       ])
 
       ctx.body = {
         status: 200,
+<<<<<<< HEAD
         result: { active, knife }
+=======
+        result: { active, replied, knife }
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
       }
     } catch (e) {
       ctx.body = { status: 500, message: e }
     }
   })
 
+<<<<<<< HEAD
   router.get('/rejected', async ctx => {
     try {
       let active = await ctx.__.me.getRepliedByStatus(ctx.query.programId, 4)
@@ -62,6 +72,8 @@ module.exports = router => {
     }
   })
 
+=======
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   router.get('/count', async ctx => {
     try {
       let count = await models.TaskVerification.getRejectedRepliesCount(ctx.__.me._id, ctx.session.currentProgram)
@@ -69,8 +81,15 @@ module.exports = router => {
       ctx.body = {
         status: 200,
         result: { count }
+<<<<<<< HEAD
       }
     } catch (e) {
+=======
+
+      }
+    } catch (e) {
+      console.log(e)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
       ctx.body = { status: 500 }
     }
   })

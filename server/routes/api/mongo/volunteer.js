@@ -11,7 +11,10 @@ const getReply = async (ctx, next) => {
     ctx.__.reply = reply
     await next()
   } catch (e) {
+<<<<<<< HEAD
     console.log(e)
+=======
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     ctx.body = { status: 500, message: e }
   }
 }
@@ -19,10 +22,17 @@ const getReply = async (ctx, next) => {
 module.exports = router => {
   router.bridge('/tasks', router => {
     router.get('/list', async ctx => {
+<<<<<<< HEAD
       let { programId, title } = ctx.query
 
       try {
         let data = await models.TaskReply.getNotVerified({ programId, title })
+=======
+      let { programId } = ctx.query
+
+      try {
+        let data = await models.TaskReply.getNotVerified(programId)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 
         // TODO: убрать лишние поля из аггрегагции
         let replies = await models.TaskReply
@@ -36,7 +46,11 @@ module.exports = router => {
             { path: 'postId', select: 'title content' }
           ])
           .sort({ created: -1 })
+<<<<<<< HEAD
           .lean()
+=======
+          // .lean()
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
           // .cache(60)
 
         let users = await models.Users.getShortInfo(replies.map(el => el.userId))
@@ -49,6 +63,10 @@ module.exports = router => {
           }
         }
       } catch (e) {
+<<<<<<< HEAD
+=======
+        console.log(e)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
         ctx.body = { status: 500 }
       }
     })
@@ -71,6 +89,7 @@ module.exports = router => {
       }
     })
 
+<<<<<<< HEAD
     router.bridge('/:replyId/:status', [ getReply ], router => {
       router.put('/', async ctx => {
         try {
@@ -84,6 +103,33 @@ module.exports = router => {
           }
         } catch (e) {
           ctx.log.info(e)
+=======
+    router.bridge('/:rplyId', [ getReply ], router => {
+      router.put('/approve', async ctx => {
+        let { body } = ctx.request
+        try {
+          let status = await ctx.__.reply.approve(body, ctx.__.me)
+          if (!status) throw new Error('somethidng goes worng')
+          ctx.body = {
+            status: 200, result: { status }
+          }
+        } catch (e) {
+          console.log(e)
+          ctx.body = { status: 500, message: e }
+        }
+      })
+
+      router.put('/reject', async ctx => {
+        let { body } = ctx.request
+        try {
+          let status = await ctx.__.reply.reject(body, ctx.__.me)
+          if (!status) throw new Error('somethidng goes worng')
+          ctx.body = {
+            status: 200, result: { status }
+          }
+        } catch (e) {
+          console.log(e)
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
           ctx.body = { status: 500, message: e }
         }
       })

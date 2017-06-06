@@ -16,6 +16,10 @@ export const getTotalCount = createAction('volunteer/tasks/GET_COUNT', async (pa
   options.params = params
   options.withCredentials = true
   let { data } = await axios.get(`${BACKEND_URL}/api/mongo/volunteer/tasks/count`, options)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   if (data.status === 200) return data.result
 })
 
@@ -28,9 +32,13 @@ export const getNotVerified = createAction('volunteer/tasks/LOAD', async (params
   if (data.status === 200) return data.result
 })
 
+<<<<<<< HEAD
 export const verifyTask = createAction(`/volunteer/tasks/TASK_VERIFY`, async (replyId, type) => {
   let { data } = await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type })
   console.log(data)
+=======
+export const verifyTask = createAction('/volunteer/tasks/TASK_VERIFY', async (replyId, type) => {
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   return { replyId }
 })
 

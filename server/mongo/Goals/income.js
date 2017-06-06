@@ -12,9 +12,12 @@ const model = new mongoose.Schema(extend({
   programId: { type: Number, ref: 'Program' }
 }, created))
 
+<<<<<<< HEAD
 model.methods.confirm = async function (status) {
   this.confirmed = status
   return this.save()
 }
 
+=======
+>>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 module.exports = mongoose.model('Income', model)
