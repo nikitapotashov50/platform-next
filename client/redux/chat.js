@@ -9,19 +9,19 @@ const defaultState = {
 }
 
 export const login = createAction('chat/LOGIN', async password => {
-  const { data } = await axios.post('/api/chat/login', {
+  const { data } = await axios.post('/api/mongo/chat/login', {
     password
   })
   return data
 })
 
 export const getChatList = createAction('chat/GET_CHAT_LIST', async () => {
-  const { data } = await axios('/api/chat/list')
+  const { data } = await axios('/api/mongo/chat/list')
   return data.chats
 })
 
 export const getMessageList = createAction('chat/GET_MESSAGE_LIST', async chatId => {
-  const { data } = await axios(`/api/chat/${chatId}/message`)
+  const { data } = await axios(`/api/mongo/chat/${chatId}/message`)
   return {
     chatId,
     messages: data.messages
@@ -29,7 +29,7 @@ export const getMessageList = createAction('chat/GET_MESSAGE_LIST', async chatId
 })
 
 export const sendMessage = createAction('chat/SEND_MESSAGE', async (chatId, text) => {
-  const { data } = await axios.post(`/api/chat/${chatId}/message`, {
+  const { data } = await axios.post(`/api/mongo/chat/${chatId}/message`, {
     text
   })
 
@@ -48,7 +48,7 @@ const receiveData = createAction('chat/RECEIVE_DATA')
 
 export const listen = () => async dispatch => {
   try {
-    const { data } = await axios.get('/api/chat/access_token')
+    const { data } = await axios.get('/api/mongo/chat/access_token')
     const token = data
 
     const socket = new WebSocket(`ws://bmchat.maximumsoft.ru/notify/?accessToken=${token}`)
