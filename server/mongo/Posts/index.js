@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const { is } = require('../utils/common')
 const { extend, isArray } = require('lodash')
 const paginate = require('mongoose-paginate')
-const pMap = require('p-map')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
