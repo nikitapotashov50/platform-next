@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "./config/babel-preset.js"
+  ],
+  "plugins": [
+    ["transform-define", "./config/env-config.js"]
+  ]
+}

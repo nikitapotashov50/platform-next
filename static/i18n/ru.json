@@ -1,0 +1,101 @@
+{
+  "auth": {
+    "login": {
+      "title": "Вход с аккаунтом БМ",
+      "fields": {
+        "email": "Введите ваш E-mail:",
+        "password": "Введите ваш пароль:"
+      },
+      "placeholders": {
+        "email": "Электронная почта",
+        "password": "Пароль"
+      },
+      "errors": {},
+      "submit": "Войти",
+      "recover": "Восстановить пароль",
+      "support": "Техническая поддержка"
+    },
+    "registration": {
+      "title": "Регистрация",
+      "fields": {
+        "email": "Электронная почта",
+        "last_name": "Фамилия",
+        "first_name": "Имя"
+      },
+      "errors": {},
+      "submit": "Зарегистрироваться",
+      "login": "У меня есть аккаунт",
+      "terms": "Подтверждая ваш аккаунт вы соглашаетесь с Политикой Конфиденциальности сайта platform.molodost.bz."
+    },
+    "recovery": {
+      "title": "Восстановить пароль",
+      "fields": {
+        "email": "Электронная почта"
+      },
+      "placeholders": {
+        "email": "Электронная почта"
+      },
+      "errors": {},
+      "submit": "Восстановить пароль",
+      "login": "Войти"
+    }
+  },
+  "account": {
+    "settings": {
+      "title": "Настройки аккаунта",
+      "main": {
+        "title": "Основная информация",
+        "fields": {
+          "last_name": "Фамилия",
+          "first_name": "Имя",
+          "city": "Город",
+          "birthday": "Дата рождения"
+        }
+      },
+      "contacts": {
+        "title": "Контактные данные",
+        "fields": {
+          "vk": "ВКонтакте",
+          "facebook": "Facebook",
+          "instagram": "Instargam",
+          "phone": "Контактный телефон",
+          "website": "Сайт"
+        }
+      },
+      "goal": {
+        "title": "Ниша и Цель",
+        "fields": {
+          "a": "Точка А",
+          "b": "Точка Б",
+          "occupation": "Ниша",
+          "category": "Категория бизнеса",
+          "date": "Дата постановки точки Б"
+        }
+      },
+      "about": {
+        "title": "О себе",
+        "fields": {
+          "hobbi": "Хобби",
+          "about": "Рассказ о себе"
+        }
+      },
+      "avatar": {
+        "title": "Аватар и фон",
+        "fields": {
+          "avatar": "Картинка профиля",
+          "background": "Картинка фона"
+        }
+      },
+      "other": {
+        "title": "Настройки платформы",
+        "fields": {
+          "lang": "Язык"
+        }
+      }
+    }
+  },
+  "common": {
+    "save": "Сохранить",
+    "clear": "Очистить"
+  }
+}

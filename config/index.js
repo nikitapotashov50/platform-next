@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 module.exports = {
   server: {
     host: process.env.HOST || 'localhost',
@@ -15,5 +13,9 @@ module.exports = {
   bmapi: {
     client_id: process.env.BM_API_CLIENT_ID,
     client_secret: process.env.BM_API_CLIENT_SECRET
+  },
+  aws: {
+    access_key_id: process.env.AWS_ACCESS_KEY_ID,
+    secret_access_key: process.env.AWS_SECRET_ACCESS_KEY
   }
 }
