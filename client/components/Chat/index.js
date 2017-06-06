@@ -90,14 +90,16 @@ class Chat extends Component {
                   <div className='chat-name'>
                     {chat.chatName}
                   </div>
-                  <div className='chat-last-message'>
-                    {chat.lastMessage.userId === you.radarId && (
-                      <span><span className='chat-last-message-author'>
-                        {you.first_name}
-                      </span>: </span>
-                    )}
-                    {chat.lastMessage.text.substring(0, 25) + '...'}
-                  </div>
+                  {chat.lastMessage && (
+                    <div className='chat-last-message'>
+                      {chat.lastMessage.userId === you.radarId && (
+                        <span><span className='chat-last-message-author'>
+                          {you.first_name}
+                        </span>: </span>
+                      )}
+                      {chat.lastMessage.text.substring(0, 25) + '...'}
+                    </div>
+                  )}
                 </div>
                 <div className='unread-count'>
                   {chat.unreadMessageCount}
