@@ -1,6 +1,9 @@
 import { isUndefined } from 'lodash'
+import moment from 'moment'
 
-export default ({ user, t, onChange, affected }) => (
+import DateInput from '../Common/dateInput'
+
+export default ({ user, t, onChange, affected, errors }) => (
   <form className='panel-form'>
     <div className='panel-form__row'>
       <label className='panel-form__label'>{t('account.settings.main.fields.last_name')}</label>
@@ -19,7 +22,8 @@ export default ({ user, t, onChange, affected }) => (
 
     <div className='panel-form__row'>
       <label className='panel-form__label'>{t('account.settings.main.fields.birthday')}</label>
-      <input className='panel-form__input' value={isUndefined(affected.birthday) ? user.birthday || '' : affected.birthday} onChange={onChange.bind(this, 'birthday')} type='text' />
+      <DateInput className='panel-form__input' value={isUndefined(affected.birthday) ? moment(user.birthday).format('DD MM YYYY') || '' : affected.birthday} onChange={onChange.bind(this, 'birthday')} />
+      { errors.birthday && <div className='panel-form__error'>{errors.birthday}</div> }
     </div>
   </form>
 )

@@ -5,10 +5,12 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 
 import Post from './Post'
-import Panel from '../Panel'
+import Panel from '../../elements/Panel'
 import PostFull from './Full'
 import PostModal from './Modal'
 import OverlayLoader from '../OverlayLoader'
+
+import Comments from '../Comment/List'
 
 import { getInitialProps, mapStateToProps, mapDispatchToProps, mergeProps } from '../../utils/Post/list'
 
@@ -70,15 +72,20 @@ class PostList extends Component {
   }
 
   render () {
-    const { posts = [], users = {}, fetching, removePost, toggleLike, loggedUser, likes, total } = this.props
+    const { posts = [], users = {}, replies = {}, fetching, removePost, onComment, toggleLike, loggedUser, likes, total } = this.props
     const { expanded } = this.state
 
     let postCount = posts.length
 
     return (
-      <OverlayLoader loading={fetching}>
+      <OverlayLoader loading={fetching} noLoader>
         { postCount > 0 && posts.map((post, index) => (
-          <Post key={post.id} {...post} loggedUser={loggedUser} user={users[post.user_id]} isLiked={isLiked(likes, post.id)} onLike={toggleLike(post.id)} onRemove={removePost(post.id)} onExpand={this.onPostExpand(post, index)} />
+          <div key={post._id}>
+            <Post post={post} loggedUser={loggedUser} reply={replies[post._id]} user={users[post.userId]} onComment={onComment(post._id)} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
+            <Panel noPadding bodyStyles={{ noPadding: true }}>
+              <Comments postId={post._id} ids={post.comments} />
+            </Panel>
+          </div>
         ))}
 
         { (postCount > 0 && total > postCount) && (
@@ -94,7 +101,7 @@ class PostList extends Component {
         {/* Модалка с постом */}
         { !!expanded && (
           <PostModal isOpened={!!expanded} onPaginate={this.onPostPaginate} onClose={this.onPostExpand(null)}>
-            <PostFull {...expanded} loggedUser={loggedUser} user={users[expanded.user_id]} isLiked={isLiked(likes, expanded.id)} onLike={toggleLike(expanded.id)} />
+            <PostFull {...expanded} loggedUser={loggedUser} user={users[expanded.userId]} isLiked={isLiked(likes, expanded._id)} onLike={toggleLike(expanded._id)} />
           </PostModal>
         )}
 

@@ -14,8 +14,8 @@ let defaultState = {
 // action creators
 // export const getUserInfo = createAction('profile/GET_INFO', ({ user, groups, subscriptions, subscribers, goal }) => ({ user, groups, goal, subscriptions, subscribers }))
 export const getUser = createAction('profile/GET_USER', async username => {
-  let params = { username }
-  let { data } = await axios.get(BACKEND_URL + '/api/users/user', { params })
+  // let params = { username }
+  let { data } = await axios.get(BACKEND_URL + '/api/mongo/users/' + username)
 
   return data.status === 200
     ? data.result
@@ -57,7 +57,7 @@ export const userNotFound = createAction('profile/NOT_FOUND')
 export default handleActions({
   [getUser]: (state, { payload }) => (
     payload.user
-      ? { ...defaultState, user: payload.user }
+      ? { ...defaultState, ...payload }
       : { ...defaultState }
   ),
   [getInfo]: (state, { payload }) => ({
@@ -66,5 +66,7 @@ export default handleActions({
   }),
   [userNotFound]: (state, action) => ({
     ...defaultState
-  })
+  }),
+  [fetchEnd]: state => ({ ...state, fetching: false }),
+  [fetchStart]: state => ({ ...state, fetching: true })
 }, defaultState)

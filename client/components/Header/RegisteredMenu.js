@@ -47,7 +47,7 @@ class HeaderRegisteredMenu extends Component {
     let result = []
     for (var i in items) {
       result.push(
-        <option value={items[i].id} key={'program-' + items[i].id}>{items[i].title}</option>
+        <option value={items[i]._id} key={'program-' + items[i]._id}>{items[i].title}</option>
       )
     }
     return result

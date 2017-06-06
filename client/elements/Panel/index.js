@@ -21,7 +21,7 @@ const Panel = props => {
   let { children, noBody, bodyStyles = {} } = props
   let { Menu, menuStyles } = props
   let { Footer } = props
-  let { Options, toggleOptions, showPostMenu, showPostMenuButton } = props
+  let { Options, toggleOptions, showOptions, showPostMenuButton } = props
 
   let footerArray = null
   if (Footer) footerArray = isArray(Footer) ? Footer : [ Footer ]
@@ -31,10 +31,10 @@ const Panel = props => {
 
       { showPostMenuButton && Options && (
         <div className='panel__options'>
-          <div className={classNames('panel__options_button', {'panel__options_button_active': showPostMenu})} onClick={toggleOptions}>
+          <div className={classNames('panel__options_button', {'panel__options_button_active': showOptions})} onClick={toggleOptions}>
             <EllipsisIcon />
           </div>
-          <Options />
+          { showOptions && (<Options />) }
         </div>
       )}
 

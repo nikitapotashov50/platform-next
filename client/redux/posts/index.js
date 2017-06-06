@@ -4,6 +4,7 @@ import { handleActions, createAction } from 'redux-actions'
 /** default state  */
 export const defaultState = {
   posts: [],
+  replies: {},
   query: {},
   total: 0,
   fething: false
@@ -11,7 +12,7 @@ export const defaultState = {
 
 /** posts fetching actions */
 export const fetchPosts = createAction('posts/LOAD_MORE', async (params, serverPath = '', isInitial = false) => {
-  let apiPath = serverPath + '/api/post'
+  let apiPath = serverPath + '/api/mongo/posts'
   const { data } = await axios.get(apiPath, { params })
 
   return {
@@ -32,7 +33,7 @@ export const queryUpdate = createAction('posts/POSTS_LIST_QUERY_UPDATE', (query,
 
 /** posts add actions */
 export const addPost = createAction('posts/POST_ADD', async post => {
-  let { data } = await axios.post('/api/post', post, { withCredentials: true })
+  let { data } = await axios.post('/api/mongo/posts', post, { withCredentials: true })
 
   return {
     users: data.result.users,
@@ -68,19 +69,19 @@ const toggleFetchFlag = (state, flag) => ({
 
 // resucer
 export default handleActions({
-  [fetchPosts]: (state, action) => ({
+  [fetchPosts]: (state, { payload }) => ({
     ...state,
     posts: [
       // тут добавляем посты в конец списка
-      ...(action.payload.offset ? state.posts : []),
-      ...action.payload.posts
+      ...(payload.offset ? state.posts : []),
+      ...(payload.posts || [])
     ],
-    users: {
-      ...state.users,
-      ...(action.payload.users || {})
+    replies: {
+      ...(payload.offset ? state.replies : {}),
+      ...(payload.replies || {})
     },
-    total: action.payload.total,
-    offset: action.payload.offset
+    total: payload.total,
+    offset: payload.offset
   }),
   [addPost]: (state, { payload }) => ({
     ...state,
@@ -88,11 +89,7 @@ export default handleActions({
       // тут добавляем пост в начало списка
       ...payload.posts,
       ...state.posts
-    ],
-    users: {
-      ...state.users,
-      ...(payload.users || {})
-    }
+    ]
   }),
   [endListFetch]: state => toggleFetchFlag(state, false),
   [startListFetch]: state => toggleFetchFlag(state, true),
@@ -106,43 +103,15 @@ export default handleActions({
   [clearList]: state => ({ ...state, posts: [] }),
   [deletePost]: (state, action) => ({
     ...state,
-    posts: state.posts.filter(post => post.id !== action.payload)
+    posts: state.posts.filter(post => post._id !== action.payload)
   }),
   [updatePost]: (state, action) => ({
     ...state,
     posts: state.posts.map(post => {
-      if (post.id === action.payload.id) {
+      if (post._id === action.payload._id) {
         return { ...post, ...action.payload.data }
       }
       return post
     })
   })
-  // [addLike]: (state, action) => {
-  //   const postId = action.payload.post_id
-  //   const posts = state.posts.map(post => {
-  //     return post.id === postId ? {
-  //       ...post,
-  //       likes: [...post.likes, action.payload],
-  //       liked: true
-  //     } : post
-  //   })
-  //   return {
-  //     ...state,
-  //     posts
-  //   }
-  // },
-  // [removeLike]: (state, action) => {
-  //   const postId = action.payload.post_id
-  //   const posts = state.posts.map(post => {
-  //     return post.id === postId ? {
-  //       ...post,
-  //       likes: post.likes.filter(like => like.id !== action.payload.id),
-  //       liked: false
-  //     } : post
-  //   })
-  //   return {
-  //     ...state,
-  //     posts
-  //   }
-  // }
 }, defaultState)

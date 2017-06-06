@@ -1,7 +1,8 @@
-import axios from 'axios'
 import _ from 'lodash'
+import moment from 'moment'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 
 import MainSettings from '../../client/components/AccountSettings/Main'
 import AboutSettings from '../../client/components/AccountSettings/About'
@@ -12,10 +13,10 @@ import ContactsSettings from '../../client/components/AccountSettings/Contacts'
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
 import Page from '../../client/hocs/Page'
-import Panel from '../../client/components/Panel'
+import Panel from '../../client/elements/Panel'
 import OverlayLoader from '../../client/components/OverlayLoader'
 
-import { updateInfo } from '../../client/redux/auth'
+import { loadInfo, updateInfo } from '../../client/redux/user/info'
 
 class AccountSettings extends Component {
   constructor (props) {
@@ -32,6 +33,10 @@ class AccountSettings extends Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
+  async componentWillMount () {
+    await this.props.loadInfo()
+  }
+
   handleChange (field, e) {
     let value = e.target.value.replace(/(<([^>]+)>)/ig, '')
     this.setState(state => {
@@ -42,13 +47,32 @@ class AccountSettings extends Component {
   async submit () {
     if (this.state.fetching || _.isEmpty(this.state.affected)) return
     let { affected } = this.state
+    let errors = []
 
-    this.setState(state => { state.fetching = true })
+    await this.setState(state => { state.fetching = true })
 
-    let { data } = await axios.put('/api/me/edit', affected, { withCredentials: true })
-    this.props.dispatch(updateInfo(data.result.user))
+    if (affected.birthday) {
+      let formated = moment(affected.birthday, 'DD-MM-YYYY')
+      if (!formated.isValid()) errors.push({ field: 'birthday', message: 'Неправильный формат даты' })
+      if (moment().diff(formated) < 0) errors.push({ field: 'birthday', message: 'Вы точно не могли родиться до сегодняшнего дня' })
+      if (moment().diff(formated, 'years') > 100) errors.push({ field: 'birthday', message: 'А по вам не скажешь...' })
+    }
 
-    this.setState(state => { state.fetching = false })
+    if (errors.length) {
+      errors = errors.reduce((object, item) => {
+        object[item.field] = item.message
+        return object
+      }, {})
+
+      this.setState(state => {
+        state.fetching = false
+        state.errors = errors
+      })
+    } else {
+      await this.setState(state => { state.errors = {} })
+      await this.props.updateInfo(affected)
+      this.setState(state => { state.fetching = false })
+    }
   }
 
   clear () {
@@ -67,7 +91,7 @@ class AccountSettings extends Component {
   render () {
     let { t, user, url } = this.props
     let { tab = 'main' } = url.query
-    let { fetching, affected } = this.state
+    let { fetching, affected, errors } = this.state
 
     let Footer = (
       <div>
@@ -80,7 +104,7 @@ class AccountSettings extends Component {
       <SettingsLayout url={this.props.url}>
         <OverlayLoader loading={fetching}>
           <Panel Footer={Footer} bodyStyles={{ noVerticalPadding: true }} Header={<h2 className='panel__title'>{t('account.settings.' + tab + '.title')}</h2>}>
-            { (tab === 'main') && <MainSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
+            { (tab === 'main') && <MainSettings onChange={this.handleChange} errors={errors} affected={affected} user={user} t={t} /> }
             { (tab === 'contacts') && <ContactsSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             { (tab === 'about') && <AboutSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             {/* { (tab === 'avatar') && <AvatarSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> } */}
@@ -94,8 +118,27 @@ class AccountSettings extends Component {
 
 const accessRule = user => !!user
 
-const mapStateToProps = ({ auth }) => ({
-  user: auth.user
+const mapStateToProps = ({ auth, user }) => ({
+  user: auth.user,
+  info: user.info
+})
+
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators({
+    loadInfo,
+    updateInfo
+  }, dispatch),
+  dispatch
+})
+
+const mergeProps = (state, dispatch, props) => ({
+  ...state,
+  ...dispatch,
+  ...props,
+  user: {
+    ...state.user,
+    ...state.info
+  }
 })
 
 let translated = translate([ 'common' ])(AccountSettings)
@@ -103,5 +146,7 @@ let translated = translate([ 'common' ])(AccountSettings)
 export default Page(translated, {
   title: 'Настройки профиля',
   accessRule,
-  mapStateToProps
+  mergeProps,
+  mapStateToProps,
+  mapDispatchToProps
 })

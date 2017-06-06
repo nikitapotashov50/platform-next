@@ -12,11 +12,11 @@ class UserPage extends Component {
     let { profile, user } = store.getState()
 
     let params = {
-      by_author_id: profile.user.id,
+      authorIds: profile.user._id,
       programId: user.programs.current || null
     }
 
-    if (req) params.user = req.session.user ? req.session.user.id : null
+    if (req) params.user = req.session.user ? req.session.user._id : null
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)
   }
@@ -25,7 +25,7 @@ class UserPage extends Component {
     const { isMe, url } = this.props
 
     let params = {
-      by_author_id: this.props.user.id,
+      authorIds: this.props.user._id,
       programId: this.props.program
     }
 
@@ -53,7 +53,7 @@ class UserPage extends Component {
 let mapStateToProps = ({ auth, profile, user }) => ({
   user: profile.user,
   program: user.programs.current,
-  isMe: auth.user && profile.user && (auth.user.id === profile.user.id)
+  isMe: auth.user && profile.user && (auth.user._id === profile.user._id)
 })
 
 const mapDispatchToProps = dispatch => ({

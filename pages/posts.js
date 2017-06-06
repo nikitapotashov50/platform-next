@@ -36,7 +36,7 @@ PostPage.getInitialProps = async ({ query, store, req, ...ctx }) => {
     programId: user.programs.current || null
   }
 
-  if (req) params.user = req.session.user ? req.session.user.id : null
+  if (req) params.user = req.session.user ? req.session.user._id : null
 
   await getInitialProps(store.dispatch, params, BACKEND_URL)
 
@@ -47,7 +47,7 @@ const mapStateToProps = ({ likes, auth, user, posts }) => ({
   posts: posts.posts,
   likes: likes.posts || [],
   program: user.programs.current,
-  loggedUser: auth.user ? auth.user.id : null
+  loggedUser: auth.user ? auth.user._id : null
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

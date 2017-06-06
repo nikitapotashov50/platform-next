@@ -4,12 +4,14 @@ import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
 import PostList from '../client/components/Post/PostList'
-import Panel from '../client/components/Panel'
+import Panel from '../client/elements/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 
 const menuItems = [
-  { href: '/', path: '/', title: 'Новое', code: 'index' },
-  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' }
+  { href: '/', path: '/', title: 'Актуальное', code: 'index' },
+  { href: '/?tab=new', path: '/feed/new', title: 'Новое', code: 'new' },
+  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' },
+  { href: '/?tab=groups', path: '/feed/groups', title: 'Моя десятка', code: 'groups' }
 ]
 
 class IndexPage extends Component {
@@ -18,9 +20,9 @@ class IndexPage extends Component {
 
     let params = { programId: user.programs.current || null }
 
-    if (req) params.user = req.session.user ? req.session.user.id : null
+    if (req) params.user = req.session.user ? req.session.user._id : null
 
-    if (query.tab === 'subscriptions' && auth.user) params.by_author_id = (user.subscriptions || []).join(',')
+    if (query.tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
     await PostList.getInitial(store.dispatch, params, BACKEND_URL)
 
@@ -33,10 +35,10 @@ class IndexPage extends Component {
     let params = { programId: program }
     let pathname = { href: url.pathname + '?tab=' + tab, path: tab ? ('/feed/' + tab) : '/' }
 
-    if (tab === 'subscriptions') params.by_author_id = this.props.subscriptions.join(',')
+    if (tab === 'subscriptions') params.authorIds = this.props.subscriptions.join(',')
 
     return (
-      <FeedLayout>
+      <FeedLayout menuItem='index'>
         {this.props.user && <PostEditor />}
 
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} />

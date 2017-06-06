@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { omit } from 'lodash'
-import { fetchPosts } from '../posts'
+import { fetchPosts } from './index'
 import { handleActions, createAction } from 'redux-actions'
 
 /** default */
@@ -11,34 +10,39 @@ const defaultState = {
   // fetching will indicate which post is processing now
   fetching: null,
   // added is for newly added comments. It's an object, with the keys representing post ids, containing array of added commtents ids
-  added: {}
+  added: {},
+  opened: null
 }
 
 /** comment actions */
+// open form
+export const openForm = createAction('/comments/COMMENT_OPEN_FORM', postId => ({ postId }))
 
 // add comment
 export const add = createAction('comments/COMMENT_ADD', async (content, postId) => {
-  const { data } = await axios.post(`/api/post/${postId}/comment`, { content })
-
-  return { postId, comment: data.result.comment }
+  const { data } = await axios.post(`/api/mongo/posts/${postId}/comments`, { content }, { withCredentials: true })
+  console.log(data)
+  return { postId, comment: data.result.comment, users: data.result.users }
 })
 
 // remove comment
 export const remove = createAction('comments/COMMENT_REMOVE', async (id, postId) => {
-  let { data } = await axios.delete(`/api/post/${postId}/comment/${id}`)
-
-  return data.status === 200 ? { id } : {}
+  let { data } = await axios.delete(`/api/mongo/posts/${postId}/comments/${id}`, {}, { withCredentials: true })
+  return data.status === 200 ? { id, postId } : {}
 })
 
 // load more comments
-export const loadMore = createAction('comments/COMMENTS_LIST_MORE', async idArray => {
-  let params = { idArray: idArray.join(',') }
-  let { data } = await axios.get('/api/post/comments', { params })
+export const loadMore = createAction('comments/COMMENTS_LIST_MORE', async postId => {
+  let params = {}
+  let { data } = await axios.get(`/api/mongo/posts/${postId}/comments`, { params })
 
-  return { comments: data.result.comments }
+  return {
+    postId,
+    comments: data.result.comments
+  }
 })
 
-export const reduce = createAction('comments/COMMENTS_LIST_REDUCE', ids => ({ ids }))
+export const reduce = createAction('comments/COMMENTS_LIST_REDUCE', (postId, number) => ({ postId, number }))
 
 // toggle fetch
 export const fetchStart = createAction('comments/FETCH_START', id => ({ id }))
@@ -46,17 +50,24 @@ export const fetchEnd = createAction('comments/FETCH_END')
 
 /** reducer */
 export default handleActions({
+  [openForm]: (state, { payload }) => ({
+    ...state,
+    opened: payload.postId || null
+  }),
   [add]: (state, { payload }) => ({
     ...state,
     items: {
       ...state.items,
-      [payload.comment.id]: payload.comment
+      [payload.postId]: [
+        ...(state.items[payload.postId] || []),
+        payload.comment
+      ]
     },
     added: {
       ...state.added,
       [payload.postId]: [
         ...(state.added[payload.postId] || []),
-        payload.comment.id
+        payload.comment._id
       ]
     }
   }),
@@ -80,15 +91,38 @@ export default handleActions({
     ...state,
     items: {
       ...state.items,
-      ...payload.comments
+      [payload.postId]: [
+        ...payload.comments,
+        ...(state.items[payload.postId] || [])
+      ]
     }
   }),
-  [reduce]: (state, { payload }) => ({
-    ...state,
-    items: { ...omit(state.items, payload.ids) }
-  }),
-  [remove]: (state, { payload }) => ({
-    ...state,
-    items: { ...omit(state.items, payload.id) }
-  })
+  [reduce]: (state, { payload }) => {
+    let tmp = state.items[payload.postId]
+    return {
+      ...state,
+      items: {
+        ...state.items,
+        [payload.postId]: [ ...(tmp.slice(tmp.length - payload.number, tmp.length)) ]
+      }
+    }
+  },
+  [remove]: (state, { payload }) => {
+    let tmp = [ ...state.items[payload.postId] ]
+    let index
+
+    tmp.map((el, i) => {
+      if (el._id === payload.id) index = i
+    })
+
+    tmp.splice(index, 1)
+
+    return {
+      ...state,
+      items: {
+        ...state.items,
+        [payload.postId]: tmp
+      }
+    }
+  }
 }, defaultState)

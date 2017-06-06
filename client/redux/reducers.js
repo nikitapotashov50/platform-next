@@ -13,12 +13,19 @@ import chat from './chat'
 
 import nps from './admin/nps'
 
+import info from './user/info'
 import programs from './user/programs'
 import subscriptions from './user/subscriptions'
 
-import users from './admin/users'
+import taskItems from './tasks'
+import task from './task'
 
-export default combineReducers({
+import admin from './admin'
+import users from './users'
+import volunteer from './volunteer'
+import feedback from './feedback'
+
+export default asyncReducers => combineReducers({
   nps,
   auth,
   error,
@@ -27,6 +34,8 @@ export default combineReducers({
   users,
   // likes
   likes,
+  //
+  admin,
   // posts & comments
   posts: combineReducers({
     posts,
@@ -34,8 +43,16 @@ export default combineReducers({
   }),
   // session user data
   user: combineReducers({
+    info,
     programs,
     subscriptions
   }),
-  chat
+  chat,
+  tasks: combineReducers({
+    items: taskItems
+  }),
+  task,
+  volunteer,
+  feedback,
+  ...asyncReducers
 })

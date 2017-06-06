@@ -13,6 +13,12 @@ import ReactPlayer from 'react-player'
 import AddVideoButton from './AddVideoButton'
 import { addPost } from '../../redux/posts'
 
+import marked from 'marked'
+
+marked.setOptions({
+  breaks: true
+})
+
 class PostEditor extends Component {
   constructor (props) {
     super(props)
@@ -50,6 +56,12 @@ class PostEditor extends Component {
     this.toggleButtonState() // disable create button
 
     const post = { title, content, attachments, program }
+
+    post.tags = []
+    post.content.replace(/(^|\W)(#[a-z\d][\w-]*)/gi, function (i, k, j) {
+      post.tags.push(j)
+      return j
+    })
 
     await this.props.addPost(post)
 

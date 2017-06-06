@@ -4,28 +4,39 @@ import { connect } from 'react-redux'
 
 let menu = [
   { url: '/', title: 'Отчеты', as: '/', code: 'index' }
-  // { url: '/tasks', title: 'Задания' },
   // { url: '/ratings', title: 'Рейтинг' }
 ]
 
-const Header = ({ pathname, dispatch, isLogged }) => (
-  <header className='app-header noPrint'>
-    <div className='app-header__wrap'>
+const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => {
+  let addMenu = [
+    { url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' }
+  ]
+  if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
-      <div className='app-header__block app-header__block_menu'>
-        <Menu items={menu} selected={'index'} withLogo pathname={pathname} />
+  return (
+    <header className='app-header noPrint'>
+      <div className='app-header__wrap'>
+
+        <div className='app-header__block app-header__block_menu'>
+          <Menu items={[ ...menu, ...addMenu ]} selected={selected} withLogo pathname={pathname} />
+        </div>
+
+        <div className='app-header__block app-header__block_menu'>
+          <HeaderRight dispatch={dispatch} isLogged={isLogged} />
+        </div>
+
       </div>
+    </header>
+  )
+}
 
-      <div className='app-header__block app-header__block_menu'>
-        <HeaderRight dispatch={dispatch} isLogged={isLogged} />
-      </div>
-
-    </div>
-  </header>
-)
-
-const mapStateToProps = state => ({
-  isLogged: state.auth.isLogged
-})
+const mapStateToProps = ({ auth, user, tasks }) => {
+  let role = (user.programs.items && user.programs.current) ? user.programs.items[user.programs.current].role : null
+  return {
+    role,
+    isLogged: auth.isLogged,
+    taskCount: tasks.items.count
+  }
+}
 
 export default connect(mapStateToProps)(Header)

@@ -9,6 +9,7 @@ import { I18nextProvider } from 'react-i18next'
 
 import { auth, refresh, cookieExists } from '../redux/auth'
 import { restrictAccess, allowAccess } from '../redux/error'
+import { getActiveCount } from '../redux/tasks/index'
 
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
@@ -34,18 +35,29 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
     }
   }
 
+  const realMspDispatch = dispatch => {
+    let disp = {}
+    if (mapDispatchToProps && isFunction(mapDispatchToProps)) disp = mapDispatchToProps(dispatch)
+    return { ...disp, dispatch }
+  }
+
   return withRedux(
     initStore,
     realMapStateToProps,
-    mapDispatchToProps,
+    realMspDispatch,
     mergeProps
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         if (ctx.req && ctx.isServer) {
-          if (ctx.req.session.user && ctx.req.session.user.id) {
-            ctx.store.dispatch(auth(ctx.req.session))
-            await ctx.store.dispatch(refresh(ctx.req.session.user.id, BACKEND_URL))
+          if (ctx.req.session.user && ctx.req.session.user._id) {
+            ctx.store.dispatch(auth({
+              user: ctx.req.session.user,
+              currentProgram: ctx.req.session.currentProgram,
+              isRestored: ctx.req.session.isRestored
+            }))
+            await ctx.store.dispatch(refresh(ctx.req.session.user._id, BACKEND_URL))
+            ctx.store.dispatch(getActiveCount({ headers: ctx.req.headers }))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
         }
 
@@ -73,21 +85,23 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
         if (this.props.__service.hash && !this.props.__service.user) {
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
 
-          if (data.user && data.user.id) {
+          if (data.user && data.user._id) {
             this.props.dispatch(auth(data, true))
-            await this.props.dispatch(refresh(data.user.id))
-          } else this.props.dispatch(restrictAccess('Страница недоступна'))
+            await this.props.dispatch(refresh(data.user._id))
+          } else this.props.dispatch(cookieExists(false))
         }
       }
 
       componentWillReceiveProps ({ __service, ...nextProps }) {
-        let flag = (__service.user && this.props.__service.user)
-          ? (__service.user.id !== this.props.__service.user.id)
-          : (__service.user !== this.props.__service.user)
+        if (accessRule && isFunction(accessRule)) {
+          let flag = (__service.user && this.props.__service.user)
+            ? (__service.user._id !== this.props.__service.user._id)
+            : (__service.user !== this.props.__service.user)
 
-        if (flag && accessRule && isFunction(accessRule)) {
-          if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Страница недоступна'))
-          else nextProps.dispatch(allowAccess())
+          if (flag) {
+            if (!accessRule(__service.user, nextProps)) nextProps.dispatch(restrictAccess('Страница недоступна'))
+            else nextProps.dispatch(allowAccess())
+          }
         }
       }
 
@@ -176,8 +190,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              a {
+                               transition: color $transition-time;
+
                                color: #0c00ff;
                                text-decoration: none;
+                               &:hover {
+                                 color: color(#0c00ff b(+40%));
+                               }
                              }
 
                              h1, h2, h3, h4, h5, h6 {
@@ -204,7 +223,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              textarea:-moz-placeholder {color:#9f9f9f;}
                              textarea:-ms-input-placeholder {color:#9f9f9f;}
 
-
                              button {
                                border: none;
                                outline: none;
@@ -213,6 +231,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .pull-right {
                                text-align: right;
+                             }
+
+                             .text-center {
+                               text-align: center;
                              }
 
                              .noscroll {
@@ -347,7 +369,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  &_small { margin-bottom: 10px; }
                                  &_negative { margin-bottom: -2px; }
                                }
-                               &_no_border { border-bottom: none; }
+                               &_no_border { border-bottom: none; border-radius: 3px 3px 0 0; }
                                &_no_margin { margin-bottom: 0; }
 
                                &__title {
@@ -357,6 +379,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  color: #1f1f1f;
                                  font-size: 21px;
                                  font-weight: 700;
+
+                                 &_small {
+                                   font-size: 18px;
+                                   line-height: 22px;
+                                  }
                                }
 
                                &__header {
@@ -422,7 +449,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
                              }
 
+                             .panel:first-child {
+                                  border-radius: 0 0 3px 3px;
+                                }
+
                              .task-sub-header {
+                               position: relative;
+                              
                                &__title {
                                  line-height: 15px;
 
@@ -447,20 +480,34 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  &:hover { color: #333; }
                                  &:visited, &:active { color: #777; }
                                }
+
+                               &__status {
+                                 top: 0;
+                                 right: 0;
+                                 position: absolute;
+                               }
                              }
 
                              .panel-menu {
                                position: relative;
                                margin: 0 10px;
+                               display: block;
+                               height: 50px;
+                              
+                               
 
                                &__item {
-                                 margin: 0 10px;
+                                 margin: 0 5px 0 10px;
                                  vertical-align: top;
-                                 display: inline-block;
+                                 float: left;
                                }
 
                                &__link {
                                  box-sizing: border-box;
+                                 
+                                 position: relative;
+                                 z-index: 10;
+                                 margin-bottom:-1px;
 
                                  display: block;
                                  padding-top: 2px;
@@ -471,11 +518,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  border-bottom: 2px solid transparent;
 
-                                 &:hover, &:active, &_active { color: #0c00ff; }
+                                 &:hover, &:active, &_active { color: #196aff; }
                                }
 
                                &__item_bordered &__link {
-                                 &:hover, &:active, &_active { border-bottom-color: #0c00ff; }
+                                 &:hover, &:active, &_active { border-bottom-color: #196aff; }
                                }
                              }
 
@@ -564,10 +611,27 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  }
                                }
                                &__error {
-                                 padding: 10px 20px;
+                                 padding: 10px 15px;
+                                  /* border-top: 1px solid #eee; */
+                                  background: #f12a4a;
+                                  border-radius: 3px;
+                                  margin: 0 20px 10px;
+                                  color: #fff;
 
-                                 border-top: 1px solid #eee;
                                }
+
+                              
+                                 &__error:before {
+                                  content: ' ';
+                                  position: relative;
+                                  width: 0;
+                                  height: 0;
+                                  left: -15px;
+                                  top: -5px;
+                                  border: 15px solid;
+                                  border-color:  transparent transparent #f12a4a #f12a4a ;
+                                }
+                               
                                &__fake-input {
                                  padding: 0 20px 10px;
                                }
@@ -789,6 +853,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                    background: svg("edit", "[fill]: #7f7f7f;") 16px 16px no-repeat #fff;
                                    background-size: 17px 17px;
                                  }
+                               }
+
+                               .panel {
+                                 border-radius: 3px;
                                }
                              }
 
@@ -1215,6 +1283,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
                              }
 
+                             .app-header:first-child {
+                               
+                             }
+
                              .menu {
                                margin: 0;
                                width: 100%;
@@ -1229,13 +1301,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  padding: 0 10px;
 
                                  &_no {
-                                   &_padding-left { padding-left: 0; }
+                                   &_padding-left { padding-left: 0; margin-right: 10px; }
                                  }
                                }
 
                                &__link {
+                                 box-sizing: border-box;
+                                 transition: border $transition-time;
+
                                  margin: 0 !important;
-                                 padding: 0 !important;
+                                 padding: 0;
                                  height: 59px !important;
                                  line-height: 59px !important;
 
@@ -1245,6 +1320,42 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
+                                 
+                                 border-bottom: 1px solid transparent;
+
+                                 &:hover, &_active {
+                                   color: #196aff;
+                                   border-bottom-color: #196aff;
+                                 }
+
+                                 &:hover {
+                                   color: #196aff;
+                                 }
+
+                                 &_notify {
+                                   position: relative;
+                                   padding-right: 30px;
+                                 }
+                               }
+
+                               &__notify {
+                                 border-radius: 50%;
+
+                                 top: 0;
+                                 right: 0;
+                                 bottom: 0;
+                                 position: absolute;
+                    
+                                 width: 23px;
+                                 height: 23px;
+                                 margin: auto;
+                                 display: block;
+                                 line-height: 22px;
+
+                                 color: #fff;
+                                 font-size: 10px;
+                                 text-align: center;
+                                 background-color: #e1430b;
                                }
                              }
 
@@ -1302,18 +1413,20 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .comments {
                                box-sizing: border-box;
                                
-                               margin: 0 -15px;
-                               max-width: 800px;
+                               /* margin: 0 -15px;
+                               margin-bottom: 15px;
+                               max-width: 800px; */
                                padding: 0;
+                               
 
                                background: #fff;
 
-                               &_footer {
+                               /* &_footer {
                                  margin-bottom: -10px;
-                               }
+                               } */
 
                                &__block {
-                                 margin: 10px 0;
+                                 /* margin: 10px 0; */
                                  padding-left: 15px;
                                  padding-right: 15px;
                                  border-top: 1px solid rgb(235, 235, 235);
@@ -1325,6 +1438,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  &_form {
                                    margin-bottom: 0;
                                  }
+                                 &:first-of-type { border-top: none }
                                }
 
                                &__form {
@@ -1824,6 +1938,21 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  border-radius: 0;
                                }
 
+                               .panel-menu {
+                                 height: 50px;
+                                 
+                                  white-space: nowrap;
+                                  overflow-x: auto;
+                                  overflow-y: hidden;
+                                  -webkit-overflow-scrolling: touch;
+                                  -ms-overflow-style: -ms-autohiding-scrollbar; 
+                                  margin-bottom: 0;
+                               }
+
+                                .panel-menu ::-webkit-scrollbar {
+                                   display: none; 
+                                }
+
 
                                .user-sub-menu {
 
@@ -1867,8 +1996,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                .user-menu {
 
                                   &__item {
+
+                                    padding: 0 8px;
+                                     
                                     select {
-                                      width: 70px;
+                                      display: none;
+                                     
                                     }
                                   }
 

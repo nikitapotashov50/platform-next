@@ -1,6 +1,9 @@
 const services = require('../../services')
 const { models } = require('../../models')
 
+const mongoose = require('mongoose')
+const { pick } = require('lodash')
+
 module.exports = router => {
   router.post('/login', async ctx => {
     ctx.body = {
@@ -187,6 +190,54 @@ module.exports = router => {
         subscriptions: user.Subscriptions,
         subscribers: user.Subscribers
       }
+    }
+  })
+
+  router.get('/mongo_posts', async ctx => {
+    let postData = [
+      { title: 'Первый пост', content: 'Содержимое', type: 'user', user: 'bm-paperdoll', programs: [ 'ceh-23', 'default' ] },
+      { title: 'Второй пост', content: 'Содержимое', type: 'user', user: 'bm-paperdoll', programs: [ 'ceh-23' ] },
+      { title: 'Третий пост', content: 'Содержимое', type: 'user', user: 'bm-paperdoll', programs: [ 'mzs-17' ] }
+    ]
+
+    let types = await mongoose.models.PostTypes.find({})
+    types = types.reduce((arr, item) => {
+      arr[item.code] = item
+      return arr
+    }, {})
+
+    let programs = await mongoose.models.Program.find({})
+    programs = programs.reduce((arr, item) => {
+      arr[item.alias] = item
+      return arr
+    }, {})
+
+    postData.map(async el => {
+      var post = new mongoose.models.Post({
+        title: el.title,
+        content: el.content,
+        type: types[el.type]
+      })
+
+      post.programs = Object.values(pick(programs, el.programs) || {}) || []
+      // ctx.log.info(Object.values(pick(programs, el.programs)))
+      let user = await mongoose.models.Users.findOne({ name: el.user })
+
+      post.userId = user
+
+      await post.save()
+    })
+
+    let posts = await mongoose.models.Post.find({
+      programs: { $in: [ 2 ] }
+    })
+
+    // let program = await mongoose.models.ProgramClass.find({
+    //   program: 1
+    // }).populate('program')
+
+    ctx.body = {
+      posts
     }
   })
 }

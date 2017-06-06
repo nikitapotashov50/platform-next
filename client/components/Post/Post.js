@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 
-import Menu from './Menu'
-import Panel from '../Panel'
-import PostSummary from './Summary'
-import Comments from '../Comment/List'
+import PostMenu from './Preview/Menu'
+import PostFooter from './Preview/Footer'
+
+import TaskHeader from './Preview/Subheader'
+import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
-import TextWithImages from './TextWithImages'
-import Attachments from './Attachments'
-import EditPost from './EditPost'
+import PostBody from './Preview/Body'
 
 class Post extends Component {
   constructor (props) {
@@ -15,101 +14,54 @@ class Post extends Component {
     this.state = {
       showPostMenu: false,
       showCommentForm: false,
-      likes: props.likes_count - Number(props.isLiked || false),
-      editPost: false
+      editPost: false,
+      likes: props.post.likes_count - Number(props.post.isLiked || false)
     }
 
+    this.toggleOptions = this.toggleOptions.bind(this)
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
-    this.handleOptionButtonClick = this.handleOptionButtonClick.bind(this)
-    this.handleCommentButtonClick = this.handleCommentButtonClick.bind(this)
-  }
-
-  handleCommentButtonClick () {
-    this.setState({ showCommentForm: true })
   }
 
   handleEditButtonClick () {
     this.setState({ editPost: true })
   }
 
-  handleOptionButtonClick () {
-    this.setState({ showPostMenu: !this.state.showPostMenu })
-  }
-
-  getFooter () {
-    let { id, loggedUser, comments = [], onLike, isLiked } = this.props
-    let { showCommentForm, likes } = this.state
-
-    const Footer = (
-      <div>
-        <PostSummary
-          liked={isLiked}
-          onLike={onLike}
-          isLogged={!!loggedUser}
-          likes={likes + Number(isLiked)}
-          onComment={this.handleCommentButtonClick}
-        />
-
-        <Comments ids={comments} postId={id} expanded={showCommentForm} />
-      </div>
-    )
-
-    return Footer
+  toggleOptions (flag) {
+    this.setState({ showPostMenu: flag })
   }
 
   render () {
-    const { showPostMenu } = this.state
-    const { title, content, attachments, user, added, onExpand, onRemove } = this.props
+    const { likes, showPostMenu } = this.state
+    const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment } = this.props
 
-    let Footer = this.getFooter()
+    let Footer = <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} />
 
-    const myPost = this.props.loggedUser && this.props.loggedUser === user.id
+    let myPost = loggedUser === user._id
 
-    const Options = myPost && showPostMenu ? (
-      <Menu
-        onDelete={onRemove}
-        onEdit={this.handleEditButtonClick}
-        handleClickOutside={() => {
-          this.setState({ showPostMenu: false })
-        }}
-      />
-    ) : null
+    const Options = <PostMenu onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
+
+    let headerStyles = { noBorder: true }
+
+    let SubHeader = null
+    if (reply) SubHeader = <TaskHeader {...reply} />
+    else headerStyles.npBottomPadding = true
 
     return (
-      <div>
-        <Panel
-          Footer={Footer}
-          Header={<UserInline user={user} date={this.props.created_at} />}
-          headerStyles={{ noBorder: true, npBottomPadding: true }}
-          Options={() => Options}
-          withAnimation={added}
-          showPostMenu={this.state.showPostMenu}
-          showPostMenuButton={myPost}
-          toggleOptions={() => {
-            this.setState({ showPostMenu: true })
-          }}
-        >
-          <div className='post-preview'>
-            {this.state.editPost ? (
-              <EditPost
-                title={title}
-                content={content}
-                id={this.props.id}
-                exitEdit={() => {
-                  this.setState({
-                    editPost: false
-                  })
-                }} />
-            ) : (
-              <div>
-                <a className='post-preview__title' onClick={onExpand}>{title}</a>
-                <TextWithImages text={content} />
-              </div>
-            )}
-            { (attachments && attachments.length > 0) && <Attachments items={attachments} />}
-          </div>
-        </Panel>
-      </div>
+      <Panel
+        noMargin
+        withAnimation={added}
+        Footer={Footer}
+        SubHeader={SubHeader}
+        Header={<UserInline user={user} date={post.created} />}
+        //
+        headerStyles={headerStyles}
+        //
+        Options={() => Options}
+        showOptions={myPost && showPostMenu}
+        toggleOptions={this.toggleOptions.bind(this, !showPostMenu)}
+      >
+        <PostBody post={post} reply={reply} onExpand={onExpand} />
+      </Panel>
     )
   }
 }

@@ -1,5 +1,5 @@
 import DefaultLayout from './default'
-import Panel from '../components/Panel'
+import Panel from '../elements/Panel'
 import PanelMenu from '../components/PanelMenu'
 
 let items = [

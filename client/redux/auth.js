@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
 
+import { updateInfo } from './user/info'
+
 // util
 const removeElement = (array, el) => {
   let index = array.indexOf(el)
@@ -13,7 +15,6 @@ let defaultState = {
   user: null,
   isLogged: false,
   goal: {},
-  subscriptions: [],
   blackList: [],
   cookieExists: false
 }
@@ -28,9 +29,6 @@ export const refresh = createAction('auth/REFRESH', async (userId, serverPath = 
   let { data } = await axios.post(serverPath + '/api/auth/refresh', { userId })
   return data.result
 })
-
-//
-export const updateInfo = createAction('auth/UPDATE_INFO')
 
 // interactions
 export const addToBlackList = createAction('auth/BLACK_LIST_ADD', async id => {
@@ -58,17 +56,9 @@ export default handleActions({
   [logout]: (state, action) => ({
     ...defaultState
   }),
-  [cookieExists]: state => ({
+  [cookieExists]: (state, { payload = true }) => ({
     ...state,
-    cookieExists: true
-  }),
-  //
-  [updateInfo]: (state, { payload }) => ({
-    ...state,
-    user: {
-      ...state.user,
-      ...payload
-    }
+    cookieExists: payload
   }),
   //
   [addToBlackList]: (state, { payload }) => ({
@@ -78,5 +68,13 @@ export default handleActions({
   [removeFromBlackList]: (state, { payload }) => ({
     ...state,
     subscriptions: [ ...removeElement(state.blackList, payload.id) ]
+  }),
+  //
+  [updateInfo]: (state, { payload }) => ({
+    ...state,
+    user: {
+      ...state.user,
+      ...(payload.user || {})
+    }
   })
 }, defaultState)

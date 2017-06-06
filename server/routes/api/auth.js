@@ -1,62 +1,33 @@
-const { pick } = require('lodash')
-const { models } = require('../../models')
+const mongoose = require('mongoose')
 
 const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
 
 const getUser = async email => {
-  let rawUser = await models.User.findOne({
-    attributes: [ 'id', 'name', 'first_name', 'last_name', 'picture_small' ],
-    where: { email },
-    include: [
-      {
-        required: false,
-        model: models.Program,
-        attributes: [ 'id', 'title', 'alias', 'start_at', 'finish_at' ],
-        through: {
-          attributes: [ 'is_activated' ]
-        }
-      },
-      {
-        required: false,
-        model: models.User,
-        as: 'Subscriptions',
-        attributes: [ 'id', 'name' ],
-        through: {
-          attributes: []
-        }
-      },
-      {
-        required: false,
-        model: models.User,
-        as: 'BlackList',
-        attributes: [ 'id', 'name' ],
-        through: {
-          attributes: []
-        }
-      }
-    ]
-  })
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean().cache(100)
 
-  if (!rawUser) return null
+  if (!user) return null
 
-  return {
-    user: pick(rawUser, [ 'id', 'last_name', 'first_name', 'picture_small', 'name' ]),
-    programs: rawUser.get('Programs'),
-    blackList: rawUser.get('BlackList'),
-    subscriptions: rawUser.get('Subscriptions')
-  }
+  return { user }
 }
 
 const createUserBasedOnBM = async accessToken => {
   let BMInfo = await getMyInfo(accessToken)
-  let user = await models.User.create({
-    first_name: BMInfo.firstName,
-    last_name: BMInfo.lastName,
-    birthday: BMInfo.birthDate,
+
+  let userData = {
     email: BMInfo.email,
     name: BMInfo.userId,
+    last_name: BMInfo.lastName,
+    first_name: BMInfo.firstName,
     picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
-  })
+  }
+
+  let userMeta = {
+    birthday: BMInfo.birthDate
+  }
+
+  let user = await mongoose.models.Users.create(userData)
+  await user.updateMeta(userMeta)
+  await user.addProgram(3, {})
 
   return { user }
 }
@@ -67,23 +38,26 @@ module.exports = router => {
     let hash = ctx.cookies.get('molodost_hash')
     let BMAccess, user
 
-    if (hash && email) {
-      BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
+    try {
+      if (hash && email) {
+        BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
 
-      if (BMAccess) {
-        user = await getUser(email)
-        if (!user) user = await createUserBasedOnBM(BMAccess)
+        if (BMAccess) {
+          user = await getUser(email)
+          if (!user) user = await createUserBasedOnBM(BMAccess)
+        }
+        ctx.session = user
       }
-      ctx.session = user
+      ctx.body = user
+    } catch (e) {
+      console.log(e)
+      ctx.body = { status: 500, message: e }
     }
-    ctx.body = user
   })
 
   router.post('/logout', ctx => {
     ctx.session = {}
-    ctx.body = {
-      status: 200
-    }
+    ctx.body = { status: 200 }
   })
 
   router.post('/recover', async ctx => {
@@ -96,9 +70,7 @@ module.exports = router => {
 
       await getBMRecovery(email, BMAccess.access_token)
 
-      ctx.body = {
-        status: 200
-      }
+      ctx.body = { status: 200 }
     } catch (e) {
       ctx.body = {
         status: 500,
@@ -160,27 +132,42 @@ module.exports = router => {
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
 
-    let programs = await models.Program.findAll({
-      attributes: [ 'id', 'alias', 'title' ],
-      where: {
-        '$Users.id$': userId,
-        is_enabled: true
-      },
-      include: [
+    let [ user ] = await mongoose.models.Users
+      .find({
+        _id: userId
+      })
+      .limit(1)
+      .select('programs subscriptions')
+
+    let rawPrograms = await mongoose.models.ProgramUserMeta
+      .find({
+        _id: { $in: user.programs.map(el => el.meta) || [] }
+      })
+      .populate([
         {
-          model: models.User,
-          attributes: [],
-          through: {
-            attributes: []
-          }
+          path: 'programId',
+          select: 'alias title _id'
+        },
+        {
+          path: 'roleId',
+          select: 'code'
         }
-      ]
-    })
+      ])
+
+    let programs = rawPrograms.map(el => ({
+      _id: el.programId._id,
+      role: el.roleId.code,
+      alias: el.programId.alias,
+      title: el.programId.title
+    }))
+
+    if (!ctx.session.currentProgram) ctx.session.currentProgram = 3
 
     ctx.body = {
       status: 200,
       result: {
-        programs
+        programs,
+        subscriptions: user.subscriptions
       }
     }
   })

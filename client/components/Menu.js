@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import classNames from 'classnames'
 
-const Menu = ({ items, withLogo = false, pathname }) => (
+const Menu = ({ items, withLogo = false, selected }) => (
   <ul className='menu'>
     { withLogo && (
       <li className='menu__item  menu__item_no_padding-left'>
@@ -15,10 +14,13 @@ const Menu = ({ items, withLogo = false, pathname }) => (
 
     { items.map(el => (
       <li
-        className={classNames('menu__item', { active: pathname === el.url })}
+        className={[ 'menu__item' ].join(' ')}
         key={'menu-' + el.url}>
         <Link href={el.url} as={el.as} prefetch>
-          <a className='menu__link'>{el.title}</a>
+          <a className={[ 'menu__link', el.notify ? 'menu__link_notify' : '', selected === el.code ? ' menu__link_active' : '' ].join(' ')}>
+            {el.title}
+            { el.notify && (<span className='menu__notify'>{el.notify}</span>)}
+          </a>
         </Link>
       </li>
     )) }

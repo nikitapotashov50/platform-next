@@ -1,5 +1,6 @@
 import { addLike, removeLike } from '../../redux/likes'
 import { fetchPosts, startListFetch, endListFetch, queryUpdate, deletePost } from '../../redux/posts'
+import { openForm } from '../../redux/posts/comments'
 
 export const getInitialProps = async (dispatch, params, serverPath) => {
   dispatch(startListFetch())
@@ -10,10 +11,11 @@ export const getInitialProps = async (dispatch, params, serverPath) => {
   return {}
 }
 
-export const mapStateToProps = ({ posts, likes, auth }) => ({
+export const mapStateToProps = ({ posts, users, likes, auth }) => ({
   ...posts.posts,
+  users,
   likes: likes.posts || [],
-  loggedUser: auth.user ? auth.user.id : null
+  loggedUser: auth.user ? auth.user._id : null
 })
 
 export const mapDispatchToProps = dispatch => ({ dispatch })
@@ -39,12 +41,18 @@ export const mergeProps = (state, dispatchProps, props) => {
     await dispatchProps.dispatch(deletePost(postId))
   }
 
+  const onComment = postId => () => {
+    console.log('1231231')
+    dispatchProps.dispatch(openForm(postId))
+  }
+
   return {
     ...state,
     ...props,
     getPosts,
     toggleLike,
     updateParams,
-    removePost
+    removePost,
+    onComment
   }
 }

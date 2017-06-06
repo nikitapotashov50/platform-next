@@ -4,7 +4,7 @@ import Waypoint from 'react-waypoint'
 import { loadRatings, loadSpeakers, searchUsers, loadMore } from '../client/redux/ratings'
 
 import PageHoc from '../client/hocs/Page'
-import Panel from '../client/components/Panel'
+import Panel from '../client/elements/Panel'
 import FeedLayout from '../client/layouts/feed'
 import PanelMenu from '../client/components/PanelMenu'
 import GroupInline from '../client/components/Group/Inline'
@@ -179,7 +179,7 @@ export default PageHoc(RatingsPage, {
   title: 'Рейтинги',
   accessRule: () => false,
   mapStateToProps: state => ({
-    userId: state.auth.user.id,
+    userId: state.auth.user._id,
     program: state.user.programs.current,
     ratings: state.ratings.ratings,
     speakers: state.ratings.speakers,
