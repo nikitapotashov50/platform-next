@@ -2,10 +2,7 @@ const mongoose = require('mongoose')
 const { is } = require('../utils/common')
 const { extend, isArray } = require('lodash')
 const paginate = require('mongoose-paginate')
-<<<<<<< HEAD
 const moment = require('moment')
-=======
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -52,15 +49,11 @@ model.statics.getList = async function (params = {}, query = {}) {
     lean: true,
     page: offset,
     sort: { created: -1 },
-<<<<<<< HEAD
     select: '_id title content userId comments attachments likes_count',
     populate: {
       path: 'attachments',
       select: '_id path name'
     }
-=======
-    select: '_id title content userId comments attachments likes_count'
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   }
 
   let data = await model.paginate(params, options)
@@ -68,7 +61,6 @@ model.statics.getList = async function (params = {}, query = {}) {
   return { total: data.total, posts: data.docs }
 }
 
-<<<<<<< HEAD
 model.statics.getActual = async function (params, query = {}) {
   let model = this
   let { limit = 7, offset = 0, days = 7 } = query
@@ -103,10 +95,6 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   let model = this
   let attachments = data.attachments || []
   if (data.attachments) delete data.attachments
-=======
-model.statics.addPost = async function (data, { user, type = 'user' }) {
-  let model = this
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 
   if (data.program) {
     if (!isArray(data.program)) data.program = [ data.program ]
@@ -124,17 +112,13 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   data.userId = user
   let post = await model.create(data)
 
-<<<<<<< HEAD
   if (attachments && attachments.length > 0) {
     await Promise.all(attachments.map(el => {
       return mongoose.models.Attachment.addToPost(el, post, { userId: user })
     }))
   }
 
-  return post.save()
-=======
   return post
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 }
 
 model.methods.addComment = async function (content, userId, add = {}) {

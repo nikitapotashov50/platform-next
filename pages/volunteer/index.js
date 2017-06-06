@@ -17,11 +17,7 @@ VolunteerPage.getInitialProps = async ctx => {
 export default PageHoc(VolunteerPage, {
   title: 'Волонтерство',
   accessRule: (user, props) => {
-<<<<<<< HEAD
     let flag = props.user.programs.items && props.user.programs.current && props.user.programs.items[props.user.programs.current].role === 'volunteer'
-=======
-    let flag = props.user.programs.items[props.user.programs.current].role === 'volunteer'
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     return !!user && flag
   }
 })

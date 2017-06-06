@@ -49,7 +49,6 @@ model.methods.closePlan = async function (data, user, programId) {
   return { report, plan }
 }
 
-<<<<<<< HEAD
 model.methods.confirmPlan = async function (status) {
   let plan = this
 
@@ -63,6 +62,4 @@ model.methods.confirmPlan = async function (status) {
   return plan.save()
 }
 
-=======
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 module.exports = mongoose.model('KnifePlan', model)

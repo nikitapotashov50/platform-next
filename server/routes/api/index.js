@@ -15,8 +15,8 @@ const chatRoutes = require('./chat')
 const mongoTest = require('./mongo')
 const mongoMigrate = require('./migrate')
 
-const mongoTest = require('./mongo')
-const mongoMigrate = require('./migrate')
+// const mongoTest = require('./mongo')
+// const mongoMigrate = require('./migrate')
 
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {

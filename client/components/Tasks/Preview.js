@@ -77,9 +77,6 @@ export default ({ task, link, completed = false, status = null, statusText = nul
       .task-preview__button {
         color: #196aff;
       }
-<<<<<<< HEAD
-=======
-
 
        /*  Мобильные стили */
       @media screen and (max-width: 39.9375em) {
@@ -124,12 +121,7 @@ export default ({ task, link, completed = false, status = null, statusText = nul
         font-weight: 700;
         padding-left: 50px;
       }
-
-
-              
-
-      }
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
+    }
     `}</style>
   </Panel>
 )

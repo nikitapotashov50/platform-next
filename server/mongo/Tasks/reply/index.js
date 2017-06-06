@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
-<<<<<<< HEAD
 const { extend, isArray } = require('lodash')
-=======
-const { extend } = require('lodash')
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 const { is } = require('../../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -16,11 +12,8 @@ const model = new mongoose.Schema(extend({
   postId: { type: ObjectId, ref: 'Post', index: true },
   taskId: { type: ObjectId, ref: 'Task', index: true },
   replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
-<<<<<<< HEAD
   //
   status: [ { type: ObjectId, ref: 'TaskVerification' } ],
-=======
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   specific: {
     model: { type: String, enum: [ 'Goal', 'KnifePlan', 'TaskReport' ] },
     item: { type: ObjectId, refPath: 'specific.model', index: true }
@@ -70,17 +63,11 @@ model.statics.makeReply = async function (data) {
 
 model.statics.getByPostIds = async function (postIds) {
   let model = this
-<<<<<<< HEAD
-
-=======
-  // return new Promise(async (resolve, reject) => {
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
   return model
     .find({
       enabled: true,
       postId: { $in: postIds }
     })
-<<<<<<< HEAD
     .select('specific title postId taskId status replyTypeId')
     .populate([
       'specific.item',
@@ -107,26 +94,6 @@ model.statics.getNotVerified = async function (params = {}) {
 
   return mongoose.models.Task.aggregate([
     { $match: match },
-=======
-    .select('specific title postId replyTypeId')
-    .populate([ 'specific.item', 'replyTypeId' ])
-    // .cache(40)
-    .lean()
-
-    // resolve(replies.reduce(async (obj, item) => {
-    //   if (item.specific) obj[item.postId] = { type: item.replyTypeId.code, data: item.specific.item }
-    //   return obj
-    // }, {}))
-  // })
-}
-
-model.statics.getNotVerified = async function (programId) {
-  return mongoose.models.Task.aggregate([
-    { $match: {
-      targetProgram: Number(programId),
-      replyTypeId: 4
-    }},
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     { $project: {
       _id: 1,
       title: 1
@@ -171,7 +138,6 @@ model.statics.getNotVerified = async function (programId) {
       task: '$_id.task',
       reply: '$_id.reply',
       status: '$verification'
-<<<<<<< HEAD
     }},
     { $sample: { size: 2 } }
   ])
@@ -208,15 +174,12 @@ model.statics.getByStatus = function (status, params) {
       _id: '$_id._id',
       taskId: '$_id.taskId',
       status: '$status.status'
-=======
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
     }}
   ])
 }
 
 /** ----------------------- MODEL METHODS ----------------------- */
 
-<<<<<<< HEAD
 model.methods.addStatus = async function (statusCode, params = {}) {
   let reply = this
   let status = await mongoose.models.TaskVerificationStatus.findOne({ code: statusCode })
@@ -228,16 +191,6 @@ model.methods.addStatus = async function (statusCode, params = {}) {
   reply.status.addToSet(verify)
 
   return reply.save()
-=======
-model.methods.addStatus = async function (statusCode, params) {
-  let reply = this
-  let status = await mongoose.models.TaskVerificationStatus.findOne({ code: statusCode })
-
-  return mongoose.models.TaskVerification.create({
-    status: status._id,
-    taskReplyId: reply._id
-  })
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 }
 
 model.methods.getStatus = async function () {
@@ -254,7 +207,6 @@ model.methods.getStatus = async function () {
     .sort({ created: -1 })
 }
 
-<<<<<<< HEAD
 model.methods.verify = async function (status, user) {
   let reply = this
 
@@ -268,15 +220,6 @@ model.methods.verify = async function (status, user) {
   }
 
   return reply.addStatus(status, { userId: user._id })
-=======
-model.methods.approve = async function (data, user) {
-  let reply = this
-  return mongoose.models.TaskVerification.add('approved', { reply, user, data })
-}
-model.methods.reject = async function (data, user) {
-  let reply = this
-  return mongoose.models.TaskVerification.add('rejected', { reply, user, data })
->>>>>>> 4be3b2a01a129e6a936ce5befb5943ae3fb39761
 }
 
 module.exports = mongoose.model('TaskReply', model)
