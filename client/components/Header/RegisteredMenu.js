@@ -78,6 +78,7 @@ class HeaderRegisteredMenu extends Component {
 
         {this.props.showChatWindow && (
           <Chat
+            you={this.props.user}
             auth={this.props.user.radar_access || this.props.isChatAuth}
             login={this.props.login}
             chats={this.props.chatList}
