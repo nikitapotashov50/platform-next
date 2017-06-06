@@ -92,6 +92,22 @@ class HeaderRegisteredMenu extends Component {
             <select onChange={this.changeProgram} value={programs.current || ''}>
               {this.drawPrograms(programs.items || [])}
             </select>
+
+            <div className='programs-menu__wrap'>
+              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-active'>24</div>
+              <div className='programs-menu__item programs-menu__item-mzs'>18</div>
+              <div className='programs-menu__item programs-menu__item-main' />
+
+              <div className='programs-menu__old'>
+                <span>Прошедшие курсы</span>
+              </div>
+
+              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-old'>23</div>
+              <div className='programs-menu__item programs-menu__item-mzs programs-menu__item-old'>17</div>
+              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-old'>22</div>
+              <div className='programs-menu__item programs-menu__item-mzs programs-menu__item-old'>16</div>
+
+            </div>
           </li>
         )}
 

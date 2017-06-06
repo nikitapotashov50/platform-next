@@ -1258,6 +1258,107 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
                              }
 
+                             .programs-menu {
+                               
+                               &__wrap {
+                                 position: absolute;
+                                 top: 59px;
+                                 left:-50px;
+                                 width: 240px;
+                                 
+                                 border-radius: 3px;
+
+                                 background: #fff;
+                                 padding: 15px 5px 5px 15px;
+                                box-shadow: 0px 12px 46px 0px rgba(45, 45, 45, 0.41);
+
+                               }
+
+                               &__item {
+                                 float: left;
+                                 background: #e6e5e2;
+                                 border-radius: 3px;
+                                 width: 70px;
+                                 height: 52px;
+                                 margin: 0 10px 10px 0;
+                                 padding-top: 18px;
+                                 font-weight: 700;
+                                 
+                                 &:hover {
+                                  opacity: 0.8;
+                                 }
+                               }
+
+                               &__item-ceh {
+                                 background: #edbe00;
+                                 background-image: url('/static/img/programs.png');
+                                 background-size: 199px 39px;
+                                 background-position: 13px 15px;
+                                 background-repeat: no-repeat;
+                                 font-size: 20px;
+                                 text-align: center;
+                                 
+                                 
+                               }
+
+                               &__item-mzs {
+                                 background: #765dd2;
+                                 background-image: url('/static/img/programs.png');
+                                 background-size: 199px 39px;
+                                 background-position: -67px 15px;
+                                 background-repeat: no-repeat;
+                                 font-size: 20px;
+                                 text-align: center;
+                                 color: #fff;
+                               }
+
+                               &__item-main {
+                                 background: #69c39e;
+                                 background-image: url('/static/img/programs.png');
+                                 background-size: 199px 39px;
+                                 background-position: -146px 15px;
+                                 background-repeat: no-repeat;
+                                
+                               }
+
+                               &__old {
+                                float: left;
+                                width: 240px;
+                                 text-align: center;
+                                 text-transform: uppercase;
+                                 letter-spacing: 2px;
+                                 font-size: 10px;
+                                 line-height: 10px;
+                                 padding: 8px 0 18px 0;
+                                 
+
+                                 position: relative;
+                                  z-index: 1;
+                                  
+                                  &:before {
+                                      border-top: 1px solid #dfdfdf;
+                                      content:"";
+                                      margin: 0 auto; /* this centers the line to the full width specified */
+                                      position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+                                      top: 12px; left: -10px; right: 0; bottom: 0;
+                                      width: 230px;
+                                      z-index: -1;
+                                  }
+
+                                  span { 
+                                     
+                                      background: #fff; 
+                                      padding: 0 10px 0 10px; 
+                                  }
+
+                               }
+
+                               &__item-old {
+                                 background-color: #cac9c8;
+                               }
+
+                             }
+
                              .app-header {
                                top: 0;
                                left: 0;
