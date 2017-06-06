@@ -48,8 +48,6 @@ class Chat extends Component {
   }
 
   render () {
-    const you = { radarId: 1 } // your radar id
-
     if (!this.props.auth) {
       return (
         <ChatWindow>
@@ -92,9 +90,9 @@ class Chat extends Component {
                   </div>
                   {chat.lastMessage && (
                     <div className='chat-last-message'>
-                      {chat.lastMessage.userId === you.radarId && (
+                      {chat.lastMessage.userId === this.props.you.radar_id && (
                         <span><span className='chat-last-message-author'>
-                          {you.first_name}
+                          {this.props.you.first_name}
                         </span>: </span>
                       )}
                       {chat.lastMessage.text.substring(0, 25) + '...'}
