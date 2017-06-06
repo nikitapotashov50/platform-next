@@ -244,7 +244,6 @@ const migrateUsers = async ctx => {
           migration_id: program.city_id || 1
         })
         data.cityId = city._id
-
         await mongoUser.addProgram(program.program_id, data, programsRoles[program.program_id])
 
         resolve()
@@ -379,7 +378,7 @@ const migratePosts = async ctx => {
 
             try {
               ctx.log.info(`attachment ${attachment}`)
-              await newPost.addAttachment(_.pick(attachment, [ 'name', 'path' ]), null, add)
+              await newPost.addAttachment(_.pick(attachment, [ 'name', 'path' ]), add)
             } catch (e) {
               ctx.log.info(`error in attachment ${post.id}, ${e}`)
             }

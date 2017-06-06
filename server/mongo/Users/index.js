@@ -73,6 +73,7 @@ model.statics.getShortInfo = async function (idArray) {
 /** add program to user */
 model.methods.addProgram = async function (programId, options, roleId = 3) {
   let user = this
+  if (!options.roleId) options.roleId = roleId
 
   let meta = await mongoose.models.ProgramUserMeta.makeMeta(programId, user._id, options)
 

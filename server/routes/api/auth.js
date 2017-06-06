@@ -143,7 +143,6 @@ module.exports = router => {
 
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
-
     let [ user ] = await mongoose.models.Users
       .find({
         _id: userId

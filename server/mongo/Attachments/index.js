@@ -18,17 +18,9 @@ const model = new mongoose.Schema(extend({
   }
 }, is))
 
-model.statics.addToPost = async function (data, post, add = {}) {
-  let final = { name: data.key, path: data.url }
-  final.target = { model: 'Post', item: post._id }
-  if (add.userId) final.userId = add.userId
-
-  let attachment = await this.create(final)
-
-  post.attachments.addToSet(attachment)
-  await post.save()
-
-  return attachment
+model.statics.addToPost = async function (data, postId, add = {}) {
+  data.target = { model: 'Post', item: postId }
+  return this.create(data)
 }
 
 module.exports = mongoose.model('Attachment', model)
