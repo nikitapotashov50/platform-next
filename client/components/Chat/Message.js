@@ -1,6 +1,7 @@
 import moment from 'moment'
+import classNames from 'classnames'
 
-const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isSpecial }) => {
+const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isSpecial, you }) => {
   if (isSpecial) {
     return ( // служебное сообщение
       <div key={messageId} className='special'>
@@ -34,7 +35,7 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
           </div>
         </div>
       ) : ( // сообщение в одиночном чате
-        <div className='message'>{text}</div>
+        <div className={classNames('message', { me: you && you.radar_id === userId })}>{text}</div>
       )}
 
       <style jsx>{`
@@ -76,6 +77,12 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
         .time {
           margin-left: 10px;
           color: #A6A6A6;
+        }
+
+        .me {
+          background: #0064FF;
+          color: #fff;
+          align-self: flex-end;
         }
       `}</style>
     </div>
