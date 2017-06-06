@@ -1259,6 +1259,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              .programs-menu {
+
+                              &__hidden {
+                                 display: none; 
+                              }
                                
                                &__wrap {
                                  position: absolute;
@@ -1290,7 +1294,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__item-ceh {
-                                 background: #edbe00;
+                                 background: #fabc00;
                                  background-image: url('/static/img/programs.png');
                                  background-size: 199px 39px;
                                  background-position: 13px 15px;
@@ -1313,7 +1317,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__item-main {
-                                 background: #69c39e;
+                                 background: #22d69d;
                                  background-image: url('/static/img/programs.png');
                                  background-size: 199px 39px;
                                  background-position: -146px 15px;
@@ -1358,7 +1362,48 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__item-active:before {
-                                 
+                                 content:"";
+                                 background-image: url('/static/img/programs-checked.png');
+                                 background-size: 19px 19px;
+                                 width: 19px;
+                                 height: 19px;
+                                 top: 10px;
+                                 left: 68px;
+                                 position: absolute;
+                               }
+
+                             }
+
+                             .programs-selected {
+                               width: 68px;
+                               height: 60px;
+                               background: url('/static/img/programs-active.png');
+                               background-size: 184px 25px;
+                               background-repeat: no-repeat;
+                               
+                               
+                               
+                               &__ceh {
+                                 background-position: 4px 20px;
+                               }
+
+                               &__mzs {
+                                 background-position: -69px 20px;
+                               }
+                               &__main {
+                                 background-position: -144px 18px;
+                               }
+                               span {
+                                display: block;
+                                width: 68px;
+                               height: 60px;
+                               background: url('/static/img/dd-arrow.png');
+                               background-size: 9px 50px;
+                               background-repeat: no-repeat;
+                               background-position: 58px 27px;
+                               }
+                               span:hover {
+                                background-position: 58px -18px;
                                }
 
                              }

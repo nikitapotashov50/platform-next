@@ -98,7 +98,12 @@ class HeaderRegisteredMenu extends Component {
               {this.drawPrograms(programs.items || [])}
             </select>
 
-            <div className='programs-menu__wrap'>
+            {/* Правильная переключалка программ. Классы доступные programs-selected__ceh / __mzs / __main
+            <div className='programs-selected programs-selected__main'>
+            <span />
+            </div> */}
+
+            <div className='programs-menu__wrap programs-menu__hidden'>
               <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-active'>24</div>
               <div className='programs-menu__item programs-menu__item-mzs'>18</div>
               <div className='programs-menu__item programs-menu__item-main' />
