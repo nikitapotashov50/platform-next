@@ -9,6 +9,7 @@ import auth from './auth'
 import error from './error'
 import profile from './profile'
 import ratings from './ratings'
+import chat from './chat'
 
 import nps from './admin/nps'
 
@@ -35,5 +36,6 @@ export default combineReducers({
   user: combineReducers({
     programs,
     subscriptions
-  })
+  }),
+  chat
 })

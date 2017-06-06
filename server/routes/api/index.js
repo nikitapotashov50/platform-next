@@ -10,6 +10,7 @@ const feedbackRoutes = require('./feedback')
 const meRoutes = require('./me')
 const usersRoutes = require('./users')
 const attachmentRoutes = require('./attachment')
+const chatRoutes = require('./chat')
 
 const initMeRoutes = async (ctx, next) => {
   if (ctx.session && ctx.session.user) {
@@ -36,6 +37,7 @@ module.exports = router => {
   router.bridge('/rating', ratingRouter)
   router.bridge('/me', [ initMeRoutes ], meRoutes)
   router.bridge('/attachment', attachmentRoutes)
+  router.bridge('/chat', chatRoutes)
 
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)

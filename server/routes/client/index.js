@@ -62,6 +62,10 @@ module.exports = router => {
     })
   })
 
+  router.get('/chat/:chatId', async ctx => {
+    await ctx.__next.render(ctx.req, ctx.res, '/chat', Object.assign({}, ctx.params, ctx.query))
+  })
+
   router.get('*', async ctx => {
     await ctx.__next.getRequestHandler()(ctx.req, ctx.res)
   })

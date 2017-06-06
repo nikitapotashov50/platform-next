@@ -70,6 +70,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       hobbies: {
         type: DataTypes.TEXT
+      },
+      radar_id: {
+        type: DataTypes.INTEGER
+      },
+      radar_access_token: {
+        type: DataTypes.STRING
       }
     },
     {

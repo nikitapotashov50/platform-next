@@ -2,18 +2,27 @@ import axios from 'axios'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 
 import UserImage from '../User/Image'
 import UserHeaderMenu from '../User/HeaderMenu'
+import ChatButton from './ChatButton'
+import Chat from '../Chat/index'
 
 import { logout } from '../../redux/auth'
 import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs'
+import {
+  login, getChatList, getMessageList, listen, sendMessage,
+  toggleChatWindow, closeChatWindow, selectChat
+} from '../../redux/chat'
 
 class HeaderRegisteredMenu extends Component {
   constructor (props) {
     super(props)
 
-    this.state = { menu: false }
+    this.state = {
+      menu: false
+    }
     this.changeProgram = this.changeProgram.bind(this)
   }
 
@@ -44,12 +53,39 @@ class HeaderRegisteredMenu extends Component {
     return result
   }
 
+  componentDidMount () {
+    // this.props.getChatList()
+    // this.props.listen()
+  }
+
   render () {
     let { menu } = this.state
     let {className, user, programs} = this.props
 
     return (
       <div className={[ className ].join(' ')}>
+
+        <li className='user-menu__item user-menu__item_hoverable'>
+          <ChatButton
+            notificationCount={1}
+            handleClick={this.props.toggleChatWindow} />
+        </li>
+
+        {this.props.showChatWindow && (
+          <Chat
+            auth={this.props.isChatAuth}
+            login={this.props.login}
+            chats={this.props.chatList}
+            currentChat={this.props.selectedChat}
+            sendMessage={this.props.sendMessage}
+            getChatList={this.props.getChatList}
+            onSelect={(chatId, cb) => {
+              this.props.selectChat(chatId)
+              this.props.getMessageList(chatId)
+              cb()
+            }}
+            handleClickOutside={this.props.closeChatWindow} />
+        )}
 
         { !isEmpty(programs.items) && (
           <li className='user-menu__item user-menu__item_hoverable'>
@@ -69,9 +105,24 @@ class HeaderRegisteredMenu extends Component {
   }
 }
 
-let mapStateToProps = ({ auth, user }) => ({
+const mapStateToProps = ({ auth, user, chat }) => ({
   user: auth.user,
-  programs: user.programs
+  programs: user.programs,
+  showChatWindow: chat.showChatWindow,
+  chatList: chat.chats,
+  isChatAuth: chat.auth,
+  selectedChat: chat.selectedChat
 })
 
-export default connect(mapStateToProps)(HeaderRegisteredMenu)
+const mapDispatchToProps = dispatch => bindActionCreators({
+  login,
+  listen,
+  getChatList,
+  getMessageList,
+  sendMessage,
+  toggleChatWindow,
+  closeChatWindow,
+  selectChat
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderRegisteredMenu)
