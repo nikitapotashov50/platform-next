@@ -6,10 +6,6 @@ import PostFooter from './Preview/Footer'
 import TaskHeader from './Preview/Subheader'
 import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
-import TextWithImages from './TextWithImages'
-import TaskContent from '../Tasks/replyContent/index'
-import Attachments from './Attachments'
-import EditPost from './EditPost'
 import PostBody from './Preview/Body'
 
 class Post extends Component {

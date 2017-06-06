@@ -65,7 +65,7 @@ model.statics.getActual = async function (params, query = {}) {
   let model = this
   let { limit = 7, offset = 0, days = 7 } = query
 
-  params.created = { $gte: moment().subtract(days, 'days').toISOString() }
+  params.created = { $gte: new Date(2017, 6, 1) }
   console.log(moment().subtract(days, 'days').toISOString())
   // console.log(moment().toISOString(), moment().add(days, 'days').toISOString())
 
