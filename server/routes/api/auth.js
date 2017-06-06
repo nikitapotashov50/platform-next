@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
+const { isNil } = require('lodash')
 
-const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../controllers/authController')
+const {
+  getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
+  getBMAccessTokenCredentialsOnly, getBMSignUp
+} = require('../../controllers/authController')
 
 const getUser = async email => {
   let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean().cache(100)
@@ -137,7 +141,11 @@ module.exports = router => {
         _id: userId
       })
       .limit(1)
-      .select('programs subscriptions')
+      .select('programs subscriptions meta')
+
+    const userMeta = await mongoose.models.UsersMeta.findOne({
+      userId: user._id
+    })
 
     let rawPrograms = await mongoose.models.ProgramUserMeta
       .find({
@@ -167,7 +175,9 @@ module.exports = router => {
       status: 200,
       result: {
         programs,
-        subscriptions: user.subscriptions
+        subscriptions: user.subscriptions,
+        radar_id: userMeta.radar_id,
+        radar_access: !isNil(userMeta.radar_access_token)
       }
     }
   })

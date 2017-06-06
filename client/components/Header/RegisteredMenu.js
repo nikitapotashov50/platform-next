@@ -68,12 +68,15 @@ class HeaderRegisteredMenu extends Component {
         <li className='user-menu__item user-menu__item_hoverable'>
           <ChatButton
             notificationCount={1}
-            handleClick={this.props.toggleChatWindow} />
+            handleClick={() => {
+              this.props.toggleChatWindow()
+              this.props.getChatList()
+            }} />
         </li>
 
         {this.props.showChatWindow && (
           <Chat
-            auth={this.props.isChatAuth}
+            auth={this.props.user.radar_access || this.props.isChatAuth}
             login={this.props.login}
             chats={this.props.chatList}
             currentChat={this.props.selectedChat}
