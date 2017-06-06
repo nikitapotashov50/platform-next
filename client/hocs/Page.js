@@ -1357,6 +1357,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  background-color: #cac9c8;
                                }
 
+                               &__item-active:before {
+                                 
+                               }
+
                              }
 
                              .app-header {
