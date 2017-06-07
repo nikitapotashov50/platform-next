@@ -249,6 +249,7 @@ model.methods.getRepliedByStatus = async function (programId, status) {
     userId: user._id,
     taskId: { $in: tasks.map(el => el._id) }
   })
+
   replies = replies.map(el => String(el.taskId))
 
   return tasks.filter(el => replies.indexOf(String(el._id)) > -1)

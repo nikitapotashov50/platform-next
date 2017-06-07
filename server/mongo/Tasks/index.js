@@ -198,7 +198,7 @@ model.methods.addReply = async function (user, body) {
   if (isReplied) throw new Error('already replied by user')
 
   // 2. подготовка сущностей для создания и записи
-  let postInfo = extend(pick(body, [ 'content' ]), { program: task.targetProgram })
+  let postInfo = extend(pick(body, [ 'content', 'attachments' ]), { program: task.targetProgram })
   postInfo.title = task.replyMeta.title || task.title
 
   //
