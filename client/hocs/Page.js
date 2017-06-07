@@ -233,6 +233,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                text-align: right;
                              }
 
+                             .text {
+                               line-height: 140%;
+                             }
+
                              .text-center {
                                text-align: center;
                              }
@@ -1181,7 +1185,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &__link {
                                  display: block;
                                  line-height: 59px;
-
+                                 padding: 0 10px;
                                  cursor: pointer;
 
                                  &, &:hover, &:active, &:visited {

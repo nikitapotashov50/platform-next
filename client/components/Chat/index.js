@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import clickOutside from 'react-click-outside'
 import classNames from 'classnames'
-import PaperPlaneIcon from 'react-icons/lib/fa/paper-plane'
 // import { map, reverse } from 'lodash'
 // import shortid from 'shortid'
 
@@ -71,7 +70,7 @@ class Chat extends Component {
             <input type='text' placeholder='Поиск' />
           </div>
 
-          <div>
+          <div className='chat-list-area'>
             {this.props.chats.map(chat => (
               <div key={chat.chatId} className={classNames('chat-conversation', {
                 current: this.props.currentChat === chat.chatId
@@ -145,7 +144,7 @@ class Chat extends Component {
                   newMessageText: ''
                 })
               }}>
-                <PaperPlaneIcon color='#0064FF' size='24' />
+                <div className='message-send-btn' />
               </button>
             </div>
           </div>
@@ -157,12 +156,11 @@ class Chat extends Component {
             display: flex;
             background: #fff;
             width: 700px;
-            top: 65px;
+            top: 60px;
             box-sizing: border-box;
-            right: 220px;
+            right: 30px;
             border-radius: 3px;
-            border: 1px solid #e1e3e4;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 12px 46px 0px rgba(45, 45, 45, .41);
             max-height: 500px;
             overflow: auto;
           }
@@ -174,6 +172,29 @@ class Chat extends Component {
             border-right: 1px solid #E6E8E9;
           }
 
+          .chat-list-area {
+            height: 379px;
+          }
+
+          .chat-list-area {
+            overflow-x:hidden;
+            overflow-y:scroll;
+            margin: 0 3px 0 0;
+          }
+          .chat-list-area::-webkit-scrollbar {
+            width:8px;           
+          }
+
+          .chat-list-area::-webkit-scrollbar * {
+            background:transparent;
+            border-radius: 5px;
+          }
+          
+          .chat-list-area::-webkit-scrollbar-thumb {
+            background:#edeeee !important;
+            border-radius: 5px;
+          }
+
           .message-list {
             flex-grow: 1;
             padding: 10px;
@@ -181,6 +202,32 @@ class Chat extends Component {
             flex-direction: column;
             max-height: 350px;
             overflow: auto;
+            margin-right: 3px;
+          }
+
+          .message-list::-webkit-scrollbar {
+            width:8px;           
+          }
+
+          .message-list::-webkit-scrollbar * {
+            background:transparent;
+            border-radius: 5px;
+          }
+          
+          .message-list::-webkit-scrollbar-thumb {
+            background:#edeeee !important;
+            border-radius: 5px;
+          }
+
+          .message-send-btn {
+            background: url('/static/img/messages-send-blue.png');
+            background-size: 23px 20px;
+            background-position: 5px 2px;
+            background-repeat: no-repeat;
+            width: 30px;
+            height: 25px;
+            float: left;
+            border-radius:3px;
           }
 
           .no-selected-chat {
@@ -272,6 +319,7 @@ class Chat extends Component {
             margin-bottom: 10px;
             padding: 10px;
             font-size: 14px;
+            line-height: 21px;
             border-radius: 5px;
             align-self: flex-start;
           }
@@ -297,12 +345,13 @@ class Chat extends Component {
             font-size: 14px;
             padding: 10px;
             border-radius: 3px;
-            margin-right: 10px;
+            margin-right: 3px;
           }
 
           .message-form > button {
             cursor: pointer;
             padding: 7px;
+            border-radius:3px;
           }
 
           .message-form > button:hover {
