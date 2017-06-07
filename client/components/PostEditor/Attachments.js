@@ -1,6 +1,6 @@
-import axios from 'axios'
-import md5 from 'blueimp-md5'
-import { startsWith } from 'lodash'
+// import axios from 'axios'
+// import md5 from 'blueimp-md5'
+// import { startsWith } from 'lodash'
 
 import Dropzone from 'react-dropzone'
 
