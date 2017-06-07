@@ -18,7 +18,7 @@ const model = new mongoose.Schema(extend({
 
 model.statics.makeMeta = async function (programId, userId, data) {
   let model = this
-  data = pick(data, [ 'activated_at', 'is_activated', 'cityId', 'price' ])
+  data = pick(data, [ 'activated_at', 'is_activated', 'cityId', 'price', 'roleId' ])
 
   let meta = await model.create(extend(data, { programId, userId }))
   return meta

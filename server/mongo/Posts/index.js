@@ -49,7 +49,7 @@ model.statics.getList = async function (params = {}, query = {}) {
     lean: true,
     page: offset,
     sort: { created: -1 },
-    select: '_id title content userId comments attachments likes_count',
+    select: '_id title created content userId comments attachments likes_count',
     populate: {
       path: 'attachments',
       select: '_id path name'
@@ -65,9 +65,7 @@ model.statics.getActual = async function (params, query = {}) {
   let model = this
   let { limit = 7, offset = 0, days = 7 } = query
 
-  params.created = { $gte: new Date(2017, 6, 1) }
-  console.log(moment().subtract(days, 'days').toISOString())
-  // console.log(moment().toISOString(), moment().add(days, 'days').toISOString())
+  params.created = { $gte: new Date(moment().subtract(days, 'days').format('YYYY-MM-DD')) }
 
   return model.aggregate([
     { $match: params },
@@ -114,7 +112,7 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
 
   if (attachments && attachments.length > 0) {
     await Promise.all(attachments.map(el => {
-      return mongoose.models.Attachment.addToPost(el, post, { userId: user })
+      return post.addAttachment(el)
     }))
   }
 
@@ -175,16 +173,14 @@ model.methods.removeLike = async function (userId) {
   return post
 }
 
-model.methods.addAttachment = async function (data, userId, add = {}) {
+model.methods.addAttachment = async function (data, add = {}) {
   let post = this
 
-  data = extend(data, add, userId ? { userId } : {})
-  let attachment = await mongoose.models.Attachment.addToPost(data, post._id, userId)
+  data = extend(data, add, { userId: post.userId })
+  let attachment = await mongoose.models.Attachment.addToPost(data, post._id)
 
   post.attachments.addToSet(attachment)
-  await post.save()
-
-  return post
+  return post.save()
 }
 
 model.methods.getComments = async function (offset = 0, limit = null, reversed = false) {

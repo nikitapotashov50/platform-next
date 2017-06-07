@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import React, { Component } from 'react'
 
 import PostMenu from './Preview/Menu'
@@ -25,6 +26,13 @@ class Post extends Component {
   handleEditButtonClick () {
     this.setState({ editPost: true })
   }
+
+  shouldComponentUpdate (nextProps) {
+    let flag = !isEqual(nextProps.post, this.props.post) || !isEqual(nextProps.reply, this.props.reply) || !isEqual(nextProps.user, this.props.user) || nextProps.isLiked !== this.props.isLiked || nextProps.loggedUser !== this.props.loggedUser
+    return flag
+  }
+
+  componentDidUpdate () { console.log('update') }
 
   toggleOptions (flag) {
     this.setState({ showPostMenu: flag })
