@@ -169,6 +169,11 @@ module.exports = router => {
         }
       ])
 
+    if (!rawPrograms.length) {
+      let defaultProgram = await user.addProgram(3, {})
+      rawPrograms = [ defaultProgram ]
+    }
+
     let programs = rawPrograms.map(el => ({
       _id: el.programId._id,
       role: el.roleId.code,
