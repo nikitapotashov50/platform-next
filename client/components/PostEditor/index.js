@@ -49,9 +49,18 @@ class PostEditor extends Component {
     e.preventDefault()
 
     const { program } = this.props
-    const { title, content, attachments } = this.state
+    let { title, content, attachments } = this.state
 
     if (!title || !content) return
+
+    // отрефакторим аттачменты тут
+    if (attachments && attachments.length) {
+      attachments = attachments.map(el => ({
+        path: el.url,
+        name: el.key,
+        mime: el.mime || el.type
+      }))
+    }
 
     this.toggleButtonState() // disable create button
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Lightbox from 'react-image-lightbox-universal'
-import { endsWith } from 'lodash'
+import { endsWith, startsWith } from 'lodash'
 import PDFFileIcon from 'react-icons/lib/fa/file-pdf-o'
 import WordFileIcon from 'react-icons/lib/fa/file-word-o'
 import FileIcon from 'react-icons/lib/fa/file-text-o'
@@ -15,7 +15,7 @@ class PostAttachments extends Component {
     this.state = { ...defaultState }
 
     this.images = (this.props.items || [])
-      .filter(x => x.type === 'image')
+      .filter(x => startsWith(x.mime, 'image'))
       .map(x => ({ src: x.path }))
 
     this.open = this.open.bind(this)
@@ -59,7 +59,7 @@ class PostAttachments extends Component {
     return (
       <div>
         <div className='attachments-container'>
-          {items.map((attachment, index) => (
+          {items.filter(x => startsWith(x.mime, 'image')).map((attachment, index) => (
             <div key={attachment._id}>
               <a onClick={this.open(index)}>
                 <img src={attachment.path} style={{ cursor: 'pointer' }} />
@@ -68,15 +68,15 @@ class PostAttachments extends Component {
           ))}
         </div>
         <div className='attachments-container'>
-          {items.filter(x => x.type === 'video').map(attachment => (
-            <div key={attachment.id} className='attachment-video'>
+          {items.filter(x => startsWith(x.mime, 'video')).map(attachment => (
+            <div key={attachment._id} className='attachment-video'>
               <ReactPlayer url={attachment.path} width='100%' />
             </div>
           ))}
         </div>
         <div className='attachments-container'>
-          {items.filter(x => x.type === 'document').map(attachment => (
-            <div key={attachment.id} className='attachment-doc'>
+          {items.filter(x => startsWith(x.mime, 'application')).map(attachment => (
+            <div key={attachment._id} className='attachment-doc'>
               {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
             </div>
           ))}
