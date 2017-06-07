@@ -32,8 +32,6 @@ class Post extends Component {
     return flag
   }
 
-  componentDidUpdate () { console.log('update') }
-
   toggleOptions (flag) {
     this.setState({ showPostMenu: flag })
   }

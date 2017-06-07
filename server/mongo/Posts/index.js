@@ -52,7 +52,7 @@ model.statics.getList = async function (params = {}, query = {}) {
     select: '_id title created content userId comments attachments likes_count',
     populate: {
       path: 'attachments',
-      select: '_id path name'
+      select: '_id path name mime'
     }
   }
 
