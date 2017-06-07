@@ -642,7 +642,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                position: relative;
                                display: block;
 
-                               &_small { width: 40px; }
+                               &_small { width: 40px; padding: 0 10px; }
                                &_smallest { width: 30px; }
 
                                &__image-link {
@@ -1142,7 +1142,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  margin: 0;
                                  height: 59px;
                                  line-height: 59px;
-                                 padding: 0 13px;
+                                 padding: 0 0;
                                  vertical-align: top;
                                  display: inline-block;
 
