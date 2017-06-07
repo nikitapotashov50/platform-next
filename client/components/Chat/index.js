@@ -51,16 +51,14 @@ class Chat extends Component {
     if (!this.props.auth) {
       return (
         <ChatWindow>
-          <div style={{ padding: '10px' }}>
-            <ChatLoginForm
-              submit={this.props.login}
-              onSuccess={() => {
-                this.props.getChatList()
-              }}
-              onError={() => {
-                console.log('error')
-              }} />
-          </div>
+          <ChatLoginForm
+            submit={this.props.login}
+            onSuccess={() => {
+              this.props.getChatList()
+            }}
+            onError={() => {
+              console.log('error')
+            }} />
         </ChatWindow>
       )
     }
