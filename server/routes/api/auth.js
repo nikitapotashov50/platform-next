@@ -170,8 +170,22 @@ module.exports = router => {
       ])
 
     if (!rawPrograms.length) {
-      let defaultProgram = await user.addProgram(3, {})
-      rawPrograms = [ defaultProgram ]
+      await user.addProgram(3, {})
+
+      rawPrograms = await mongoose.models.ProgramUserMeta
+        .find({
+          _id: { $in: user.programs.map(el => el.meta) || [] }
+        })
+        .populate([
+          {
+            path: 'programId',
+            select: 'alias title _id'
+          },
+          {
+            path: 'roleId',
+            select: 'code'
+          }
+        ])
     }
 
     let programs = rawPrograms.map(el => ({
