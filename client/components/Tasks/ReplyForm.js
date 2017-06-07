@@ -30,6 +30,9 @@ class TaskReply extends Component {
     this.submit = this.submit.bind(this)
     this.toggleForm = this.toggleForm.bind(this)
     this.onAddChange = this.onAddChange.bind(this)
+    //
+    this.onAttachmentAdd = this.onAttachmentAdd.bind(this)
+    this.onAttachmentUpdate = this.onAttachmentUpdate.bind(this)
   }
 
   async submit (e) {
@@ -42,6 +45,14 @@ class TaskReply extends Component {
     if (!isEmpty(errors)) {
       this.setState(state => { state.errors = errors })
     } else {
+      if (reply.attachments) {
+        reply.attachments = reply.attachments.map(el => ({
+          path: el.url,
+          name: el.key,
+          mime: el.mime || el.type
+        }))
+      }
+
       await this.props.reply(reply)
 
       this.setState(state => {
@@ -65,6 +76,19 @@ class TaskReply extends Component {
     this.setState(state => { state.reply[field] = value })
   }
 
+  onAttachmentAdd (data) {
+    this.setState(state => {
+      if (!state.reply.attachments) state.reply.attachments = []
+      state.reply.attachments.push(data)
+    })
+  }
+
+  onAttachmentUpdate (data) {
+    this.setState(state => {
+      state.reply.attachments = data
+    })
+  }
+
   render () {
     if (!this.props.task) return null
 
@@ -75,6 +99,8 @@ class TaskReply extends Component {
 
     const openedFlag = opened || showForm
 
+    console.log(reply.attachments)
+
     return (
       <OverlayLoader loading={fetching}>
         { (success && replyType === 'report') && <div>Ваш ответ отправлен на проверку!</div>}
@@ -82,7 +108,7 @@ class TaskReply extends Component {
         { !success && (
           <div>
             { openedFlag && (
-              <AttachmentForm>
+              <AttachmentForm data={reply.attachments || []} updateAttachments={this.onAttachmentUpdate} addAttachment={this.onAttachmentAdd}>
                 <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
                   { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
                 </Panel>
