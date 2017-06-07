@@ -1,9 +1,9 @@
 import CurrentList from './Current'
-import DefaultList from './Rejected'
+import DefaultList from './Default'
 
 export default {
   current: CurrentList,
-  rejected: DefaultList,
-  approved: DefaultList,
-  pending: DefaultList
+  rejected: DefaultList('rejected'),
+  approved: DefaultList('approved'),
+  pending: DefaultList('pending')
 }

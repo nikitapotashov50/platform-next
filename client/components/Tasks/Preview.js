@@ -2,7 +2,13 @@ import moment from 'moment'
 import Panel from '../../elements/Panel'
 import Link from 'next/link'
 
-export default ({ task, link, completed = false, status = null, statusText = null }) => (
+const statusText = {
+  rejected: 'Отклонен',
+  pending: 'На проверке',
+  approved: 'Выполнено'
+}
+
+export default ({ task, link, completed = false, status = null }) => (
   <Panel bodyStyles={{ paddingClass: 'smallest' }}>
     <div className={'task-preview'}>
       <div className='task-preview__block task-preview__block_title'>
@@ -13,7 +19,7 @@ export default ({ task, link, completed = false, status = null, statusText = nul
       <div className='task-preview__block task-preview__block_status'>
         { !completed && (<span className='task-remaining' data-prefix='осталось'>{moment().to(moment(task.finish_at), true)}</span>) }
         { completed && (
-          <span className={[ 'task-status', status ? ('task-status_' + status) : '' ].join(' ')}>{statusText}</span>
+          <span className={[ 'task-status', status ? ('task-status_' + status) : '' ].join(' ')}>{statusText[status]}</span>
         )}
       </div>
 

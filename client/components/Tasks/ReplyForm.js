@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 
 import Panel from '../../elements/Panel'
 import PanelTitle from '../../elements/Panel/Title'
+import AttachmentForm from '../PostEditor/Attachments'
 
 import Replies from './replyForm/index'
 import Button from '../../elements/Button'
@@ -81,9 +82,11 @@ class TaskReply extends Component {
         { !success && (
           <div>
             { openedFlag && (
-              <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
-                { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
-              </Panel>
+              <AttachmentForm>
+                <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
+                  { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
+                </Panel>
+              </AttachmentForm>
             )}
 
             <Button onClick={openedFlag ? this.submit : this.toggleForm.bind(true)}>

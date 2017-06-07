@@ -203,10 +203,10 @@ class PostEditor extends Component {
           )}
 
           { expanded && (
-          <div className='panel panel_margin_small'>
-            <input className='reply-form__input reply-form__input_text_big' value={title} onChange={this.handleTitleChange} type='text' placeholder='Заголовок отчета' />
-          </div>
-        )}
+            <div className='panel panel_margin_small'>
+              <input className='reply-form__input reply-form__input_text_big' value={title} onChange={this.handleTitleChange} type='text' placeholder='Заголовок отчета' />
+            </div>
+          )}
 
           <div className='panel panel_margin_small'>
             <textarea className={textareaClasses.join(' ')} value={content} onChange={this.handleContentChange} placeholder={'Написать отчет за сегодня'} rows={expanded ? 8 : 1} onFocus={this.expand} />
