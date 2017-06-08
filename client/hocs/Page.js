@@ -1551,7 +1551,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                margin: 0 auto;
                                max-width: 800px;
-                               padding: 20px 20px 10px;
+                               padding: 0px 40px 20px;
                                /* max-width: 50rem; */
 
                                background: #fff;
@@ -1585,13 +1585,15 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &__title {
                                  margin: 0 0 7.5px;
 
-                                 font-size: 26px;
+                                 font-size: 34px;
                                  font-weight: 700px;
                                }
 
                                &__footer {}
 
                                &__content {
+                                 font-family: Georgia, serif;
+                                 font-size: 21px;
                                  padding: 30px 0;
                                  line-height: 150%;
                                }
