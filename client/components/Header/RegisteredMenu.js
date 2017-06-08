@@ -56,7 +56,6 @@ class HeaderRegisteredMenu extends Component {
   }
 
   componentDidMount () {
-    // this.props.getChatList()
     if (this.props.user.radar_access || this.props.isChatAuth) {
       this.props.listen()
     }
@@ -71,7 +70,7 @@ class HeaderRegisteredMenu extends Component {
 
         <li className='user-menu__item user-menu__item_hoverable'>
           <ChatButton
-            notificationCount={1}
+            notificationCount={this.props.user.radar_access ? 0 : 1}
             handleClick={() => {
               this.props.toggleChatWindow()
               this.props.getChatList()
