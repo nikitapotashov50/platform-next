@@ -7,10 +7,14 @@ import { handleActions, createAction } from 'redux-actions'
 let defaultState = {
   items: [],
   count: [],
-  verified: []
+  verified: [],
+  fetching: false,
+  processing: null
 }
 
-export const { startFetch, endFetch } = generateFetchActions('volunteer/tasks')
+export const { fetchStart, fetchEnd } = generateFetchActions('volunteer/tasks')
+
+export const toggleProcessing = createAction('volunteer/tasks/PROCESSING_TOGGLE', (replyId = null) => ({ replyId }))
 
 export const getTotalCount = createAction('volunteer/tasks/GET_COUNT', async (params, options = {}) => {
   options.params = params
@@ -29,8 +33,7 @@ export const getNotVerified = createAction('volunteer/tasks/LOAD', async (params
 })
 
 export const verifyTask = createAction(`/volunteer/tasks/TASK_VERIFY`, async (replyId, type) => {
-  let { data } = await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type }, { withCredentials: true })
-  console.log(data)
+  await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type }, { withCredentials: true })
   return { replyId }
 })
 
@@ -46,5 +49,8 @@ export default handleActions({
   [verifyTask]: (state, { payload }) => ({
     ...state,
     verified: [ ...state.verified, payload.replyId ]
-  })
+  }),
+  [fetchEnd]: state => ({ ...state, fetching: false }),
+  [fetchStart]: state => ({ ...state, fetching: true }),
+  [toggleProcessing]: (state, { payload }) => ({ ...state, processing: payload.replyId })
 }, defaultState)

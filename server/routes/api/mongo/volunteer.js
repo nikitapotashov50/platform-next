@@ -28,9 +28,10 @@ module.exports = router => {
           .find({
             _id: { $in: data.map(el => el.reply) }
           })
-          .select('_id title taskId userId postId specific content created')
+          .select('_id title taskId replyTypeId userId postId specific content created')
           .populate([
             'specific.item',
+            'replyTypeId',
             { path: 'taskId', select: 'title' },
             { path: 'postId', select: 'title content' }
           ])

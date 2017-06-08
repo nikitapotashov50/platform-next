@@ -38,7 +38,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
   const realMspDispatch = dispatch => {
     let disp = {}
     if (mapDispatchToProps && isFunction(mapDispatchToProps)) disp = mapDispatchToProps(dispatch)
-    return { ...disp, dispatch }
+    return { ...disp, __dispatch: dispatch }
   }
 
   return withRedux(

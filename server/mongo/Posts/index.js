@@ -65,6 +65,10 @@ model.statics.getActual = async function (params, query = {}) {
   let model = this
   let { limit = 7, offset = 0, days = 7 } = query
 
+  limit = Number(limit)
+  offset = Number(offset)
+  console.log(offset, offset * limit)
+
   params.created = { $gte: new Date(moment().subtract(days, 'days').format('YYYY-MM-DD')) }
 
   return model.aggregate([
@@ -84,8 +88,8 @@ model.statics.getActual = async function (params, query = {}) {
       likes_count: -1,
       comment_count: -1
     }},
-    { $limit: limit },
-    { $skip: limit * offset }
+    { $skip: limit * offset },
+    { $limit: limit }
   ])
 }
 
