@@ -29,7 +29,7 @@ export const getNotVerified = createAction('volunteer/tasks/LOAD', async (params
 })
 
 export const verifyTask = createAction(`/volunteer/tasks/TASK_VERIFY`, async (replyId, type) => {
-  let { data } = await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type })
+  let { data } = await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type }, { withCredentials: true })
   console.log(data)
   return { replyId }
 })

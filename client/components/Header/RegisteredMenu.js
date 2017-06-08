@@ -19,6 +19,7 @@ import {
 
 const getCurrentPrefix = programs => {
   let current = programs.items[programs.current]
+  if (!current) return
   return current.alias.split('-')[0]
 }
 
