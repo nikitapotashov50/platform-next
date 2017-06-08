@@ -82,7 +82,10 @@ class Chat extends Component {
 
         <div className='chat-list'>
           <div className='chat-search'>
-            <input type='text' placeholder='Поиск' />
+            <input type='text' value={this.props.filterQuery} placeholder='Поиск' onChange={e => {
+              const query = e.target.value
+              this.props.setFilterQuery(query)
+            }} />
           </div>
 
           <div className='chat-list-area'>
