@@ -64,7 +64,12 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 2,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13')
+    finish_at: new Date('2017-06-13'),
+    replyMeta: {
+      title: 'План кинжал №5',
+      start_at: new Date('2017-06-03'),
+      finish_at: new Date('2017-06-13')
+    }
   },
   {
     title: 'Поставить план-кинжал!',
@@ -101,7 +106,12 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 2,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13')
+    finish_at: new Date('2017-06-13'),
+    replyMeta: {
+      title: 'План кинжал №2',
+      start_at: new Date('2017-06-03'),
+      finish_at: new Date('2017-06-13')
+    }
   },
   {
     title: 'Поставить ПК',

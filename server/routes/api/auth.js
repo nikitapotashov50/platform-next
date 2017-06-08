@@ -1,3 +1,4 @@
+// const moment = require('moment')
 const mongoose = require('mongoose')
 const { isNil } = require('lodash')
 
@@ -143,12 +144,7 @@ module.exports = router => {
 
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
-    let [ user ] = await mongoose.models.Users
-      .find({
-        _id: userId
-      })
-      .limit(1)
-      .select('programs subscriptions meta')
+    let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions meta')
 
     const userMeta = await user.getMeta()
     let programs = await user.getPrograms()
@@ -158,14 +154,20 @@ module.exports = router => {
       programs = await user.getPrograms()
     }
 
-    programs = programs.map(el => ({
-      _id: el.programId._id,
-      role: el.roleId.code,
-      alias: el.programId.alias,
-      title: el.programId.title,
-      start: el.programId.start_at,
-      finish: el.programId.finish_at
-    }))
+    // let today = moment()
+    // let active = []
+    programs = programs.map(el => {
+      // if ((moment(el.programId.start_at) < today && moment(el.programId.finish_at) > today) && el.roleId._id === 3) active.push(el._id)
+
+      return {
+        _id: el.programId._id,
+        role: el.roleId.code,
+        alias: el.programId.alias,
+        title: el.programId.title,
+        start: el.programId.start_at,
+        finish: el.programId.finish_at
+      }
+    })
 
     if (!ctx.session.currentProgram) ctx.session.currentProgram = 3
 

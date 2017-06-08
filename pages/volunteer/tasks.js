@@ -7,11 +7,12 @@ import PanelTitle from '../../client/elements/Panel/Title'
 
 import PageHoc from '../../client/hocs/Page'
 import VolunteerLayout from '../../client/layouts/volunteer'
+import OverlayLoader from '../../client/components/OverlayLoader'
 
 import TaskReply from '../../client/components/Tasks/Check'
 
 import { restrictAccess } from '../../client/redux/error'
-import { getNotVerified, getTotalCount, verifyTask } from '../../client/redux/volunteer/tasks'
+import { getNotVerified, getTotalCount, verifyTask, fetchEnd, fetchStart, toggleProcessing } from '../../client/redux/volunteer/tasks'
 
 const drawSide = items => items.map(el => ({
   path: '/volunteer/tasks?title=' + encodeURIComponent(el._id),
@@ -39,15 +40,23 @@ class VolunteerPage extends Component {
     let type = 'reports'
     let { users } = this.props
     let selectedTitle = this.props.url.query.title || null
-    let { items, verified, count } = this.props.tasks
+    let { items, verified, count, fetching, processing } = this.props.tasks
+
+    // items = []
 
     return (
       <VolunteerLayout subMenu={menuItems} subSelected={type} selected={'tasks'} >
         <div className='feed'>
           <div className='feed__left'>
-            { (items && items.length) && items.map(el => {
-              if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} task={el.taskId} post={el.postId} user={users[el.userId]} specific={el.specific} onVerify={this.props.onVerify(el._id)} />
-            })}
+            <OverlayLoader loading={fetching}>
+              { (items.length > 0) && items.map(el => {
+                if (verified.indexOf(el._id) === -1) return <TaskReply key={el._id} created={el.created} replyType={el.replyTypeId.code} task={el.taskId} post={el.postId} user={users[el.userId]} specific={el.specific} fetching={processing === el._id} onVerify={this.props.onVerify(el._id)} />
+              })}
+
+              { !items.length && (
+                <a onClick={this.props.getMore}>Загрузить еще</a>
+              )}
+            </OverlayLoader>
           </div>
 
           <div className='feed__right'>
@@ -85,18 +94,28 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getTotalCount,
   getNotVerified,
   restrictAccess,
-  verifyTask
+  toggleProcessing,
+  verifyTask,
+  fetchStart,
+  fetchEnd
 }, dispatch)
 
-const mergeProps = (state, dispatch, props) => {
-  const onVerify = replyId => type => dispatch.verifyTask(replyId, type)
-  return {
-    ...state,
-    ...dispatch,
-    ...props,
-    onVerify
+const mergeProps = (state, dispatch, props) => ({
+  ...state,
+  ...dispatch,
+  ...props,
+  onVerify: replyId => async type => {
+    dispatch.toggleProcessing(replyId)
+    await dispatch.verifyTask(replyId, type)
+    await dispatch.getTotalCount({ programId: state.current })
+    dispatch.toggleProcessing()
+  },
+  getMore: async () => {
+    dispatch.fetchStart()
+    await dispatch.getNotVerified({ programId: state.current, title: props.title })
+    dispatch.fetchEnd()
   }
-}
+})
 
 export default PageHoc(VolunteerPage, {
   title: 'Волонтерство',

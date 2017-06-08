@@ -99,8 +99,6 @@ class TaskReply extends Component {
 
     const openedFlag = opened || showForm
 
-    console.log(reply.attachments)
-
     return (
       <OverlayLoader loading={fetching}>
         { (success && replyType === 'report') && <div>Ваш ответ отправлен на проверку!</div>}
@@ -112,6 +110,8 @@ class TaskReply extends Component {
                 <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
                   { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
                 </Panel>
+
+                { errors.attachments && errors.attachments }
               </AttachmentForm>
             )}
 

@@ -1,5 +1,5 @@
 import Router from 'next/router'
-import { isEqual } from 'lodash'
+import { isEqual, isNil } from 'lodash'
 import Waypoint from 'react-waypoint'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -88,7 +88,7 @@ class PostList extends Component {
           </div>
         ))}
 
-        { (postCount > 0 && total > postCount) && (
+        { (isNil(total) || (postCount > 0 && total > postCount)) && (
           <div className='posts-load-more' onClick={this.loadMore}>
             <Waypoint onEnter={this.loadMore} />
           </div>

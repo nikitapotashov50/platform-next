@@ -24,6 +24,7 @@ class PostEditor extends Component {
     super(props)
 
     this.state = {
+      fetching: false,
       expanded: false,
       title: '',
       content: '',
@@ -73,7 +74,9 @@ class PostEditor extends Component {
     })
     console.log(post.tags)
 
+    await this.setState({ fetching: true })
     await this.props.addPost(post)
+    await this.setState({ fetching: false })
 
     this.toggleButtonState() // enable create button
 
@@ -128,7 +131,7 @@ class PostEditor extends Component {
   }
 
   render () {
-    let { expanded, title, content } = this.state
+    let { expanded, title, content, fetching } = this.state
 
     let textareaClasses = [ 'reply-form__textarea' ]
     if (!expanded) textareaClasses.push('reply-form__textarea_short')
@@ -319,7 +322,7 @@ class PostEditor extends Component {
 
               <div>
                 <button
-                  disabled={this.state.buttonDisabled}
+                  disabled={fetching}
                   className='myBtn'
                   onClick={this.createPost}
                   type='submit'

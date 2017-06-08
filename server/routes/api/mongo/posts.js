@@ -82,7 +82,7 @@ module.exports = router => {
         _id: reply.taskId._id,
         title: reply.taskId.title,
         type: reply.replyTypeId.code,
-        status: replyStatuses[reply.status[0].status],
+        status: replyStatuses[reply.status[0] ? reply.status[0].status : 'pending'],
         data: reply.specific ? reply.specific.item : null
       }
       return obj

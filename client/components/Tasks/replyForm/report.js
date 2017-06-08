@@ -33,6 +33,7 @@ TaskReportForm.title = 'Отчитайтесь по плану-кинжалу'
 TaskReportForm.validate = (data, errors = {}) => {
   if (isUndef(data.fact)) errors.fact = 'Укажите свой факт за неделю в деньгах'
   if (!data.action || !data.action.length) errors.action = 'Укажите ключевое действие'
+  if (!data.attachments || !data.attachments.length) errors.attachments = 'Приложите доказательства'
 
   return errors
 }
