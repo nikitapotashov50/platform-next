@@ -1475,9 +1475,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
                                  
-                                 border-bottom: 1px solid transparent;
+                                 border-bottom: 2px solid transparent;
 
-                                 &:hover, &_active {
+                                 &_active {
                                    color: #196aff;
                                    border-bottom-color: #196aff;
                                  }

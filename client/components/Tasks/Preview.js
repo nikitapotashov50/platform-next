@@ -12,6 +12,7 @@ export default ({ task, link, completed = false, status = null }) => (
   <Panel bodyStyles={{ paddingClass: 'smallest' }}>
     <div className={'task-preview'}>
       <div className='task-preview__block task-preview__block_title'>
+        <div className='task-preview__icon' />
         <div className='task-preview__title'>{task.title}</div>
         <div className='task-preview__description'>{task.content}</div>
       </div>
@@ -32,11 +33,15 @@ export default ({ task, link, completed = false, status = null }) => (
 
     <style jsx>{`
       .task-remaining {
-        font-size: 22px;
+        font-size: 18px;
+        font-weight: 700;
       }
       .task-remaining:before {
         display: block;
-        font-size: 12px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
         content: attr(data-prefix);
       }
 
@@ -44,6 +49,15 @@ export default ({ task, link, completed = false, status = null }) => (
       .task-status_pending {}
       .task-status_rejected {}
       .task-status_approved {}
+
+      .task-preview__icon {
+        width: 50px;
+        height: 50px;
+        float: left;
+        border-radius: 25px;
+        background-color: #f0e034;
+        margin-right: 15px;
+      }
 
       .task-preview {
         display: flex;
@@ -53,10 +67,10 @@ export default ({ task, link, completed = false, status = null }) => (
         display: inline-block;
       }
       .task-preview__block_title {
-        width: 60%;
+        width: 64%;
       }
       .task-preview__block_status {
-        width: 20%;
+        width: 18%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -66,9 +80,9 @@ export default ({ task, link, completed = false, status = null }) => (
       }
 
       .task-preview__title {
-        line-height: 36px;
+        line-height: 27px;
 
-        font-size: 22px;
+        font-size: 18px;
         font-weight: bold;
       }
       .task-preview__description {
