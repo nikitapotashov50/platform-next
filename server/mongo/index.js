@@ -22,6 +22,7 @@ exports.Posts = require('./Group')
 exports.Posts = require('./Location')
 //
 exports.Posts = require('./NPS')
+exports.Posts = require('./Tags')
 //
 exports.Posts = require('./Likes')
 exports.Posts = require('./Comments')

@@ -92,6 +92,9 @@ model.statics.getActual = async function (params, query = {}) {
 model.statics.addPost = async function (data, { user, type = 'user' }) {
   let model = this
   let attachments = data.attachments || []
+  let tags = data.tags || []
+
+  if (data.tags) delete data.tags
   if (data.attachments) delete data.attachments
 
   if (data.program) {
@@ -109,6 +112,8 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   data.type = 0
   data.userId = user
   let post = await model.create(data)
+
+  if (tags && tags.length > 0) tags.map(async tag => post.addTag(tag, user))
 
   if (attachments && attachments.length > 0) {
     await Promise.all(attachments.map(el => {
@@ -129,6 +134,11 @@ model.methods.addComment = async function (content, userId, add = {}) {
   await post.save()
 
   return comment
+}
+
+model.methods.addTag = function (title, userId) {
+  let post = this
+  return mongoose.models.Tag.addToPost(title, post._id, userId)
 }
 
 model.methods.removeComment = async function (commentId, user) {

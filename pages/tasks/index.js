@@ -17,9 +17,9 @@ const getLink = taskId => ({
 
 const filters = [
   { href: '/tasks', path: '/tasks', title: 'Текущие', code: 'current' },
+  { href: '/tasks?type=pending', path: '/tasks?type=pending', title: 'На проверке', code: 'pending' },
   { href: '/tasks?type=approved', path: '/tasks?type=approved', title: 'Выполненые', code: 'approved' },
-  { href: '/tasks?type=rejected', path: '/tasks?type=rejected', title: 'Отклоненные', code: 'rejected' },
-  { href: '/tasks?type=pending', path: '/tasks?type=pending', title: 'На проверке', code: 'pending' }
+  { href: '/tasks?type=rejected', path: '/tasks?type=rejected', title: 'Отклоненные', code: 'rejected' }
 ]
 
 const TasksIndex = ({ tasks, type }) => {
