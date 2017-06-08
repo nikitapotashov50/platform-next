@@ -7,9 +7,7 @@ const ChatButton = ({ handleClick, notificationCount = 0 }) => (
       )}
 
     {notificationCount === 0 && (
-      <div className='chat-icon-disabled'>
-        <div className='chat-button-label-disabled'>0</div>
-      </div>
+      <div className='chat-icon-disabled' />
       )}
 
     <style jsx>{`

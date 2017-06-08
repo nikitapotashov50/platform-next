@@ -92,13 +92,13 @@ class Chat extends Component {
                           {this.props.you.first_name}
                         </span>: </span>
                       )}
-                      {chat.lastMessage.text.substring(0, 25) + '...'}
+                      {chat.lastMessage.text.substring(0, 15) + '...'}
                     </div>
                   )}
                 </div>
-                <div className='unread-count'>
+                {chat.unreadMessageCount > 0 && <div className='unread-count'>
                   {chat.unreadMessageCount}
-                </div>
+                </div>}
 
               </div>
             ))}
@@ -255,7 +255,7 @@ class Chat extends Component {
           .chat-conversation {
             display: flex;
             cursor: pointer;
-            padding: 10px;
+            padding: 5px 10px;
           }
 
           .current {
@@ -278,8 +278,8 @@ class Chat extends Component {
           }
 
           .chat-avatar {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
           }
 
@@ -292,22 +292,28 @@ class Chat extends Component {
           }
 
           .chat-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
+            height: 19px;
+            overflow: hidden;
+            line-height: 160%;
           }
 
           .unread-count {
             color: #fff;
-            padding: 2px 10px;
+            padding: 2px 6px;
             height: 100%;
             background: #0064FF;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             border-radius: 50px;
+            margin-top:7px;
           }
 
           .chat-last-message {
-            color: #A6A6A6;
+            color: #a1a1a1;
+            font-size: 12px;
+            margin-top:-10px;
           }
 
           .chat-last-message-author {

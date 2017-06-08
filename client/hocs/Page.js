@@ -402,7 +402,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  position: relative;
 
                                  margin: 0;
-                                 padding: 12px 20px 7px;
+                                 padding: 12px 20px;
 
                                  background: #f7f8f9;
                                  border-top: 1px solid #ebebeb;
@@ -489,6 +489,39 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  top: 0;
                                  right: 0;
                                  position: absolute;
+                               }
+
+                               &__status_approved {
+                                 background: #a6da41;
+                                 border-radius: 3px;
+                                 padding: 2px 5px;
+                                 color: #fff;
+                                 letter-spacing: 2px;
+                                 font-size: 10px;
+                                 font-weight: 700;
+                                 text-transform: uppercase;
+                               }
+
+                               &__status_pending {
+                                 background: #dadde0;
+                                 border-radius: 3px;
+                                 padding: 2px 5px;
+                                 color: #fff;
+                                 letter-spacing: 2px;
+                                 font-size: 10px;
+                                 font-weight: 700;
+                                 text-transform: uppercase;
+                               }
+
+                               &__status_rejected {
+                                 background: #e04e2c;
+                                 border-radius: 3px;
+                                 padding: 2px 5px;
+                                 color: #fff;
+                                 letter-spacing: 2px;
+                                 font-size: 10px;
+                                 font-weight: 700;
+                                 text-transform: uppercase;
                                }
                              }
 

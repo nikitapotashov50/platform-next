@@ -57,7 +57,7 @@ class PostAttachments extends Component {
     let imgLength = images.length
 
     return (
-      <div>
+      <div className='attachment__wrap'>
         <div className='attachments-container'>
           {items.filter(x => startsWith(x.mime, 'image')).map((attachment, index) => (
             <div key={attachment._id}>
@@ -95,6 +95,9 @@ class PostAttachments extends Component {
         )}
 
         <style jsx>{`
+          .attachment__wrap {
+            margin-top:15px;
+          }
           .attachments-container {
             display: flex;
             flex-flow: row wrap;
@@ -103,7 +106,7 @@ class PostAttachments extends Component {
           .attachments-container div {
             flex: auto;
             width: 150px;
-            margin: 2px;
+            margin: 1px;
           }
 
           .attachments-container div a {

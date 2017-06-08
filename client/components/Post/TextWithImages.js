@@ -68,6 +68,12 @@ class TextWithImages extends Component {
           .show-more-text {
             cursor: pointer;
             font-weight: bold;
+            color: #196aff;
+            line-height: 200%;
+            opacity: 0.7;
+          }
+          .show-more-text:hover {
+            opacity: 1;
           }
         `}</style>
       </div>

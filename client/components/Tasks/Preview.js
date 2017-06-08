@@ -46,9 +46,36 @@ export default ({ task, link, completed = false, status = null }) => (
       }
 
       .task-status {}
-      .task-status_pending {}
-      .task-status_rejected {}
-      .task-status_approved {}
+      .task-status_pending {
+        background: #dadde0;
+        border-radius: 3px;
+        padding: 0 4px;
+        color: #fff;
+        letter-spacing: 2px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .task-status_rejected {
+        background: #e04e2c;
+        border-radius: 3px;
+        padding: 0 4px;
+        color: #fff;
+        letter-spacing: 2px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .task-status_approved {
+        background: #a6da41;
+        border-radius: 3px;
+        padding: 0 4px;
+        color: #fff;
+        letter-spacing: 2px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
 
       .task-preview__icon {
         width: 50px;
@@ -87,7 +114,6 @@ export default ({ task, link, completed = false, status = null }) => (
       }
       .task-preview__description {
         overflow-y: hidden;
-        height: 42px;
 
         font-size: 14px;
         font-weight: 300;
