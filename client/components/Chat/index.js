@@ -20,6 +20,7 @@ class Chat extends Component {
     this.getMessages = this.getMessages.bind(this)
     this.getCurrentChat = this.getCurrentChat.bind(this)
     this.scrollToEnd = this.scrollToEnd.bind(this)
+    this.sendMessage = this.sendMessage.bind(this)
   }
 
   handleClickOutside () {
@@ -27,7 +28,7 @@ class Chat extends Component {
   }
 
   getCurrentChat () {
-    const currentChat = this.props.chats.filter(chat => chat.chatId === this.props.currentChat.payload)
+    const currentChat = this.props.chats.filter(chat => chat.chatId === this.props.currentChat)
     return currentChat[0] || {}
   }
 
@@ -42,8 +43,22 @@ class Chat extends Component {
   }
 
   scrollToEnd () {
-    const node = findDOMNode(this.messagesEnd)
+    const node = findDOMNode(this.lastMessage)
+    console.log('need to scrool', node)
     node && node.scrollIntoView()
+  }
+
+  sendMessage () {
+    if (!this.state.newMessageText) return
+
+    this.props.sendMessage(
+      this.props.currentChat,
+      this.state.newMessageText
+    )
+
+    this.setState({
+      newMessageText: ''
+    })
   }
 
   render () {
@@ -116,6 +131,11 @@ class Chat extends Component {
             <div className='message-list'>
               {this.getMessages().map(message => (
                 <Message
+                  ref={m => {
+                    if (this.getCurrentChat().lastMessage && message.messageId === this.getCurrentChat().lastMessage.messageId) {
+                      this.lastMessage = m
+                    }
+                  }}
                   key={message.messageId}
                   you={this.props.you}
                   isGroup={this.getCurrentChat().isGroup}
@@ -128,22 +148,17 @@ class Chat extends Component {
                 type='text'
                 placeholder='Написать сообщение'
                 value={this.state.newMessageText}
+                onKeyPress={e => {
+                  if (e.key === 'Enter') {
+                    this.sendMessage()
+                  }
+                }}
                 onChange={e => {
                   this.setState({
                     newMessageText: e.target.value
                   })
                 }} />
-              <button onClick={() => {
-                if (!this.state.newMessageText) return
-                this.props.sendMessage(
-                  this.props.currentChat.payload,
-                  this.state.newMessageText
-                )
-                this.scrollToEnd()
-                this.setState({
-                  newMessageText: ''
-                })
-              }}>
+              <button onClick={this.sendMessage}>
                 <div className='message-send-btn' />
               </button>
             </div>
@@ -182,14 +197,14 @@ class Chat extends Component {
             margin: 0 3px 0 0;
           }
           .chat-list-area::-webkit-scrollbar {
-            width:8px;           
+            width:8px;
           }
 
           .chat-list-area::-webkit-scrollbar * {
             background:transparent;
             border-radius: 5px;
           }
-          
+
           .chat-list-area::-webkit-scrollbar-thumb {
             background:#edeeee !important;
             border-radius: 5px;
@@ -206,14 +221,14 @@ class Chat extends Component {
           }
 
           .message-list::-webkit-scrollbar {
-            width:8px;           
+            width:8px;
           }
 
           .message-list::-webkit-scrollbar * {
             background:transparent;
             border-radius: 5px;
           }
-          
+
           .message-list::-webkit-scrollbar-thumb {
             background:#edeeee !important;
             border-radius: 5px;

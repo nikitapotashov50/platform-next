@@ -1,10 +1,11 @@
-import { pick } from 'lodash'
+import { pick, isNil } from 'lodash'
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { addToBlackList, removeFromBlackList } from '../redux/auth'
 import { subscribeToUser, unsubscribeFromUser } from '../redux/user/subscriptions'
+import { startChat } from '../redux/chat'
 
 import DefaultLayout from './default'
 import Panel from '../elements/Panel'
@@ -15,6 +16,22 @@ import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
 class UserLayout extends Component {
+  constructor (props) {
+    super(props)
+    this.sendMessage = this.sendMessage.bind(this)
+  }
+
+  async sendMessage () {
+    const userId = this.props.user.meta.radar_id
+    if (userId) {
+      await this.props.startChat(userId)
+    }
+  }
+
+  hasRadar () {
+    return !isNil(this.props.user.meta.radar_id)
+  }
+
   render () {
     let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
     // isBlocked, toggleBlock,
@@ -36,7 +53,7 @@ class UserLayout extends Component {
 
               { showButtons && (
                 <div className='up-header__buttons'>
-                  <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')}>Написать сообщение</button>
+                  {this.hasRadar() && <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={this.sendMessage}>Написать сообщение</button>}
                   {/* <button className={[ 'up-header__button', isBlocked ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleBlock}>Блокировать</button> */}
                   <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleSubscription}>Подписаться</button>
                 </div>
@@ -107,21 +124,23 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   subscribe: subscribeToUser,
   unsubscribe: unsubscribeFromUser,
   block: addToBlackList,
-  unblock: removeFromBlackList
+  unblock: removeFromBlackList,
+  startChat
 }, dispatch)
 
-const mergeProps = (state, dispatch, props) => {
-  let userId = state.user ? state.user._id : null
-  const toggleBlock = () => state.isBlocked ? dispatch.unblock(userId) : dispatch.block(userId)
-  const toggleSubscription = () => state.isSubscribed ? dispatch.unsubscribe(userId) : dispatch.subscribe(userId)
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  let userId = stateProps.user ? stateProps.user._id : null
+  const toggleBlock = () => stateProps.isBlocked ? dispatchProps.unblock(userId) : dispatchProps.block(userId)
+  const toggleSubscription = () => stateProps.isSubscribed ? dispatchProps.unsubscribe(userId) : dispatchProps.subscribe(userId)
 
   return {
-    ...props,
-    ...state,
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
     //
     toggleBlock,
     toggleSubscription,
-    showButtons: userId && state.me && (userId !== state.me._id)
+    showButtons: userId && stateProps.me && (userId !== stateProps.me._id)
   }
 }
 
