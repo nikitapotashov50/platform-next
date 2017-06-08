@@ -42,7 +42,7 @@ const Message = ({ isGroup, messageId, avatar, userName, userId, date, text, isS
         .message {
           background: #EDEFEF;
           margin-bottom: 10px;
-          padding: 10px;
+          padding: 5px 10px;
           font-size: 14px;
           border-radius: 5px;
           align-self: flex-start;
