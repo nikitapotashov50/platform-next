@@ -1,16 +1,19 @@
 const ChatButton = ({ handleClick, notificationCount = 0 }) => (
   <div className='chat-button' onClick={handleClick}>
-    {notificationCount > 0 && (
+
+    {notificationCount > 0 ? (
       <div className='chat-icon'>
         <div className='chat-button-label'>{notificationCount}</div>
       </div>
-      )}
-
-    {notificationCount === 0 && (
-      <div className='chat-icon-disabled' />
-      )}
+    ) : (
+      <div className='chat-icon disabled' />
+    )}
 
     <style jsx>{`
+      .chat-button {
+        position: relative;
+      }
+
       .chat-icon {
         background-image: url('/static/img/messages-ico.png');
         background-size: 102px 16px;
@@ -21,19 +24,10 @@ const ChatButton = ({ handleClick, notificationCount = 0 }) => (
         float: left;
       }
 
-      .chat-icon-disabled {
-        background-image: url('/static/img/messages-ico.png');
-        background-size: 102px 16px;
+      .disabled {
         background-position: 14px 22px;
-        padding: 0 17px;
-        height: 60px;
-        background-repeat: no-repeat;
-        float: left;
+        padding: 0 25px;
       }
-      .chat-button {
-        position: relative;
-      }
-
 
       .chat-button-label {
         float: left;
@@ -41,6 +35,7 @@ const ChatButton = ({ handleClick, notificationCount = 0 }) => (
         font-size: 14px;
         color: #196aff;
       }
+
       .chat-button-label-disabled {
         float: left;
         margin-left: 27px;
