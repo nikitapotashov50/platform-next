@@ -394,10 +394,10 @@ class PostEditor extends Component {
             background: #fff;
             font-size: 20px;
             border-radius: 4px;
-            padding: 5px;
+            padding: 10px 15px;
             color: #196aff;
             cursor: pointer;
-            margin-right: 20px;
+            margin-right: 5px;
             border: 1px solid #e1e3e4;
           }
 

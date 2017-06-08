@@ -12,7 +12,7 @@ export default ({ task, link, completed = false, status = null }) => (
   <Panel bodyStyles={{ paddingClass: 'smallest' }}>
     <div className={'task-preview'}>
       <div className='task-preview__block task-preview__block_title'>
-        <div className='task-preview__icon' />
+        <div className='task-preview__icon task-preview__icon-kinjal' />
         <div className='task-preview__title'>{task.title}</div>
         <div className='task-preview__description'>{task.content}</div>
       </div>
@@ -84,6 +84,13 @@ export default ({ task, link, completed = false, status = null }) => (
         border-radius: 25px;
         background-color: #f0e034;
         margin-right: 15px;
+      }
+
+      .task-preview__icon-kinjal {
+        background-image: url('/static/img/tasks/kinjal.png');
+        background-size: 26px 25px;
+        background-position: center center;
+        background-repeat: no-repeat;
       }
 
       .task-preview {
