@@ -6,6 +6,7 @@ const { models } = require('mongoose')
 const baseUrl = 'http://bmchat.maximumsoft.ru'
 
 module.exports = router => {
+  // авторизоваться в радаре
   router.post('/login', async ctx => {
     try {
       const userId = ctx.session.user._id
@@ -57,6 +58,7 @@ module.exports = router => {
     }
   })
 
+  // получить access_token
   router.get('/access_token', async ctx => {
     try {
       const token = ctx.session.user.radar_access_token
@@ -67,6 +69,7 @@ module.exports = router => {
     }
   })
 
+  // список чатов
   router.get('/list', async ctx => {
     ctx.log.info('session', ctx.session)
 
@@ -82,6 +85,32 @@ module.exports = router => {
     }
   })
 
+  // новый одиночный чат
+  router.post('/dialog', async ctx => {
+    try {
+      const token = ctx.session.user.radar_access_token
+      const { userId } = ctx.request.body
+
+      if (token && userId) {
+        const { data } = await axios.put(`${baseUrl}/chat/dialog/`, {
+          accessToken: token,
+          userId: userId
+        }, {
+          transformRequest: data => {
+            return qs.stringify(data)
+          }
+        })
+
+        ctx.body = data
+      }
+    } catch (e) {
+      console.log(e)
+      ctx.statusCode = 500
+      ctx.body = e
+    }
+  })
+
+  // список сообщений для чата
   router.get('/:chatId/message', async ctx => {
     const token = ctx.session.user.radar_access_token
     const chatId = ctx.params.chatId
@@ -102,6 +131,7 @@ module.exports = router => {
     }
   })
 
+  // написать сообщение в чат
   router.post('/:chatId/message', async ctx => {
     const token = ctx.session.user.radar_access_token
     const chatId = ctx.params.chatId

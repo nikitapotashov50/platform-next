@@ -16,7 +16,8 @@ module.exports = router => {
             options: { limit: 1 }
           }
         ])
-        .select('name first_name last_name picture_small picture_large _id info goals, subscriptions')
+        .populate('meta', 'radar_id')
+        .select('meta name first_name last_name picture_small picture_large _id info goals, subscriptions')
 
       let groups = await user.getGroups(3)
       let subscribers = await user.getSubscribers(6)

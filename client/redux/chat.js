@@ -28,6 +28,14 @@ export const getMessageList = createAction('chat/GET_MESSAGE_LIST', async chatId
   }
 })
 
+export const startChat = createAction('chat/START_CHAT', async userId => {
+  const { data } = await axios.post(`/api/mongo/chat/dialog`, {
+    userId
+  })
+
+  return data
+})
+
 export const sendMessage = createAction('chat/SEND_MESSAGE', async (chatId, text) => {
   const { data } = await axios.post(`/api/mongo/chat/${chatId}/message`, {
     text
@@ -109,5 +117,10 @@ export default handleActions({
   [openChatWindow]: state => ({ ...state, showChatWindow: true }),
   [closeChatWindow]: state => ({ ...state, showChatWindow: false }),
   [toggleChatWindow]: state => ({ ...state, showChatWindow: !state.showChatWindow }),
-  [selectChat]: (state, payload) => ({ ...state, selectedChat: payload })
+  [selectChat]: (state, { payload }) => ({ ...state, selectedChat: payload }),
+  [startChat]: (state, { payload }) => ({
+    ...state,
+    showChatWindow: true,
+    selectedChat: payload.chatId
+  })
 }, defaultState)
