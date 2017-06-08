@@ -1,4 +1,4 @@
-const moment = require('moment')
+// const moment = require('moment')
 const mongoose = require('mongoose')
 const { isNil } = require('lodash')
 
@@ -149,17 +149,16 @@ module.exports = router => {
     const userMeta = await user.getMeta()
     let programs = await user.getPrograms()
 
-    let today = moment()
-
     if (!programs.length) {
       await user.addProgram(3, {})
       programs = await user.getPrograms()
     }
 
-    let active = []
+    // let today = moment()
+    // let active = []
     programs = programs.map(el => {
-      if ((moment(el.programId.start_at) < today && moment(el.programId.finish_at) > today) && el.roleId._id === 3) active.push(el._id)
-      console.log(active)
+      // if ((moment(el.programId.start_at) < today && moment(el.programId.finish_at) > today) && el.roleId._id === 3) active.push(el._id)
+
       return {
         _id: el.programId._id,
         role: el.roleId.code,
@@ -168,7 +167,7 @@ module.exports = router => {
         start: el.programId.start_at,
         finish: el.programId.finish_at
       }
-    }).filter(x => (!active.length || (active.length && x._id !== 3)))
+    })
 
     if (!ctx.session.currentProgram) ctx.session.currentProgram = 3
 
