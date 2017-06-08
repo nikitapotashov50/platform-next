@@ -91,8 +91,9 @@ class HeaderUnregisteredMenu extends Component {
         state.modal = null
         state.credentials = { ...defaultCredentials }
       })
-      this.props.dispatch(refresh(data.user._id))
-      this.props.dispatch(auth(data))
+
+      await this.props.dispatch(auth(data))
+      await this.props.dispatch(refresh(data.user._id))
     } catch (error) {
       await this.setState(state => {
         state.fetching = false

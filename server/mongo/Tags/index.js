@@ -14,7 +14,7 @@ const model = new mongoose.Schema(extend({
 }, is))
 
 model.statics.addToPost = function (title, post, userId) {
-  if (title[0] === '#') title.substring(0, 1)
+  if (title[0] === '#') title = title.substr(1)
 
   let data = {
     title,

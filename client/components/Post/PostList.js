@@ -82,7 +82,7 @@ class PostList extends Component {
         { postCount > 0 && posts.map((post, index) => (
           <div key={post._id}>
             <Post post={post} loggedUser={loggedUser} reply={replies[post._id]} user={users[post.userId]} onComment={onComment(post._id)} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
-            <Panel noPadding bodyStyles={{ noPadding: true }}>
+            <Panel noPadding bodyStyles={{ noPadding: true }} margin='top-negative'>
               <Comments postId={post._id} ids={post.comments} />
             </Panel>
           </div>

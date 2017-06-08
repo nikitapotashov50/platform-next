@@ -14,9 +14,7 @@ export default ({ post, reply, onExpand }) => {
 
       <TextWithImages text={post.content} />
 
-      { (post.attachments && post.attachments.length > 0) && (
-        <Attachments items={post.attachments} />
-      )}
+      { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
     </div>
   )
 }

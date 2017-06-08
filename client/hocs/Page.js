@@ -372,6 +372,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                &_margin {
                                  &_small { margin-bottom: 10px; }
                                  &_negative { margin-bottom: -2px; }
+                                 &_top-negative { margin-top: -1px; }
                                }
                                &_no_border { border-bottom: none; border-radius: 3px 3px 0 0; }
                                &_no_margin { margin-bottom: 0; }
@@ -486,9 +487,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__status {
-                                 top: 0;
                                  right: 0;
+                                 top: -3px;
                                  position: absolute;
+                                 display: block;
+                                 opacity: .75;
                                }
 
                                &__status_approved {
@@ -766,6 +769,25 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                }
                              }
+
+                             .task-status {
+                               border-radius: 3px;
+                               box-sizing: border-box;
+
+                               height: 21px;
+                               padding: 0 7px;
+                               line-height: 21px;
+                               display: inline-block;
+
+                               color: #fff;
+                               font-size: 10px;
+                               font-weight: 700;
+                               letter-spacing: 2px;
+                               text-transform: uppercase;
+                             }
+                             .task-status_pending { background: #dadde0; }
+                             .task-status_rejected { background: #e04e2c; }
+                             .task-status_approved { background: #a6da41; }
 
                              .user-badge {
                                text-align: center;
@@ -1297,14 +1319,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .programs-menu {
 
-                              &__hidden {
-                                 display: none; 
-                              }
+                              &_hidden { display: none; }
                                
                                &__wrap {
                                  position: absolute;
-                                 top: 59px;
-                                 left:-50px;
+                                 top: 60px;
+                                 right: -30px;
                                  width: 240px;
                                  
                                  border-radius: 3px;
@@ -1316,6 +1336,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                }
 
                                &__item {
+                                 position: relative;
                                  float: left;
                                  background: #e6e5e2;
                                  border-radius: 3px;
@@ -1353,7 +1374,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  color: #fff;
                                }
 
-                               &__item-main {
+                               &__item-default {
                                  background: #22d69d;
                                  background-image: url('/static/img/programs.png');
                                  background-size: 199px 39px;
@@ -1404,45 +1425,45 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  background-size: 19px 19px;
                                  width: 19px;
                                  height: 19px;
-                                 top: 10px;
-                                 left: 68px;
+                                 top: -7px;
+                                 right: -7px;
                                  position: absolute;
                                }
 
                              }
 
                              .programs-selected {
-                               width: 68px;
+                               position: relative;
+                          
+                               width: 64px;
                                height: 60px;
+                               margin: 0 10px;
                                background: url('/static/img/programs-active.png');
+                               background-position: 0 10px;
                                background-size: 184px 25px;
                                background-repeat: no-repeat;
                                
-                               
-                               
-                               &__ceh {
-                                 background-position: 4px 20px;
-                               }
+                               &_ceh { background-position: 4px 20px; }
+                               &_mzs { background-position: -69px 20px; }
+                               &_default { background-position: -144px 18px; }
 
-                               &__mzs {
-                                 background-position: -69px 20px;
-                               }
-                               &__main {
-                                 background-position: -144px 18px;
-                               }
-                               span {
+                               &:after {
+                                right: 0;
+                                position: absolute;
+
+                                width: 9px;
+                                height: 60px;
                                 display: block;
-                                width: 68px;
-                               height: 60px;
-                               background: url('/static/img/dd-arrow.png');
-                               background-size: 9px 50px;
-                               background-repeat: no-repeat;
-                               background-position: 58px 27px;
+                                
+                                background-size: 9px 60px;
+                                background-repeat: no-repeat;
+                                background-position: 0 28px;
+                                background-image: url('/static/img/dd-arrow.png');
+                                content: '';
                                }
-                               span:hover {
-                                background-position: 58px -18px;
+                               &:hover:after {
+                                 background-position: 0 -26px;
                                }
-
                              }
 
                              .app-header {

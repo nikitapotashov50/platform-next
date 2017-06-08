@@ -150,49 +150,21 @@ module.exports = router => {
       .limit(1)
       .select('programs subscriptions meta')
 
-    const userMeta = await mongoose.models.UsersMeta.findOne({
-      userId: user._id
-    })
+    const userMeta = await user.getMeta()
+    let programs = await user.getPrograms()
 
-    let rawPrograms = await mongoose.models.ProgramUserMeta
-      .find({
-        _id: { $in: user.programs.map(el => el.meta) || [] }
-      })
-      .populate([
-        {
-          path: 'programId',
-          select: 'alias title _id'
-        },
-        {
-          path: 'roleId',
-          select: 'code'
-        }
-      ])
-
-    if (!rawPrograms.length) {
+    if (!programs.length) {
       await user.addProgram(3, {})
-
-      rawPrograms = await mongoose.models.ProgramUserMeta
-        .find({
-          _id: { $in: user.programs.map(el => el.meta) || [] }
-        })
-        .populate([
-          {
-            path: 'programId',
-            select: 'alias title _id'
-          },
-          {
-            path: 'roleId',
-            select: 'code'
-          }
-        ])
+      programs = await user.getPrograms()
     }
 
-    let programs = rawPrograms.map(el => ({
+    programs = programs.map(el => ({
       _id: el.programId._id,
       role: el.roleId.code,
       alias: el.programId.alias,
-      title: el.programId.title
+      title: el.programId.title,
+      start: el.programId.start_at,
+      finish: el.programId.finish_at
     }))
 
     if (!ctx.session.currentProgram) ctx.session.currentProgram = 3

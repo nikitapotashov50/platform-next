@@ -113,13 +113,8 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   data.userId = user
   let post = await model.create(data)
 
-  if (tags && tags.length > 0) tags.map(async tag => post.addTag(tag, user))
-
-  if (attachments && attachments.length > 0) {
-    await Promise.all(attachments.map(el => {
-      return post.addAttachment(el)
-    }))
-  }
+  if (tags && tags.length > 0) tags.map(async tag => { await post.addTag(tag, user) })
+  if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
   return post
 }

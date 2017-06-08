@@ -59,8 +59,8 @@ module.exports = mongoose.model('Program', model)
 /** ----------------------- DEFAULTS ------------------------ */
 
 const defaultPrograms = {
-  'ceh-23': { _id: 1, title: 'ЦЕХ 23', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') },
-  'mzs-17': { _id: 2, title: 'МЗС 17', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') },
+  'ceh-23': { _id: 1, title: 'ЦЕХ 23', is_enabled: true, start_at: moment('2017-01-01').format('YYYY-DD-MM'), finish_at: moment('2017-04-04').format('YYYY-DD-MM') },
+  'mzs-17': { _id: 2, title: 'МЗС 17', is_enabled: true, start_at: moment('2017-01-01').format('YYYY-DD-MM'), finish_at: moment('2017-04-04').format('YYYY-DD-MM') },
   default: { noClasses: true, _id: 3, title: 'Общая лента', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') }
 }
 

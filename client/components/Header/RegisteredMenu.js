@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
+import Programs from './Programs'
 import UserImage from '../User/Image'
 import UserHeaderMenu from '../User/HeaderMenu'
 import ChatButton from './ChatButton'
@@ -16,13 +17,20 @@ import {
   toggleChatWindow, closeChatWindow, selectChat
 } from '../../redux/chat'
 
+const getCurrentPrefix = programs => {
+  let current = programs.items[programs.current]
+  return current.alias.split('-')[0]
+}
+
 class HeaderRegisteredMenu extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      menu: false
+      menu: false,
+      programMenu: false
     }
+    this.togglePrograms = this.togglePrograms.bind(this)
     this.changeProgram = this.changeProgram.bind(this)
   }
 
@@ -38,19 +46,12 @@ class HeaderRegisteredMenu extends Component {
     this.props.dispatch(logout())
   }
 
-  async changeProgram (e) {
-    let val = e.target.value
-    this.props.dispatch(changeCurrentProgram(val.length ? val : null))
+  async changeProgram (value) {
+    this.props.dispatch(changeCurrentProgram(value || 3))
   }
 
-  drawPrograms (items) {
-    let result = []
-    for (var i in items) {
-      result.push(
-        <option value={items[i]._id} key={'program-' + items[i]._id}>{items[i].title}</option>
-      )
-    }
-    return result
+  togglePrograms (flag) {
+    this.setState({ programMenu: flag })
   }
 
   componentDidMount () {
@@ -61,7 +62,7 @@ class HeaderRegisteredMenu extends Component {
   }
 
   render () {
-    let { menu } = this.state
+    let { menu, programMenu } = this.state
     let {className, user, programs} = this.props
 
     return (
@@ -95,29 +96,8 @@ class HeaderRegisteredMenu extends Component {
 
         { !isEmpty(programs.items) && (
           <li className='user-menu__item user-menu__item_hoverable'>
-            <select onChange={this.changeProgram} value={programs.current || ''}>
-              {this.drawPrograms(programs.items || [])}
-            </select>
-
-            {/* Правильная переключалка программ. Классы доступные programs-selected__ceh / __mzs / __main
-            <div className='programs-selected programs-selected__main'>
-            <span />
-            </div> */}
-
-            <div className='programs-menu__wrap programs-menu__hidden'>
-              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-active'>24</div>
-              <div className='programs-menu__item programs-menu__item-mzs'>18</div>
-              <div className='programs-menu__item programs-menu__item-main' />
-
-              <div className='programs-menu__old'>
-                <span>Прошедшие курсы</span>
-              </div>
-
-              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-old'>23</div>
-              <div className='programs-menu__item programs-menu__item-mzs programs-menu__item-old'>17</div>
-              <div className='programs-menu__item programs-menu__item-ceh programs-menu__item-old'>22</div>
-              <div className='programs-menu__item programs-menu__item-mzs programs-menu__item-old'>16</div>
-
+            <div className={`programs-selected programs-selected_${getCurrentPrefix(programs)}`} onClick={this.togglePrograms.bind(this, !programMenu)}>
+              { programMenu && <Programs items={programs.items} current={programs.current} onChange={this.changeProgram} />}
             </div>
           </li>
         )}

@@ -34,14 +34,20 @@ const initGoal = async (ctx, next) => {
 
 module.exports = router => {
   router.get('/edit', async ctx => {
-    let info = await models.UsersInfo.getOrCreate(ctx.__.me._id)
+    try {
+      let info = await models.UsersInfo.getOrCreate(ctx.__.me._id)
+      ctx.log.info(info)
 
-    ctx.body = {
-      status: 200,
-      result: {
-        info,
-        user: ctx.__.me.getSessionInfo()
+      ctx.body = {
+        status: 200,
+        result: {
+          info,
+          user: ctx.__.me.getSessionInfo()
+        }
       }
+    } catch (e) {
+      ctx.log.info(e)
+      ctx.body = { status: 500, message: e }
     }
   })
 
@@ -73,15 +79,16 @@ module.exports = router => {
   router.bridge('/program', router => {
     router.put('/changeCurrent', ctx => {
       try {
-        if (!ctx.request.body.programId) throw new Error('No program id specified')
-
-        let program = models.Program.findOne({ _id: ctx.request.body.programId })
+        let programId = ctx.request.body.programId
+        if (!programId) throw new Error('No program id specified')
+        programId = Number(programId)
+        let [ program ] = models.Program.find({ _id: programId }).limit(1)
         if (!program) throw new Error('no such program exists')
 
-        ctx.session.currentProgram = ctx.request.body.programId
-
+        ctx.session.currentProgram = program._id
         ctx.body = { status: 200 }
       } catch (e) {
+        ctx.log.info(e)
         ctx.body = { status: 500 }
       }
     })
@@ -129,14 +136,3 @@ module.exports = router => {
     })
   })
 }
-
-// router.bridge('/block', router => {
-//   router.post('/', async ctx => {
-//     await ctx.__.me.addBlackList([ ctx.__.target ])
-//     ctx.body = { status: 200 }
-//   })
-//   router.put('/', async ctx => {
-//     await ctx.__.me.removeBlackList([ ctx.__.target ])
-//     ctx.body = { status: 200 }
-//   })
-// })

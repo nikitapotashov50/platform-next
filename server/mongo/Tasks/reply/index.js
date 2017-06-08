@@ -173,8 +173,10 @@ model.statics.getByStatus = function (status, params) {
     { $project: {
       _id: '$_id._id',
       taskId: '$_id.taskId',
-      status: '$status.status'
-    }}
+      status: '$status.status',
+      updated: '$status.created'
+    }},
+    { $sort: { 'status.updated': -1 } }
   ])
 }
 

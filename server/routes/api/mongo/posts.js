@@ -111,7 +111,10 @@ module.exports = router => {
 
       const post = await models.Post.addPost(postData, { user })
       const users = await models.Users.getShortInfo([ user._id ])
+      const attachments = await models.Attachment.find({ _id: { $in: post.attachments } })
+
       post.userId = user._id
+      post.attachments = attachments
 
       ctx.body = {
         status: 200,

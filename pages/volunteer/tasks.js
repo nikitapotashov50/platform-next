@@ -26,7 +26,7 @@ let menuItems = [
 
 class VolunteerPage extends Component {
   componentWillReceiveProps (nextProps) {
-    if (nextProps.program.role !== 'volunteer') nextProps.restrictAccess('Ошибка доступа')
+    if (nextProps.program && nextProps.program.role !== 'volunteer') nextProps.restrictAccess('Ошибка доступа')
     else {
       if (nextProps.current !== this.props.current) {
         nextProps.getTotalCount({ programId: nextProps.current })
@@ -101,7 +101,8 @@ const mergeProps = (state, dispatch, props) => {
 export default PageHoc(VolunteerPage, {
   title: 'Волонтерство',
   accessRule: (user, props) => {
-    let flag = props.user.programs.items[props.user.programs.current].role === 'volunteer'
+    let { programs } = props.user
+    let flag = (programs.items[programs.current] && programs.items[programs.current].role === 'volunteer')
     return !!user && flag
   },
   mergeProps,

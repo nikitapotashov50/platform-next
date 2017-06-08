@@ -95,6 +95,18 @@ model.methods.getProgramCity = async function (programId, withName = false) {
   return meta
 }
 
+model.methods.getPrograms = function () {
+  let user = this
+  return mongoose.models.ProgramUserMeta
+    .find({
+      _id: { $in: user.programs.map(el => el.meta) || [] }
+    })
+    .populate([
+      { path: 'programId', select: 'alias title _id start_at finish_at' },
+      { path: 'roleId', select: 'code' }
+    ])
+}
+
 //
 
 model.methods.updateMeta = async function (data) {
@@ -107,6 +119,11 @@ model.methods.updateMeta = async function (data) {
   await user.save()
 
   return user
+}
+
+model.methods.getMeta = async function () {
+  let [ meta ] = await mongoose.models.UsersMeta.find({ userId: this._id }).limit(1).sort({ created: -1 })
+  return meta
 }
 
 model.methods.updateInfo = async function (data) {
@@ -249,7 +266,7 @@ model.methods.getRepliedByStatus = async function (programId, status) {
     userId: user._id,
     taskId: { $in: tasks.map(el => el._id) }
   })
-
+  // TODO: добавить сортировку по пришедшей информации из getByStatus
   replies = replies.map(el => String(el.taskId))
 
   return tasks.filter(el => replies.indexOf(String(el._id)) > -1)

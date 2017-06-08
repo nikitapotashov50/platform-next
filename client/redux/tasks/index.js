@@ -1,12 +1,17 @@
 import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
+import { generateFetchActions } from '../../utils/redux'
 
 const defaultState = {
   active: [],
   replied: [],
   knife: [],
-  count: null
+  count: null,
+  fetching: false
 }
+
+//
+export const { fetchEnd, fetchStart } = generateFetchActions('tasks')
 
 export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
   options.withCredentials = true
@@ -32,10 +37,7 @@ export const getTasks = createAction('tasks/GET_LIST', async (programId, type, o
       replied: data.result.replied || [],
       knife: data.result.knife || []
     }
-  } else {
-    console.log(data)
-    return data
-  }
+  } else return data
 })
 
 export default handleActions({
@@ -48,5 +50,7 @@ export default handleActions({
     active: payload.active || [],
     replied: payload.replied || [],
     knife: payload.knife || []
-  })
+  }),
+  [fetchEnd]: state => ({ ...state, fetching: false }),
+  [fetchStart]: state => ({ ...state, fetching: true })
 }, defaultState)

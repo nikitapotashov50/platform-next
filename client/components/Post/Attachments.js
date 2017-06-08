@@ -56,31 +56,44 @@ class PostAttachments extends Component {
     let { images } = this
     let imgLength = images.length
 
+    let previews = { video: [], image: [], documents: [] }
+    items.map(el => {
+      if (startsWith(el.mime, 'image')) previews.image.push(el)
+      if (startsWith(el.mime, 'video')) previews.video.push(el)
+      if (startsWith(el.mime, 'application')) previews.documents.push(el)
+    })
+
     return (
       <div className='attachment__wrap'>
-        <div className='attachments-container'>
-          {items.filter(x => startsWith(x.mime, 'image')).map((attachment, index) => (
-            <div key={attachment._id}>
-              <a onClick={this.open(index)}>
-                <img src={attachment.path} style={{ cursor: 'pointer' }} />
-              </a>
-            </div>
-          ))}
-        </div>
-        <div className='attachments-container'>
-          {items.filter(x => startsWith(x.mime, 'video')).map(attachment => (
-            <div key={attachment._id} className='attachment-video'>
-              <ReactPlayer url={attachment.path} width='100%' />
-            </div>
-          ))}
-        </div>
-        <div className='attachments-container'>
-          {items.filter(x => startsWith(x.mime, 'application')).map(attachment => (
-            <div key={attachment._id} className='attachment-doc'>
-              {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
-            </div>
-          ))}
-        </div>
+        { (previews.image.length > 0) && (
+          <div className='attachments-container'>
+            {previews.image.map((attachment, index) => (
+              <div key={attachment._id}>
+                <a onClick={this.open(index)}>
+                  <img src={attachment.path} style={{ cursor: 'pointer' }} />
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+        { (previews.video.length > 0) && (
+          <div className='attachments-container'>
+            {previews.video.map(attachment => (
+              <div key={attachment._id} className='attachment-video'>
+                <ReactPlayer url={attachment.path} width='100%' />
+              </div>
+            ))}
+          </div>
+        )}
+        { (previews.documents.length > 0) && (
+          <div className='attachments-container'>
+            {previews.documents.map(attachment => (
+              <div key={attachment._id} className='attachment-doc'>
+                {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
+              </div>
+            ))}
+          </div>
+        )}
 
         {isOpen && (
           <Lightbox
@@ -95,12 +108,10 @@ class PostAttachments extends Component {
         )}
 
         <style jsx>{`
-          .attachment__wrap {
-            margin-top:15px;
-          }
           .attachments-container {
             display: flex;
             flex-flow: row wrap;
+            margin-top: 10px;
           }
 
           .attachments-container div {

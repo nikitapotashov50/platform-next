@@ -1,12 +1,7 @@
 import moment from 'moment'
 import Panel from '../../elements/Panel'
 import Link from 'next/link'
-
-const statusText = {
-  rejected: 'Отклонен',
-  pending: 'На проверке',
-  approved: 'Выполнено'
-}
+import TaskStatus from '../../elements/Task/Status'
 
 export default ({ task, link, completed = false, status = null }) => (
   <Panel bodyStyles={{ paddingClass: 'smallest' }}>
@@ -19,9 +14,7 @@ export default ({ task, link, completed = false, status = null }) => (
 
       <div className='task-preview__block task-preview__block_status'>
         { !completed && (<span className='task-remaining' data-prefix='осталось'>{moment().to(moment(task.finish_at), true)}</span>) }
-        { completed && (
-          <span className={[ 'task-status', status ? ('task-status_' + status) : '' ].join(' ')}>{statusText[status]}</span>
-        )}
+        { completed && (<TaskStatus status={status} />)}
       </div>
 
       <div className='task-preview__block task-preview__block_status'>
@@ -43,38 +36,6 @@ export default ({ task, link, completed = false, status = null }) => (
         letter-spacing: 2px;
         font-weight: 500;
         content: attr(data-prefix);
-      }
-
-      .task-status {}
-      .task-status_pending {
-        background: #dadde0;
-        border-radius: 3px;
-        padding: 0 4px;
-        color: #fff;
-        letter-spacing: 2px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-      .task-status_rejected {
-        background: #e04e2c;
-        border-radius: 3px;
-        padding: 0 4px;
-        color: #fff;
-        letter-spacing: 2px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-      .task-status_approved {
-        background: #a6da41;
-        border-radius: 3px;
-        padding: 0 4px;
-        color: #fff;
-        letter-spacing: 2px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
       }
 
       .task-preview__icon {

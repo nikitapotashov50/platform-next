@@ -31,7 +31,9 @@ const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => 
 }
 
 const mapStateToProps = ({ auth, user, tasks }) => {
-  let role = (user.programs.items && user.programs.current) ? user.programs.items[user.programs.current].role : null
+  let { programs } = user
+  let role = (programs.items && programs.current && programs.items[programs.current]) ? user.programs.items[user.programs.current].role : null
+
   return {
     role,
     isLogged: auth.isLogged,

@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
 
-import { refresh, auth } from '../auth'
+import { refresh, auth, logout } from '../auth'
 
 // default state
 let defaultState = {
-  items: null,
+  items: {},
   current: null
 }
 
@@ -53,11 +53,14 @@ export default handleActions({
     ...state,
     items: {
       ...state.items,
-      ...payload.item
+      ...payload.item || {}
     }
   }),
   [changeCurrent]: (state, { payload }) => ({
     ...state,
     current: payload.id
+  }),
+  [logout]: state => ({
+    ...defaultState
   })
 }, defaultState)

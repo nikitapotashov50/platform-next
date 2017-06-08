@@ -115,11 +115,6 @@ module.exports = router => {
           let [ statusData ] = await reply.getStatus()
           status = statusData ? statusData.status : null
           specific = reply.specific.item || null
-
-          if (ctx.__.task.replyTypeId === 2) {
-            let [ plan ] = await models.KnifePlan.find({ _id: specific.type.item }).limit(1)
-            specific = plan
-          }
         }
 
         ctx.body = {

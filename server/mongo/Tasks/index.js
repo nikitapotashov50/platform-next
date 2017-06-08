@@ -9,6 +9,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const model = new mongoose.Schema(extend({
   title: { type: String, required: true },
   content: { type: String, required: true },
+  description: { type: String, default: '' },
   //
   userId: { type: ObjectId, ref: 'Users', index: true },
   replyTypeId: { type: Number, ref: 'TaskReplyType', index: true },
@@ -63,7 +64,7 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 2,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-13')
   },
   {
     title: 'Поставить план-кинжал!',
@@ -71,11 +72,11 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03'),
+    finish_at: new Date('2017-06-13'),
     replyMeta: {
       title: 'План кинжал №2',
       start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-10')
+      finish_at: new Date('2017-06-13')
     }
   },
   {
@@ -84,7 +85,7 @@ let defaultTasks = [
     replyTypeId: 3,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-13')
   },
   {
     title: 'Поставить цель',
@@ -92,7 +93,7 @@ let defaultTasks = [
     replyTypeId: 3,
     targetProgram: 2,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-13')
   },
   {
     title: 'Поставить ПК',
@@ -100,7 +101,7 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 2,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03')
+    finish_at: new Date('2017-06-13')
   },
   {
     title: 'Поставить ПК',
@@ -108,11 +109,11 @@ let defaultTasks = [
     replyTypeId: 2,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-10'),
+    finish_at: new Date('2017-06-13'),
     replyMeta: {
       title: 'План кинжал №3',
       start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-10')
+      finish_at: new Date('2017-06-13')
     }
   },
   {
@@ -121,7 +122,7 @@ let defaultTasks = [
     replyTypeId: 1,
     targetProgram: 3,
     start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-08')
+    finish_at: new Date('2017-06-18')
   }
 ]
 
@@ -140,6 +141,7 @@ model.statics.initDefaults = async function (defaults) {
 /** ------------------------ MODEL STATICS ------------------------ */
 
 model.statics.createKnifePlan = async function (user, data, options = {}) {
+  console.log(data, options)
   /**
    * Для создания плана-кинжала надо
    * 1. понять кто цель плана
@@ -165,7 +167,7 @@ model.statics.createKnifePlan = async function (user, data, options = {}) {
   let finish = options.finish_at ? options.finish_at : moment().add(7, 'days').toISOString()
 
   let taskData = {
-    title: options.title,
+    title: options.title || 'План-кинжал',
     content: options.content,
     userId: user._id,
     target: { model: 'Users', item: targetId },
@@ -246,7 +248,7 @@ model.methods.addReply = async function (user, body) {
 
   await task.save()
 
-  return { reply, specific: additional }
+  return { reply, specific: additional.specific ? additional.specific.item : null }
 }
 
 model.methods.checkReply = async function (user) {
