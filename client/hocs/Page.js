@@ -17,6 +17,8 @@ import starti18n, { getTranslations } from '../tools/start_i18n'
 
 import ErrorLayout from '../layouts/error'
 import OverlayLoader from '../components/OverlayLoader'
+import axiosDefaults from 'axios/lib/defaults'
+axiosDefaults.baseURL = BACKEND_URL
 
 moment.locale('ru')
 numeral.language('ru', { delimiters: { thousands: ' ', decimal: '.' } })

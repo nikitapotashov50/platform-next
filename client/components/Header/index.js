@@ -6,9 +6,9 @@ let menu = [
   { url: '/', title: 'Отчеты', as: '/', code: 'index' }
 ]
 
-const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => {
+const Header = ({ pathname, dispatch, current, isLogged, role, selected, taskCount }) => {
   let addMenu = []
-  if (isLogged) addMenu.push({ url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' })
+  if (isLogged && current !== 3) addMenu.push({ url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' })
   if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
   return (
@@ -34,6 +34,7 @@ const mapStateToProps = ({ auth, user, tasks }) => {
 
   return {
     role,
+    current: programs.current,
     isLogged: auth.isLogged,
     taskCount: tasks.items.count
   }
