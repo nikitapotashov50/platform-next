@@ -2121,6 +2121,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                .menu {
                                  padding: 0 0 0 10px;
+
+                                 &__item {
+                                   display: none;
+                                 }
+                                 &__item_no_padding-left {
+                                   display: block;
+                                 }
                                }
 
                                .app-header {
@@ -2206,7 +2213,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                .user-menu {
 
                                   &__item {
-
+.
                                     padding: 0 8px;
 
                                     select {
