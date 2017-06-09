@@ -1,5 +1,5 @@
 const { models } = require('mongoose')
-const { pick } = require('lodash')
+const { pick, isUndefined } = require('lodash')
 const { keyObj, initMeRoutes } = require('../../../controllers/common')
 
 const initPost = async (ctx, next) => {
@@ -37,7 +37,8 @@ module.exports = router => {
 
     let params = {}
     params.programs = { $in: [ Number(programId) ] }
-    if (authorIds) params.userId = { $in: authorIds.split(',') }
+
+    if (!isUndefined(authorIds)) params.userId = { $in: (!authorIds ? [] : authorIds.split(',')) }
 
     let userId = ctx.session.user ? ctx.session.user._id : (user || null)
 
