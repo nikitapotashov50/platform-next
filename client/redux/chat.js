@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
-import { createSelector } from 'reselect'
-import { includes, toLower } from 'lodash'
+// import { createSelector } from 'reselect'
+// import { includes, toLower } from 'lodash'
 
 const defaultState = {
   auth: false,
   showChatWindow: false,
   selectedChat: null,
-  chats: [],
-  chatsFilterQuery: ''
+  chats: []
+  // chatsFilterQuery: ''
 }
 
 export const login = createAction('chat/LOGIN', async password => {
@@ -133,13 +133,13 @@ export const listen = () => async dispatch => {
 }
 
 // фильтр списка чатов через reselect
-const chatListSelector = state => state.chat.chats || []
-const chatsFilterQuerySelector = state => state.chat.chatsFilterQuery || ''
-export const getFilteredChatList = createSelector(
-  chatListSelector,
-  chatsFilterQuerySelector,
-  (chats, query) => chats.filter(chat => includes(toLower(chat.chatName), toLower(query)))
-)
+// const chatListSelector = state => state.chat.chats || []
+// const chatsFilterQuerySelector = state => state.chat.chatsFilterQuery || ''
+// export const getFilteredChatList = createSelector(
+//   chatListSelector,
+//   chatsFilterQuerySelector,
+//   (chats, query) => chats.filter(chat => includes(toLower(chat.chatName), toLower(query)))
+// )
 
 export default handleActions({
   [login]: (state, action) => ({

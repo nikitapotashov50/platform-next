@@ -15,7 +15,7 @@ import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs
 import {
   login, getChatList, getMessageList, listen, sendMessage,
   toggleChatWindow, closeChatWindow, selectChat, setChatsFilterQuery,
-  getFilteredChatList, sendWelcomeMessage, acceptFriend
+  sendWelcomeMessage, acceptFriend
 } from '../../redux/chat'
 
 const getCurrentPrefix = programs => {
@@ -118,7 +118,8 @@ const mapStateToProps = state => ({
   user: state.auth.user,
   programs: state.user.programs,
   showChatWindow: state.chat.showChatWindow,
-  chatList: getFilteredChatList(state),
+  // chatList: getFilteredChatList(state),
+  chatList: state.chats,
   isChatAuth: state.chat.auth,
   selectedChat: state.chat.selectedChat,
   chatsFilterQuery: state.chat.chatsFilterQuery
