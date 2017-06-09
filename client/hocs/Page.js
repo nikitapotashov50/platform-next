@@ -127,7 +127,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                 <link rel='icon' type='image/png' href='/static/favicons/favicon-32x32.png' sizes='32x32' />
                 <link rel='icon' type='image/png' href='/static/favicons/favicon-16x16.png' sizes='16x16' />
                 <link rel='manifest' href='/static/favicons/manifest.json' />
-                <link rel='stylesheet' type='text/css' href='/static/bundle.min.css' />
                 <script src='https://cdn.polyfill.io/v2/polyfill.min.js' />
               </Head>
 
