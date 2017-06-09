@@ -24,7 +24,7 @@ export default handleActions({
   [getContent]: (state, { payload }) => ({
     ...state,
     items: payload.items
-  })
+  }),
   [fetchEnd]: state => ({ ...state, fetching: false }),
   [fetchStart]: state => ({ ...state, fetching: true })
 }, defaultState)
