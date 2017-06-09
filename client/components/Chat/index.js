@@ -27,6 +27,14 @@ class Chat extends Component {
     this.props.handleClickOutside()
   }
 
+  componentDidMount () {
+    this.scrollToEnd()
+  }
+
+  componentDidUpdate () {
+    this.scrollToEnd()
+  }
+
   getCurrentChat () {
     const currentChat = this.props.chats.filter(chat => chat.chatId === this.props.currentChat)
     return currentChat[0] || {}
@@ -43,8 +51,7 @@ class Chat extends Component {
   }
 
   scrollToEnd () {
-    const node = findDOMNode(this.lastMessage)
-    console.log('need to scrool', node)
+    const node = findDOMNode(this.end)
     node && node.scrollIntoView()
   }
 
@@ -134,16 +141,12 @@ class Chat extends Component {
             <div className='message-list'>
               {this.getMessages().map(message => (
                 <Message
-                  ref={m => {
-                    if (this.getCurrentChat().lastMessage && message.messageId === this.getCurrentChat().lastMessage.messageId) {
-                      this.lastMessage = m
-                    }
-                  }}
                   key={message.messageId}
                   you={this.props.you}
                   isGroup={this.getCurrentChat().isGroup}
                   {...message} />
               ))}
+              <div ref={node => { this.end = node }} />
             </div>
 
             <div className='message-form'>
