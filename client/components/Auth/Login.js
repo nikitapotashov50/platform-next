@@ -21,7 +21,7 @@ const AuthLogin = ({ recoverySwitch, message, values, onInput, errors, submit, f
 
         <div className='login-form__row'>
           <label className='login-form__label'>{t('auth.login.fields.password')}</label>
-          <input className='login-form__input' value={values.password} placeholder={t('auth.login.placeholders.email')} onChange={onInput.bind(this, 'password')} type='password' />
+          <input className='login-form__input' value={values.password} placeholder={t('auth.login.placeholders.password')} onChange={onInput.bind(this, 'password')} type='password' />
           { errors.password && (<div>{errors.password}</div>)}
         </div>
 
