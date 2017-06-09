@@ -14,7 +14,8 @@ import { logout } from '../../redux/auth'
 import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs'
 import {
   login, getChatList, getMessageList, listen, sendMessage,
-  toggleChatWindow, closeChatWindow, selectChat
+  toggleChatWindow, closeChatWindow, selectChat, setChatsFilterQuery,
+  getFilteredChatList
 } from '../../redux/chat'
 
 const getCurrentPrefix = programs => {
@@ -86,6 +87,8 @@ class HeaderRegisteredMenu extends Component {
             currentChat={this.props.selectedChat}
             sendMessage={this.props.sendMessage}
             getChatList={this.props.getChatList}
+            filterQuery={this.props.chatsFilterQuery}
+            setFilterQuery={this.props.setChatsFilterQuery}
             onSelect={(chatId, cb) => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
@@ -112,13 +115,14 @@ class HeaderRegisteredMenu extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, user, chat }) => ({
-  user: auth.user,
-  programs: user.programs,
-  showChatWindow: chat.showChatWindow,
-  chatList: chat.chats,
-  isChatAuth: chat.auth,
-  selectedChat: chat.selectedChat
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  programs: state.user.programs,
+  showChatWindow: state.chat.showChatWindow,
+  chatList: getFilteredChatList(state),
+  isChatAuth: state.chat.auth,
+  selectedChat: state.chat.selectedChat,
+  chatsFilterQuery: state.chat.chatsFilterQuery
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -129,7 +133,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   sendMessage,
   toggleChatWindow,
   closeChatWindow,
-  selectChat
+  selectChat,
+  setChatsFilterQuery
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderRegisteredMenu)
