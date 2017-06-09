@@ -125,10 +125,7 @@ module.exports = router => {
         }
       }
     } catch (e) {
-      ctx.body = {
-        status: 500,
-        message: e.message
-      }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 

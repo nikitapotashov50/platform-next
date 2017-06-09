@@ -34,7 +34,7 @@ export const queryUpdate = createAction('posts/POSTS_LIST_QUERY_UPDATE', (query,
 
 /** posts add actions */
 export const addPost = createAction('posts/POST_ADD', async post => {
-  let { data } = await axios.post(`${BACKEND_URL}/api/mongo/posts`, post, { withCredentials: true })
+  let { data } = await axios.post(`/api/mongo/posts`, post, { withCredentials: true })
 
   return {
     users: data.result.users,
