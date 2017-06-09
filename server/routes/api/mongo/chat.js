@@ -111,6 +111,7 @@ module.exports = router => {
     }
   })
 
+  // добавление в друзья
   router.post('/:userId/friend', async ctx => {
     const token = ctx.session.user.radar_access_token
     const userId = ctx.params.userId
