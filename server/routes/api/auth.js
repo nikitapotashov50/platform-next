@@ -35,7 +35,7 @@ const createUserBasedOnBM = async access => {
   let user = await mongoose.models.Users.create(userData)
   let info = await user.updateInfo(userInfo)
   let meta = await user.updateMeta(userMeta)
-  meta = await meta.updateToken(access)
+  // meta = await meta.updateToken(access)
   await user.addProgram(3, {})
 
   return { user, info, meta }
@@ -64,7 +64,7 @@ module.exports = router => {
 
         if (BMAccess) {
           res = await getUser(email)
-          if (!res.user) res = await createUserBasedOnBM(BMAccess)
+          if (!res) res = await createUserBasedOnBM(BMAccess)
           else res.meta = await updateMolodostMeta(res.meta, BMAccess)
         } else throw new Error('no access token')
 
