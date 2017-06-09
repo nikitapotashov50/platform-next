@@ -68,6 +68,19 @@ class Chat extends Component {
     })
   }
 
+  sendWelcomeMessage () {
+    if (!this.state.newMessageText) return
+
+    this.props.sendWelcomeMessage(
+      this.props.currentChat,
+      this.state.newMessageText
+    )
+
+    this.setState({
+      newMessageText: ''
+    })
+  }
+
   render () {
     if (!this.props.auth) {
       return (
@@ -100,7 +113,7 @@ class Chat extends Component {
               <div key={chat.chatId} className={classNames('chat-conversation', {
                 current: this.props.currentChat === chat.chatId
               })} onClick={() => {
-                this.props.onSelect(chat.chatId, () => this.scrollToEnd())
+                this.props.onSelect(chat.chatId)
               }}>
 
                 <div>
@@ -138,6 +151,15 @@ class Chat extends Component {
 
         {this.props.currentChat && (
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            {this.getCurrentChat().chatMemberStatus === 'invited' && (
+              <div>
+                <p className='message__invite-title'>Пользователь отправил вам приглашение для общения с ним</p>
+                <button onClick={() => this.props.acceptFriend(this.getCurrentChat().userId)} className='message__invite-accept'>
+                  Принять приглашение
+                </button>
+                <button onClick={() => {}} className='message__invite-decline'>Отказаться</button>
+              </div>
+            )}
             <div className='message-list'>
               {this.getMessages().map(message => (
                 <Message
@@ -156,6 +178,13 @@ class Chat extends Component {
                 value={this.state.newMessageText}
                 onKeyPress={e => {
                   if (e.key === 'Enter') {
+                    const { isNoFriend } = this.getCurrentChat()
+
+                    if (isNoFriend) {
+                      this.sendWelcomeMessage()
+                      return
+                    }
+
                     this.sendMessage()
                   }
                 }}
@@ -164,7 +193,16 @@ class Chat extends Component {
                     newMessageText: e.target.value
                   })
                 }} />
-              <button onClick={this.sendMessage}>
+              <button onClick={() => {
+                const { isNoFriend } = this.getCurrentChat()
+
+                if (isNoFriend) {
+                  this.sendWelcomeMessage()
+                  return
+                }
+
+                this.sendMessage()
+              }}>
                 <div className='message-send-btn' />
               </button>
             </div>
@@ -379,6 +417,34 @@ class Chat extends Component {
             cursor: pointer;
             padding: 7px;
             border-radius:3px;
+          }
+
+          .message__invite-title {
+            color: #A6A6A6;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+          }
+
+          .message__invite-accept {
+            padding: 7px 10px;
+            color: #fff;
+            background: #a6da41;
+            border-radius: 3px;
+            font-weight: 700;
+            float: left;
+            cursor: pointer;
+            margin-left: 70px;
+            margin-right: 10px;
+          }
+
+          .message__invite-decline {
+            padding: 7px 10px;
+            color: #1d1d1d;
+            background: #edeeee;
+            border-radius: 3px;
+            float: left;
+            cursor: pointer;
           }
 
           .message-form > button:hover {

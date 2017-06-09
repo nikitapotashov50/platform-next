@@ -15,7 +15,7 @@ import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs
 import {
   login, getChatList, getMessageList, listen, sendMessage,
   toggleChatWindow, closeChatWindow, selectChat, setChatsFilterQuery,
-  getFilteredChatList
+  getFilteredChatList, sendWelcomeMessage, acceptFriend
 } from '../../redux/chat'
 
 const getCurrentPrefix = programs => {
@@ -59,6 +59,7 @@ class HeaderRegisteredMenu extends Component {
   componentDidMount () {
     if (this.props.user.radar_access || this.props.isChatAuth) {
       this.props.listen()
+      this.props.getChatList()
     }
   }
 
@@ -86,13 +87,14 @@ class HeaderRegisteredMenu extends Component {
             chats={this.props.chatList}
             currentChat={this.props.selectedChat}
             sendMessage={this.props.sendMessage}
+            sendWelcomeMessage={this.props.sendWelcomeMessage}
             getChatList={this.props.getChatList}
             filterQuery={this.props.chatsFilterQuery}
             setFilterQuery={this.props.setChatsFilterQuery}
-            onSelect={(chatId, cb) => {
+            acceptFriend={this.props.acceptFriend}
+            onSelect={chatId => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
-              cb()
             }}
             handleClickOutside={this.props.closeChatWindow} />
         )}
@@ -131,10 +133,12 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getChatList,
   getMessageList,
   sendMessage,
+  sendWelcomeMessage,
   toggleChatWindow,
   closeChatWindow,
   selectChat,
-  setChatsFilterQuery
+  setChatsFilterQuery,
+  acceptFriend
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderRegisteredMenu)
