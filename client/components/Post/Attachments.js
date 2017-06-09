@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import Lightbox from 'react-image-lightbox-universal'
+// import Lightbox from 'react-image-lightbox-universal'
+import Lightbox from 'react-image-lightbox'
 import { endsWith, startsWith } from 'lodash'
 import PDFFileIcon from 'react-icons/lib/fa/file-pdf-o'
 import WordFileIcon from 'react-icons/lib/fa/file-word-o'

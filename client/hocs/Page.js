@@ -86,9 +86,9 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
 
           if (data.user && data.user._id) {
-            this.props.dispatch(auth(data, true))
-            await this.props.dispatch(refresh(data.user._id))
-          } else this.props.dispatch(cookieExists(false))
+            this.props.__dispatch(auth(data, true))
+            await this.props.__dispatch(refresh(data.user._id))
+          } else this.props.__dispatch(cookieExists(false))
         }
       }
 
@@ -460,7 +460,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .task-sub-header {
                                position: relative;
-                              
+
                                &__title {
                                  line-height: 15px;
 
@@ -533,8 +533,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                margin: 0 10px;
                                display: block;
                                height: 50px;
-                              
-                               
+
+
 
                                &__item {
                                  margin: 0 5px 0 10px;
@@ -544,7 +544,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                &__link {
                                  box-sizing: border-box;
-                                 
+
                                  position: relative;
                                  z-index: 10;
                                  margin-bottom:-1px;
@@ -660,7 +660,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                }
 
-                              
+
                                  &__error:before {
                                   content: ' ';
                                   position: relative;
@@ -671,7 +671,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                   border: 15px solid;
                                   border-color:  transparent transparent #f12a4a #f12a4a ;
                                 }
-                               
+
                                &__fake-input {
                                  padding: 0 20px 10px;
                                }
@@ -1320,13 +1320,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              .programs-menu {
 
                               &_hidden { display: none; }
-                               
+
                                &__wrap {
                                  position: absolute;
                                  top: 60px;
                                  right: -30px;
                                  width: 240px;
-                                 
+
                                  border-radius: 3px;
 
                                  background: #fff;
@@ -1345,7 +1345,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  margin: 0 10px 10px 0;
                                  padding-top: 18px;
                                  font-weight: 700;
-                                 
+
                                  &:hover {
                                   opacity: 0.8;
                                  }
@@ -1359,8 +1359,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  background-repeat: no-repeat;
                                  font-size: 20px;
                                  text-align: center;
-                                 
-                                 
+
+
                                }
 
                                &__item-mzs {
@@ -1380,7 +1380,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  background-size: 199px 39px;
                                  background-position: -146px 15px;
                                  background-repeat: no-repeat;
-                                
+
                                }
 
                                &__old {
@@ -1392,11 +1392,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-size: 10px;
                                  line-height: 10px;
                                  padding: 8px 0 18px 0;
-                                 
+
 
                                  position: relative;
                                   z-index: 1;
-                                  
+
                                   &:before {
                                       border-top: 1px solid #dfdfdf;
                                       content:"";
@@ -1407,10 +1407,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                       z-index: -1;
                                   }
 
-                                  span { 
-                                     
-                                      background: #fff; 
-                                      padding: 0 10px 0 10px; 
+                                  span {
+
+                                      background: #fff;
+                                      padding: 0 10px 0 10px;
                                   }
 
                                }
@@ -1434,7 +1434,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .programs-selected {
                                position: relative;
-                          
+
                                width: 64px;
                                height: 60px;
                                margin: 0 10px;
@@ -1442,7 +1442,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                background-position: 0 10px;
                                background-size: 184px 25px;
                                background-repeat: no-repeat;
-                               
+
                                &_ceh { background-position: 4px 20px; }
                                &_mzs { background-position: -69px 20px; }
                                &_default { background-position: -144px 18px; }
@@ -1454,7 +1454,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                 width: 9px;
                                 height: 60px;
                                 display: block;
-                                
+
                                 background-size: 9px 60px;
                                 background-repeat: no-repeat;
                                 background-position: 0 28px;
@@ -1492,7 +1492,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                              }
 
                              .app-header:first-child {
-                               
+
                              }
 
                              .menu {
@@ -1528,7 +1528,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  font-weight: 700;
                                  letter-spacing: 1px;
                                  text-transform: uppercase;
-                                 
+
                                  border-bottom: 2px solid transparent;
 
                                  &_active {
@@ -1553,7 +1553,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                  right: 0;
                                  bottom: 0;
                                  position: absolute;
-                    
+
                                  width: 23px;
                                  height: 23px;
                                  margin: auto;
@@ -1622,12 +1622,12 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                              .comments {
                                box-sizing: border-box;
-                               
+
                                /* margin: 0 -15px;
                                margin-bottom: 15px;
                                max-width: 800px; */
                                padding: 0;
-                               
+
 
                                background: #fff;
 
@@ -2150,17 +2150,17 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
                                .panel-menu {
                                  height: 50px;
-                                 
+
                                   white-space: nowrap;
                                   overflow-x: auto;
                                   overflow-y: hidden;
                                   -webkit-overflow-scrolling: touch;
-                                  -ms-overflow-style: -ms-autohiding-scrollbar; 
+                                  -ms-overflow-style: -ms-autohiding-scrollbar;
                                   margin-bottom: 0;
                                }
 
                                 .panel-menu ::-webkit-scrollbar {
-                                   display: none; 
+                                   display: none;
                                 }
 
 
@@ -2208,10 +2208,10 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
                                   &__item {
 
                                     padding: 0 8px;
-                                     
+
                                     select {
                                       display: none;
-                                     
+
                                     }
                                   }
 
