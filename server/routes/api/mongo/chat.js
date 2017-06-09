@@ -71,8 +71,6 @@ module.exports = router => {
 
   // список чатов
   router.get('/list', async ctx => {
-    ctx.log.info('session', ctx.session)
-
     const token = ctx.session.user.radar_access_token
     if (token) {
       const { data } = await axios(`${baseUrl}/user/me/chat/`, {
