@@ -113,7 +113,7 @@ class Chat extends Component {
               <div key={chat.chatId} className={classNames('chat-conversation', {
                 current: this.props.currentChat === chat.chatId
               })} onClick={() => {
-                this.props.onSelect(chat.chatId, () => this.scrollToEnd())
+                this.props.onSelect(chat.chatId)
               }}>
 
                 <div>

@@ -59,6 +59,7 @@ class HeaderRegisteredMenu extends Component {
   componentDidMount () {
     if (this.props.user.radar_access || this.props.isChatAuth) {
       this.props.listen()
+      this.props.getChatList()
     }
   }
 
@@ -91,10 +92,9 @@ class HeaderRegisteredMenu extends Component {
             filterQuery={this.props.chatsFilterQuery}
             setFilterQuery={this.props.setChatsFilterQuery}
             acceptFriend={this.props.acceptFriend}
-            onSelect={(chatId, cb) => {
+            onSelect={chatId => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
-              cb()
             }}
             handleClickOutside={this.props.closeChatWindow} />
         )}
