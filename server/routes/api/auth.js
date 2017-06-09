@@ -70,7 +70,7 @@ module.exports = router => {
 
         res.user.radar_id = res.meta ? res.meta.radar_id : null
 
-        ctx.session.user = extend(res.user, { radar_access: res.meta.radar_access_token || false })
+        ctx.session.user = extend(res.user, { radar_access_token: res.meta.radar_access_token || false })
         ctx.session.uid = res.user._id
       }
 
