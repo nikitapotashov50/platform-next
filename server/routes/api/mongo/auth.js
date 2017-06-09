@@ -1,16 +1,25 @@
+const moment = require('moment')
 const mongoose = require('mongoose')
-const { extend } = require('lodash')
+const { isNil } = require('lodash')
 
-const { getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery, getBMAccessTokenCredentialsOnly, getBMSignUp } = require('../../../controllers/authController')
+const {
+  getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
+  getBMAccessTokenCredentialsOnly, getBMSignUp
+} = require('../../controllers/authController')
 
 const getUser = async email => {
-  let user = await mongoose.models.Users.findOne({ email })
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean().cache(100)
 
   if (!user) return null
 
-  return {
-    user: user.getSessionInfo()
-  }
+  const userMeta = await mongoose.models.UsersMeta.findOne({
+    userId: user._id
+  })
+
+  user.radar_id = userMeta.radar_id
+  user.radar_access_token = userMeta.radar_access_token
+
+  return { user }
 }
 
 const createUserBasedOnBM = async accessToken => {
@@ -41,16 +50,23 @@ module.exports = router => {
     let hash = ctx.cookies.get('molodost_hash')
     let BMAccess, user
 
-    if (hash && email) {
-      BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
+    try {
+      if (hash && email) {
+        BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
 
-      if (BMAccess) {
-        user = await getUser(email)
-        if (!user) user = await createUserBasedOnBM(BMAccess)
+        if (BMAccess) {
+          user = await getUser(email)
+          if (!user) user = await createUserBasedOnBM(BMAccess)
+        }
+        ctx.session = {}
+        ctx.session = user
+        ctx.session.uid = user.user._id
       }
-      ctx.session = user
+      ctx.body = user
+    } catch (e) {
+      console.log(e)
+      ctx.body = { status: 500, message: e }
     }
-    ctx.body = user
   })
 
   router.post('/logout', ctx => {
@@ -120,7 +136,9 @@ module.exports = router => {
         dbUser = await createUserBasedOnBM(BMAccess.access_token)
       } else if (!dbUser) throw new Error('No user found in our local database')
 
+      ctx.session = {}
       ctx.session = dbUser
+
       ctx.body = dbUser
     } catch (e) {
       ctx.throw(400, e.message)
@@ -129,24 +147,49 @@ module.exports = router => {
 
   router.post('/refresh', async ctx => {
     let { userId } = ctx.request.body
+    let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions meta')
 
-    let user = await mongoose.models.Users
-      .findOne({
-        _id: userId
-      })
-      .select('programs.roleId programs.programId subscriptions')
-      .populate({
-        path: 'programs.programId',
-        select: '_id alias title'
-      })
+    const userMeta = await user.getMeta()
+    let programs = await user.getPrograms()
 
-    let programs = user.programs.map(el => extend({}, { role: el.roleId }, el.programId))
+    if (!programs.length) {
+      await user.addProgram(3, {})
+      programs = await user.getPrograms()
+    }
+
+    let today = moment()
+    let active = []
+    let volunteer = false
+
+    /**
+     * Нужно отсечь дефолтную программу, если у человека есть активная программа прямо сейчас и он нигде не волонтер
+     */
+    programs = programs.map(el => {
+      let program = el.programId
+      if (moment(program.start_at) < today && moment(program.finish_at) > today) {
+        active.push(el.programId._id)
+        if (el.roleId._id !== 3) volunteer = true
+      }
+
+      return {
+        _id: el.programId._id,
+        role: el.roleId.code,
+        alias: el.programId.alias,
+        title: el.programId.title,
+        start: el.programId.start_at,
+        finish: el.programId.finish_at
+      }
+    }).filter(x => ((x._id !== 3) || (active.length > 0 && !volunteer)))
+
+    if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
 
     ctx.body = {
       status: 200,
       result: {
         programs,
-        subscriptions: user.subscriptions
+        subscriptions: user.subscriptions,
+        radar_id: userMeta.radar_id,
+        radar_access: !isNil(userMeta.radar_access_token)
       }
     }
   })

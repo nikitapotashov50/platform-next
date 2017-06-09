@@ -33,15 +33,13 @@ class UserLayout extends Component {
   }
 
   render () {
-    let { user, groups, showButtons, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
+    let { user, groups, showButtons, goal, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
     // isBlocked, toggleBlock,
 
     let panelBodyStyles = { padding: 'small' }
 
     let bgImageStyles = {}
     if (user.picture_large) bgImageStyles.backgroundImage = `url(${user.picture_large})`
-
-    let goal = pick(user, [ 'occupation', 'a', 'b', 'fact' ])
 
     return (
       <DefaultLayout>

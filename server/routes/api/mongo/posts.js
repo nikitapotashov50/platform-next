@@ -47,11 +47,12 @@ module.exports = router => {
     let total = null
     let posts = []
 
-    if (mode === 'new') {
+    if (mode === 'actual') posts = await models.Post.getActual(params, options)
+    else {
       result = await models.Post.getList(params, options)
       posts = result.posts
       total = result.total
-    } if (mode === 'actual') posts = await models.Post.getActual(params, options)
+    }
 
     let comments = await models.Comment.getForPosts(posts, { limit: 3, reversed: true })
 

@@ -4,13 +4,11 @@ import { connect } from 'react-redux'
 
 let menu = [
   { url: '/', title: 'Отчеты', as: '/', code: 'index' }
-  // { url: '/ratings', title: 'Рейтинг' }
 ]
 
 const Header = ({ pathname, dispatch, isLogged, role, selected, taskCount }) => {
-  let addMenu = [
-    { url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' }
-  ]
+  let addMenu = []
+  if (isLogged) addMenu.push({ url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' })
   if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
   return (

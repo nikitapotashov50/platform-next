@@ -4,7 +4,7 @@ import Panel from '../../elements/Panel'
 const UserGoal = ({ goal }) => {
   let overwhelmed = false
 
-  let progress = 100 - ((goal.b - goal.fact) / (goal.b / 100))
+  let progress = 100 - ((goal.b - goal.progress) / (goal.b / 100))
   if (progress > 100) {
     progress = 100
     overwhelmed = true

@@ -2,10 +2,10 @@ import { addLike, removeLike } from '../../redux/likes'
 import { fetchPosts, startListFetch, endListFetch, queryUpdate, deletePost } from '../../redux/posts'
 import { openForm } from '../../redux/posts/comments'
 
-export const getInitialProps = async (dispatch, params, serverPath) => {
+export const getInitialProps = async (dispatch, params, options) => {
   dispatch(startListFetch())
   await dispatch(queryUpdate(params, true))
-  await dispatch(fetchPosts(params, serverPath, true))
+  await dispatch(fetchPosts(params, options))
   dispatch(endListFetch())
 
   return {}
@@ -42,7 +42,6 @@ export const mergeProps = (state, dispatchProps, props) => {
   }
 
   const onComment = postId => () => {
-    console.log('1231231')
     dispatchProps.dispatch(openForm(postId))
   }
 
