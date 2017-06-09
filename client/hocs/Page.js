@@ -51,7 +51,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
         ctx.store.dispatch(allowAccess())
-
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.uid) {
             ctx.store.dispatch(auth({ user: ctx.req.session.user, currentProgram: ctx.req.session.currentProgram, isRestored: ctx.req.session.isRestored }))
