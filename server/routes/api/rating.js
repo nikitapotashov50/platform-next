@@ -73,7 +73,7 @@ module.exports = router => {
   router.get('/search/:program/:searchInput/:offset', async ctx => {
     const limit = 20
     const { program, searchInput, offset } = ctx.params
-    console.log(offset)
+
     const data = await models.User.findAll({
       attributes: [
         'id',
