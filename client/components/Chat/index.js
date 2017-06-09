@@ -157,7 +157,6 @@ class Chat extends Component {
                 <button
                   onClick={() => {
                     this.props.acceptFriend(this.getCurrentChat().userId)
-                    this.props.getMessageList(this.getCurrentChat().chatId)
                   }}
                   className='message__invite-accept'>
                   Принять приглашение
