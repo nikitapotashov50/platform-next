@@ -1984,6 +1984,13 @@ export default props => (
 
       .menu {
         padding: 0 0 0 10px;
+        
+        &__item {
+          display: none;
+        }
+        &__item_no_padding-left {
+          display: block;
+        }
       }
 
       .app-header {
@@ -2070,8 +2077,6 @@ export default props => (
 
         &__item {
 
-          padding: 0 8px;
-            
           select {
             display: none;
             
