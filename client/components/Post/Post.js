@@ -16,7 +16,7 @@ class Post extends Component {
       showPostMenu: false,
       showCommentForm: false,
       editPost: false,
-      likes: props.post.likes_count - Number(props.post.isLiked || false)
+      likes: props.post.likes_count - Number(props.isLiked || false)
     }
 
     this.toggleOptions = this.toggleOptions.bind(this)
@@ -42,7 +42,7 @@ class Post extends Component {
 
     let Footer = <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} />
 
-    let myPost = loggedUser === user._id
+    let myPost = user ? loggedUser === user._id : false
 
     const Options = <PostMenu onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
 

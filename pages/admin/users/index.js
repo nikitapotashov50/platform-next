@@ -71,8 +71,7 @@ class AdminUsersPage extends Component {
   }
 }
 
-// тут будет проверка через апи
-const accessRule = user => true
+const accessRule = user => false
 
 const mapStateToProps = ({ admin }) => ({
   users: admin.users.items,

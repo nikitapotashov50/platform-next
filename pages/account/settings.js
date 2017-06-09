@@ -34,7 +34,7 @@ class AccountSettings extends Component {
   }
 
   async componentWillMount () {
-    await this.props.loadInfo()
+    if (this.props.user) await this.props.loadInfo()
   }
 
   handleChange (field, e) {
@@ -89,6 +89,8 @@ class AccountSettings extends Component {
   }
 
   render () {
+    if (!this.props.user) return null
+
     let { t, user, url } = this.props
     let { tab = 'main' } = url.query
     let { fetching, affected, errors } = this.state

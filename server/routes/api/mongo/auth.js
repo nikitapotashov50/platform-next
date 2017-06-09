@@ -1,6 +1,6 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
-const { isNil } = require('lodash')
+const { isNil, extend } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
@@ -12,18 +12,13 @@ const getUser = async email => {
 
   if (!user) return null
 
-  const userMeta = await mongoose.models.UsersMeta.findOne({
-    userId: user._id
-  })
+  const [ meta ] = await mongoose.models.UsersMeta.find({ userId: user._id }).sort({ created: -1 }).limit(1)
 
-  user.radar_id = userMeta.radar_id
-  user.radar_access_token = userMeta.radar_access_token
-
-  return { user }
+  return { user, meta }
 }
 
-const createUserBasedOnBM = async accessToken => {
-  let BMInfo = await getMyInfo(accessToken)
+const createUserBasedOnBM = async access => {
+  let BMInfo = await getMyInfo(access.access_token)
 
   let userData = {
     email: BMInfo.email,
@@ -33,36 +28,50 @@ const createUserBasedOnBM = async accessToken => {
     picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
   }
 
-  let userMeta = {
-    birthday: BMInfo.birthDate
-  }
+  let userInfo = { birthday: BMInfo.birthDate }
+  let userMeta = { molodost_id: BMInfo.userId }
 
   let user = await mongoose.models.Users.create(userData)
-  await user.updateMeta(userMeta)
+  let info = await user.updateInfo(userInfo)
+  let meta = await user.updateMeta(userMeta)
+  meta = await meta.updateToken(access)
   await user.addProgram(3, {})
 
-  return { user }
+  return { user, info, meta }
+}
+
+const updateMolodostMeta = async (meta, BMAccess) => {
+  meta = await meta.updateToken(BMAccess)
+  if (!meta.molodost_id) {
+    let BMInfo = await getMyInfo(BMAccess.access_token)
+    meta = await meta.update({ molodost_id: BMInfo.userId })
+  }
+  return meta
 }
 
 module.exports = router => {
   router.get('/restore', async ctx => {
     let email = unescape(ctx.cookies.get('molodost_user'))
     let hash = ctx.cookies.get('molodost_hash')
-    let BMAccess, user
+    let BMAccess, res
 
     try {
       if (hash && email) {
         BMAccess = await isUserAuthOnBM(email, hash, ctx.request.headers['user-agent'])
 
         if (BMAccess) {
-          user = await getUser(email)
-          if (!user) user = await createUserBasedOnBM(BMAccess)
-        }
-        ctx.session = {}
-        ctx.session = user
-        ctx.session.uid = user.user._id
+          res = await getUser(email)
+          if (!res.user) res = await createUserBasedOnBM(BMAccess)
+          else res.meta = await updateMolodostMeta(res.meta, BMAccess)
+        } else throw new Error('no access token')
+
+        res.user.radar_id = res.meta ? res.meta.radar_id : null
+
+        ctx.session.user = extend(res.user, { radar_access: res.user.radar_id || false })
+        ctx.session.uid = res.user._id
       }
-      ctx.body = user
+
+      ctx.body = { user: res.user }
     } catch (e) {
       console.log(e)
       ctx.body = { status: 500, message: e }
@@ -130,16 +139,20 @@ module.exports = router => {
       if (!BMAccess.access_token) throw new Error('No user account found on molodost.bz')
 
       // Проверяем наличие юзера у нас в базе данных
-      let dbUser = await getUser(email)
+      let { user, meta } = await getUser(email)
+      if (!user && BMAccess.access_token) {
+        let res = await createUserBasedOnBM(BMAccess)
+        user = res.user
+        meta = res.meta
+      } else if (!user) throw new Error('No user found in our local database')
+      else meta = await updateMolodostMeta(meta, BMAccess)
 
-      if (!dbUser && BMAccess.access_token) {
-        dbUser = await createUserBasedOnBM(BMAccess.access_token)
-      } else if (!dbUser) throw new Error('No user found in our local database')
+      user.radar_id = meta ? meta.radar_id : null
 
-      ctx.session = {}
-      ctx.session = dbUser
+      ctx.session.user = extend(user, { radar_access: user.radar_id || false })
+      ctx.session.uid = user._id
 
-      ctx.body = dbUser
+      ctx.body = { user }
     } catch (e) {
       ctx.throw(400, e.message)
     }
@@ -158,15 +171,27 @@ module.exports = router => {
     }
 
     let today = moment()
+
+    // проверим валиден ли access_token
+    // TODO: refresh token
+    if (userMeta && today.isAfter(moment(userMeta.token_expires).subtract(1, 'day'), 'days')) {
+      console.log('need to refresh token')
+      // try {
+      //   let token = await refreshToken(userMeta.molodost_refresh)
+      //   console.log(token)
+      // } catch (e) {
+      //   console.log(e)
+      // }
+    }
+
     let active = []
     let volunteer = false
-
     /**
      * Нужно отсечь дефолтную программу, если у человека есть активная программа прямо сейчас и он нигде не волонтер
      */
     programs = programs.map(el => {
       let program = el.programId
-      if (moment(program.start_at) < today && moment(program.finish_at) > today) {
+      if (moment(program.start_at) < today && moment(program.finish_at) > today && el.programId._id !== 3) {
         active.push(el.programId._id)
         if (el.roleId._id !== 3) volunteer = true
       }
@@ -179,7 +204,7 @@ module.exports = router => {
         start: el.programId.start_at,
         finish: el.programId.finish_at
       }
-    }).filter(x => ((x._id !== 3) || (active.length > 0 && !volunteer)))
+    }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
     if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
 

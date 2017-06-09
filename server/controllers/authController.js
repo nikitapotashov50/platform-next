@@ -13,7 +13,22 @@ const isUserAuthOnBM = async (user, hash, userAgent) => {
       client_secret: config.bmapi.client_secret
     })
 
-    return data.access_token
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
+const refreshToken = async token => {
+  try {
+    let { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
+      refresh_token: token,
+      grant_type: 'refresh_token',
+      client_id: config.bmapi.client_id,
+      client_secret: config.bmapi.client_secret
+    })
+
+    return data
   } catch ({ response }) {
     throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
   }
@@ -98,6 +113,7 @@ const getBMRecovery = async (email, accessToken) => {
 module.exports = {
   getMyInfo,
   getBMSignUp,
+  refreshToken,
   getBMRecovery,
   isUserAuthOnBM,
   getBMAccessToken,

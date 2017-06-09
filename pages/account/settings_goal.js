@@ -12,18 +12,12 @@ import GoalSettings from '../../client/components/AccountSettings/Goal'
 
 class AccountSettings extends Component {
   static async getInitialProps (ctx) {
-    let options = {}
-    if (ctx.isServer && ctx.req) {
-      options = { headers: ctx.req.headers }
-    } else {
-      options = { withCredentials: true }
-    }
+    let options = { withCredentials: true }
+    if (ctx.isServer && ctx.req) options = { headers: ctx.req.headers }
+    if (ctx.req && !ctx.req.session.uid) return { notAllowed: true }
 
     let { data } = await axios.get(`${BACKEND_URL}/api/mongo/me/goal`, options)
-
-    return {
-      goal: data.result.goal
-    }
+    return { goal: data.result.goal }
   }
 
   constructor (props) {
@@ -81,6 +75,8 @@ class AccountSettings extends Component {
   }
 
   render () {
+    if (this.props.notAllowed) return null
+
     let { t, goal } = this.props
     let { fetching, affected, errors } = this.state
 

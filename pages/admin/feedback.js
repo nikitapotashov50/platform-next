@@ -139,5 +139,5 @@ export default Page(FeedbackResults, {
   title: 'NPS',
   mapStateToProps,
   mapDispatchToProps,
-  accessRule: user => true
+  accessRule: user => false
 })

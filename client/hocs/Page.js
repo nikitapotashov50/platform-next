@@ -50,6 +50,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
+        ctx.store.dispatch(allowAccess())
+
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.uid) {
             ctx.store.dispatch(auth({ user: ctx.req.session.user, currentProgram: ctx.req.session.currentProgram, isRestored: ctx.req.session.isRestored }))
@@ -60,7 +62,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
 
         if (accessRule && isFunction(accessRule)) {
           let state = ctx.store.getState()
-          if (!accessRule(state.auth.user, state)) ctx.store.dispatch(restrictAccess('Ошибка доступа'))
+          if (!accessRule(state.auth.user, state)) await ctx.store.dispatch(restrictAccess('Ошибка доступа'))
           else ctx.store.dispatch(allowAccess())
         }
 
