@@ -21,7 +21,6 @@ export const openForm = createAction('/comments/COMMENT_OPEN_FORM', postId => ({
 // add comment
 export const add = createAction('comments/COMMENT_ADD', async (content, postId) => {
   const { data } = await axios.post(`/api/mongo/posts/${postId}/comments`, { content }, { withCredentials: true })
-  console.log(data)
   return { postId, comment: data.result.comment, users: data.result.users }
 })
 

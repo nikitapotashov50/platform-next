@@ -151,7 +151,6 @@ model.statics.initDefaults = async function (defaults) {
 /** ------------------------ MODEL STATICS ------------------------ */
 
 model.statics.createKnifePlan = async function (user, data, options = {}) {
-  console.log(data, options)
   /**
    * Для создания плана-кинжала надо
    * 1. понять кто цель плана

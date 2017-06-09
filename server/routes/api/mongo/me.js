@@ -36,7 +36,6 @@ module.exports = router => {
   router.get('/edit', async ctx => {
     try {
       let info = await models.UsersInfo.getOrCreate(ctx.__.me._id)
-      ctx.log.info(info)
 
       ctx.body = {
         status: 200,

@@ -181,77 +181,80 @@ const migrateUsers = async ctx => {
   await mongoose.models.UsersMeta.remove()
   await mongoose.models.ProgramUserMeta.remove()
 
-  users.map(async user => {
-    let mongoData = _.pick(user, [ 'name', 'email', 'last_name', 'first_name', 'picture_small', 'picture_small' ])
-    mongoData.locale = user.locale || 'ru'
-    mongoData.role = 1
+  await Promise.all(users.map(async user => {
+    return new Promise(async (resolve, reject) => {
+      let mongoData = _.pick(user, [ 'name', 'email', 'last_name', 'first_name', 'picture_small', 'picture_small' ])
+      mongoData.locale = user.locale || 'ru'
+      mongoData.role = 1
 
-    let mongoUser = new mongoose.models.Users(mongoData)
-    await mongoUser.save()
+      let mongoUser = new mongoose.models.Users(mongoData)
+      await mongoUser.save()
 
-    let uInfo = _.pick(user, [ 'phone', 'vk', 'facebook', 'instagram', 'website', 'about', 'hobbies', 'birthday', 'gender' ])
-    mongoUser.updateInfo(uInfo)
+      let uInfo = _.pick(user, [ 'phone', 'vk', 'facebook', 'instagram', 'website', 'about', 'hobbies', 'birthday', 'gender' ])
+      mongoUser.updateInfo(uInfo)
 
-    let uMeta = _.extend(_.pick(user, [ 'timezone', 'remote_ip', 'uid', 'molodost_id' ]), { migration_id: user.id })
-    await mongoUser.updateMeta(uMeta)
+      let uMeta = _.extend(_.pick(user, [ 'timezone', 'remote_ip', 'uid', 'molodost_id' ]), { migration_id: user.id })
+      await mongoUser.updateMeta(uMeta)
 
-    let goals = await models.Goal.findAll({
-      attributes: [ 'a', 'b', 'occupation', 'is_closed', 'created_at', 'category', 'id', 'user_id' ],
-      where: {
-        user_id: user.id
-      }
-    })
-
-    await Promise.all(goals.map(goal => {
-      return new Promise(async (resolve, reject) => {
-        let add = {
-          closed: goal.is_closed,
-          created: goal.created_at
+      let goals = await models.Goal.findAll({
+        attributes: [ 'a', 'b', 'occupation', 'is_closed', 'created_at', 'category', 'id', 'user_id' ],
+        where: {
+          user_id: user.id
         }
-        goal = _.pick(goal, [ 'a', 'b', 'occupation', 'category' ])
-
-        try {
-          await mongoUser.addGoal(goal, add)
-        } catch (e) {
-          ctx.log.info(`Error on goal save ${user.id}, ${e}`)
-        }
-        resolve()
       })
-    }))
 
-    let programsRoles = await models.UserProgramRole.findAll({
-      where: { user_id: user.id }
-    })
+      await Promise.all(goals.map(goal => {
+        return new Promise(async (resolve, reject) => {
+          let add = {
+            closed: goal.is_closed,
+            created: goal.created_at
+          }
+          goal = _.pick(goal, [ 'a', 'b', 'occupation', 'category' ])
 
-    programsRoles = programsRoles.reduce((obj, item) => {
-      obj[item.program_id] = item.program_role_id ? item.program_role_id : 3
-      return obj
-    }, {})
-
-    let programMeta = await models.UserProgram.findAll({
-      where: { user_id: user.id }
-    })
-
-    await Promise.all(programMeta.map(program => {
-      return new Promise(async (resolve, reject) => {
-        let data = {
-          price: program.price,
-          is_activated: program.is_activated,
-          activated_at: program.activated_at
-        }
-
-        let city = await mongoose.models.City.findOne({
-          migration_id: program.city_id || 1
+          try {
+            await mongoUser.addGoal(goal, add)
+          } catch (e) {
+            ctx.log.info(`Error on goal save ${user.id}, ${e}`)
+          }
+          resolve()
         })
-        data.cityId = city._id
-        await mongoUser.addProgram(program.program_id, data, programsRoles[program.program_id])
+      }))
 
-        resolve()
+      let programsRoles = await models.UserProgramRole.findAll({
+        where: { user_id: user.id }
       })
-    }))
 
-    bar.tick()
-  })
+      programsRoles = programsRoles.reduce((obj, item) => {
+        obj[item.program_id] = item.program_role_id ? item.program_role_id : 3
+        return obj
+      }, {})
+
+      let programMeta = await models.UserProgram.findAll({
+        where: { user_id: user.id }
+      })
+
+      await Promise.all(programMeta.map(program => {
+        return new Promise(async (resolve, reject) => {
+          let data = {
+            price: program.price,
+            is_activated: program.is_activated,
+            activated_at: program.activated_at
+          }
+
+          let city = await mongoose.models.City.findOne({
+            migration_id: program.city_id || 1
+          })
+          data.cityId = city._id
+          await mongoUser.addProgram(program.program_id, data, programsRoles[program.program_id])
+
+          resolve()
+        })
+      }))
+
+      bar.tick()
+      resolve()
+    })
+  }))
 
   return 200
 }

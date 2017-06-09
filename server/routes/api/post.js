@@ -367,7 +367,6 @@ module.exports = router => {
     })
 
     router.delete('/comment/:commentId', async ctx => {
-      console.log('asdasdasdasdasdasdasd', ctx.params)
       try {
         if (!ctx.session.user || !ctx.session.user.id) throw new Error('Access denied')
 

@@ -67,7 +67,6 @@ model.statics.getActual = async function (params, query = {}) {
 
   limit = Number(limit)
   offset = Number(offset)
-  console.log(offset, offset * limit)
 
   params.created = { $gte: new Date(moment().subtract(days, 'days').format('YYYY-MM-DD')) }
 

@@ -6,7 +6,7 @@ import { handleActions, createAction } from 'redux-actions'
 let defaultState = {}
 
 export const loadInfo = createAction('user/info/LOAD', async () => {
-  let { data } = await axios.get('/api/mongo/me/edit')
+  let { data } = await axios.get('/api/mongo/me/edit', { withCredentials: true })
   if (data.status === 200) return data.result
 })
 
