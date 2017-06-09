@@ -1,4 +1,4 @@
-import { pick, isNil } from 'lodash'
+import { isNil } from 'lodash'
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
