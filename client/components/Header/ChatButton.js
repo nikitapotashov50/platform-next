@@ -42,6 +42,16 @@ const ChatButton = ({ handleClick, notificationCount = 0 }) => (
         font-size: 14px;
         color: #9da5ab;
       }
+
+      /*  Мобильные стили */
+      @media screen and (max-width: 39.9375em) {
+       .chat-button {
+        display: none;
+       }
+
+      }
+
+
     `}</style>
   </div>
 )
