@@ -76,10 +76,20 @@ export const listen = () => async dispatch => {
       dispatch(receiveData(data))
     }
 
-    socket.onclose = () => {
-      dispatch({
+    socket.onclose = e => {
+      const action = {
         type: 'chat/FINISH_LISTEN'
-      })
+      }
+
+      if (e.code !== 1000) {
+        action.error = true
+        action.paylaod = {
+          code: e.code,
+          reason: e.reason
+        }
+      }
+
+      dispatch(action)
     }
   } catch (e) {
     console.error(e)
