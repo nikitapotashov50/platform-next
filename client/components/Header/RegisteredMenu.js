@@ -73,10 +73,7 @@ class HeaderRegisteredMenu extends Component {
         <li className='user-menu__item user-menu__item_hoverable'>
           <ChatButton
             notificationCount={this.props.user.radar_access ? 0 : 1}
-            handleClick={() => {
-              this.props.toggleChatWindow()
-              this.props.getChatList()
-            }} />
+            handleClick={this.props.toggleChatWindow} />
         </li>
 
         {this.props.showChatWindow && (
