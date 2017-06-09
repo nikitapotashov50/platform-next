@@ -34,7 +34,7 @@ const createUserBasedOnBM = async access => {
   let user = await mongoose.models.Users.create(userData)
   let info = await user.updateInfo(userInfo)
   let meta = await user.updateMeta(userMeta)
-  // meta = await meta.updateToken(access)
+  meta = await meta.updateToken(access)
   await user.addProgram(3, {})
 
   return { user, info, meta }
