@@ -26,19 +26,19 @@ export const cookieExists = createAction('auth/cookieExists')
 
 //
 export const refresh = createAction('auth/REFRESH', async (userId, serverPath = '') => {
-  let { data } = await axios.post(serverPath + '/api/auth/refresh', { userId })
+  let { data } = await axios.post(`${BACKEND_URL}/api/auth/refresh`, { userId })
   return data.result
 })
 
 // interactions
 export const addToBlackList = createAction('auth/BLACK_LIST_ADD', async id => {
-  let { status } = await axios.post('/api/me/interact/block', { id }, { withCredentials: true })
+  let { status } = await axios.post(`${BACKEND_URL}/api/me/interact/block`, { id }, { withCredentials: true })
   if (status === 200) return { id }
   return {}
 })
 
 export const removeFromBlackList = createAction('auth/BLACK_LIST_REMOVE', async id => {
-  let { status } = await axios.put('/api/me/interact/block', { id }, { withCredentials: true })
+  let { status } = await axios.put(`${BACKEND_URL}/api/me/interact/block`, { id }, { withCredentials: true })
   if (status === 200) return { id }
   return {}
 })

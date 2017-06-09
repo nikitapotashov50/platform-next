@@ -1,4 +1,4 @@
-// const moment = require('moment')
+const moment = require('moment')
 const mongoose = require('mongoose')
 const { isNil } = require('lodash')
 
@@ -59,6 +59,7 @@ module.exports = router => {
           if (!user) user = await createUserBasedOnBM(BMAccess)
         }
         ctx.session = user
+        ctx.session.uid = user.user._id
       }
       ctx.body = user
     } catch (e) {
@@ -135,6 +136,7 @@ module.exports = router => {
       } else if (!dbUser) throw new Error('No user found in our local database')
 
       ctx.session = dbUser
+      ctx.session.uid = dbUser.user._id
 
       ctx.body = dbUser
     } catch (e) {
@@ -154,10 +156,20 @@ module.exports = router => {
       programs = await user.getPrograms()
     }
 
-    // let today = moment()
-    // let active = []
+    let today = moment()
+    let active = []
+    let volunteer = false
+
+    /**
+     * Нужно отсечь дефолтную программу, если у человека есть активная программа прямо сейчас и он нигде не волонтер
+     */
+    ctx.log.info(programs)
     programs = programs.map(el => {
-      // if ((moment(el.programId.start_at) < today && moment(el.programId.finish_at) > today) && el.roleId._id === 3) active.push(el._id)
+      let program = el.programId
+      if (moment(program.start_at) < today && moment(program.finish_at) > today && el.programId._id !== 3) {
+        active.push(el.programId._id)
+        if (el.roleId._id !== 3) volunteer = true
+      }
 
       return {
         _id: el.programId._id,
@@ -167,9 +179,9 @@ module.exports = router => {
         start: el.programId.start_at,
         finish: el.programId.finish_at
       }
-    })
-
-    if (!ctx.session.currentProgram) ctx.session.currentProgram = 3
+    }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
+    ctx.log.info(active)
+    if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
 
     ctx.body = {
       status: 200,

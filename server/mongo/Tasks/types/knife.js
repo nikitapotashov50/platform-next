@@ -29,7 +29,7 @@ model.statics.createPlan = async function (userId, data) {
 
   data = extend(pick(data, [ 'goal', 'price', 'action' ]), { userId })
 
-  let goal = await mongoose.models.Goal.getActiveForUser(userId)
+  let { goal } = await mongoose.models.Goal.getActiveForUser(userId)
 
   if (!goal) throw new Error('No goal found')
 

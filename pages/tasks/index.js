@@ -63,11 +63,14 @@ const mapStateToProps = ({ tasks, user }) => ({
   program: user.programs.current
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  getTasks,
-  fetchEnd,
-  fetchStart
-}, dispatch)
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators({
+    getTasks,
+    fetchEnd,
+    fetchStart
+  }, dispatch),
+  dispatch
+})
 
 const mergeProps = (state, dispatch, props) => ({
   ...state,
@@ -76,7 +79,8 @@ const mergeProps = (state, dispatch, props) => ({
     dispatch.fetchStart()
     await dispatch.getTasks(programId, type)
     dispatch.fetchEnd()
-  }
+  },
+  dispatch: dispatch.dispatch
 })
 
 export default PageHoc(TasksIndex, {

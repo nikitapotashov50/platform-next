@@ -11,9 +11,10 @@ export const defaultState = {
 }
 
 /** posts fetching actions */
-export const fetchPosts = createAction('posts/LOAD_MORE', async (params, serverPath = '', isInitial = false) => {
-  let apiPath = serverPath + '/api/mongo/posts'
-  const { data } = await axios.get(apiPath, { params })
+export const fetchPosts = createAction('posts/LOAD_MORE', async (params = {}, options = {}) => {
+  options.params = params
+  options.withCredentials = true
+  const { data } = await axios.get(`${BACKEND_URL}/api/mongo/posts`, options)
 
   return {
     ...data.result,
@@ -33,7 +34,7 @@ export const queryUpdate = createAction('posts/POSTS_LIST_QUERY_UPDATE', (query,
 
 /** posts add actions */
 export const addPost = createAction('posts/POST_ADD', async post => {
-  let { data } = await axios.post('/api/mongo/posts', post, { withCredentials: true })
+  let { data } = await axios.post(`${BACKEND_URL}/api/mongo/posts`, post, { withCredentials: true })
 
   return {
     users: data.result.users,
@@ -43,7 +44,7 @@ export const addPost = createAction('posts/POST_ADD', async post => {
 
 /** edit post */
 export const updatePost = createAction('posts/UPDATE_POST', async (id, data) => {
-  await axios.put(`/api/post/${id}`, {
+  await axios.put(`${BACKEND_URL}/api/post/${id}`, {
     title: data.title,
     content: data.content
   }, {

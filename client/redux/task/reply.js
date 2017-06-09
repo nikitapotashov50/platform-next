@@ -15,7 +15,6 @@ export const getReply = createAction('task/reply/GET_REPLY', async (taskId, opti
   if (options.headers) params.headers = options.headers
 
   let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${taskId}/reply`, params)
-  console.log(data)
   return data.result
 })
 
@@ -32,7 +31,6 @@ export const fetchEnd = createAction('task/reply/FETCH_END')
 /** --------------------- */
 
 const getReducer = (state, payload) => {
-  console.log(payload)
   return {
     ...state,
     info: payload.reply || null,

@@ -17,8 +17,8 @@ import { getInitialProps, mapStateToProps, mapDispatchToProps, mergeProps } from
 const isLiked = (likes, id) => (likes || []).indexOf(id) > -1
 
 class PostList extends Component {
-  static async getInitial (dispatch, params, serverPath) {
-    await getInitialProps(dispatch, params, serverPath)
+  static async getInitial (dispatch, params, options = {}) {
+    await getInitialProps(dispatch, params, options)
   }
 
   constructor (props) {
@@ -35,7 +35,7 @@ class PostList extends Component {
     return () => {
       let { pathname } = this.props
 
-      Router.replace(pathname.href, post ? '/posts/' + post.id : pathname.path, { shallow: true })
+      Router.replace(pathname.href, post ? '/posts/' + post._id : pathname.path, { shallow: true })
 
       this.setState(state => {
         state.expanded = post
@@ -89,7 +89,7 @@ class PostList extends Component {
         ))}
 
         { (isNil(total) || (postCount > 0 && total > postCount)) && (
-          <div className='posts-load-more' onClick={this.loadMore}>
+          <div onClick={this.loadMore}>
             <Waypoint onEnter={this.loadMore} />
           </div>
         )}

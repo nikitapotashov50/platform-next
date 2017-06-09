@@ -10,23 +10,28 @@ import PanelMenu from '../client/components/PanelMenu'
 const menuItems = [
   { href: '/', path: '/', title: 'Актуальное', code: 'actual' },
   { href: '/?tab=new', path: '/feed/new', title: 'Новое', code: 'new' },
-  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' },
-  { href: '/?tab=groups', path: '/feed/groups', title: 'Моя десятка', code: 'groups' }
+  { href: '/?tab=subscriptions', path: '/feed/subscriptions', title: 'Мои подписки', code: 'subscriptions' }
+  // { href: '/?tab=groups', path: '/feed/groups', title: 'Моя десятка', code: 'groups' }
 ]
 
 class IndexPage extends Component {
   static async getInitialProps ({ store, req, query }) {
     let { auth, user } = store.getState()
+    const tab = query.tab || 'actual'
 
-    let params = { programId: user.programs.current || null, mode: query.tab || 'actual' }
+    let headers = null
+    let params = { programId: user.programs.current || null, mode: tab }
 
-    if (req) params.user = req.session.user ? req.session.user._id : null
+    if (req) {
+      params.user = req.session.user ? req.session.user._id : null
+      headers = req.headers
+    }
 
-    if (query.tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
+    if (tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
-    await PostList.getInitial(store.dispatch, params, BACKEND_URL)
+    await PostList.getInitial(store.dispatch, params, { headers })
 
-    return { tab: query.tab || 'actual' }
+    return { tab }
   }
 
   render () {

@@ -314,7 +314,7 @@ model.methods.addIncome = async function (amount, programId) {
   if (!program) throw new Error(`no program with programId equals ${programId} found`)
 
   let user = this
-  let goal = await mongoose.models.Goal.getActiveForUser(user._id)
+  let { goal } = await mongoose.models.Goal.getActiveForUser(user._id)
   let income = await goal.addIncome(amount, programId)
 
   return income
@@ -334,6 +334,11 @@ model.methods.addGoal = async function (data, add) {
   await user.save()
 
   return goal
+}
+
+model.methods.getGoal = function (programId) {
+  let user = this
+  return mongoose.models.Goal.getActiveForUser(user._id)
 }
 
 /** ---------------------- NPS ---------------------- */

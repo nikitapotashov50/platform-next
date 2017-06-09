@@ -10,52 +10,59 @@ import ReplyContent from '../../client/components/Tasks/ReplyContent'
 import { getTask } from '../../client/redux/task/task'
 import { getReply } from '../../client/redux/task/reply'
 
-const TaskPage = ({ task, replyOpened, reply, specific = null, replyStatus, isReplied }) => (
-  <FeedLayout wide emptySide menuItem='tasks'>
-    <TaskContent task={task} />
+const TaskPage = ({ task, replyOpened, notFound, reply, specific = null, replyStatus, isReplied }) => {
+  if (notFound) return <div>123</div>
+  return (
+    <FeedLayout wide emptySide menuItem='tasks'>
+      <TaskContent task={task} />
 
-    { (!isReplied || !reply) && <TaskReply task={task} opened={replyOpened} /> }
+      { (!isReplied || !reply) && <TaskReply task={task} opened={replyOpened} /> }
 
-    { (reply && replyStatus) && (
-      <div className='task-inline-status'>
-        <div className='task-inline-status__title'>Задание {replyStatus.title.toLowerCase()}</div>
-      </div>
-    ) }
+      { (reply && replyStatus) && (
+        <div className='task-inline-status'>
+          <div className='task-inline-status__title'>Задание {replyStatus.title.toLowerCase()}</div>
+        </div>
+      ) }
 
-    { reply && <ReplyContent type={task.replyType} reply={reply} specific={specific} /> }
+      { reply && <ReplyContent type={task.replyType} reply={reply} specific={specific} /> }
 
-    <style jsx>{`
-      .task-inline-status {
-        margin: 10px 0;
-        padding: 10px 0;
+      <style jsx>{`
+        .task-inline-status {
+          margin: 10px 0;
+          padding: 10px 0;
 
-        text-align: center;
-      }
-      .task-inline-status:before {
-        display: block;
+          text-align: center;
+        }
+        .task-inline-status:before {
+          display: block;
 
-        color: #999;
-        font-size: 12px;
-        content: attr(data-prefix);
-      }
-      .task-inline-status__title {
-        font-size: 14px;
-        line-height: 20px;
-      }
-    `}</style>
-  </FeedLayout>
-)
+          color: #999;
+          font-size: 12px;
+          content: attr(data-prefix);
+        }
+        .task-inline-status__title {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      `}</style>
+    </FeedLayout>
+  )
+}
 
 TaskPage.getInitialProps = async ctx => {
   let headers = null
   if (ctx.req) headers = ctx.req.headers
 
-  await ctx.store.dispatch(getTask(ctx.query.id, { headers }))
-  let { payload } = await ctx.store.dispatch(getReply(ctx.query.id, { headers }))
+  try {
+    await ctx.store.dispatch(getTask(ctx.query.id, { headers }))
+    let { payload } = await ctx.store.dispatch(getReply(ctx.query.id, { headers }))
 
-  return {
-    isReplied: !!payload.reply,
-    replyOpened: !isUndefined(ctx.query.reply)
+    return {
+      isReplied: !!payload.reply,
+      replyOpened: !isUndefined(ctx.query.reply)
+    }
+  } catch (e) {
+    return { notFound: true }
   }
 }
 
@@ -68,5 +75,6 @@ const mapStateToProps = ({ task }) => ({
 
 export default PageHoc(TaskPage, {
   title: 'Задание',
-  mapStateToProps
+  mapStateToProps,
+  accessRule: user => !!user
 })

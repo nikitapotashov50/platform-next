@@ -17,4 +17,18 @@ model.methods.confirm = async function (status) {
   return this.save()
 }
 
+model.statics.calculate = async function (params) {
+  params.confirmed = true
+
+  let data = await this.aggregate([
+    { $match: params },
+    { $group: {
+      _id: { userId: '$userId' },
+      progress: { $sum: '$amount' }
+    }}
+  ])
+
+  return data.length ? data[0].progress : 0
+}
+
 module.exports = mongoose.model('Income', model)

@@ -63,7 +63,7 @@ model.statics.getList = async function (params = {}, query = {}) {
 
 model.statics.getActual = async function (params, query = {}) {
   let model = this
-  let { limit = 7, offset = 0, days = 7 } = query
+  let { limit = 7, offset = 0, days = 2 } = query
 
   limit = Number(limit)
   offset = Number(offset)
@@ -91,6 +91,11 @@ model.statics.getActual = async function (params, query = {}) {
     { $skip: limit * offset },
     { $limit: limit }
   ])
+  .cache(200)
+  .exec((err, data) => {
+    if (err) console.log(err)
+    return data
+  })
 }
 
 model.statics.addPost = async function (data, { user, type = 'user' }) {

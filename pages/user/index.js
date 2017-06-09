@@ -10,15 +10,19 @@ import PostEditor from '../../client/components/PostEditor/index'
 class UserPage extends Component {
   static async getInitialProps ({ store, req, ...ctx }) {
     let { profile, user } = store.getState()
+    let headers = null
 
     let params = {
       authorIds: profile.user._id,
       programId: user.programs.current || null
     }
 
-    if (req) params.user = req.session.user ? req.session.user._id : null
+    if (req) {
+      headers = req.headers
+      params.user = req.session.uid || null
+    }
 
-    await PostList.getInitial(store.dispatch, params, BACKEND_URL)
+    await PostList.getInitial(store.dispatch, params, { headers })
   }
 
   render () {

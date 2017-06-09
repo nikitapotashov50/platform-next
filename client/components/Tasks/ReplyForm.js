@@ -92,12 +92,10 @@ class TaskReply extends Component {
   render () {
     if (!this.props.task) return null
 
-    const { replyType, opened } = this.props
-    const { fetching, errors, reply, showForm, success } = this.state
+    const { replyType } = this.props
+    const { fetching, errors, reply, success } = this.state
 
     const AddForm = Replies[replyType]
-
-    const openedFlag = opened || showForm
 
     return (
       <OverlayLoader loading={fetching}>
@@ -105,19 +103,15 @@ class TaskReply extends Component {
 
         { !success && (
           <div>
-            { openedFlag && (
-              <AttachmentForm data={reply.attachments || []} updateAttachments={this.onAttachmentUpdate} addAttachment={this.onAttachmentAdd}>
-                <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
-                  { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
-                </Panel>
+            <AttachmentForm data={reply.attachments || []} updateAttachments={this.onAttachmentUpdate} addAttachment={this.onAttachmentAdd}>
+              <Panel Header={<PanelTitle small title={AddForm.title} />} bodyStyles={{ noVerticalPadding: true }}>
+                { AddForm && <AddForm onChange={this.onAddChange} affected={reply} errors={errors} /> }
+              </Panel>
 
-                { errors.attachments && errors.attachments }
-              </AttachmentForm>
-            )}
+              { errors.attachments && errors.attachments }
+            </AttachmentForm>
 
-            <Button onClick={openedFlag ? this.submit : this.toggleForm.bind(true)}>
-              { openedFlag ? 'Отправить' : 'Ответить на задание' }
-            </Button>
+            <Button onClick={this.submit}>Ответить на задание</Button>
           </div>
         ) }
       </OverlayLoader>

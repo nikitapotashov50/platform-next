@@ -39,10 +39,14 @@ model.statics.addToUser = async function (userId, data, add) {
   return goal
 }
 
-model.statics.getActiveForUser = async function (userId) {
+model.statics.getActiveForUser = async function (userId, options = {}) {
   let model = this
   let [ goal ] = await model.find({ userId, closed: false, enabled: true }).limit(1).sort({ created: -1 })
-  return goal
+
+  let progress = 0
+  if (goal) progress = await mongoose.models.Income.calculate({ _id: { $in: goal.incomes || [] } })
+
+  return goal ? { goal, progress } : { goal: null, progress: null }
 }
 
 /** ------------------- MODEL METHODS ------------------- */
