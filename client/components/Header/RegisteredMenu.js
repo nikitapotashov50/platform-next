@@ -89,6 +89,7 @@ class HeaderRegisteredMenu extends Component {
             filterQuery={this.props.chatsFilterQuery}
             setFilterQuery={this.props.setChatsFilterQuery}
             acceptFriend={this.props.acceptFriend}
+            getMessageList={this.props.getMessageList}
             onSelect={chatId => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
