@@ -18,18 +18,23 @@ const initInteractions = async (ctx, next) => {
 }
 
 const initGoal = async (ctx, next) => {
-  let goal = await models.Goal
-    .findOne({
-      userId: ctx.__.me._id,
-      closed: false
-    })
-    .sort({ created: -1 })
+  try {
+    let goal = await models.Goal
+      .findOne({
+        userId: ctx.__.me._id,
+        closed: false
+      })
+      .sort({ created: -1 })
 
-  if (!goal) goal = await models.Goal.create({ userId: ctx.__.me._id, a: 0, b: 0 })
+    if (!goal) goal = await models.Goal.create({ userId: ctx.__.me._id, a: 0, b: 0 })
 
-  ctx.__.goal = goal
+    ctx.__.goal = goal
 
-  await next()
+    await next()
+  } catch (e) {
+    console.log(e)
+    ctx.body = { status: 500, message: e }
+  }
 }
 
 module.exports = router => {
