@@ -35,20 +35,20 @@ const createUserBasedOnBM = async access => {
   let user = await mongoose.models.Users.create(userData)
   let info = await user.updateInfo(userInfo)
   let meta = await user.updateMeta(userMeta)
-  // meta = await meta.updateToken(access)
+  meta = await meta.updateToken(access)
   await user.addProgram(3, {})
 
   return { user, info, meta }
 }
 
-// const updateMolodostMeta = async (meta, BMAccess) => {
-//   meta = await meta.updateToken(BMAccess)
-//   if (!meta.molodost_id) {
-//     let BMInfo = await getMyInfo(BMAccess.access_token)
-//     meta = await meta.update({ molodost_id: BMInfo.userId })
-//   }
-//   return meta
-// }
+const updateMolodostMeta = async (meta, BMAccess) => {
+  meta = await meta.updateToken(BMAccess)
+  if (!meta.molodost_id) {
+    let BMInfo = await getMyInfo(BMAccess.access_token)
+    meta = await meta.update({ molodost_id: BMInfo.userId })
+  }
+  return meta
+}
 
 module.exports = router => {
   router.get('/restore', async ctx => {
@@ -64,13 +64,15 @@ module.exports = router => {
 
         if (BMAccess) {
           res = await getUser(email)
-          if (!res) res = await createUserBasedOnBM(BMAccess)
-          // else res.meta = await updateMolodostMeta(res.meta, BMAccess)
+          if (!res.user) res = await createUserBasedOnBM(BMAccess)
+          else res.meta = await updateMolodostMeta(res.meta, BMAccess)
         } else throw new Error('no access token')
 
         res.user.radar_id = res.meta ? res.meta.radar_id : null
 
-        ctx.session.user = extend(res.user, { radar_access_token: res.meta.radar_access_token || false })
+        console.log(res.user._id)
+        ctx.session.user = extend(res.user, { radar_access: res.meta.radar_access_token || false })
+        console.log(res.user._id)
         ctx.session.uid = res.user._id
       }
 
@@ -145,14 +147,12 @@ module.exports = router => {
 
       // Проверяем наличие юзера у нас в базе данных
       let { user, meta } = await getUser(email)
-      console.log('USER TO EST', user, meta)
       if (!user && BMAccess.access_token) {
-        console.log('ZAHODIM:')
         let res = await createUserBasedOnBM(BMAccess)
         user = res.user
         meta = res.meta
       } else if (!user) throw new Error('No user found in our local database')
-      // else meta = await updateMolodostMeta(meta, BMAccess)
+      else meta = await updateMolodostMeta(meta, BMAccess)
 
       user.radar_id = meta ? meta.radar_id : null
 
@@ -161,9 +161,7 @@ module.exports = router => {
 
       ctx.body = { user }
     } catch (e) {
-      // ctx.throw(400, e.message)
-      console.log(e)
-      ctx.body = e
+      ctx.throw(400, e.message)
     }
   })
 
