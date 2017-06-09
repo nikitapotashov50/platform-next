@@ -89,6 +89,7 @@ class HeaderRegisteredMenu extends Component {
             filterQuery={this.props.chatsFilterQuery}
             setFilterQuery={this.props.setChatsFilterQuery}
             acceptFriend={this.props.acceptFriend}
+            getMessageList={this.props.getMessageList}
             onSelect={chatId => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
@@ -119,7 +120,7 @@ const mapStateToProps = state => ({
   programs: state.user.programs,
   showChatWindow: state.chat.showChatWindow,
   // chatList: getFilteredChatList(state),
-  chatList: state.chats,
+  chatList: state.chat.chats,
   isChatAuth: state.chat.auth,
   selectedChat: state.chat.selectedChat,
   chatsFilterQuery: state.chat.chatsFilterQuery
