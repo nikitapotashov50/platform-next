@@ -66,6 +66,7 @@ module.exports = router => {
     } catch (e) {
       console.log(e)
       ctx.statusCode = 500
+      ctx.body = e
     }
   })
 
@@ -100,11 +101,33 @@ module.exports = router => {
         })
 
         ctx.body = data
+      } else {
+        throw new Error('missing token or userId')
       }
     } catch (e) {
       console.log(e)
       ctx.statusCode = 500
       ctx.body = e
+    }
+  })
+
+  router.post('/:userId/friend', async ctx => {
+    const token = ctx.session.user.radar_access_token
+    const userId = ctx.params.userId
+    const text = ctx.request.body.text
+
+    if (token) {
+      const { data } = await axios.put(`${baseUrl}/user/${userId}/friend/toggle/`, {
+        accessToken: token,
+        on: true,
+        text
+      }, {
+        transformRequest: data => {
+          return qs.stringify(data)
+        }
+      })
+
+      ctx.body = data
     }
   })
 

@@ -24,7 +24,7 @@ class UserLayout extends Component {
   async sendMessage () {
     const userId = this.props.user.meta.radar_id
     if (userId) {
-      await this.props.startChat(userId)
+      await this.props.startChat(userId, this.props.user)
     }
   }
 

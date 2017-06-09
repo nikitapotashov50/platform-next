@@ -68,6 +68,19 @@ class Chat extends Component {
     })
   }
 
+  sendWelcomeMessage () {
+    if (!this.state.newMessageText) return
+
+    this.props.sendWelcomeMessage(
+      this.props.currentChat,
+      this.state.newMessageText
+    )
+
+    this.setState({
+      newMessageText: ''
+    })
+  }
+
   render () {
     if (!this.props.auth) {
       return (
@@ -138,6 +151,15 @@ class Chat extends Component {
 
         {this.props.currentChat && (
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            {this.getCurrentChat().chatMemberStatus === 'invited' && (
+              <div>
+                <p>Пользователь отправил вам приглашение для общения с ним</p>
+                <button onClick={() => this.props.acceptFriend(this.getCurrentChat().userId)}>
+                  Принять приглашение
+                </button>
+                <button onClick={() => {}}>Отказаться</button>
+              </div>
+            )}
             <div className='message-list'>
               {this.getMessages().map(message => (
                 <Message
@@ -156,6 +178,13 @@ class Chat extends Component {
                 value={this.state.newMessageText}
                 onKeyPress={e => {
                   if (e.key === 'Enter') {
+                    const { isNoFriend } = this.getCurrentChat()
+
+                    if (isNoFriend) {
+                      this.sendWelcomeMessage()
+                      return
+                    }
+
                     this.sendMessage()
                   }
                 }}
@@ -164,7 +193,16 @@ class Chat extends Component {
                     newMessageText: e.target.value
                   })
                 }} />
-              <button onClick={this.sendMessage}>
+              <button onClick={() => {
+                const { isNoFriend } = this.getCurrentChat()
+
+                if (isNoFriend) {
+                  this.sendWelcomeMessage()
+                  return
+                }
+
+                this.sendMessage()
+              }}>
                 <div className='message-send-btn' />
               </button>
             </div>

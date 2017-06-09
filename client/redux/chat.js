@@ -31,13 +31,32 @@ export const getMessageList = createAction('chat/GET_MESSAGE_LIST', async chatId
   }
 })
 
-export const startChat = createAction('chat/START_CHAT', async userId => {
+export const startChat = (radarId, user) => async dispatch => {
   const { data } = await axios.post(`/api/mongo/chat/dialog`, {
-    userId
+    userId: radarId
   })
 
-  return data
-})
+  if (data.type === 'error' && data.errCode === 1300) {
+    return dispatch({
+      type: 'chat/START_CHAT_WITH_NO_FRIEND',
+      payload: {
+        user,
+        radarId
+      }
+    })
+  }
+
+  if (data.type === 'success') {
+    return dispatch({
+      type: 'chat/START_CHAT_WITH_FRIEND',
+      payload: data.chatId
+    })
+  }
+}
+
+const startChatWithFriend = createAction('chat/START_CHAT_WITH_FRIEND')
+
+const startChatWithNoFriend = createAction('chat/START_CHAT_WITH_NO_FRIEND')
 
 export const sendMessage = createAction('chat/SEND_MESSAGE', async (chatId, text) => {
   const { data } = await axios.post(`/api/mongo/chat/${chatId}/message`, {
@@ -45,6 +64,23 @@ export const sendMessage = createAction('chat/SEND_MESSAGE', async (chatId, text
   })
 
   return data
+})
+
+export const sendWelcomeMessage = createAction('chat/SEND_WELCOME_MESSAGE', async (chatId, text) => {
+  const { data } = await axios.post(`/api/mongo/chat/${chatId}/friend`, {
+    text
+  })
+
+  return {
+    ...data,
+    chatId,
+    text
+  }
+})
+
+export const acceptFriend = createAction('chat/ACCEPT_FRIEND', async userId => {
+  const { data } = await axios.post(`/api/mongo/chat/${userId}/friend`)
+  console.log(data)
 })
 
 export const openChatWindow = createAction('chat/OPEN_CHAT_WINDOW')
@@ -97,8 +133,8 @@ export const listen = () => async dispatch => {
 }
 
 // фильтр списка чатов через reselect
-const chatListSelector = state => state.chat.chats
-const chatsFilterQuerySelector = state => state.chat.chatsFilterQuery
+const chatListSelector = state => state.chat.chats || []
+const chatsFilterQuerySelector = state => state.chat.chatsFilterQuery || ''
 export const getFilteredChatList = createSelector(
   chatListSelector,
   chatsFilterQuerySelector,
@@ -142,13 +178,45 @@ export default handleActions({
   [closeChatWindow]: state => ({ ...state, showChatWindow: false }),
   [toggleChatWindow]: state => ({ ...state, showChatWindow: !state.showChatWindow }),
   [selectChat]: (state, { payload }) => ({ ...state, selectedChat: payload }),
-  [startChat]: (state, { payload }) => ({
+  [startChatWithNoFriend]: (state, { payload }) => ({
+    ...state,
+    chats: [{
+      chatId: payload.radarId,
+      chatName: `${payload.user.first_name} ${payload.user.last_name}`,
+      avatar: `${payload.user.picture_small}`,
+      isGroup: false,
+      userId: payload.radarId,
+      isNoFriend: true,
+      messages: []
+    }, ...state.chats],
+    showChatWindow: true,
+    selectedChat: payload.radarId
+  }),
+  [startChatWithFriend]: (state, { payload }) => ({
     ...state,
     showChatWindow: true,
-    selectedChat: payload.chatId
+    selectedChat: payload
   }),
   [setChatsFilterQuery]: (state, { payload }) => ({
     ...state,
     chatsFilterQuery: payload
+  }),
+  [sendWelcomeMessage]: (state, { payload }) => ({
+    ...state,
+    chats: state.chats.map(chat => {
+      if (chat.chatId === payload.chatId) {
+        return {
+          ...chat,
+          messages: [
+            ...chat.messages,
+            {
+              text: payload.text
+            }
+          ]
+        }
+      } else {
+        return chat
+      }
+    })
   })
 }, defaultState)

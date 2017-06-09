@@ -15,7 +15,7 @@ import { changeCurrent as changeCurrentProgram } from '../../redux/user/programs
 import {
   login, getChatList, getMessageList, listen, sendMessage,
   toggleChatWindow, closeChatWindow, selectChat, setChatsFilterQuery,
-  getFilteredChatList
+  getFilteredChatList, sendWelcomeMessage, acceptFriend
 } from '../../redux/chat'
 
 const getCurrentPrefix = programs => {
@@ -86,9 +86,11 @@ class HeaderRegisteredMenu extends Component {
             chats={this.props.chatList}
             currentChat={this.props.selectedChat}
             sendMessage={this.props.sendMessage}
+            sendWelcomeMessage={this.props.sendWelcomeMessage}
             getChatList={this.props.getChatList}
             filterQuery={this.props.chatsFilterQuery}
             setFilterQuery={this.props.setChatsFilterQuery}
+            acceptFriend={this.props.acceptFriend}
             onSelect={(chatId, cb) => {
               this.props.selectChat(chatId)
               this.props.getMessageList(chatId)
@@ -131,10 +133,12 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getChatList,
   getMessageList,
   sendMessage,
+  sendWelcomeMessage,
   toggleChatWindow,
   closeChatWindow,
   selectChat,
-  setChatsFilterQuery
+  setChatsFilterQuery,
+  acceptFriend
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderRegisteredMenu)
