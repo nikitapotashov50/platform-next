@@ -21,10 +21,11 @@ module.exports = router => {
 
     if (!ctx.__.currentProgram.noClasses) {
       lastClass = await ctx.__.currentProgram.getLastClass()
-      // types.push('program')
+
       if (lastClass) {
         types.push('class')
         if (type === 'class') reply = await models.NPS.find({ userId: ctx.__.me._id, programId: ctx.__.currentProgram._id, 'target.model': 'ProgramClass', 'target.item': lastClass._id }).limit(1).sort({ created: -1 })
+        if (lastClass.isLast) types.push('program')
       }
     }
 

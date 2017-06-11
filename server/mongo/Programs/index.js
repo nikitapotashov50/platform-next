@@ -38,13 +38,16 @@ model.methods.getLastClass = async function () {
   let program = this
   if (program.noClasses) return null
 
-  let [ lastClass ] = await mongoose.models.ProgramClass
+  let [ lastClass, nextClass ] = await mongoose.models.ProgramClass
     .find({
       programId: program._id,
       date: { $lte: moment().toISOString() }
     })
-    .limit(1)
     .sort({ date: -1 })
+    .limit(2)
+    .lean()
+
+  if (!nextClass) lastClass.isLast = true
 
   return lastClass
 }
