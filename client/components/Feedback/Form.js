@@ -1,5 +1,4 @@
 import Panel from '../../elements/Panel'
-import PanelTitle from '../../elements/Panel/Title'
 import RatingBar from '../Rating/Bar'
 import OverlayLoader from '../OverlayLoader'
 
@@ -12,7 +11,7 @@ const feedbackForm = ({ fetching, errors, data, type, t, onChange, onSubmit }) =
   let Footer = <Button onClick={onSubmit.bind(this)} disabled={fetching}>Отправить отзыв</Button>
 
   return (
-    <Panel Header={<PanelTitle title='Оставьте отзыв о платформе' />} Footer={Footer}>
+    <Panel Footer={Footer}>
       <OverlayLoader loading={fetching}>
         <div className='post-preview'>
           <textarea className='' value={data.content} onChange={changeContent.bind(this, onChange)} rows={7} placeholder={'Написать отзыв, минимум 15 символов'} />

@@ -8,6 +8,10 @@ let genders = {
   values: [ 'male', 'feemale', null ]
 }
 
+let statuses = {
+  values: [ 'single', 'couple', 'married', null ]
+}
+
 const model = new mongoose.Schema(extend({
   phone: { type: String, default: '' },
   vk: { type: String, default: '' },
@@ -19,7 +23,8 @@ const model = new mongoose.Schema(extend({
   hobbies: { type: String, default: '' },
   //
   birthday: { type: Date },
-  gender: { type: String, enum: genders },
+  gender: { type: String, enum: genders, default: null },
+  social_status: { type: String, enum: statuses, default: null },
   //
   userId: { type: ObjectId, ref: 'Users', required: true, unique: true }
 }, created))
@@ -36,7 +41,7 @@ model.statics.getOrCreate = async function (userId) {
 
 model.methods.update = async function (data) {
   let _self = this
-  _self = extend(_self, pick(data, [ 'phone', 'vk', 'facebook', 'instagram', 'website', 'about', 'hobbies', 'birthday', 'gender' ]))
+  _self = extend(_self, pick(data, [ 'phone', 'vk', 'facebook', 'instagram', 'website', 'about', 'hobbies', 'birthday', 'gender', 'social_status' ]))
   await _self.save()
   return _self
 }

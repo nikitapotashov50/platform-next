@@ -19,6 +19,7 @@ const model = new mongoose.Schema(extend({
 //   { title: 'Занятие 2', date: moment('2017-06-01').toISOString(), programId: 2 },
 //   { title: 'Занятие 3', date: moment('2017-06-04').toISOString(), programId: 2 },
 //   //
+//   { title: 'Занятие 0', date: moment('2017-06-11').toISOString(), programId: 4 },
 //   { title: 'Занятие 1', date: moment('2017-06-17').toISOString(), programId: 4 },
 //   { title: 'Занятие 2', date: moment('2017-06-24').toISOString(), programId: 4 },
 //   { title: 'Занятие 3', date: moment('2017-07-01').toISOString(), programId: 4 },

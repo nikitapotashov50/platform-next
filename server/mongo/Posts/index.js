@@ -83,6 +83,12 @@ model.statics.getActual = async function (params, query = {}) {
       likes_count: 1,
       comment_count: { $multiply: [ { $size: '$comments' }, 2 ] }
     }},
+    { $lookup: {
+      from: 'attachments',
+      localField: 'attachments',
+      foreignField: '_id',
+      as: 'attachments'
+    }},
     { $sort: {
       likes_count: -1,
       comment_count: -1
