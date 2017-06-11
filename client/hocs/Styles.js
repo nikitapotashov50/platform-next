@@ -1935,6 +1935,9 @@ export default props => (
       line-height: 28px;
 
       display: inline-block;
+      
+      color: #f5be00;
+      padding: 0 6px 5px 0;
     }
 
     .pager {
@@ -1982,6 +1985,10 @@ export default props => (
   /*  Мобильные стили */
   @media screen and (max-width: 39.9375em) {
 
+      textarea {
+        font-size: 16px;
+        line-height: 140%;
+      }
       .menu {
         padding: 0 0 0 10px;
         
