@@ -33,7 +33,7 @@ class UserLayout extends Component {
   }
 
   render () {
-    let { user, groups, showButtons, goal, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
+    let { user, groups, showButtons, goal, info, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
     // isBlocked, toggleBlock,
 
     let panelBodyStyles = { padding: 'small' }
@@ -64,7 +64,7 @@ class UserLayout extends Component {
             <div className='user-page__content-block user-page__content-block_side'>
               {/* Информация */}
               <Panel bodyStyles={panelBodyStyles}>
-                <UserProfileBadge {...user} {...goal} />
+                <UserProfileBadge info={info} user={user} goal={goal} />
               </Panel>
 
               {/* Цель */}

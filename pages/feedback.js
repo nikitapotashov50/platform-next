@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import PanelMenu from '../client/components/PanelMenu'
 import PageHoc from '../client/hocs/Page'
 import Panel from '../client/elements/Panel'
+import PanelTitle from '../client/elements/Panel/Title'
 import FeedLayout from '../client/layouts/feed'
 
 import FeedbackForm from '../client/components/Feedback/Form'
@@ -67,7 +68,7 @@ class FeedbackPage extends Component {
 
     return (
       <FeedLayout emptySide>
-        <Panel noBody noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={Object.values(menu)} selected={type} />} />
+        <Panel noBody noBorder menuStyles={{ noBorder: true }} Header={<PanelTitle title='Оставьте отзыв' />} Menu={() => <PanelMenu items={Object.values(menu)} selected={type} />} />
 
         { !ReplyData && (<FeedbackForm t={t} data={reply} type={type} errors={errors} fetching={fetching} onSubmit={this.submit} onChange={this.handleChange} />)}
         { ReplyData && (<ReplyData data={info} />)}

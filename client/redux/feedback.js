@@ -7,6 +7,7 @@ import { generateFetchActions } from '../utils/redux'
 let defaultState = {
   types: [ 'platform' ],
   reply: false,
+  lastClass: null,
   fetching: false
 }
 

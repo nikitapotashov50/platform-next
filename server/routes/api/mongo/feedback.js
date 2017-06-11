@@ -16,21 +16,15 @@ module.exports = router => {
     const { type } = ctx.request.query
     let types = [ 'platform' ]
 
-    if (ctx.__.currentProgram._id !== 3) { types.push('program') }
-
     let reply = null
-    if (!ctx.__.currentProgram.noClasses) {
-      types.push('class')
+    let lastClass = null
 
-      if (type === 'class') {
-        let lastClass = await ctx.__.currentProgram.getLastClass()
-        reply = await models.NPS
-          .find({
-            userId: ctx.__.me._id,
-            programId: ctx.__.currentProgram._id,
-            'target.model': 'ProgramClass',
-            'target.item': lastClass._id
-          }).limit(1).sort({ created: -1 })
+    if (!ctx.__.currentProgram.noClasses) {
+      lastClass = await ctx.__.currentProgram.getLastClass()
+      // types.push('program')
+      if (lastClass) {
+        types.push('class')
+        if (type === 'class') reply = await models.NPS.find({ userId: ctx.__.me._id, programId: ctx.__.currentProgram._id, 'target.model': 'ProgramClass', 'target.item': lastClass._id }).limit(1).sort({ created: -1 })
       }
     }
 
