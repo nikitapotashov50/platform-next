@@ -95,7 +95,7 @@ class PostList extends Component {
         )}
 
         { (!postCount && !fetching) && (
-          <Panel noBody Header={<div className='panel__title'>Лента пуста</div>} />
+          <Panel noBody Header={<div className='text-center'>ничего не найдено</div>} />
         )}
 
         {/* Модалка с постом */}

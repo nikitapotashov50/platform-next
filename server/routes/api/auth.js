@@ -9,7 +9,7 @@ const {
 // refreshToken
 
 const getUser = async email => {
-  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean().cache(100)
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean()
 
   if (!user) return null
 
@@ -26,19 +26,20 @@ const createUserBasedOnBM = async access => {
     name: BMInfo.userId,
     last_name: BMInfo.lastName,
     first_name: BMInfo.firstName,
-    picture_small: 'http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar
+    picture_small: BMInfo.avatar ? ('http://static.molodost.bz/thumb/160_160_2/img/avatars/' + BMInfo.avatar) : null
   }
 
   let userInfo = { birthday: BMInfo.birthDate }
   let userMeta = { molodost_id: BMInfo.userId }
 
   let user = await mongoose.models.Users.create(userData)
-  let info = await user.updateInfo(userInfo)
   let meta = await user.updateMeta(userMeta)
+
   meta = await meta.updateToken(access)
+  await user.updateInfo(userInfo)
   await user.addProgram(3, {})
 
-  return { user, info, meta }
+  return { user, meta }
 }
 
 const updateMolodostMeta = async (meta, BMAccess) => {
@@ -52,13 +53,20 @@ const updateMolodostMeta = async (meta, BMAccess) => {
 
 const getSessionUser = async (email, access) => {
   let res = await getUser(email)
+
   if (!res || !res.user) res = await createUserBasedOnBM(access)
   else if (res.meta) res.meta = await updateMolodostMeta(res.meta, access)
 
   if (!res || !res.user) throw new Error('error getting user')
 
   let add = { radar_id: null, radar_access_token: false }
-  if (res.meta) add = extend(add, { radar_id: res.meta.radar_id || null, radar_access_token: res.meta.radar_access_token || false })
+  if (res.meta) {
+    add = extend(add, {
+      radar_id: res.meta.radar_id || null,
+      molodost_id: res.meta.molodost_id || null,
+      radar_access_token: res.meta.radar_access_token || false
+    })
+  }
 
   return extend(res.user, add)
 }
@@ -151,6 +159,7 @@ module.exports = router => {
       let BMAccess = await getBMAccessToken(email, password)
       if (!BMAccess) throw new Error('No user account found on molodost.bz')
 
+      ctx.log.info(email, BMAccess)
       let user = await getSessionUser(email, BMAccess)
       ctx.session.user = user
       ctx.session.uid = user._id

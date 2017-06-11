@@ -72,7 +72,6 @@ class PostEditor extends Component {
       post.tags.push(j)
       return j
     })
-    console.log(post.tags)
 
     await this.setState({ fetching: true })
     await this.props.addPost(post)
