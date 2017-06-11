@@ -25,7 +25,7 @@ export const unsubscribeFromUser = createAction('auth/UNSUBSCRIBE_FROM_USER', as
 
 // reducer
 export default handleActions({
-  [refresh]: (state, { payload }) => (payload.subscriptions || []),
-  [subscribeToUser]: (state, { payload }) => (payload.id ? [ ...state, payload.id ] : [ ...state ]),
-  [unsubscribeFromUser]: (state, { payload }) => ([ ...removeElement(state, payload.id) ])
+  [refresh]: (state, { payload = {} }) => (payload.subscriptions || []),
+  [subscribeToUser]: (state, { payload = {} }) => (payload.id ? [ ...state, payload.id ] : [ ...state ]),
+  [unsubscribeFromUser]: (state, { payload = {} }) => ([ ...removeElement(state, payload.id) ])
 }, defaultState)
