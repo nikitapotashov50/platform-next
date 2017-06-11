@@ -51,7 +51,7 @@ class UserLayout extends Component {
 
               { showButtons && (
                 <div className='up-header__buttons'>
-                  {this.hasRadar() && <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={this.sendMessage}>Написать сообщение</button>}
+                  {this.hasRadar() && <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '', 'up-header__send-msg' ].join(' ')} onClick={this.sendMessage}>Написать сообщение</button>}
                   {/* <button className={[ 'up-header__button', isBlocked ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleBlock}>Блокировать</button> */}
                   <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleSubscription}>Подписаться</button>
                 </div>
