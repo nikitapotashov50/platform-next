@@ -28,7 +28,7 @@ export const changeCurrent = createAction('user/programs/CHANGE_PROGRAM', async 
   return { id: programId }
 })
 
-const fillPrograms = (state, payload) => {
+const fillPrograms = (state, payload = {}) => {
   let current
   let items = (payload.programs || []).reduce((acc, item) => {
     acc[item._id] = item

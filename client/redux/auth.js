@@ -81,8 +81,7 @@ export default handleActions({
     ...state,
     user: {
       ...state.user,
-      radar_id: payload.radar_id,
-      radar_access: payload.radar_access
+      ...(payload ? { radar_id: payload.radar_id, radar_access: payload.radar_access } : {})
     }
   })
 }, defaultState)
