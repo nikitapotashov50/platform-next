@@ -118,7 +118,7 @@ model.methods.updateMeta = async function (data) {
   user.meta = meta
   await user.save()
 
-  return user
+  return meta
 }
 
 model.methods.getMeta = async function () {
