@@ -1,15 +1,27 @@
-export default props => (
-  <div className=''>
-    <div className=''>
-      <select>
-        <option value=''>Программа</option>
-      </select>
-    </div>
+export default ({ data = {} }) => {
+  let { programs = [], classes = [] } = data
 
+  return (
     <div className=''>
-      <select>
-        <option value=''>Занятие 1</option>
-      </select>
+      { (programs.length > 0) && (
+        <div className=''>
+          Программа
+
+          <select>
+            { programs.map(el => <option value={el._id} key={el._id}>{el.title}</option>)}
+          </select>
+        </div>
+      )}
+
+      { (classes.length > 0) && (
+        <div className=''>
+          Занятие
+
+          <select>
+            { classes.map(el => <option value={el._id} key={el._id}>{el.title}</option>)}
+          </select>
+        </div>
+      )}
     </div>
-  </div>
-)
+  )
+}

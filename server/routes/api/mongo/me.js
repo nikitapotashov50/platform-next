@@ -58,7 +58,7 @@ module.exports = router => {
   router.put('/edit', async ctx => {
     let body = ctx.request.body
 
-    let userInfo = pick(body, [ 'vk', 'website', 'phone', 'facebook', 'instagram', 'about', 'hobbies', 'birthday', 'gender' ])
+    let userInfo = pick(body, [ 'vk', 'website', 'phone', 'facebook', 'instagram', 'about', 'hobbies', 'birthday', 'gender', 'social_status' ])
     let userMain = pick(body, [ 'first_name', 'last_name', 'locale' ])
 
     if (userInfo.birthday) userInfo.birthday = new Date(moment(userInfo.birthday, 'DD-MM-YYYY').format('YYYY-MM-DD'))

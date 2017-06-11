@@ -113,12 +113,12 @@ model.methods.updateMeta = async function (data) {
   let user = this
   let meta = await mongoose.models.UsersMeta.getOrCreate(user._id, data)
 
-  if (user.meta) return user
+  if (user.meta) return meta
 
   user.meta = meta
   await user.save()
 
-  return user
+  return meta
 }
 
 model.methods.getMeta = async function () {
@@ -132,7 +132,7 @@ model.methods.updateInfo = async function (data) {
 
   await info.update(data)
 
-  if (!user.meta) {
+  if (!user.info) {
     user.info = info
     await user.save()
   }

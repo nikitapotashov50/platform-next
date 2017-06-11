@@ -90,7 +90,7 @@ class PostAttachments extends Component {
           <div className='attachments-container'>
             {previews.documents.map(attachment => (
               <div key={attachment._id} className='attachment-doc'>
-                {this.getIcon(attachment.mime)} <a href={attachment.path}>{attachment.name}</a>
+                <a href={attachment.path}>{attachment.name}</a>
               </div>
             ))}
           </div>
@@ -133,14 +133,28 @@ class PostAttachments extends Component {
           }
 
           .attachment-doc {
+            width: 100%;
             font-size: 18px;
-            padding: 10px;
+            padding: 5px 10px 10px 40px;
             border-radius: 3px;
             /*margin: 5px;*/
+            background: url('/static/img/attachment.png');
+            background-position: 0 0;
+            background-size: 32px 32px;
+            background-repeat: no-repeat;
+            font-size: 13px;
+            color: #141414;
+            font-weight: 700;
           }
 
-          .attachment-doc:hover {
-            background: #f5f7fa;
+          .attachment-doc a {
+            font-size: 13px;
+            color: #141414;
+            font-weight: 700;
+          }
+
+          .attachment-doc a:hover {
+            color: #196aff;
           }
 
           @media screen and (max-width: 400px) {

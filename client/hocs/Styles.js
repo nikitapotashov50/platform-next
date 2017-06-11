@@ -1935,6 +1935,9 @@ export default props => (
       line-height: 28px;
 
       display: inline-block;
+      
+      color: #f5be00;
+      padding: 0 6px 5px 0;
     }
 
     .pager {
@@ -1982,6 +1985,10 @@ export default props => (
   /*  Мобильные стили */
   @media screen and (max-width: 39.9375em) {
 
+      textarea {
+        font-size: 16px;
+        line-height: 140%;
+      }
       .menu {
         padding: 0 0 0 10px;
         
@@ -2106,14 +2113,16 @@ export default props => (
 
       .user-page {
       &__header {
-
+        margin-bottom: 30px;
       }
 
       &__content {
-
+        margin: 0;
+  
       }
 
       &__content-block {
+        padding: 0;
 
 
         &_side {
@@ -2149,6 +2158,29 @@ export default props => (
 
 
         }
+      }
+    }
+
+    .up-header {
+      &__image {
+        left: 50%;
+        margin-left:-79px;
+      }
+
+      &__buttons {
+        top: 10px;
+        right: 10px;
+      }
+
+      &__button {
+        background: rgb(35, 116, 255);
+        width: 100px;
+        padding: 10px 10px;
+        font-size: 12px;
+      }
+
+      &__send-msg {
+        display: none;
       }
     }
 

@@ -43,8 +43,9 @@ model.methods.getLastClass = async function () {
       programId: program._id,
       date: { $lte: moment().toISOString() }
     })
-    .limit(1)
     .sort({ date: -1 })
+    .limit(1)
+    // .lean()
 
   return lastClass
 }

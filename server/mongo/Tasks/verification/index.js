@@ -62,7 +62,30 @@ model.statics.getLastForReplies = async function (params = {}) {
 model.statics.getRejectedRepliesCount = async function (userId, programId) {
   let model = this
   let data = await model.aggregate([
-    { $match: { userId, status: 4 } }
+    { $match: { userId, status: 4 } },
+    { $lookup: {
+      from: 'taskreplies',
+      localField: 'taskReplyId',
+      foreignField: '_id',
+      as: 'reply'
+    }},
+    { $unwind: '$reply' },
+    { $group: {
+      _id: {
+        rerplyId: 'taskReplyId',
+        taskId: '$reply.taskId'
+      }
+    }},
+    { $project: {
+      _id: 1,
+      taskId: '$reply.taskId'
+    }},
+    { $lookup: {
+      from: 'tasks',
+      localField: 'taskId',
+      foreignField: '_id',
+      as: 'task'
+    }}
   ])
 
   return data.length
