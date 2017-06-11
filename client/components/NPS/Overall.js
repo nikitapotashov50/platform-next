@@ -3,7 +3,7 @@ export default ({ data, labels = {} }) => {
   for (var i in data) {
     items.push(
       <div className='nps-overall__item' key={'nps-overall' + i}>
-        <div className='nps-overall__value'>{data[i]}</div>
+        <div className='nps-overall__value'>{data[i].toFixed(2)}</div>
         <span className='nps-overall__title'>{labels[i] || 'noname'}</span>
       </div>
     )

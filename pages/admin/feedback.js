@@ -5,18 +5,19 @@ import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
 // import NpsRightMenu from '../../client/components/NPS/RightMenu'
-// import NpsOverall from '../../client/components/NPS/Overall'
+import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
 import NpsList from '../../client/components/NPS/List'
 
 import Page from '../../client/hocs/Page'
 import Panel from '../../client/elements/Panel'
+import PanelTitle from '../../client/elements/Panel/Title'
 import DefaultLayout from '../../client/layouts/default'
 
 import NpsFilters from '../../client/components/Feedback/adminFilters/index'
 
-import { getNpsEntries, getNpsCities } from '../../client/redux/admin/nps'
+import { getNpsEntries, getNpsCities, getFilters, getTotal } from '../../client/redux/admin/nps'
 
 let labels = {
   score_1: 'Контент',
@@ -27,20 +28,21 @@ let labels = {
 
 let menu = [
   { href: '/admin/feedback?type=program', path: '/admin/feedback/program', code: 'programs', title: 'Программы' },
-  { href: '/admin/feedback?type=coach', path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
+  // { href: '/admin/feedback?type=coach', path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
   { href: '/admin/feedback?type=platform', path: '/admin/feedback/platform', code: 'platform', title: 'Платформа' }
 ]
 
 class FeedbackResults extends Component {
   static async getInitialProps (ctx) {
-    // let { page = 1, type = 'program' } = ctx.query
-    // let { nps } = ctx.store.getState()
+    let type = ctx.query.type || 'programs'
+    let headers = null
+    if (ctx.isServer) headers = ctx.req.headers
 
-    // await Promise.all([
-    //   ctx.store.dispatch(getNpsEntries({ type }, { limit: nps.limit, page })),
-    //   ctx.store.dispatch(getNpsCities({ type }))
-    // ])
-    return { type: ctx.query.type || 'programs' }
+    await ctx.store.dispatch(getFilters(type, { headers }))
+    await ctx.store.dispatch(getTotal(type, { headers }))
+    await ctx.store.dispatch(getNpsEntries(type, {}, { headers }))
+
+    return { type }
   }
 
   constructor (props) {
@@ -92,8 +94,8 @@ class FeedbackResults extends Component {
     let { page = 1 } = this.props.url.query
     let { type } = this.props
     let { fetching } = this.state
-    let { items, limit, count } = this.props.nps
-
+    let { items, limit, count, filters, total } = this.props.nps
+    console.log(this.props.nps)
     let SubHeader = NpsFilters[type]
     let Menu = () => <PanelMenu items={menu} selected={type} />
     let Pagination = null
@@ -104,8 +106,8 @@ class FeedbackResults extends Component {
         <div className='feed'>
           <div className='feed__left'>
 
-            <Panel Menu={Menu} SubHeader={<SubHeader />}>
-              {/* <NpsOverall labels={labels} data={{ score_1: 123, score_2: 123, score_3: 123, total: 123 }} /> */}
+            <Panel Header={<PanelTitle title='NPS' />} Menu={Menu} SubHeader={<SubHeader data={filters} />}>
+              <NpsOverall labels={labels} data={total} />
             </Panel>
 
             { (count > 0) && Pagination }
@@ -139,5 +141,5 @@ export default Page(FeedbackResults, {
   title: 'NPS',
   mapStateToProps,
   mapDispatchToProps,
-  accessRule: user => false
+  accessRule: user => true
 })

@@ -17,7 +17,8 @@ module.exports = router => {
   router.bridge('/chat', chatRoutes)
   router.bridge('/tasks', [ initMeRoutes ], tasksRoutes)
   router.bridge('/admin', [ initMeRoutes, checkAccess('admin') ], adminRoutes)
-  router.bridge('/nps', [ initMeRoutes, checkAccess('admin') ], npsRoutes)
+  router.bridge('/nps', [ initMeRoutes ], npsRoutes)
+  // , checkAccess('admin')
   //
   router.bridge('/feedback', [ initMeRoutes, getSessionProgram ], feedbackRoutes)
   // TODO: check volunteer access
