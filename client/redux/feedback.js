@@ -19,7 +19,7 @@ export const { fetchEnd, fetchStart } = generateFetchActions('feedback')
 //
 export const submiFeedback = createAction('feedback/SUBMIT', async (type, reply) => {
   reply = pick(reply, [ 'content', 'score' ])
-  let { data } = await axios.post(`${BACKEND_URL}/api/mongo/feedback/rate/${type}`, reply, { withCredentials: true })
+  let { data } = await axios.post(`/api/mongo/feedback/rate/${type}`, reply, { withCredentials: true })
 
   return data.result
 })
