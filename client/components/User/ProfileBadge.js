@@ -13,7 +13,8 @@ const getStatus = (status, gender = null) => {
 
 export default ({ info = {}, user = {}, goal = {} }) => {
   let badgeInfo = []
-  if (info.birthday) badgeInfo.push(Math.floor(moment(new Date()).diff(moment(info.birthday), 'years', true)) + ' лет')
+  if (info && info.birthday) badgeInfo.push(Math.floor(moment(new Date()).diff(moment(info.birthday), 'years', true)) + ' лет')
+  if (info && info.social_status) badgeInfo.push(getStatus(info.social_status, info.gender))
   // if (city) badgeInfo.push(city)
   let contacts = pickInfo(info, [ 'vk', 'facebook', 'instagram', 'website' ])
 
@@ -31,10 +32,6 @@ export default ({ info = {}, user = {}, goal = {} }) => {
             <div key={el.type}>{el.type}: {el.value}</div>
           ))}
         </div>
-      )}
-
-      { info.social_status && (
-        <div>{getStatus(info.social_status, info.gender)}</div>
       )}
     </div>
   )
