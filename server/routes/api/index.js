@@ -13,7 +13,7 @@ const attachmentRoutes = require('./attachment')
 const chatRoutes = require('./chat')
 
 const mongoTest = require('./mongo')
-const mongoMigrate = require('./migrate')
+// const mongoMigrate = require('./migrate')
 
 // const mongoTest = require('./mongo')
 // const mongoMigrate = require('./migrate')

@@ -2,8 +2,6 @@ import axios from 'axios'
 import qs from 'query-string'
 import { pick } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
-import { npsList } from '../entities/schema'
-import { normalize, arrayOf } from 'normalizr'
 
 // default state
 let defaultState = {

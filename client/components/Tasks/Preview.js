@@ -82,6 +82,8 @@ export default ({ task, link, completed = false, status = null }) => (
       }
       .task-preview__description {
         overflow-y: hidden;
+        line-height: 16px;
+        max-height: 32px;
 
         font-size: 14px;
         font-weight: 300;

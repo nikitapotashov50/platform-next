@@ -209,7 +209,7 @@ module.exports = router => {
           finish: el.programId.finish_at
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
-      
+
       if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
 
       ctx.body = {

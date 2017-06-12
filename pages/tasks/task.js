@@ -11,7 +11,8 @@ import { getTask } from '../../client/redux/task/task'
 import { getReply } from '../../client/redux/task/reply'
 
 const TaskPage = ({ task, replyOpened, notFound, reply, specific = null, replyStatus, isReplied }) => {
-  if (notFound) return <div>123</div>
+  if (notFound) return <div />
+
   return (
     <FeedLayout wide emptySide menuItem='tasks'>
       <TaskContent task={task} />
