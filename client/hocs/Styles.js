@@ -155,11 +155,9 @@ export default props => (
 
       &__content-block {
         box-sizing: border-box;
-
         padding: 0 7.5px;
         vertical-align: top;
         display: inline-block;
-
         &_side {
           width: 300px;
         }
@@ -171,10 +169,8 @@ export default props => (
 
     .up-header {
       position: relative;
-
       width: 100%;
       height: 198px;
-
       background-color: #7a7a7a;
       background-position: 0 0;
       background-repeat: repeat;
@@ -183,15 +179,12 @@ export default props => (
 
       &__image {
         border-radius: 3px;
-
         top: 52px;
         left: 71px;
         position: absolute;
-
         width: 158px;
         height: 158px;
         display: block;
-
         background: #000;
         border: 2px solid #fff;
       }
@@ -205,10 +198,8 @@ export default props => (
       &__button {
         border-radius: 3px;
         transition: background $transition-time;
-
         margin: 0 0 0 5px;
         padding: 10px 15px;
-
         color: #fff;
         color: #fefefe;
         border: 0 none;
@@ -216,9 +207,7 @@ export default props => (
         font-weight: 700;
         text-transform: none;
         background-color: rgba(0,0,0,.4);
-
         cursor: pointer;
-
         &:hover, &_active { background-color: #196aff; }
       }
     }
@@ -326,13 +315,11 @@ export default props => (
     
       &__title {
         line-height: 15px;
-
         color: #9f9f9f;
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 1px;
         text-transform: uppercase;
-
         @extend museo;
       }
 
@@ -340,11 +327,9 @@ export default props => (
         margin: 0 0 5px;
         overflow: hidden;
         line-height: 19px;
-
         color: #333;
         font-size: 14px;
         font-weight: 700;
-
         &:hover { color: #333; }
         &:visited, &:active { color: #777; }
       }
@@ -472,9 +457,7 @@ export default props => (
 
       &__row {
         margin-top: 10px;
-
         border-bottom: 1px solid #eee;
-
         &:last-of-type {
           border-bottom: none
         }
@@ -484,11 +467,26 @@ export default props => (
         padding: 0 20px;
         height: 25px !important;
         line-height: 25px !important;
-
         color: #b5b5b5;
         font-size: 12px;
         text-transform: none;
       }
+
+      &__select {
+        border:0 none;
+        background: none;
+        height: 40px;
+        display: block;
+        padding: 0 20px 10px 20px;
+        width: 100%;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-size: 9px 60px;
+        background-repeat: no-repeat;
+        background-position: right 10px top 10px;
+        background-image: url(/static/img/dd-arrow.png);
+      }
+
       &__input {
         appearance: none;
 
@@ -907,12 +905,34 @@ export default props => (
     .user-side-panel {
       &__title {
         line-height: 14px;
-        display: inline-block;
-        color: #0c0c0c;
+        display: block;
+        color: #9f9f9f;
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
+        margin-bottom: 7px;
+        margin-top:0;        
+      }
+
+      &__dz {
+        background-position: right 6px;
+        height: 25px;
+        overflow: hidden;
+        background-size: 14px 13px;
+        background-repeat: no-repeat;
+        background-image: url('/static/img/arrow-right.png');
+      }
+
+      &__dz a{
+        display: block;
+        color:#000;
+        font-size:13px;
+        font-weight: 700;
+        line-height: 25px;
+      }
+      &__dz a:hover {
+        color: #196aff;
       }
 
       &__body {}
