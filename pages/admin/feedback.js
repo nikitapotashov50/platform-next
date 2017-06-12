@@ -95,7 +95,7 @@ class FeedbackResults extends Component {
     let { type } = this.props
     let { fetching } = this.state
     let { items, limit, count, filters, total } = this.props.nps
-    console.log(this.props.nps)
+
     let SubHeader = NpsFilters[type]
     let Menu = () => <PanelMenu items={menu} selected={type} />
     let Pagination = null

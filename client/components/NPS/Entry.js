@@ -26,7 +26,7 @@ export default ({ data, body, labels, User, ...props }) => {
 
   return (
     <Panel Footer={() => Footer} Header={<UserInline date={data.created} user={User} />} noBody={!data.content} headerStyles={headerStyles}>
-      { body && (
+      { data.content && (
         <div className='post-preview'>
           <a className='post-preview__body'>{data.content}</a>
         </div>
