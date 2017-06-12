@@ -655,7 +655,7 @@ export default props => (
 
       &__name {
         margin-bottom: 7.5px;
-
+        margin-top: 10px;
         color: #1f1f1f;
         font-size: 21px;
         font-weight: 700;
@@ -665,6 +665,35 @@ export default props => (
         font-size: 12px;
         line-height: 18px;
         color: #9f9f9f;
+      }
+      
+      &__info-link {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-size: 135px 65px;
+        background-image: url('/static/img/social.png'); 
+        margin-top:5px;
+      }
+
+      &__info-vk {
+        background-position: -110px 5px;
+      }
+
+      &__info-facebook {
+        background-position: -53px 5px;
+      }
+
+      &__info-instagram {
+        background-position: 5px 5px;
+      }
+
+      &__info-website {
+        display: block;
+        color: #bbb;
+        font-size:12px;
+        font-weight: 700;
       }
     }
 

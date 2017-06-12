@@ -29,7 +29,10 @@ export default ({ info = {}, user = {}, goal = {} }) => {
       { contacts.length > 0 && (
         <div>
           { contacts.map(el => (
-            <div key={el.type}>{el.type}: {el.value}</div>
+            el.type === 'vk' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-vk' key={el.type} />)
+            : el.type === 'facebook' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-facebook' key={el.type} />)
+            : el.type === 'instagram' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-instagram' key={el.type} />)
+            : el.type === 'website' ? (<a href={el.value} target='_blank' className='user-badge__info-website' key={el.type}>{el.value}</a>) : ''
           ))}
         </div>
       )}
