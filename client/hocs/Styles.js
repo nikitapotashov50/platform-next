@@ -680,13 +680,22 @@ export default props => (
       &__info-vk {
         background-position: -110px 5px;
       }
+      &__info-vk:hover {
+        background-position: -110px -40px;
+      }
 
       &__info-facebook {
         background-position: -53px 5px;
       }
+      &__info-facebook:hover {
+        background-position: -53px -40px;
+      }
 
       &__info-instagram {
         background-position: 5px 5px;
+      }
+      &__info-instagram:hover {
+        background-position: 5px -40px;
       }
 
       &__info-website {
