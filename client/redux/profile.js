@@ -17,7 +17,6 @@ let defaultState = {
 export const getUser = createAction('profile/GET_USER', async username => {
   // let params = { username }
   let { data } = await axios.get(BACKEND_URL + '/api/mongo/users/' + username)
-  console.log(data.result)
   return data.status === 200
     ? data.result
     : { error: { ...data } }

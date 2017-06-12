@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import { isEqual, pick } from 'lodash'
 import React, { Component } from 'react'
 
 import PostMenu from './Preview/Menu'
@@ -27,9 +27,9 @@ class Post extends Component {
     this.setState({ editPost: true })
   }
 
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate (nextProps, nextState) {
     let flag = !isEqual(nextProps.post, this.props.post) || !isEqual(nextProps.reply, this.props.reply) || !isEqual(nextProps.user, this.props.user) || nextProps.isLiked !== this.props.isLiked || nextProps.loggedUser !== this.props.loggedUser
-    return flag
+    return flag || !isEqual(nextState, this.state)
   }
 
   toggleOptions (flag) {
@@ -37,14 +37,14 @@ class Post extends Component {
   }
 
   render () {
-    const { likes, showPostMenu } = this.state
+    const { likes, showPostMenu, editPost } = this.state
     const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment } = this.props
 
     let Footer = <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} />
 
     let myPost = user ? loggedUser === user._id : false
 
-    const Options = <PostMenu onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
+    const Options = <PostMenu post={post} reply={pick(reply, [ 'created', 'finish_at', '_id' ])} onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
 
     let headerStyles = { noBorder: true }
 
@@ -64,9 +64,9 @@ class Post extends Component {
         //
         Options={() => Options}
         showOptions={myPost && showPostMenu}
-        toggleOptions={this.toggleOptions.bind(this, !showPostMenu)}
+        toggleOptions={this.toggleOptions.bind(this, true)}
       >
-        <PostBody post={post} reply={reply} onExpand={onExpand} />
+        <PostBody edit={editPost} post={post} reply={reply} onExpand={onExpand} />
       </Panel>
     )
   }

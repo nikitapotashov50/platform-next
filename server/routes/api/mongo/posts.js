@@ -3,7 +3,7 @@ const { pick, isUndefined } = require('lodash')
 const { keyObj, initMeRoutes } = require('../../../controllers/common')
 
 const initPost = async (ctx, next) => {
-  let post = await models.Post.findOne({ _id: ctx.params.id })
+  let [ post ] = await models.Post.find({ _id: ctx.params.id }).limit(1)
   if (post) {
     ctx.__.post = post
     await next()
@@ -82,6 +82,8 @@ module.exports = router => {
     replies = replies.reduce((obj, reply) => {
       obj[reply.postId] = {
         _id: reply.taskId._id,
+        created: reply.created,
+        finish_at: reply.taskId.finish_at,
         title: reply.taskId.title,
         type: reply.replyTypeId.code,
         status: replyStatuses[reply.status[0] ? reply.status[0].status : 'pending'],
@@ -131,6 +133,36 @@ module.exports = router => {
   })
 
   router.bridge('/:id', [ initPost ], router => {
+    router.delete('/', async ctx => {
+      try {
+        // ctx.log.info(JSON.stringify(ctx.__.post), ctx.session)
+        if (!ctx.session.uid) throw new Error('Access denied')
+        // if (ctx.__.post._doc.userId !== ctx.session.uid) throw new Error('Access denied')
+        // TODO: ADD COMPARDION TO USER ID
+        await ctx.__.post.block()
+
+        ctx.body = { status: 200, result: { id: ctx.__.post._id } }
+      } catch (e) {
+        ctx.log.info(e)
+        ctx.body = { status: 403, message: e }
+      }
+    })
+
+    router.put('/', async ctx => {
+      try {
+        // ctx.log.info(JSON.stringify(ctx.__.post), ctx.session)
+        if (!ctx.session.uid) throw new Error('Access denied')
+        // if (ctx.__.post._doc.userId !== ctx.session.uid) throw new Error('Access denied')
+        // TODO: ADD COMPARDION TO USER ID
+        // await ctx.__.post.block()
+
+        ctx.body = { status: 200, result: {} }
+      } catch (e) {
+        ctx.log.info(e)
+        ctx.body = { status: 403, message: e }
+      }
+    })
+
     router.get('/comments', async ctx => {
       let { offset, limit, reversed } = ctx.query
       try {

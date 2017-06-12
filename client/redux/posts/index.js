@@ -44,21 +44,17 @@ export const addPost = createAction('posts/POST_ADD', async post => {
 
 /** edit post */
 export const updatePost = createAction('posts/UPDATE_POST', async (id, data) => {
-  await axios.put(`${BACKEND_URL}/api/post/${id}`, {
+  await axios.put(`${BACKEND_URL}/api/mongo/posts/${id}`, {
     title: data.title,
     content: data.content
-  }, {
-    withCredentials: true
-  })
-  return {
-    id,
-    data
-  }
+  }, { withCredentials: true })
+
+  return { id, data }
 })
 
 /** Post removal */
 export const deletePost = createAction('posts/POST_DELETE', async id => {
-  await axios.delete(`/api/post/${id}`)
+  await axios.delete(`/api/mongo/posts/${id}`, {}, { withCredentials: true })
   return id
 })
 

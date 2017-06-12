@@ -7,6 +7,7 @@ const {
   getBMAccessTokenCredentialsOnly, getBMSignUp
 } = require('../../controllers/authController')
 // refreshToken
+// getBalance
 
 const getUser = async email => {
   let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean()
@@ -211,6 +212,9 @@ module.exports = router => {
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
       if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
+
+      // let wow = await getBalance(503248)
+      // ctx.log.info(wow)
 
       ctx.body = {
         status: 200,

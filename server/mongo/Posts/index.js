@@ -39,6 +39,7 @@ model.statics.PostTypes = require('./types')
 
 model.statics.getList = async function (params = {}, query = {}) {
   let model = this
+  params.enabled = true
 
   let { limit = 7, offset = 0 } = query
   limit = Number(limit)
@@ -62,6 +63,8 @@ model.statics.getList = async function (params = {}, query = {}) {
 }
 
 model.statics.getActual = async function (params, query = {}) {
+  params.enabled = true
+
   let model = this
   let { limit = 7, offset = 0, days = 2 } = query
 
@@ -190,6 +193,11 @@ model.methods.removeLike = async function (userId) {
   await post.save()
 
   return post
+}
+
+model.methods.block = function (flag = true) {
+  this.enabled = !flag
+  return this.save()
 }
 
 model.methods.addAttachment = async function (data, add = {}) {

@@ -2,7 +2,7 @@ import Attachments from '../Attachments'
 import TextWithImages from '../TextWithImages'
 import TaskContent from '../../Tasks/replyContent/index'
 
-export default ({ post, reply, onExpand }) => {
+export default ({ post, reply, onExpand, edit }) => {
   let TaskReply = null
   if (reply && reply.type) TaskReply = TaskContent[reply.type]
 
@@ -12,7 +12,8 @@ export default ({ post, reply, onExpand }) => {
 
       { (reply && TaskReply) && (<TaskReply data={reply.data} />)}
 
-      <TextWithImages text={post.content} />
+      { !edit && <TextWithImages text={post.content} /> }
+      { edit && <div /> }
 
       { (post.attachments && post.attachments.length > 0) && <Attachments items={post.attachments} />}
     </div>

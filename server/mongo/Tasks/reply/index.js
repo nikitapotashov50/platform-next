@@ -68,11 +68,11 @@ model.statics.getByPostIds = async function (postIds) {
       enabled: true,
       postId: { $in: postIds }
     })
-    .select('specific title postId taskId status replyTypeId')
+    .select('specific title postId taskId status replyTypeId created')
     .populate([
       'specific.item',
       'replyTypeId',
-      { path: 'taskId', select: 'title _id' },
+      { path: 'taskId', select: 'title _id finish_at' },
       {
         path: 'status',
         select: 'status',

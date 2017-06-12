@@ -14,6 +14,9 @@ module.exports = {
     client_id: process.env.BM_API_CLIENT_ID,
     client_secret: process.env.BM_API_CLIENT_SECRET
   },
+  bmtoken: {
+    secret: process.env.BM_TOKEN_ACCESS
+  },
   aws: {
     access_key_id: process.env.AWS_ACCESS_KEY_ID,
     secret_access_key: process.env.AWS_SECRET_ACCESS_KEY

@@ -38,6 +38,7 @@ export const mergeProps = (state, dispatchProps, props) => {
   }
 
   const removePost = postId => async () => {
+    console.log('remove', postId)
     await dispatchProps.dispatch(deletePost(postId))
   }
 

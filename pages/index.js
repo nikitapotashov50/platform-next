@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import { isEqual } from 'lodash'
 import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
@@ -40,6 +41,15 @@ class IndexPage extends Component {
     return { tab }
   }
 
+  shouldComponentUpdate (nextProps) {
+    let flag = !isEqual(nextProps.program, this.props.program) || !isEqual(nextProps.tasks, this.props.tasks) || !isEqual(nextProps.subscriptions, this.props.subscriptions) || !isEqual(nextProps.user, this.props.user)
+    return flag
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.program !== this.props.program) this.props.dispatch(getTasks(nextProps.program, 'active', {}))
+  }
+
   render () {
     let { tab, url, program, tasks } = this.props
 
@@ -60,8 +70,11 @@ class IndexPage extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({ dispatch })
+
 export default Page(IndexPage, {
   title: 'Отчеты',
+  mapDispatchToProps,
   mapStateToProps: ({ auth, user, tasks }) => ({
     user: auth.user,
     tasks: tasks.items.active || [],
