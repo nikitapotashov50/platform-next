@@ -14,8 +14,11 @@ const defaultState = {
 export const { fetchEnd, fetchStart } = generateFetchActions('tasks')
 
 export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
+  let prefix = ''
   options.withCredentials = true
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/count`, options)
+  if (options.headers) prefix = BACKEND_URL
+
+  let { data } = await axios.get(`${prefix}/api/mongo/tasks/count`, options)
 
   return data.result
 })
@@ -26,10 +29,15 @@ export const getTasks = createAction('tasks/GET_LIST', async (programId, type, o
     withCredentials: true
   }
 
+  let prefix = ''
   let postfix = type !== 'current' ? type : ''
 
-  if (options.headers) params.headers = options.headers
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${postfix}`, params)
+  if (options.headers) {
+    prefix = BACKEND_URL
+    params.headers = options.headers
+  }
+
+  let { data } = await axios.get(`${prefix}/api/mongo/tasks/${postfix}`, params)
 
   if (data.result) {
     return {
