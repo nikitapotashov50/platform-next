@@ -53,11 +53,11 @@ module.exports = router => {
       await ctx.__next.render(ctx.req, ctx.res, '/admin/users', Object.assign({}, ctx.params, ctx.query))
     })
 
-    router.bridge('/feedback', router => {
+    router.bridge('/nps', router => {
       router.get('/:type', async ctx => {
         if ([ 'platform', 'class', 'program', 'coach' ].indexOf(ctx.params.type) === -1) console.log('404')
 
-        await ctx.__next.render(ctx.req, ctx.res, '/admin/feedback', Object.assign({}, ctx.params, ctx.query))
+        await ctx.__next.render(ctx.req, ctx.res, '/admin/nps', Object.assign({}, ctx.params, ctx.query))
       })
     })
   })

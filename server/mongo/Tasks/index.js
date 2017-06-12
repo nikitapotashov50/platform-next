@@ -46,93 +46,47 @@ model.statics.defaults = defaults
 
 let defaultTasks = [
   {
+    title: 'Поставить точки А и Б',
+    content: `Приветствуем вас на новой платформе!
+Приготовьтесь к прорыву за два месяца! Для этого прямо сейчас перейдите в настройки профиля на сайте, нажав аватарку сверху и выбрав «Настройки».
+Заполните вкладку Цель, поставьте свою точку A — ваш текущий доход в месяц, точку B — сколько вы планируете заработать за 2 месяца на МЗС.
+После этого вернитесь в задание и в ответе на задание опишите цель подробнее.`,
+    replyTypeId: 3,
+    targetProgram: 4,
+    start_at: new Date('2017-06-11'),
+    finish_at: new Date('2017-06-18'),
+    replyMeta: {
+      title: 'Моя цель на 2 месяца'
+    }
+  },
+  {
+    title: 'Сайт, инстаграм',
+    content: 'Упакуйте себя',
+    replyTypeId: 1,
+    targetProgram: 4,
+    start_at: new Date('2017-06-11'),
+    finish_at: new Date('2017-06-18')
+  },
+  {
+    title: '20 встреч',
+    content: 'Проведите 20 встреч',
+    replyTypeId: 1,
+    targetProgram: 4,
+    start_at: new Date('2017-06-11'),
+    finish_at: new Date('2017-06-18')
+  },
+  {
     title: 'Поставить план-кинжал',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
+    content: 'Поставьте цель в деньгах на две недели',
     replyTypeId: 2,
-    targetProgram: 3,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-03'),
+    targetProgram: 4,
+    start_at: new Date('2017-06-12'),
+    finish_at: new Date('2017-06-14'),
     replyMeta: {
       title: 'План кинжал №1',
-      start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-10')
+      start_at: new Date('2017-06-13'),
+      finish_at: new Date('2017-06-20')
     }
-  },
-  {
-    title: 'Поставить план-кинжал',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 2,
-    targetProgram: 2,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13'),
-    replyMeta: {
-      title: 'План кинжал №5',
-      start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-13')
-    }
-  },
-  {
-    title: 'Поставить план-кинжал!',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 2,
-    targetProgram: 3,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13'),
-    replyMeta: {
-      title: 'План кинжал №2',
-      start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-13')
-    }
-  },
-  {
-    title: 'Поставить цель',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 3,
-    targetProgram: 3,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13')
-  },
-  {
-    title: 'Поставить цель',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 3,
-    targetProgram: 2,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13')
-  },
-  {
-    title: 'Поставить ПК',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 2,
-    targetProgram: 2,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13'),
-    replyMeta: {
-      title: 'План кинжал №2',
-      start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-13')
-    }
-  },
-  {
-    title: 'Поставить ПК',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 2,
-    targetProgram: 3,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-13'),
-    replyMeta: {
-      title: 'План кинжал №3',
-      start_at: new Date('2017-06-03'),
-      finish_at: new Date('2017-06-13')
-    }
-  },
-  {
-    title: 'Тестовое задание 3',
-    content: 'Содержание задание может быть большое большое большое содержание задания может быть, дааа',
-    replyTypeId: 1,
-    targetProgram: 3,
-    start_at: new Date('2017-05-27'),
-    finish_at: new Date('2017-06-18')
   }
 ]
 

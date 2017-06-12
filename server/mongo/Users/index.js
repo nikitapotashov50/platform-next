@@ -276,7 +276,7 @@ model.methods.getRepliedByStatus = async function (programId, status) {
  * GET ACTIVE (NOT REPLIED) TASKS
  * get list of tasks in current program, where are no replies from current user exists
  */
-model.methods.getActiveTasks = async function (programId) {
+model.methods.getActiveTasks = async function (programId, options = {}) {
   let user = this
 
   let params = {
@@ -284,7 +284,7 @@ model.methods.getActiveTasks = async function (programId) {
     'type.model': { $ne: 'KnifePlan' }
   }
 
-  return user.getTasks(programId, params, {})
+  return user.getTasks(programId, params, options)
 }
 
 model.methods.getKnifePlans = async function (programId) {

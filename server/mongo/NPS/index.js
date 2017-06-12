@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-const { is } = require('../utils/common')
 const { extend } = require('lodash')
+const { is } = require('../utils/common')
+const paginate = require('mongoose-paginate')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -24,6 +25,30 @@ const model = new mongoose.Schema(extend({
 }, is))
 
 function arrayLimit (val) { return val.length <= 3 }
+model.plugin(paginate)
+
+/** ----------------- GET LIST ----------------------- */
+
+model.statics.getList = function (params = {}, query = {}) {
+  let model = this
+
+  let { limit = 7, page = 1 } = query
+  limit = Number(limit)
+  page = Number(page)
+
+  let options = {
+    page,
+    limit,
+    lean: true,
+    sort: { created: -1 },
+    select: '_id created content score total cityId userId',
+    populate: [ 'userId', 'cityId' ]
+  }
+
+  return model.paginate(params, options)
+}
+
+/** ------------------ ADD NPS ----------------------- */
 
 model.statics.addNps = async function (data, user, programId, add = {}) {
   let cityId = await user.getProgramCity(programId)
@@ -78,14 +103,14 @@ model.statics.addToPlatform = async function (data, user, programId) {
 
 model.statics.getTotal = async function () {
   let model = this
-  let params = {
-    'target.model': 'ProgramClass'
-  }
+  let params = { programId: 3 }
+  //   'target.model': 'ProgramClass'
+  // }
   let group = {
-    programId: '$programId',
-    cityId: '$cityId',
-    target: '$target.model',
-    item: '$target.item'
+    // programId: '$programId'
+  //   cityId: '$cityId',
+  //   target: '$target.model',
+  //   item: '$target.item'
   }
 
   let data = await model.aggregate([
@@ -95,6 +120,7 @@ model.statics.getTotal = async function () {
       target: 1,
       cityId: 1,
       programId: 1,
+      created: 1,
       score_1: {
         $switch: {
           branches: [
@@ -133,7 +159,10 @@ model.statics.getTotal = async function () {
       }
     }},
     { $group: {
-      _id: group,
+      // _id: group,
+      _id: extend(group, {
+        date: { $dateToString: { format: '%Y-%m-%d', date: '$created' } }
+      }),
       count: { $sum: 1 },
       score_1: { $sum: '$score_1' },
       score_2: { $sum: '$score_2' },
@@ -147,6 +176,35 @@ model.statics.getTotal = async function () {
       score_2: { $divide: [ { $multiply: [ '$score_2', 100 ] }, '$count' ] },
       score_3: { $divide: [ { $multiply: [ '$score_3', 100 ] }, '$count' ] },
       total: { $divide: [ { $multiply: [ '$total', 100 ] }, '$count' ] }
+    }},
+    { $group: {
+      _id: null,
+      count: { $sum: 1 },
+      score_1: { $sum: '$score_1' },
+      score_2: { $sum: '$score_2' },
+      score_3: { $sum: '$score_3' },
+      total: { $sum: '$total' },
+      byDate: {
+        $push: {
+          count: '$count',
+          date: '$_id.date',
+          score_1: '$score_1',
+          score_2: '$score_2',
+          score_3: '$score_3',
+          total: '$total'
+        }
+      }
+    }},
+    { $project: {
+      _id: 1,
+      count: 1,
+      result: {
+        score_1: { $divide: [ '$score_1', '$count' ] },
+        score_2: { $divide: [ '$score_2', '$count' ] },
+        score_3: { $divide: [ '$score_3', '$count' ] },
+        total: { $divide: [ '$total', '$count' ] }
+      },
+      byDate: 1
     }}
   ])
 

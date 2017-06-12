@@ -12,14 +12,18 @@ const defaultState = {
 
 export const getReply = createAction('task/reply/GET_REPLY', async (taskId, options) => {
   let params = { withCredentials: true }
-  if (options.headers) params.headers = options.headers
+  let prefix = ''
+  if (options.headers) {
+    params.headers = options.headers
+    prefix = BACKEND_URL
+  }
 
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${taskId}/reply`, params)
+  let { data } = await axios.get(`${prefix}/api/mongo/tasks/${taskId}/reply`, params)
   return data.result
 })
 
 export const postReply = createAction('task/reply/POST_REPLY', async (taskId, content) => {
-  let { data } = await axios.post(BACKEND_URL + `/api/mongo/tasks/${taskId}/reply`, content, { withCredentials: true })
+  let { data } = await axios.post(`/api/mongo/tasks/${taskId}/reply`, content, { withCredentials: true })
   return data.result
 })
 

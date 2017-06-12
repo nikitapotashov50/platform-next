@@ -32,6 +32,16 @@ module.exports = router => {
     }
   })
 
+  router.get('/active', async ctx => {
+    try {
+      let active = await ctx.__.me.getActiveTasks(ctx.query.programId, { limit: 4 })
+
+      ctx.body = { status: 200, result: { active } }
+    } catch (e) {
+      ctx.body = { status: 500, message: e }
+    }
+  })
+
   router.get('/rejected', async ctx => {
     try {
       let active = await ctx.__.me.getRepliedByStatus(ctx.query.programId, 4)

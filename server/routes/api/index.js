@@ -46,10 +46,10 @@ module.exports = router => {
   router.bridge('/chat', chatRoutes)
 
   router.bridge('/mongo', mongoTest)
-  router.bridge('/migrate', mongoMigrate)
+  // router.bridge('/migrate', mongoMigrate)
 
-  router.bridge('/mongo', mongoTest)
-  router.bridge('/migrate', mongoMigrate)
+  // router.bridge('/mongo', mongoTest)
+  // router.bridge('/migrate', mongoMigrate)
 
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)
