@@ -4,7 +4,7 @@ const { isNil, extend, omit } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
-  getBMAccessTokenCredentialsOnly, getBMSignUp
+  getBMAccessTokenCredentialsOnly, getBMSignUp, getBMProgramById
 } = require('../../controllers/authController')
 // refreshToken
 // getBalance
@@ -67,6 +67,8 @@ const getSessionUser = async (email, access) => {
       molodost_id: res.meta.molodost_id || null,
       radar_access_token: res.meta.radar_access_token || false
     })
+    let isProgram = await getBMProgramById(87, res.meta.molodost_id, res.meta.molodost_access)
+    console.log('hello world', isProgram)
   }
 
   return extend(res.user, add)

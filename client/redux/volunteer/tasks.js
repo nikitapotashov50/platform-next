@@ -19,21 +19,26 @@ export const toggleProcessing = createAction('volunteer/tasks/PROCESSING_TOGGLE'
 export const getTotalCount = createAction('volunteer/tasks/GET_COUNT', async (params, options = {}) => {
   options.params = params
   options.withCredentials = true
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/volunteer/tasks/count`, options)
+  let prefix = ''
+  if (options.headers) prefix = BACKEND_URL
+
+  let { data } = await axios.get(`${prefix}/api/mongo/volunteer/tasks/count`, options)
   if (data.status === 200) return data.result
 })
 
 export const getNotVerified = createAction('volunteer/tasks/LOAD', async (params, options = {}) => {
   options.params = params
   options.withCredentials = true
+  let prefix = ''
+  if (options.headers) prefix = BACKEND_URL
 
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/volunteer/tasks/list`, options)
+  let { data } = await axios.get(`${prefix}/api/mongo/volunteer/tasks/list`, options)
 
   if (data.status === 200) return data.result
 })
 
 export const verifyTask = createAction(`/volunteer/tasks/TASK_VERIFY`, async (replyId, type) => {
-  await axios.put(`${BACKEND_URL}/api/mongo/volunteer/tasks/${replyId}/${type}`, { type }, { withCredentials: true })
+  await axios.put(`/api/mongo/volunteer/tasks/${replyId}/${type}`, { type }, { withCredentials: true })
   return { replyId }
 })
 
