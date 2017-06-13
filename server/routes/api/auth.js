@@ -67,12 +67,6 @@ const getSessionUser = async (email, access) => {
       molodost_id: res.meta.molodost_id || null,
       radar_access_token: res.meta.radar_access_token || false
     })
-
-    let programs = res.user.programs.map(el => el.programId)
-    if (programs.indexOf(4) === -1) {
-      let isValid = await getBMProgramById(87, res.meta.molodost_id, res.meta.molodost_access)
-      if (isValid.valid) await res.user.addProgram(4, {})
-    }
   }
 
   return extend(res.user, add)
