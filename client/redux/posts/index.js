@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { pick } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
 
 /** default state  */
@@ -44,12 +45,11 @@ export const addPost = createAction('posts/POST_ADD', async post => {
 
 /** edit post */
 export const updatePost = createAction('posts/UPDATE_POST', async (id, data) => {
-  await axios.put(`${BACKEND_URL}/api/mongo/posts/${id}`, {
-    title: data.title,
-    content: data.content
-  }, { withCredentials: true })
+  data = pick(data, [ 'title', 'content' ])
 
-  return { id, data }
+  await axios.put(`/api/mongo/posts/${id}`, data, { withCredentials: true })
+
+  return { _id: id, data }
 })
 
 /** Post removal */
@@ -105,9 +105,7 @@ export default handleActions({
   [updatePost]: (state, action) => ({
     ...state,
     posts: state.posts.map(post => {
-      if (post._id === action.payload._id) {
-        return { ...post, ...action.payload.data }
-      }
+      if (post._id === action.payload._id) return { ...post, ...action.payload.data }
       return post
     })
   })

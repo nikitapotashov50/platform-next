@@ -137,8 +137,8 @@ module.exports = router => {
       try {
         // ctx.log.info(JSON.stringify(ctx.__.post), ctx.session)
         if (!ctx.session.uid) throw new Error('Access denied')
-        // if (ctx.__.post._doc.userId !== ctx.session.uid) throw new Error('Access denied')
-        // TODO: ADD COMPARDION TO USER ID
+        if (ctx.__.post._doc.userId.toString() !== ctx.session.uid) throw new Error('Access denied')
+
         await ctx.__.post.block()
 
         ctx.body = { status: 200, result: { id: ctx.__.post._id } }
@@ -152,9 +152,10 @@ module.exports = router => {
       try {
         // ctx.log.info(JSON.stringify(ctx.__.post), ctx.session)
         if (!ctx.session.uid) throw new Error('Access denied')
-        // if (ctx.__.post._doc.userId !== ctx.session.uid) throw new Error('Access denied')
-        // TODO: ADD COMPARDION TO USER ID
-        // await ctx.__.post.block()
+        if (ctx.__.post._doc.userId.toString() !== ctx.session.uid) throw new Error('Access denied')
+        if (!ctx.request.body) throw new Error('no body found')
+
+        await ctx.__.post.updatePost(pick(ctx.request.body, [ 'title', 'content' ]))
 
         ctx.body = { status: 200, result: {} }
       } catch (e) {

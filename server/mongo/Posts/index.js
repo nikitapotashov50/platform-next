@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { is } = require('../utils/common')
-const { extend, isArray } = require('lodash')
+const { extend, isArray, pick } = require('lodash')
 const paginate = require('mongoose-paginate')
 const moment = require('moment')
 
@@ -109,9 +109,7 @@ model.statics.getActual = async function (params, query = {}) {
 model.statics.addPost = async function (data, { user, type = 'user' }) {
   let model = this
   let attachments = data.attachments || []
-  let tags = data.tags || []
 
-  if (data.tags) delete data.tags
   if (data.attachments) delete data.attachments
 
   if (data.program) {
@@ -126,14 +124,42 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
     delete data.program
   }
 
+  let tags = []
+  decodeURIComponent(data.content).replace(/(^|\W)(#[a-zа-я\d]+[\w-]*)/gi, function (i, k, j) {
+    tags.push(j)
+    return j
+  })
+
   data.type = 0
   data.userId = user
   let post = await model.create(data)
 
+  console.log(tags)
   if (tags && tags.length > 0) tags.map(async tag => { await post.addTag(tag, user) })
   if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
   return post
+}
+
+model.methods.updatePost = async function (data) {
+  if (!data.title && !data.content) throw new Error('no data specified')
+
+  let post = this
+
+  post = extend(post, pick(data, [ 'title', 'content' ]))
+  console.log(data, post)
+  // let tags = []
+  // decodeURIComponent(data.content).replace(/(^|\W)(#[a-zа-я\d]+[\w-]*)/gi, function (i, k, j) {
+  //   tags.push(j)
+  //   return j
+  // })
+
+  return post.save()
+  // let tags = []
+  // data.content.replace(/(^|\W)(#[a-z\d][\w-]*)/gi, function (i, k, j) {
+  //   tags.push(j)
+  //   return j
+  // })
 }
 
 model.methods.addComment = async function (content, userId, add = {}) {

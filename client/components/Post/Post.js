@@ -8,6 +8,7 @@ import TaskHeader from './Preview/Subheader'
 import Panel from '../../elements/Panel'
 import UserInline from '../User/Inline'
 import PostBody from './Preview/Body'
+import PostEdit from './Preview/Edit'
 
 class Post extends Component {
   constructor (props) {
@@ -23,8 +24,8 @@ class Post extends Component {
     this.handleEditButtonClick = this.handleEditButtonClick.bind(this)
   }
 
-  handleEditButtonClick () {
-    this.setState({ editPost: true })
+  handleEditButtonClick (flag) {
+    this.setState({ editPost: flag })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -37,14 +38,14 @@ class Post extends Component {
   }
 
   render () {
-    const { likes, showPostMenu, editPost } = this.state
+    let { likes, showPostMenu, editPost } = this.state
     const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment } = this.props
 
     let Footer = <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} />
 
     let myPost = user ? loggedUser === user._id : false
 
-    const Options = <PostMenu post={post} reply={pick(reply, [ 'created', 'finish_at', '_id' ])} onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick} />
+    const Options = <PostMenu post={post} reply={pick(reply, [ 'created', 'finish_at', '_id' ])} onClose={this.toggleOptions.bind(this, false)} onDelete={onRemove} onEdit={this.handleEditButtonClick.bind(this, true)} />
 
     let headerStyles = { noBorder: true }
 
@@ -66,7 +67,8 @@ class Post extends Component {
         showOptions={myPost && showPostMenu}
         toggleOptions={this.toggleOptions.bind(this, true)}
       >
-        <PostBody edit={editPost} post={post} reply={reply} onExpand={onExpand} />
+        { !editPost && (<PostBody edit={editPost} post={post} reply={reply} onExpand={onExpand} />) }
+        { editPost && (<PostEdit data={post} onCancel={this.handleEditButtonClick.bind(this, false)} />)}
       </Panel>
     )
   }
