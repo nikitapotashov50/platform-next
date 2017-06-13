@@ -74,6 +74,7 @@ model.statics.getShortInfo = async function (idArray) {
 model.methods.addProgram = async function (programId, options, roleId = 3) {
   let user = this
   if (!options.roleId) options.roleId = roleId
+  if (user.programs && user.programs.filter(el => el.programId === programId).length) return user
 
   let meta = await mongoose.models.ProgramUserMeta.makeMeta(programId, user._id, options)
 
