@@ -5,6 +5,7 @@ const defaultState = {
   info: {},
   status: {},
   specific: null,
+  post: null,
   fetching: false
 }
 
@@ -27,6 +28,11 @@ export const postReply = createAction('task/reply/POST_REPLY', async (taskId, co
   return data.result
 })
 
+export const editReply = createAction('task/reply/POST_REPLY_EDIT', async (taskId, replyId, content) => {
+  let { data } = await axios.put(`/api/mongo/tasks/${taskId}/reply/${replyId}`, content, { withCredentials: true })
+  return data.result
+})
+
 /** --------------------- */
 
 export const fetchStart = createAction('task/reply/FETCH_START')
@@ -39,13 +45,15 @@ const getReducer = (state, payload) => {
     ...state,
     info: payload.reply || null,
     status: payload.status || null,
-    specific: payload.specific || null
+    specific: payload.specific || null,
+    post: payload.post || null
   }
 }
 
 export default handleActions({
   [getReply]: (state, { payload }) => getReducer(state, payload),
   [postReply]: (state, { payload }) => getReducer(state, payload),
+  [editReply]: (state, { payload }) => getReducer(state, payload),
   [fetchStart]: state => ({ ...state, fetching: true }),
   [fetchEnd]: state => ({ ...state, fetching: false })
 }, defaultState)

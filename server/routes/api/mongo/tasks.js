@@ -2,15 +2,16 @@ const { models } = require('mongoose')
 
 const initTask = async (ctx, next) => {
   try {
-    let [ task ] = await models.Task.find({ _id: ctx.params.taskId }).limit(1)
+    let params = { _id: ctx.params.taskId }
+    if (!ctx.session.uid) throw { status: 403, message: 'Access denied' } // eslint-disable-line no-throw-literal
+    params.targetProgram = ctx.session.currentProgram || null
+    let [ task ] = await models.Task.find(params).limit(1).populate([ 'type.item' ])
     if (!task) throw { status: 404, message: 'Task not found' } // eslint-disable-line no-throw-literal
 
     ctx.__.task = task
     await next()
   } catch (e) {
-    ctx.body = {
-      status: 404
-    }
+    ctx.body = { status: e.status, message: e.message }
   }
 }
 
@@ -98,9 +99,7 @@ module.exports = router => {
   router.bridge('/:taskId', [ initTask ], router => {
     router.get('/', async ctx => {
       try {
-        let replyType = await models.TaskReplyType.findOne({
-          _id: ctx.__.task.replyTypeId
-        })
+        let [ replyType ] = await models.TaskReplyType.find({ _id: ctx.__.task.replyTypeId }).limit(1)
 
         ctx.body = {
           status: 200,
@@ -124,10 +123,9 @@ module.exports = router => {
           })
           .limit(1)
           .sort({ created: -1 })
-          .populate({
-            path: 'specific.item'
-          })
+          .populate([ 'specific.item' ])
 
+        let post = null
         let status = null
         let specific = null
 
@@ -135,11 +133,13 @@ module.exports = router => {
           let [ statusData ] = await reply.getStatus()
           status = statusData ? statusData.status : null
           specific = reply.specific.item || null
+          post = await reply.getPost()
+          post = post[0] || null
         }
 
         ctx.body = {
           status: 200,
-          result: { reply, status, specific }
+          result: { reply, status, specific, post }
         }
       } catch (e) {
         ctx.log.info(e)
@@ -158,10 +158,11 @@ module.exports = router => {
       try {
         let { reply, specific } = await ctx.__.task.addReply(user, body)
         let [ statusData ] = await reply.getStatus()
+        let [ post ] = await reply.getPost()
 
         ctx.body = {
           status: 200,
-          result: { reply, specific, status: statusData.status }
+          result: { reply, specific, status: statusData.status, post: post || null }
         }
       } catch (e) {
         ctx.log.info(e)
@@ -169,6 +170,27 @@ module.exports = router => {
           status: 500,
           message: e
         }
+      }
+    })
+
+    router.put('/reply/:replyId', async ctx => {
+      let user = ctx.__.me
+      try {
+        let [ reply ] = await models.TaskReply.find({ _id: ctx.params.replyId, userId: user._id }).limit(1)
+        if (!reply) throw new Error('no reply found')
+
+        let body = ctx.request.body
+
+        let { specific, post } = await reply.editReply(body, user)
+        let [ statusData ] = await reply.getStatus()
+
+        ctx.body = {
+          status: 200,
+          result: { reply, specific, status: statusData.status, post: post || null }
+        }
+      } catch (e) {
+        ctx.log.info(e)
+        ctx.body = { status: 500, message: e }
       }
     })
   })

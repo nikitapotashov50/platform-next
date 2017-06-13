@@ -3,6 +3,8 @@ const moment = require('moment')
 const { extend, pick } = require('lodash')
 const { created } = require('../utils/common')
 
+const { getBalance, createWallet } = require('../../controllers/tokenController')
+
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
@@ -17,6 +19,8 @@ const model = new mongoose.Schema(extend({
   molodost_access: { type: String },
   molodost_refresh: { type: String },
   token_expires: { type: Date },
+  //
+  wallet: { type: String, default: null },
   //
   userId: { type: ObjectId, ref: 'Users', required: true, unique: true }
 }, created))
@@ -48,6 +52,24 @@ model.methods.updateToken = function (BMAccess) {
     token_expires: moment().add(BMAccess.expires_in, 's').toISOString()
   })
   return _self.save()
+}
+
+model.methods.getWallet = async function () {
+  let meta = this
+  if (meta.wallet) return meta
+  let wallet, response
+
+  response = await getBalance(meta.molodost_id)
+
+  if (!response.success) {
+    let [ user ] = await mongoose.models.Users.find({ _id: meta.userId }).limit(1)
+    response = await createWallet(meta.molodost_id, user.email, {})
+    if (response.success) wallet = response.data.account.waddress || true
+  } else wallet = response.data.user.waddress || true
+
+  if (wallet) meta.wallet = wallet
+
+  return meta.save()
 }
 
 module.exports = mongoose.model('UsersMeta', model)

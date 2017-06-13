@@ -50,22 +50,6 @@ const getMyInfo = async (accessToken) => {
   }
 }
 
-const getBalance = async (userId) => {
-  try {
-    let { data } = await axios.get('http://api.bmml.ru/api/v1/account/' + userId + '/', {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + config.bmtoken.secret
-      }
-    })
-
-    return data
-  } catch ({ response }) {
-    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
-  }
-}
-
 const getBMAccessToken = async (username, password) => {
   try {
     const { data } = await axios.post('http://api.molodost.bz/oauth/token/', {
@@ -133,7 +117,5 @@ module.exports = {
   getBMRecovery,
   isUserAuthOnBM,
   getBMAccessToken,
-  getBMAccessTokenCredentialsOnly,
-  //
-  getBalance
+  getBMAccessTokenCredentialsOnly
 }

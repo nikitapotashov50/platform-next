@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend } = require('lodash')
+const { extend, pick } = require('lodash')
 const { is } = require('../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -23,5 +23,20 @@ model.statics.makeReport = async function (data, user, programId) {
 }
 
 /** ----------------- METHODS ----------------- */
+
+model.methods.editReport = async function (data) {
+  let report = this
+  report = extend(report, pick(data, [ 'action', 'fact' ]))
+
+  if (data.fact) {
+    let [ income ] = await mongoose.models.Income.find({ _id: report.income }).limit(1)
+    if (income) {
+      income.amount = data.fact
+      await income.save()
+    }
+  }
+
+  return report.save()
+}
 
 module.exports = mongoose.model('TaskReport', model)

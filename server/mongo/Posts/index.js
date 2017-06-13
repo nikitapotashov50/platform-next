@@ -134,7 +134,6 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   data.userId = user
   let post = await model.create(data)
 
-  console.log(tags)
   if (tags && tags.length > 0) tags.map(async tag => { await post.addTag(tag, user) })
   if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
@@ -147,19 +146,31 @@ model.methods.updatePost = async function (data) {
   let post = this
 
   post = extend(post, pick(data, [ 'title', 'content' ]))
-  console.log(data, post)
-  // let tags = []
-  // decodeURIComponent(data.content).replace(/(^|\W)(#[a-zа-я\d]+[\w-]*)/gi, function (i, k, j) {
-  //   tags.push(j)
-  //   return j
-  // })
+
+  if (data.attachments) {
+    // смотрим какие есть аттачменты уже у поста
+    let current = post.attachments
+    // шерстим пришедшие аттачменты на предмет новы и старых
+    let newly = []
+    let old = []
+    data.attachments.map(el => {
+      if (el._id) old.push(el._id)
+      else newly.push(el)
+    })
+    // теперь смотрим не ушбрались ли старые
+    current = current.filter(el => old.indexOf(el.toString()) === -1).map(el => {
+      // убираем их из поста
+      post.attachments.splice(post.attachments.indexOf(el), 1)
+      return el
+    })
+
+    await post.save()
+    await mongoose.models.Attachment.block(current || [])
+
+    if (newly && newly.length > 0) await Promise.all(newly.map(el => post.addAttachment(el)))
+  }
 
   return post.save()
-  // let tags = []
-  // data.content.replace(/(^|\W)(#[a-z\d][\w-]*)/gi, function (i, k, j) {
-  //   tags.push(j)
-  //   return j
-  // })
 }
 
 model.methods.addComment = async function (content, userId, add = {}) {

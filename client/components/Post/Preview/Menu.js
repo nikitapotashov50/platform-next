@@ -15,8 +15,8 @@ const PostMenu = ({ onEdit, onDelete, post, reply = {} }) => {
         { (!editReply && editPost) && (<li onClick={onEdit}>Редактировать</li>) }
         { editReply && (
           <li>
-            <Link href={`/tasks/task?id=${reply._id}`} path={`/tasks/${reply._id}`}>
-              <a>Редактировать</a>
+            <Link href={`/tasks/task?id=${reply._id}&edit`} path={`/tasks/${reply._id}?edit`}>
+              <span>Редактировать</span>
             </Link>
           </li>
         )}

@@ -27,7 +27,7 @@ const model = new mongoose.Schema(extend({
   },
   type: {
     model: { type: String, enum: [ 'KnifePlan' ] },
-    item: { type: ObjectId, refPath: 'target.model', index: true }
+    item: { type: ObjectId, refPath: 'type.model', index: true }
   },
   replyMeta: {
     title: { type: String, default: '' },

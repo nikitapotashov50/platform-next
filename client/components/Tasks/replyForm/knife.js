@@ -1,4 +1,5 @@
 import numeral from 'numeral'
+import { pick } from 'lodash'
 import Form from '../../../elements/PanelForm/index'
 
 /**
@@ -31,9 +32,11 @@ const TaskReplyForm = ({ errors, affected, onChange }) => {
 
 TaskReplyForm.title = 'Поставьте план-кинжал на неделю'
 
+TaskReplyForm.getData = specific => pick(specific, [ 'goal', 'price', 'action' ])
+
 TaskReplyForm.validate = (data, errors = {}) => {
   if (!data.goal) errors.goal = 'Укажите свою цель в деньгах'
-  if (Number(data.goal) > 1000000000) errors.goal = 'Да вы охренели'
+  if (Number(data.goal) > 1000000000) errors.goal = 'Вы уверены что сможете это сделать?'
   if (!data.price || !data.price.length) errors.price = 'Укажите цену слова'
   if (!data.action || !data.action.length) errors.action = 'Укажите целевое действие'
 

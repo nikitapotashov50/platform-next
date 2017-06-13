@@ -26,12 +26,21 @@ class AttachmentForm extends Component {
   constructor (props) {
     super(props)
 
+    let tmps = []
+    let loaded = []
+    if (props.data && props.data.length) {
+      tmps = props.data.map(el => {
+        loaded.push(el.hash)
+        return { ...el, preview: el.url, type: startsWith(el.mime, 'image') ? 'image' : (startsWith(el.mime, 'application') ? 'document' : 'video') }
+      })
+    }
+
     this.state = {
       accept: null,
       dropActive: false,
-      tmp: [],
-      attachments: [],
-      loaded: []
+      tmp: [ ...tmps ],
+      attachments: [ ...(props.data || []) ],
+      loaded: loaded
     }
 
     this.onFileRemove = this.onFileRemove.bind(this)

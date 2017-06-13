@@ -1,5 +1,5 @@
 import qs from 'query-string'
-import { isEmpty } from 'lodash'
+import { isEmpty, extend, pick } from 'lodash'
 import Router from 'next/router'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -13,15 +13,29 @@ import Replies from './replyForm/index'
 import Button from '../../elements/Button'
 import OverlayLoader from '../OverlayLoader'
 
-import { fetchStart, fetchEnd, postReply } from '../../redux/task/reply'
+import { fetchStart, fetchEnd, postReply, editReply } from '../../redux/task/reply'
 
 class TaskReply extends Component {
   constructor (props) {
     super(props)
 
+    let replyData = {}
+    let reply = props.reply || null
+
+    if (props.attachments) {
+      replyData.attachments = props.attachments.map(el => ({ key: el.name, hash: el._id, mime: el.mime, url: el.path, _id: el._id }))
+    }
+    if (reply) {
+      replyData = extend(replyData, pick(reply, [ 'title', 'content' ]))
+      if (props.replyType !== 'default' && reply.specific && reply.specific.item) {
+        let add = Replies[props.replyType] ? Replies[props.replyType].getData(reply.specific.item) : {}
+        replyData = extend(replyData, add)
+      }
+    }
+
     this.state = {
       errors: {},
-      reply: {},
+      reply: replyData,
       showForm: false,
       success: false
     }
@@ -49,11 +63,12 @@ class TaskReply extends Component {
         reply.attachments = reply.attachments.map(el => ({
           path: el.url,
           name: el.key,
-          mime: el.mime || el.type
+          mime: el.mime || el.type,
+          _id: el._id
         }))
       }
 
-      await this.props.reply(reply)
+      await this.props.addReply(reply)
 
       this.setState(state => {
         state.errors = {}
@@ -76,8 +91,8 @@ class TaskReply extends Component {
     this.setState(state => { state.reply[field] = value })
   }
 
-  onAttachmentAdd (data) {
-    this.setState(state => {
+  async onAttachmentAdd (data) {
+    await this.setState(state => {
       if (!state.reply.attachments) state.reply.attachments = []
       state.reply.attachments.push(data)
     })
@@ -92,7 +107,7 @@ class TaskReply extends Component {
   render () {
     if (!this.props.task) return null
 
-    const { replyType } = this.props
+    const { replyType, edit } = this.props
     const { fetching, errors, reply, success } = this.state
 
     const AddForm = Replies[replyType]
@@ -111,7 +126,8 @@ class TaskReply extends Component {
               { errors.attachments && errors.attachments }
             </AttachmentForm>
 
-            <Button onClick={this.submit}>Ответить на задание</Button>
+            <Button onClick={this.submit}>{ edit ? 'Сохранить изменения' : 'Ответить на задание' }</Button>
+            { edit && (<Button onClick={this.props.cancelEdit}>Отменить</Button>)}
           </div>
         ) }
       </OverlayLoader>
@@ -124,18 +140,20 @@ const mapStateToProps = ({ task }) => ({ ...task.reply })
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchEnd,
   postReply,
+  editReply,
   fetchStart
 }, dispatch)
 
 const mergeProps = (state, dispatch, props) => {
-  const reply = async data => {
+  const addReply = async data => {
     dispatch.fetchStart()
-    await dispatch.postReply(props.task._id, data)
+    if (props.reply && props.reply._id) await dispatch.editReply(props.task._id, props.reply._id, data)
+    else await dispatch.postReply(props.task._id, data)
     dispatch.fetchEnd()
   }
 
   return {
-    reply,
+    addReply,
     ...state,
     ...props,
     replyType: props.task.replyType || 'default'

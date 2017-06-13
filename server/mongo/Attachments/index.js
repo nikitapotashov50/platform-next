@@ -25,4 +25,13 @@ model.statics.addToPost = async function (data, postId, add = {}) {
   return this.create(data)
 }
 
+model.statics.block = async function (idArray) {
+  let data = await this.find({ _id: { $in: idArray } })
+
+  return Promise.all(data.map(el => {
+    el.enabled = false
+    return el.save()
+  }))
+}
+
 module.exports = mongoose.model('Attachment', model)

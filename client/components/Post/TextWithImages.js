@@ -48,7 +48,7 @@ class TextWithImages extends Component {
       : truncate(content, { length: maxSize, separator: '\n', omission: '' })
 
     return (
-      <div className='display-linebreak'>
+      <div className=''>
         { (!showFull && preview) && (
           <div>
             <div className='marked-content' dangerouslySetInnerHTML={{ __html: marked(preview) }} />
@@ -63,9 +63,6 @@ class TextWithImages extends Component {
         <div>{images}</div>
 
         <style jsx>{`
-          .display-linebreak {
-            white-space: pre-line;
-          }
           .show-more-text {
             cursor: pointer;
             font-weight: bold;
@@ -81,5 +78,9 @@ class TextWithImages extends Component {
     )
   }
 }
+
+// .display-linebreak {
+//             white-space: pre-line;
+//           }
 
 export default TextWithImages

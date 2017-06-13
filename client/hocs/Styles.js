@@ -40,6 +40,7 @@ export default props => (
     }
 
     body {
+      padding-bottom: 28px;
       color: #1f1f1f;
       background: #edeeee;
       @extend museo;
@@ -90,6 +91,13 @@ export default props => (
       border: none;
       outline: none;
       background: none;
+    }
+
+    .marked-content {}
+    .marked-content p {
+      margin: 15px 0;
+      &:last-of-type { margin-bottom: 0; }
+      &:first-of-type { margin-top: 0; }
     }
 
     .pull-right {
@@ -509,6 +517,7 @@ export default props => (
         &_textarea {
           resize: auto;
           height: auto;
+          min-height: 125px;
         }
       }
       &__error {
