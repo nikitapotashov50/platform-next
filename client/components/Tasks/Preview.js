@@ -16,6 +16,16 @@ const descriptions = {
   KnifePlan: KnifeDescription
 }
 
+const getTaskTypeCode = task => {
+  if (task.type) return task.type.model.toLowerCase()
+  switch (task.replyTypeId) {
+    case 2: return 'set-knife'
+    case 3: return 'set-goal'
+    case 1:
+    default: return 'default'
+  }
+}
+
 export default ({ task, link, completed = false, status = null }) => {
   let Description = null
   if (task.type && task.type.model && task.type.item) {
@@ -25,13 +35,11 @@ export default ({ task, link, completed = false, status = null }) => {
     }
   } else Description = <div className='task-preview__description'>{task.content}</div>
 
-  let type = task.type ? task.type.model.toLowerCase() : 'default'
-
   return (
     <Panel bodyStyles={{ paddingClass: 'smallest' }}>
       <div className={'task-preview'}>
         <div className='task-preview__block task-preview__block_title'>
-          <div className={[ 'task-preview__icon', type ? `task-preview__icon-${type}` : '' ].join(' ')} />
+          <div className={[ 'task-preview__icon', `task-preview__icon-${getTaskTypeCode(task)}` ].join(' ')} />
           <div className='task-preview__title'>{task.title}</div>
           {Description}
         </div>

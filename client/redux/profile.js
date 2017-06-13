@@ -9,14 +9,17 @@ let defaultState = {
   subscribers: [],
   goal: null,
   info: null,
-  fetching: false
+  fetching: false,
+  balance: null
 }
 
 // action creators
 // export const getUserInfo = createAction('profile/GET_INFO', ({ user, groups, subscriptions, subscribers, goal }) => ({ user, groups, goal, subscriptions, subscribers }))
-export const getUser = createAction('profile/GET_USER', async username => {
-  // let params = { username }
-  let { data } = await axios.get(BACKEND_URL + '/api/mongo/users/' + username)
+export const getUser = createAction('profile/GET_USER', async (username, options = {}) => {
+  let prefix = ''
+  if (options.headers) prefix = BACKEND_URL
+
+  let { data } = await axios.get(`${prefix}/api/mongo/users/${username}`, options)
   return data.status === 200
     ? data.result
     : { error: { ...data } }

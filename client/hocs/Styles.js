@@ -958,8 +958,7 @@ export default props => (
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 7px;
-        margin-top:0;        
+        margin-top: 0;        
       }
 
       &__dz {
@@ -982,7 +981,7 @@ export default props => (
         color: #196aff;
       }
 
-      &__body {}
+      &__body_padded { padding-top: 10px; }
     }
 
     .user-groups {

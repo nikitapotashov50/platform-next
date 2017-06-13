@@ -1,5 +1,6 @@
 const { models } = require('mongoose')
 const { extend, pick } = require('lodash')
+const { getBalance } = require('../../../controllers/tokenController')
 
 module.exports = router => {
   router.bridge('/:username', router => {
@@ -8,7 +9,7 @@ module.exports = router => {
         .find({ name: ctx.params.username })
         .populate([
           { path: 'info', select: 'vk facebook instagram website gender social_status birthday' },
-          { path: 'meta', select: 'radar_id' }
+          { path: 'meta', select: 'radar_id wallet molodost_id' }
         ])
         .limit(1)
         // .cache(120)
@@ -17,11 +18,18 @@ module.exports = router => {
       let { goal, progress = 0 } = await user.getGoal(ctx.session.currentProgram)
       let groups = await user.getGroups(3)
       let subscribers = await user.getSubscribers(6)
+      let balance = null
+
+      if (user.meta.wallet && user.meta.molodost_id) {
+        let tokenResponse = await getBalance(user.meta.molodost_id)
+        balance = tokenResponse.data.user.balance
+      }
 
       ctx.body = {
         status: 200,
         result: {
           user,
+          balance,
           info: user.info,
           goal: goal ? extend({}, pick(goal, [ 'a', 'b', 'occupation' ]), { progress }) : null,
           groups: groups.list,

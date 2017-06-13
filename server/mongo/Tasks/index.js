@@ -34,7 +34,8 @@ const model = new mongoose.Schema(extend({
     content: { type: String },
     start_at: { type: Date },
     finish_at: { type: Date }
-  }
+  },
+  tokens: { type: Number, default: null }
 }, is, startFinish))
 
 model.statics.TaskReply = require('./reply')
@@ -46,6 +47,7 @@ model.statics.defaults = defaults
 
 let defaultTasks = [
   {
+    tokens: 50,
     title: 'Поставить точки А и Б',
     content: `Приветствуем вас на новой платформе!
 Приготовьтесь к прорыву за два месяца! Для этого прямо сейчас перейдите в настройки профиля на сайте, нажав аватарку сверху и выбрав «Настройки».
@@ -53,37 +55,65 @@ let defaultTasks = [
 После этого вернитесь в задание и в ответе на задание опишите цель подробнее.`,
     replyTypeId: 3,
     targetProgram: 4,
-    start_at: new Date('2017-06-11'),
-    finish_at: new Date('2017-06-18'),
+    start_at: new Date('2017-06-12'),
+    finish_at: new Date('2017-07-01'),
     replyMeta: {
       title: 'Моя цель на 2 месяца'
     }
   },
   {
-    title: 'Сайт, инстаграм',
-    content: 'Упакуйте себя',
-    replyTypeId: 1,
-    targetProgram: 4,
-    start_at: new Date('2017-06-11'),
-    finish_at: new Date('2017-06-18')
+    tokens: 50,
+    title: 'Поставить точки А и Б',
+    content: `Приветствуем вас на новой платформе!
+Приготовьтесь к прорыву за два месяца! Для этого прямо сейчас перейдите в настройки профиля на сайте, нажав аватарку сверху и выбрав «Настройки».
+Заполните вкладку Цель, поставьте свою точку A — ваш текущий доход в месяц, точку B — сколько вы планируете заработать за 2 месяца на МЗС.
+После этого вернитесь в задание и в ответе на задание опишите цель подробнее.`,
+    replyTypeId: 3,
+    targetProgram: 6,
+    start_at: new Date('2017-06-12'),
+    finish_at: new Date('2017-06-29'),
+    replyMeta: {
+      title: 'Моя цель на 2 месяца'
+    }
   },
   {
+    tokens: 30,
     title: '20 встреч',
-    content: 'Проведите 20 встреч',
+    content: `Приветствуем вас на новой платформе!
+Приготовьтесь к прорыву за два месяца! Для этого прямо сейчас перейдите в настройки профиля на сайте, нажав аватарку сверху и выбрав «Настройки».
+Заполните вкладку Цель, поставьте свою точку A — ваш текущий доход в месяц, точку B — сколько вы планируете заработать за 2 месяца на МЗС.
+После этого вернитесь в задание и в ответе на задание опишите цель подробнее.`,
     replyTypeId: 1,
-    targetProgram: 4,
-    start_at: new Date('2017-06-11'),
-    finish_at: new Date('2017-06-18')
+    targetProgram: 6,
+    start_at: new Date('2017-06-12'),
+    finish_at: new Date('2017-06-29')
   },
   {
+    tokens: 30,
     title: 'Поставить план-кинжал',
     content: 'Поставьте цель в деньгах на две недели',
     replyTypeId: 2,
-    targetProgram: 4,
+    targetProgram: 6,
     start_at: new Date('2017-06-12'),
     finish_at: new Date('2017-06-14'),
     replyMeta: {
+      tokens: 100,
       title: 'План кинжал №1',
+      start_at: new Date('2017-06-13'),
+      finish_at: new Date('2017-06-20')
+    }
+  },
+  {
+    tokens: 30,
+    title: 'Поставить план-кинжал',
+    content: 'Поставьте цель в деньгах на две недели',
+    replyTypeId: 2,
+    targetProgram: 6,
+    start_at: new Date('2017-06-12'),
+    finish_at: new Date('2017-06-14'),
+    replyMeta: {
+      tokens: 100,
+      title: 'План кинжал №2',
       start_at: new Date('2017-06-13'),
       finish_at: new Date('2017-06-20')
     }
@@ -132,6 +162,7 @@ model.statics.createKnifePlan = async function (user, data, options = {}) {
   let taskData = {
     title: options.title || 'План-кинжал',
     content: options.content,
+    tokens: options.tokens,
     userId: user._id,
     target: { model: 'Users', item: targetId },
     replyTypeId: 4,
@@ -182,7 +213,7 @@ model.methods.addReply = async function (user, body) {
     additional.specific = { model: 'Goal', item: entry }
   } else if (task.replyTypeId === 2) {
     // постановка ПК
-    let options = extend(pick(task.replyMeta, [ 'title', 'start_at', 'finish_at' ]), { content: body.action, programId: task.targetProgram })
+    let options = extend(pick(task.replyMeta, [ 'title', 'start_at', 'finish_at', 'tokens' ]), { content: body.action, programId: task.targetProgram })
     let result = await mongoose.models.Task.createKnifePlan(user, pick(body, [ 'goal', 'price', 'action' ]), options)
     additional.specific = { model: 'KnifePlan', item: result.plan }
     postInfo.title = result.task.title

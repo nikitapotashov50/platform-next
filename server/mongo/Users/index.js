@@ -244,7 +244,7 @@ model.methods.getTasks = async function (programId, params = {}, options = {}) {
       },
       params
     ))
-    .select('_id title content start_at finish_at type.model type.item')
+    .select('_id title content replyTypeId start_at finish_at type.model type.item')
     .populate([ 'type.item' ])
     .sort({ created: -1 })
     .limit(options.limit || null)

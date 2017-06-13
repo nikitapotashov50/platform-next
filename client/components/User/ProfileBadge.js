@@ -11,7 +11,7 @@ const getStatus = (status, gender = null) => {
   if (status === 'married') return gender ? (gender === 'male' ? 'Женат' : 'Замужем') : 'Женат / Замужем'
 }
 
-export default ({ info = {}, user = {}, goal = {} }) => {
+export default ({ info = {}, user = {}, goal = {}, balance = null }) => {
   let badgeInfo = []
   if (info && info.birthday) badgeInfo.push(Math.floor(moment(new Date()).diff(moment(info.birthday), 'years', true)) + ' лет')
   if (info && info.social_status) badgeInfo.push(getStatus(info.social_status, info.gender))
@@ -36,6 +36,8 @@ export default ({ info = {}, user = {}, goal = {} }) => {
           ))}
         </div>
       )}
+
+      { balance && (<div>{balance} BMT</div>)}
     </div>
   )
 }
