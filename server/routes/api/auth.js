@@ -4,7 +4,7 @@ const { isNil, extend, omit } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
-  getBMAccessTokenCredentialsOnly, getBMSignUp, getBMProgramById
+  getBMAccessTokenCredentialsOnly, getBMSignUp
 } = require('../../controllers/authController')
 // refreshToken
 // getBalance
