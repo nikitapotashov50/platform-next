@@ -20,7 +20,6 @@ const getSessionProgram = async (ctx, next) => {
     await next()
   } catch (e) {
     console.log(e)
-    ctx.status = 403
     ctx.body = { status: 403, message: 'Access denied' }
   }
 }
@@ -35,11 +34,7 @@ const initMeRoutes = async (ctx, next) => {
 
     await next()
   } catch (e) {
-    ctx.status = 403
-    ctx.body = {
-      status: 403,
-      message: 'Access denied'
-    }
+    ctx.body = { status: 403, message: 'Access denied' }
   }
 }
 
