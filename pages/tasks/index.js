@@ -11,7 +11,7 @@ import OverlayLoader from '../../client/components/OverlayLoader'
 
 import TaskList from '../../client/components/Tasks/List/index'
 
-import { getTasks, fetchEnd, fetchStart } from '../../client/redux/tasks/index'
+import { tasksApiGet } from '../../client/redux/tasks/index'
 
 const getLink = taskId => ({
   href: `/tasks/task?id=${taskId}`,
@@ -38,7 +38,7 @@ class TasksIndex extends Component {
     if (this.props.program !== nextProps.program) {
       if (nextProps.program !== 3) {
         if (this.state.restrict) await this.setState({ restrict: false })
-        await this.props.getTasks(nextProps.program, nextProps.type)
+        await this.props.tasksApiGet(nextProps.program, nextProps.type)
       } else await this.setState({ restrict: true })
     }
   }
@@ -70,7 +70,7 @@ TasksIndex.getInitialProps = async ctx => {
   let headers = null
 
   if (ctx.req) headers = ctx.req.headers
-  await ctx.store.dispatch(getTasks(user.programs.current, type, { headers }))
+  await ctx.store.dispatch(tasksApiGet(user.programs.current, type, { headers }))
 
   return { type }
 }
@@ -82,9 +82,7 @@ const mapStateToProps = ({ tasks, user }) => ({
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators({
-    getTasks,
-    fetchEnd,
-    fetchStart
+    tasksApiGet
   }, dispatch),
   dispatch
 })
@@ -92,11 +90,7 @@ const mapDispatchToProps = dispatch => ({
 const mergeProps = (state, dispatch, props) => ({
   ...state,
   ...props,
-  getTasks: async (programId, type) => {
-    dispatch.fetchStart()
-    await dispatch.getTasks(programId, type)
-    dispatch.fetchEnd()
-  },
+  tasksApiGet: dispatch.tasksApiGet,
   dispatch: dispatch.dispatch
 })
 

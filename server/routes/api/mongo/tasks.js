@@ -29,7 +29,7 @@ module.exports = router => {
         result: { active, knife }
       }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -39,7 +39,7 @@ module.exports = router => {
 
       ctx.body = { status: 200, result: { active } }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -49,7 +49,7 @@ module.exports = router => {
 
       ctx.body = { status: 200, result: { active } }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -59,7 +59,7 @@ module.exports = router => {
 
       ctx.body = { status: 200, result: { active } }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -69,7 +69,7 @@ module.exports = router => {
 
       ctx.body = { status: 200, result: { active } }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -79,7 +79,7 @@ module.exports = router => {
 
       ctx.body = { status: 200, result: { active } }
     } catch (e) {
-      ctx.body = { status: 500, message: e }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -92,7 +92,7 @@ module.exports = router => {
         result: { count }
       }
     } catch (e) {
-      ctx.body = { status: 500 }
+      ctx.body = { status: 500, message: e.message }
     }
   })
 
@@ -109,7 +109,7 @@ module.exports = router => {
           }
         }
       } catch (e) {
-        ctx.body = { status: 500 }
+        ctx.body = { status: 500, message: e.message }
       }
     })
 
@@ -168,7 +168,7 @@ module.exports = router => {
         ctx.log.info(e)
         ctx.body = {
           status: 500,
-          message: e
+          message: e.message
         }
       }
     })

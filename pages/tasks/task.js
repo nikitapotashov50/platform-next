@@ -130,6 +130,7 @@ TaskPage.getInitialProps = async ctx => {
 
     return { taskId }
   } catch (e) {
+    console.log('1231231', e)
     return { notFound: true, taskId }
   }
 }
