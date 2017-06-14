@@ -9,8 +9,6 @@ import { I18nextProvider } from 'react-i18next'
 
 import Styles from './Styles'
 import { auth, refresh, cookieExists } from '../redux/auth'
-import { restrictAccess, allowAccess } from '../redux/error'
-import { getActiveCount } from '../redux/tasks/index'
 
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
