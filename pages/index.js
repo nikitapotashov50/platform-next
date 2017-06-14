@@ -29,12 +29,12 @@ class IndexPage extends Component {
     if (req) {
       headers = req.headers
       params.user = req.session.uid || null
-    }
+    } else if (user && user._id) params.user = user._id
 
     if (tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
     let requests = [ PostList.getInitial(store.dispatch, params, { headers }) ]
-    if (req.session.uid) requests.push(store.dispatch(tasksApiGet(params.programId, 'active', { headers })))
+    if (user && user._id) requests.push(store.dispatch(tasksApiGet(params.programId, 'active', { headers })))
 
     await Promise.all(requests)
 
