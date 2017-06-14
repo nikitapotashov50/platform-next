@@ -40,7 +40,7 @@ export const fetchEnd = createAction('task/reply/FETCH_END')
 
 /** --------------------- */
 
-const getReducer = (state, payload) => {
+const getReducer = (state, payload = {}) => {
   return {
     ...state,
     info: payload.reply || null,

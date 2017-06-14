@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
+import isProgramRole from '../../client/components/Access/isProgramRole'
+
 import PageHoc from '../../client/hocs/Page'
 import VolunteerLayout from '../../client/layouts/volunteer'
 
@@ -22,17 +24,7 @@ class VolunteerPage extends Component {
   }
 }
 
-VolunteerPage.getInitialProps = async ctx => {
-  // let headers = null
-  // if (ctx.req) headers = ctx.req.headers
-  // let { user } = ctx.store.getState()
-  // let task = ctx.query.type || 'knifeplan'
-  // let programId = user.programs.current
-
-  // if (ctx.isServer) await ctx.store.dispatch(getTotalCount({ programId }, { headers }))
-  // await ctx.store.dispatch(getNotVerified({ programId }, { headers }))
-  // return { task }
-}
+VolunteerPage.getInitialProps = async ctx => {}
 
 const mapStateToProps = ({ users, user, volunteer }) => ({})
 
@@ -40,12 +32,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
 const mergeProps = (state, dispatch, props) => ({ ...state, ...dispatch, ...props })
 
-export default PageHoc(VolunteerPage, {
+export default PageHoc(isProgramRole('volunteer')(VolunteerPage), {
   title: 'Волонтерство',
-  accessRule: (user, props) => {
-    let flag = props.user.programs.items[props.user.programs.current].role === 'volunteer'
-    return !!user && flag
-  },
   mergeProps,
   mapStateToProps,
   mapDispatchToProps

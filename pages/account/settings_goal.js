@@ -3,6 +3,8 @@ import { isEmpty } from 'lodash'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 
+import isLogged from '../../client/components/Access/isLogged'
+
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
 import Page from '../../client/hocs/Page'
@@ -14,9 +16,10 @@ class AccountSettings extends Component {
   static async getInitialProps (ctx) {
     let options = { withCredentials: true }
     if (ctx.isServer && ctx.req) options = { headers: ctx.req.headers }
-    if (ctx.req && !ctx.req.session.uid) return { notAllowed: true }
 
-    let { data } = await axios.get(`${BACKEND_URL}/api/mongo/me/goal`, options)
+    let prefix = ctx.isServer ? BACKEND_URL : ''
+
+    let { data } = await axios.get(`${prefix}/api/mongo/me/goal`, options)
     return { goal: data.result.goal }
   }
 
@@ -75,8 +78,6 @@ class AccountSettings extends Component {
   }
 
   render () {
-    if (this.props.notAllowed) return null
-
     let { t, goal } = this.props
     let { fetching, affected, errors } = this.state
 
@@ -101,16 +102,13 @@ class AccountSettings extends Component {
   }
 }
 
-const accessRule = user => !!user
-
 const mapStateToProps = ({ auth }) => ({
   user: auth.user
 })
 
-let translated = translate([ 'common' ])(AccountSettings)
+let translated = isLogged(translate([ 'common' ])(AccountSettings))
 
 export default Page(translated, {
   title: 'Настройки профиля',
-  accessRule,
   mapStateToProps
 })

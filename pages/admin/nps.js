@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
 import PanelMenu from '../../client/components/PanelMenu'
-// import NpsRightMenu from '../../client/components/NPS/RightMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
@@ -28,7 +27,6 @@ let labels = {
 
 let menu = [
   { href: '/admin/nps?type=program', path: '/admin/nps/program', code: 'program', title: 'Программы' },
-  // { href: '/admin/feedback?type=coach', path: '/admin/feedback/coach', code: 'coach', title: 'Группы' },
   { href: '/admin/nps?type=platform', path: '/admin/nps/platform', code: 'platform', title: 'Платформа' }
 ]
 
@@ -149,6 +147,5 @@ export default Page(FeedbackResults, {
   title: 'NPS',
   mergeProps,
   mapStateToProps,
-  mapDispatchToProps,
-  accessRule: user => true
+  mapDispatchToProps
 })

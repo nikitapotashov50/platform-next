@@ -25,9 +25,4 @@ const AdminIndexPage = props => {
   )
 }
 
-//
-let accessRule = user => false
-
-export default Page(AdminIndexPage, {
-  accessRule
-})
+export default Page(AdminIndexPage, {})

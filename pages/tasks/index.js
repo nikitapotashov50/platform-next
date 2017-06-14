@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import isLogged from '../../client/components/Access/isLogged'
 
 import Panel from '../../client/elements/Panel'
 
@@ -94,9 +95,8 @@ const mergeProps = (state, dispatch, props) => ({
   dispatch: dispatch.dispatch
 })
 
-export default PageHoc(TasksIndex, {
+export default PageHoc(isLogged(TasksIndex), {
   title: 'Задания',
-  accessRule: user => !!user,
   mapStateToProps,
   mapDispatchToProps,
   mergeProps

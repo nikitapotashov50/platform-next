@@ -1,8 +1,8 @@
 import { translate } from 'react-i18next'
 
-import SideMenu from '../SideMenu'
 import FeedLayout from '../../layouts/feed'
 import Panel from '../../elements/Panel'
+import RightMenu from '../NPS/RightMenu'
 
 let tabs = [
   { code: 'main', href: '/account/settings', path: '/account/settings' },
@@ -18,7 +18,7 @@ const AccountSettingsLayout = ({ t, url, children }) => {
 
   let Side = (
     <Panel Header={<div className='panel__title'>{t('account.settings.title')}</div>}>
-      <SideMenu items={tabs} selected={tab} t={t} />
+      <RightMenu items={tabs} selected={tab} t={t} tRule={code => `account.settings.${code}.title`} />
     </Panel>
   )
 

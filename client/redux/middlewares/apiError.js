@@ -7,10 +7,9 @@ export const apiError = createAction(API_ERROR, ({ message, status }) => ({ mess
 
 export const errorMiddleware = store => next => async ({ type, payload }) => {
   if (type === API_ERROR) {
-    console.log('error dispatcher', payload)
     store.dispatch(dispatchError(payload))
     setTimeout(() => {
       store.dispatch(dismissError())
     }, 5000)
-  } else return next({ type, payload })
+  } else next({ type, payload })
 }

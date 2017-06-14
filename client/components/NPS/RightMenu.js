@@ -1,16 +1,16 @@
 import Link from 'next/link'
 
-export default ({ items = [], selected }) => (
+export default ({ items = [], selected, t = null, tRule = null }) => (
   <ul className='side-links'>
     { items.length > 0 && items.map(el => (
       <li className={[ 'side-links__item', el.code === selected ? 'side-links__item_active' : '' ].join(' ')} key={'links-menu-' + el.code}>
         { el.code !== selected && (
           <Link href={el.href} as={el.path}>
-            <a className='side-links__link'>{el.title}</a>
+            <a className='side-links__link'>{t ? t(tRule(el.code)) : el.title}</a>
           </Link>
         )}
         { el.code === selected && (
-          <span className='side-links__link'>{el.title}</span>
+          <span className='side-links__link'>{t ? t(tRule(el.code)) : el.title}</span>
         )}
       </li>
     ))}
