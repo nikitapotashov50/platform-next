@@ -2,7 +2,6 @@ import { pick, isEmpty } from 'lodash'
 import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import Router from 'next/router'
 
 import isLogged from '../client/components/Access/isLogged'
 
