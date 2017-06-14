@@ -27,16 +27,16 @@ class IndexPage extends Component {
     let params = { programId: user.programs.current || null, mode: tab }
 
     if (req) {
-      params.user = req.session.user ? req.session.user._id : null
       headers = req.headers
+      params.user = req.session.uid || null
     }
 
     if (tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
-    await Promise.all([
-      PostList.getInitial(store.dispatch, params, { headers }),
-      store.dispatch(tasksApiGet(params.programId, 'active', { headers }))
-    ])
+    let requests = [ PostList.getInitial(store.dispatch, params, { headers }) ]
+    if (req.session.uid) requests.push(store.dispatch(tasksApiGet(params.programId, 'active', { headers })))
+
+    await Promise.all(requests)
 
     return { tab }
   }
