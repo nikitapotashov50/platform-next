@@ -22,6 +22,5 @@ AdminPrograms.getInitialProps = async ctx => {
 }
 
 export default PageHoc(AdminPrograms, {
-  title: 'Управление программами',
-  accessRule: () => false
+  title: 'Управление программами'
 })

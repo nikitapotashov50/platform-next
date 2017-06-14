@@ -1,7 +1,6 @@
-import axios from 'axios'
-import { pick } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
-import { generateFetchActions } from '../utils/redux'
+
+import { API_CONST } from './middlewares/apiCall'
 
 // default state
 let defaultState = {
@@ -12,41 +11,50 @@ let defaultState = {
 }
 
 // action creators
+const FETCH_START = 'feedback/INIT_START'
+const FETCH_SUCCESS = 'feedback/INIT_SUCCESS'
+const FETCH_FAIL = 'feedback/INIT_FAIL'
+const SUBMIT_SUCCESS = 'feedback/SUBMIT_SUCCESS'
 
 //
-export const { fetchEnd, fetchStart } = generateFetchActions('feedback')
+export const submiFeedback = createAction(API_CONST, async (type, reply) => {
+  let options = { withCredentials: true }
 
-//
-export const submiFeedback = createAction('feedback/SUBMIT', async (type, reply) => {
-  reply = pick(reply, [ 'content', 'score' ])
-  let { data } = await axios.post(`/api/mongo/feedback/rate/${type}`, reply, { withCredentials: true })
-
-  return data.result
+  return {
+    options,
+    params: reply,
+    url: `/api/mongo/feedback/rate/${type}`,
+    method: 'post',
+    actions: [ FETCH_START, SUBMIT_SUCCESS, FETCH_FAIL ]
+  }
 })
 
 //
-export const initFeedback = createAction('feedback/INIT', async (type, options = {}) => {
-  options.params = { type }
+export const initFeedback = createAction(API_CONST, (type, options = {}) => {
   options.withCredentials = true
 
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/feedback/init`, options)
-
-  return data.result
+  return {
+    options,
+    params: { type },
+    url: `/api/mongo/feedback/init`,
+    method: 'get',
+    actions: [ FETCH_START, FETCH_SUCCESS, FETCH_FAIL ]
+  }
 })
 
 // reducer
 export default handleActions({
-  [initFeedback]: (state, { payload }) => ({
+  [FETCH_SUCCESS]: (state, { payload }) => ({
     ...state,
     types: payload.types || [ 'platform' ],
-    reply: payload.reply || false
+    reply: payload.reply || false,
+    fetching: false
   }),
-  [submiFeedback]: (state, { payload }) => ({
+  [FETCH_START]: state => ({ ...state, fetching: true }),
+  [FETCH_FAIL]: state => ({ ...defaultState }),
+  [SUBMIT_SUCCESS]: (state, { payload }) => ({
     ...state,
     reply: !!payload.reply || false,
     info: payload.info || {}
-  }),
-  //
-  [fetchEnd]: state => ({ ...state, fetching: false }),
-  [fetchStart]: state => ({ ...state, fetching: true })
+  })
 }, defaultState)

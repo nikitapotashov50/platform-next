@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Panel from '../Panel'
 
-export default ({ items = [] }) => {
+export default ({ items = [], loading = false }) => {
   if (!items.length) return null
   return (
     <Panel>

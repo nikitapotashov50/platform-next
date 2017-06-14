@@ -14,7 +14,7 @@ module.exports = router => {
    */
   router.get('/init', async ctx => {
     const { type } = ctx.request.query
-    let types = [ 'platform' ]
+    let types = []
 
     let reply = null
     let lastClass = null
@@ -28,6 +28,8 @@ module.exports = router => {
         if (lastClass.isLast) types.push('program')
       }
     }
+
+    types.push('platform')
 
     ctx.body = {
       status: 200,

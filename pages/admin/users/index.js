@@ -71,8 +71,6 @@ class AdminUsersPage extends Component {
   }
 }
 
-const accessRule = user => false
-
 const mapStateToProps = ({ admin }) => ({
   users: admin.users.items,
   query: admin.users.query,
@@ -101,7 +99,6 @@ const mergeProps = (state, dispatch, props) => {
 
 export default PageHoc(AdminUsersPage, {
   title: 'Управление пользователями',
-  accessRule,
   mapStateToProps,
   mapDispatchToProps,
   mergeProps

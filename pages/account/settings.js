@@ -4,11 +4,11 @@ import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
+import isLogged from '../../client/components/Access/isLogged'
+
 import MainSettings from '../../client/components/AccountSettings/Main'
 import AboutSettings from '../../client/components/AccountSettings/About'
 import ContactsSettings from '../../client/components/AccountSettings/Contacts'
-// import OtherSettings from '../../client/components/AccountSettings/Other'
-// import AvatarSettings from '../../client/components/AccountSettings/Avatar'
 
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
@@ -109,16 +109,12 @@ class AccountSettings extends Component {
             { (tab === 'main') && <MainSettings onChange={this.handleChange} errors={errors} affected={affected} user={user} t={t} /> }
             { (tab === 'contacts') && <ContactsSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             { (tab === 'about') && <AboutSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
-            {/* { (tab === 'avatar') && <AvatarSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> } */}
-            {/* { (tab === 'other') && <OtherSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> } */}
           </Panel>
         </OverlayLoader>
       </SettingsLayout>
     )
   }
 }
-
-const accessRule = user => !!user
 
 const mapStateToProps = ({ auth, user }) => ({
   user: auth.user,
@@ -143,11 +139,10 @@ const mergeProps = (state, dispatch, props) => ({
   }
 })
 
-let translated = translate([ 'common' ])(AccountSettings)
+let translated = isLogged(translate([ 'common' ])(AccountSettings))
 
 export default Page(translated, {
   title: 'Настройки профиля',
-  accessRule,
   mergeProps,
   mapStateToProps,
   mapDispatchToProps

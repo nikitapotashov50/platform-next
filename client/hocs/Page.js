@@ -22,7 +22,7 @@ moment.locale('ru')
 numeral.language('ru', { delimiters: { thousands: ' ', decimal: '.' } })
 numeral.language('ru')
 
-export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, accessRule }) => {
+export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }) => {
   const realMapStateToProps = state => {
     let props = {}
     if (mapStateToProps && isFunction(mapStateToProps)) props = mapStateToProps(state)
@@ -50,19 +50,11 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
-        ctx.store.dispatch(allowAccess())
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.uid) {
             ctx.store.dispatch(auth({ user: ctx.req.session.user, currentProgram: ctx.req.session.currentProgram, isRestored: ctx.req.session.isRestored }))
             await ctx.store.dispatch(refresh(ctx.req.session.uid))
-            ctx.store.dispatch(getActiveCount({ headers: ctx.req.headers }))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
-        }
-
-        if (accessRule && isFunction(accessRule)) {
-          let state = ctx.store.getState()
-          if (!accessRule(state.auth.user, state)) await ctx.store.dispatch(restrictAccess('Ошибка доступа'))
-          else ctx.store.dispatch(allowAccess())
         }
 
         let translations = await getTranslations('ru')
@@ -87,20 +79,6 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps, 
             dispatch(auth(data, true))
             await dispatch(refresh(data.user._id))
           } else dispatch(cookieExists(false))
-        }
-      }
-
-      componentWillReceiveProps ({ __service, ...nextProps }) {
-        if (accessRule && isFunction(accessRule)) {
-          let flag = (__service.user && this.props.__service.user)
-            ? (__service.user._id !== this.props.__service.user._id)
-            : (__service.user !== this.props.__service.user)
-
-          if (flag) {
-            let dispatch = nextProps.dispatch || nextProps.__dispatch
-            if (!accessRule(__service.user, nextProps)) dispatch(restrictAccess('Страница недоступна'))
-            else dispatch(allowAccess())
-          }
         }
       }
 

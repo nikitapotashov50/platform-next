@@ -35,7 +35,13 @@ const model = new mongoose.Schema(extend({
 //   { title: 'Занятие 5', date: moment('2017-07-25').toISOString(), programId: 5 },
 //   { title: 'Занятие 6', date: moment('2017-08-01').toISOString(), programId: 5 },
 //   { title: 'Занятие 7', date: moment('2017-08-08').toISOString(), programId: 5 },
-//   { title: 'Занятие 8', date: moment('2017-08-15').toISOString(), programId: 5 }
+//   { title: 'Занятие 8', date: moment('2017-08-15').toISOString(), programId: 5 },
+//   //
+//   { title: 'Занятие 1', date: moment('2017-06-13').toISOString(), programId: 6 },
+//   { title: 'Занятие 2', date: moment('2017-06-17').toISOString(), programId: 6 },
+//   { title: 'Занятие 3', date: moment('2017-07-01').toISOString(), programId: 6 },
+//   { title: 'Занятие 4', date: moment('2017-07-08').toISOString(), programId: 6 },
+//   { title: 'Занятие 5', date: moment('2017-07-15').toISOString(), programId: 6 }
 // ]
 
 model.statics.initDefaults = async function (defaults) {

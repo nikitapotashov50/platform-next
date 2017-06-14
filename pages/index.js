@@ -9,7 +9,7 @@ import Panel from '../client/elements/Panel'
 import PanelMenu from '../client/components/PanelMenu'
 import TaskSide from '../client/elements/Tasks/SIde'
 
-import { getTasks } from '../client/redux/tasks/index'
+import { tasksApiGet } from '../client/redux/tasks/index'
 
 const menuItems = [
   { href: '/', path: '/', title: 'Актуальное', code: 'actual' },
@@ -35,7 +35,7 @@ class IndexPage extends Component {
 
     await Promise.all([
       PostList.getInitial(store.dispatch, params, { headers }),
-      store.dispatch(getTasks(params.programId, 'active', { headers }))
+      store.dispatch(tasksApiGet(params.programId, 'active', { headers }))
     ])
 
     return { tab }
@@ -47,7 +47,7 @@ class IndexPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.program !== this.props.program) this.props.dispatch(getTasks(nextProps.program, 'active', {}))
+    if (nextProps.program !== this.props.program) this.props.dispatch(tasksApiGet(nextProps.program, 'active', {}))
   }
 
   render () {

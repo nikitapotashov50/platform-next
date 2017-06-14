@@ -3,6 +3,8 @@ import { isUndefined } from 'lodash'
 import Router from 'next/router'
 import React, { Component } from 'react'
 
+import isLogged from '../../client/components/Access/isLogged'
+
 import PageHoc from '../../client/hocs/Page'
 import FeedLayout from '../../client/layouts/feed'
 import ErrorLayout from '../../client/layouts/error'
@@ -18,9 +20,10 @@ import { getReply } from '../../client/redux/task/reply'
 const checkDate = (date, target = null) => (moment(date) > moment())
 
 const getInitial = async (taskId, dispatch, headers = null) => {
-  let task = await dispatch(getTask(taskId, { headers }))
-  if (task.payload.status && task.payload.status !== 200) throw new Error(task.payload.message) // eslint-disable-line no-throw-literal
-  await dispatch(getReply(taskId, { headers }))
+  return Promise.all([
+    dispatch(getTask(taskId, { headers })),
+    dispatch(getReply(taskId, { headers }))
+  ])
 }
 
 class TaskPage extends Component {
@@ -55,12 +58,13 @@ class TaskPage extends Component {
   }
 
   render () {
-    if (this.state.restrict) return <ErrorLayout />
+    if (this.state.restrict || !this.props.task) return <ErrorLayout />
 
     let { edit } = this.props.url.query
     let { task, post, reply, specific = null, replyStatus, isReplied } = this.props
 
     let canEdit = checkDate(task.finish_at) && reply
+
     // нельзя редактировать, если отчет уже проверен
     if (canEdit && replyStatus && reply.replyTypeId === 4 && replyStatus._id === 3) canEdit = false
     edit = canEdit && !isUndefined(edit)
@@ -75,7 +79,7 @@ class TaskPage extends Component {
           </div>
         ) }
 
-        { (!isReplied || !reply || edit) && <TaskReply task={task} reply={reply} attachments={post ? post.attachments : []} opened edit cancelEdit={this.toggleEdit.bind(this, false)} /> }
+        { (!isReplied || !reply || edit) && <TaskReply task={task} reply={reply} attachments={post ? post.attachments : []} opened edit={edit} cancelEdit={this.toggleEdit.bind(this, false)} /> }
 
         { (reply && !edit) && <ReplyContent type={task.replyType} post={post} reply={reply} specific={specific} /> }
         { (canEdit && !edit) && (
@@ -120,7 +124,6 @@ TaskPage.getInitialProps = async ctx => {
 
     return { taskId }
   } catch (e) {
-    console.log('1231231', e)
     return { notFound: true, taskId }
   }
 }
@@ -137,9 +140,8 @@ const mapStateToProps = ({ task, user }) => ({
 
 const mapDispatchToProps = dispatch => ({ dispatch })
 
-export default PageHoc(TaskPage, {
+export default PageHoc(isLogged(TaskPage), {
   title: 'Задание',
   mapStateToProps,
-  mapDispatchToProps,
-  accessRule: user => !!user
+  mapDispatchToProps
 })
