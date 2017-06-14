@@ -5,10 +5,10 @@ import Link from 'next/link'
 import TaskStatus from '../../elements/Task/Status'
 
 const KnifeDescription = ({ data }) => (
-  <div>
-    <div>Действие: {data.action}</div>
-    <div>Цель: {numeral(data.goal || 0).format('0,0')} ₽</div>
-    <div>{ data.price && (`Цена слова: ${data.price}`)}</div>
+  <div className='task-preview__task-desc'>
+    <div><b>Действие:</b> {data.action}</div>
+    <div><b>Цель:</b> {numeral(data.goal || 0).format('0,0')} ₽</div>
+    <div>{ data.price && (<b>Цена слова:</b>)} { data.price && (`${data.price}`)}</div>
   </div>
 )
 
@@ -111,7 +111,8 @@ export default ({ task, link, completed = false, status = null }) => {
 
         .task-preview__title {
           line-height: 27px;
-
+          margin-left: 65px;
+          display: block;
           font-size: 18px;
           font-weight: bold;
         }
@@ -123,6 +124,11 @@ export default ({ task, link, completed = false, status = null }) => {
           font-size: 14px;
           font-weight: 300;
           color: #666;
+        }
+
+        .task-preview__task-desc {
+          display: block;
+          margin-left: 65px;
         }
 
         .task-preview__button {

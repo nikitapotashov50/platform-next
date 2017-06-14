@@ -1471,7 +1471,7 @@ export default props => (
 
         &_notify {
           position: relative;
-          padding-right: 30px;
+          padding-right: 25px;
         }
       }
 
@@ -1483,16 +1483,16 @@ export default props => (
         bottom: 0;
         position: absolute;
 
-        width: 23px;
-        height: 23px;
+        width: 20px;
+        height: 20px;
         margin: auto;
         display: block;
-        line-height: 22px;
+        line-height: 20px;
 
         color: #fff;
         font-size: 10px;
         text-align: center;
-        background-color: #e1430b;
+        background-color: #e04e2c;
       }
     }
 

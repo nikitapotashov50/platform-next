@@ -6,7 +6,7 @@ const pickInfo = (obj, fields) => transform(pick(obj || {}, fields), (result, va
 }, []).filter(x => !!x.value)
 
 const getStatus = (status, gender = null) => {
-  if (status === 'single') return 'В поиске'
+  if (status === 'single') return gender ? (gender === 'male' ? 'Свободен' : 'Свободна') : 'Не в отношениях'
   if (status === 'couple') return 'В отношениях'
   if (status === 'married') return gender ? (gender === 'male' ? 'Женат' : 'Замужем') : 'Женат / Замужем'
 }
