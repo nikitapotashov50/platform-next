@@ -15,7 +15,7 @@ export default ({ user, t, affected, onChange }) => (
       <label className='panel-form__label'>{t('account.settings.about.fields.social_status')}</label>
       <select value={isUndefined(affected.social_status) ? user.social_status || '' : affected.social_status} onChange={onChange.bind(this, 'social_status')} className='panel-form__select'>
         <option value={null}>Не указано</option>
-        <option value={'single'}>В поиске</option>
+        <option value={'single'}>Не в отношениях</option>
         <option value={'couple'}>В отношениях</option>
         <option value={'married'}>Женат / Замужем</option>
       </select>

@@ -12,7 +12,7 @@ const CurrentList = ({ tasks, getLink }) => (
       <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
     ))}
 
-    { (tasks.knife.length > 0) && (<div className='tasks-inline-header'>Активные задания</div>) }
+    { (tasks.knife.length > 0) && (<div className='tasks-inline-header'>Задания на неделю</div>) }
 
     { (tasks.active.length > 0) && tasks.active.map(el => (
       <TaskPreview key={el._id} link={getLink(el._id)} task={el} />
@@ -20,7 +20,7 @@ const CurrentList = ({ tasks, getLink }) => (
 
     { (!tasks.active.length) && (
       <Panel>
-        <div className='text-center'>У вас нет активных заданий, отдыхайте.</div>
+        <div className='text-center'>У вас нет активных заданий.</div>
       </Panel>
     )}
 

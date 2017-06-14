@@ -105,8 +105,18 @@ class TaskPage extends Component {
             content: attr(data-prefix);
           }
           .task-inline-status__title {
-            font-size: 14px;
-            line-height: 20px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            line-height: 15px;
+            background: #dadde0;
+            padding: 3px 7px;
+            color: #1e1e1e;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+            border-radius: 3px;
+
+
           }
         `}</style>
       </FeedLayout>
