@@ -33,9 +33,10 @@ const checkUserPrograms = async (meta, user, bmProgramId) => {
     let city = await mongoose.models.City.getNullCity()
 
     let programCity = await getProgramCity(meta.molodost_id, bmProgramId, meta.molodost_access)
-
+    console.log(programCity)
     if (programCity.type === 'success' && programCity.city_name) {
       city = await mongoose.models.City.getOrCreate(programCity.city_name, programCity)
+      console.log(city)
     }
 
     await user.addProgram(program._id, { cityId: city._id })
@@ -86,8 +87,7 @@ const getSessionUser = async (email, access) => {
 
   if (!res || !res.user) throw new Error('error getting user')
 
-  let isInProgram = await checkUserPrograms(res.meta, res.user, 94)
-  console.log(isInProgram)
+  await checkUserPrograms(res.meta, res.user, 94)
 
   let add = { radar_id: null, radar_access_token: false }
   if (res.meta) {
@@ -189,7 +189,6 @@ module.exports = router => {
       let BMAccess = await getBMAccessToken(email, password)
       if (!BMAccess) throw new Error('No user account found on molodost.bz')
 
-      ctx.log.info(email, BMAccess)
       let user = await getSessionUser(email, BMAccess)
       ctx.session.user = user
       ctx.session.uid = user._id
@@ -211,8 +210,7 @@ module.exports = router => {
       const userMeta = await user.getMeta()
 
       // проверка на присутствие программы
-      let isInProgram = await checkUserPrograms(userMeta, user, 94)
-      console.log(isInProgram)
+      await checkUserPrograms(userMeta, user, 94)
 
       let programs = await user.getPrograms()
 

@@ -54,8 +54,12 @@ const tokenAction = async (userId, action, targetId = null) => {
   }
 }
 
+const addTokensByAction = async (userFrom, userTo, action) => {}
+
 module.exports = {
   getBalance,
   tokenAction,
-  createWallet
+  createWallet,
+  //
+  addTokensByAction
 }

@@ -52,7 +52,7 @@ module.exports = router => {
 
       if (user.meta.wallet && user.meta.molodost_id) {
         let tokenResponse = await getBalance(user.meta.molodost_id)
-        balance = tokenResponse.data.user.balance
+        if (tokenResponse.success) balance = tokenResponse.data.user.balance
       }
 
       ctx.body = {
