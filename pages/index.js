@@ -35,7 +35,7 @@ class IndexPage extends Component {
     if (tab === 'subscriptions' && auth.user) params.authorIds = (user.subscriptions || []).join(',')
 
     let requests = [ PostList.getInitial(store.dispatch, params, { headers }) ]
-    if (user && user._id) requests.push(store.dispatch(tasksApiGet(params.programId, 'active', { headers })))
+    if (user && user._id && params.programId) requests.push(store.dispatch(tasksApiGet(params.programId, 'active', { headers })))
 
     await Promise.all(requests)
 
@@ -48,7 +48,7 @@ class IndexPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.program !== this.props.program) this.props.dispatch(tasksApiGet(nextProps.program, 'active', {}))
+    if (nextProps.program !== this.props.program && nextProps.program) this.props.dispatch(tasksApiGet(nextProps.program, 'active', {}))
   }
 
   render () {
@@ -73,15 +73,17 @@ class IndexPage extends Component {
   }
 }
 
+const mapStateToProps = ({ user, auth, tasks }) => ({
+  user: auth.user,
+  tasks: tasks.items.active || [],
+  program: user.programs.current,
+  subscriptions: user.subscriptions || []
+})
+
 const mapDispatchToProps = dispatch => ({ dispatch })
 
 export default Page(IndexPage, {
   title: 'Отчеты',
-  mapDispatchToProps,
-  mapStateToProps: ({ auth, user, tasks }) => ({
-    user: auth.user,
-    tasks: tasks.items.active || [],
-    program: user.programs.current,
-    subscriptions: user.subscriptions || []
-  })
+  mapStateToProps,
+  mapDispatchToProps
 })

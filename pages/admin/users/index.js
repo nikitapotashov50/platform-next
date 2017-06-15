@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 
+import isAdmin from '../../../client/components/Access/isAdmin'
+
 import PageHoc from '../../../client/hocs/Page'
 import AdminLayout from '../../../client/layouts/admin'
 
@@ -97,7 +99,7 @@ const mergeProps = (state, dispatch, props) => {
   }
 }
 
-export default PageHoc(AdminUsersPage, {
+export default PageHoc(isAdmin(AdminUsersPage), {
   title: 'Управление пользователями',
   mapStateToProps,
   mapDispatchToProps,

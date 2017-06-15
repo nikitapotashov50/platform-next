@@ -32,19 +32,20 @@ model.index({ 'name': 1, 'email': 1 }, { unique: true })
 // model.index({ name: 'text', first_name: 'text', last_name: 'text' })
 
 model.virtual('subscriptionsCount').get(function () {
-  return this.subscriptions.length
+  return this.subscriptions ? this.subscriptions.length : 0
 })
 
 model.statics.UsersInfo = require('./info')
 model.statics.UsersMeta = require('./meta')
 model.statics.UserRoles = require('./roles')
 
-model.statics.getShortInfo = async function (idArray) {
+model.statics.getShortInfo = async function (idArray = null) {
   let model = this
-  if (!isArray(idArray)) idArray = [ idArray ]
+  let params = {}
 
-  let params = {
-    _id: { $in: uniq(idArray) }
+  if (idArray) {
+    if (!isArray(idArray)) idArray = [ idArray ]
+    params._id = { $in: uniq(idArray) }
   }
 
   let list = await model
@@ -53,6 +54,7 @@ model.statics.getShortInfo = async function (idArray) {
     .populate({
       path: 'goals',
       match: { closed: false },
+      select: 'a b occupation',
       options: {
         limit: 1,
         sort: { created: -1 }
@@ -79,9 +81,8 @@ model.methods.addProgram = async function (programId, options, roleId = 3) {
   let meta = await mongoose.models.ProgramUserMeta.makeMeta(programId, user._id, options)
 
   user.programs.addToSet({ programId, roleId, meta })
-  await user.save()
 
-  return user
+  return user.save()
 }
 
 model.methods.getProgramCity = async function (programId, withName = false) {
@@ -94,6 +95,14 @@ model.methods.getProgramCity = async function (programId, withName = false) {
 
   if (!withName) return meta.cityId
   return meta
+}
+
+model.methods.isInPrograms = function (programId) {
+  let user = this
+  if (!user.programs || !user.programs.length || !programId) return false
+  if (!isArray(programId)) programId = [ programId ]
+  let res = user.programs.filter(el => programId.indexOf(el.programId) !== -1)
+  return res.length > 0
 }
 
 model.methods.getPrograms = function () {

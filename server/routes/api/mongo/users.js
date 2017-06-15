@@ -3,6 +3,36 @@ const { extend, pick } = require('lodash')
 const { getBalance } = require('../../../controllers/tokenController')
 
 module.exports = router => {
+  router.bridge('/list', router => {
+    router.get('/', async ctx => {
+      let { programId, notIn } = ctx.query
+
+      let params = {}
+      if (programId) params['programs.programId'] = { $in: [ Number(programId) ] }
+      if (notIn) params._id = { $nin: notIn.split(',') }
+
+      let users = await models.Users
+        .find(params)
+        .select('_id first_name last_name picture_small name goals')
+        .populate({
+          path: 'goals',
+          match: { closed: false },
+          select: 'a b occupation',
+          options: {
+            limit: 1,
+            sort: { created: -1 }
+          }
+        })
+        .limit(20)
+        .lean()
+
+      ctx.body = {
+        status: 200,
+        result: { users }
+      }
+    })
+  })
+
   router.bridge('/:username', router => {
     router.get('/', async ctx => {
       let [ user ] = await models.Users

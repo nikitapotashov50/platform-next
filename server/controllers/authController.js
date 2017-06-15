@@ -19,7 +19,23 @@ const isUserAuthOnBM = async (user, hash, userAgent) => {
   }
 }
 
-const getBMProgramById = async (bmProgramId, userId, accessToken) => {
+const getProgramCity = async (userId, bmProgramId, accessToken) => {
+  try {
+    let { data } = await axios.get(`http://api.molodost.bz/api/v3/entry-set-user/city/?entry_set_id=${bmProgramId}&user_id=${userId}`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+
+    return data
+  } catch ({ response }) {
+    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  }
+}
+
+const getBMProgramById = async (userId, bmProgramId, accessToken) => {
   try {
     let { data } = await axios.get(`http://api.molodost.bz/api/v3/user/entry-set/has-access/?entry_set_id=${bmProgramId}&user_id=${userId}`, {
       withCredentials: true,
@@ -134,5 +150,6 @@ module.exports = {
   isUserAuthOnBM,
   getBMAccessToken,
   getBMProgramById,
+  getProgramCity,
   getBMAccessTokenCredentialsOnly
 }
