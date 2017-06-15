@@ -4,19 +4,46 @@ const { isNil, extend, omit } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
-  getBMAccessTokenCredentialsOnly, getBMSignUp
+  getBMAccessTokenCredentialsOnly, getBMSignUp, getBMProgramById, getProgramCity
 } = require('../../controllers/authController')
 // refreshToken
 // getBalance
 
 const getUser = async email => {
-  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name role picture_small').lean()
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name programs name role picture_small')
 
   if (!user) return null
 
   const [ meta ] = await mongoose.models.UsersMeta.find({ userId: user._id }).sort({ created: -1 }).limit(1)
 
   return { user, meta }
+}
+
+const checkUserPrograms = async (meta, user, bmProgramId) => {
+  if (!bmProgramId || !meta.molodost_id || !meta.molodost_access) return false
+
+  let [ program ] = await mongoose.models.Program.find({ molodost_id: bmProgramId }).limit(1)
+  if (!program) throw new Error(`no program exists ${bmProgramId}`)
+
+  if (user.isInPrograms([ program._id ])) return true
+
+  let isInProgram = await getBMProgramById(meta.molodost_id, bmProgramId, meta.molodost_access)
+
+  if (isInProgram.type === 'success' && isInProgram.valid) {
+    let city = await mongoose.models.City.getNullCity()
+
+    let programCity = await getProgramCity(meta.molodost_id, bmProgramId, meta.molodost_access)
+    console.log(programCity)
+    if (programCity.type === 'success' && programCity.city_name) {
+      city = await mongoose.models.City.getOrCreate(programCity.city_name, programCity)
+      console.log(city)
+    }
+
+    await user.addProgram(program._id, { cityId: city._id })
+    return true
+  }
+
+  return false
 }
 
 const createUserBasedOnBM = async access => {
@@ -59,6 +86,8 @@ const getSessionUser = async (email, access) => {
   else if (res.meta) res.meta = await updateMolodostMeta(res.meta, access)
 
   if (!res || !res.user) throw new Error('error getting user')
+
+  await checkUserPrograms(res.meta, res.user, 94)
 
   let add = { radar_id: null, radar_access_token: false }
   if (res.meta) {
@@ -160,7 +189,6 @@ module.exports = router => {
       let BMAccess = await getBMAccessToken(email, password)
       if (!BMAccess) throw new Error('No user account found on molodost.bz')
 
-      ctx.log.info(email, BMAccess)
       let user = await getSessionUser(email, BMAccess)
       ctx.session.user = user
       ctx.session.uid = user._id
@@ -180,6 +208,10 @@ module.exports = router => {
       if (!user) throw new Error('no user found')
 
       const userMeta = await user.getMeta()
+
+      // проверка на присутствие программы
+      await checkUserPrograms(userMeta, user, 94)
+
       let programs = await user.getPrograms()
 
       if (!userMeta.wallet) userMeta.getWallet()
@@ -229,16 +261,5 @@ module.exports = router => {
       console.log(e)
       ctx.body = { status: 500, message: e }
     }
-    // проверим валиден ли access_token
-    // TODO: refresh token
-    // if (userMeta && today.isAfter(moment(userMeta.token_expires).subtract(1, 'day'), 'days')) {
-      // console.log('need to refresh token')
-      // try {
-      //   let token = await refreshToken(userMeta.molodost_refresh)
-      //   // console.log(token)
-      // } catch (e) {
-      //   console.log(e)
-      // }
-    // }
   })
 }

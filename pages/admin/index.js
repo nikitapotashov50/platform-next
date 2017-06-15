@@ -1,6 +1,8 @@
 import Panel from '../../client/elements/Panel'
 import Page from '../../client/hocs/Page'
 
+import isAdmin from '../../client/components/Access/isAdmin'
+
 import AdminLayout from '../../client/layouts/admin'
 
 const AdminIndexPage = props => {
@@ -25,4 +27,4 @@ const AdminIndexPage = props => {
   )
 }
 
-export default Page(AdminIndexPage, {})
+export default Page(isAdmin(AdminIndexPage), {})

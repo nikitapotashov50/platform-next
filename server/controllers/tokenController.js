@@ -13,8 +13,9 @@ const getBalance = async (userId) => {
     })
 
     return data
-  } catch ({ response }) {
-    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  } catch (err) {
+    // console.log(err)
+    throw new Error('Token Api error')
   }
 }
 
@@ -30,12 +31,35 @@ const createWallet = async (userId, email, add = {}) => {
     })
 
     return data
-  } catch ({ response }) {
-    throw new Error('BM Api: ' + response.data.error + ' – ' + response.data.error_description)
+  } catch (error) {
+    console.log(error)
+    throw new Error('Token Api error')
   }
 }
 
+const tokenAction = async (userId, action, targetId = null) => {
+  try {
+    let request = { action, targetId }
+    let { data } = await axios.post(`http://api.bmml.ru/api/v1/account/${userId}/action`, request, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + config.bmtoken.secret
+      }
+    })
+
+    return data
+  } catch ({ response }) {
+    throw new Error('Token Api: ' + response)
+  }
+}
+
+const addTokensByAction = async (userFrom, userTo, action) => {}
+
 module.exports = {
   getBalance,
-  createWallet
+  tokenAction,
+  createWallet,
+  //
+  addTokensByAction
 }
