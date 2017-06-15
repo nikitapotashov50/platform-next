@@ -1647,7 +1647,7 @@ export default props => (
         position: relative;
         margin-left: -50px;
     }
-      &__body { margin-top: -19px; }
+      &__body { margin-top: -19px; word-wrap: break-word; }
       &__footer { margin-top: 5px; }
       &__remove {
         top: 0;
