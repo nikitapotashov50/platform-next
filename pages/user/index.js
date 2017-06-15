@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import NoSSR from 'react-no-ssr'
 
 import Page from '../../client/hocs/Page'
 import UserProfile from '../../client/hocs/UserProfile'
@@ -45,7 +46,9 @@ class UserPage extends Component {
           { isMe && <PostEditor />}
 
           <div className='user-blog__content'>
-            <PostList params={params} pathname={pathname} />
+            <NoSSR onSSR={<div>Загрузка</div>}>
+              <PostList params={params} pathname={pathname} />
+            </NoSSR>
           </div>
 
         </div>
