@@ -1,4 +1,5 @@
 import Menu from '../Menu'
+import Logo from './Logo'
 import HeaderRight from './HeaderRight'
 import { connect } from 'react-redux'
 
@@ -6,7 +7,7 @@ let menu = [
   { url: '/', title: 'Отчеты', as: '/', code: 'index' }
 ]
 
-const Header = ({ pathname, dispatch, current, isLogged, role, selected, taskCount }) => {
+const Header = ({ dispatch, current, isLogged, role, selected, taskCount }) => {
   let addMenu = []
   if (isLogged && current !== 3) addMenu.push({ url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' })
   if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
@@ -16,10 +17,11 @@ const Header = ({ pathname, dispatch, current, isLogged, role, selected, taskCou
       <div className='app-header__wrap'>
 
         <div className='app-header__block app-header__block_menu'>
-          <Menu items={[ ...menu, ...addMenu ]} selected={selected} withLogo pathname={pathname} />
+          <Logo />
+          <Menu items={[ ...menu, ...addMenu ]} selected={selected} />
         </div>
 
-        <div className='app-header__block app-header__block_menu'>
+        <div className='app-header__block app-header__block_user'>
           <HeaderRight dispatch={dispatch} isLogged={isLogged} />
         </div>
 
