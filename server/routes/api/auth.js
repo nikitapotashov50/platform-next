@@ -6,8 +6,6 @@ const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
   getBMAccessTokenCredentialsOnly, getBMSignUp, getBMProgramById, getProgramCity
 } = require('../../controllers/authController')
-// refreshToken
-// getBalance
 
 const getUser = async email => {
   let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name programs name role picture_small')
@@ -33,11 +31,7 @@ const checkUserPrograms = async (meta, user, bmProgramId) => {
     let city = await mongoose.models.City.getNullCity()
 
     let programCity = await getProgramCity(meta.molodost_id, bmProgramId, meta.molodost_access)
-    console.log(programCity)
-    if (programCity.type === 'success' && programCity.city_name) {
-      city = await mongoose.models.City.getOrCreate(programCity.city_name, programCity)
-      console.log(city)
-    }
+    if (programCity.type === 'success' && programCity.city_name) city = await mongoose.models.City.getOrCreate(programCity.city_name, programCity)
 
     await user.addProgram(program._id, { cityId: city._id })
     return true
@@ -210,7 +204,8 @@ module.exports = router => {
       const userMeta = await user.getMeta()
 
       // проверка на присутствие программы
-      await checkUserPrograms(userMeta, user, 94)
+      let res = await checkUserPrograms(userMeta, user, 94)
+      console.log(res)
 
       let programs = await user.getPrograms()
 
@@ -245,13 +240,16 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
-      if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
+      if (!ctx.session.currentProgram) {
+        ctx.session.currentProgram = active.length > 0 ? active[0] : 3
+      }
 
       ctx.body = {
         status: 200,
         result: {
           programs,
           isAdmin: user.role === 3,
+          program: ctx.session.currentProgram,
           subscriptions: user.subscriptions,
           radar_id: userMeta.radar_id,
           radar_access: !isNil(userMeta.radar_access_token)

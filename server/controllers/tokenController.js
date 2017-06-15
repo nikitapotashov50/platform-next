@@ -1,3 +1,4 @@
+const formEncode = require('form-urlencoded')
 const axios = require('axios')
 const config = require('../../config')
 const { extend } = require('lodash')
@@ -15,7 +16,7 @@ const getBalance = async (userId) => {
 
     return data
   } catch (err) {
-    // console.log(err)
+    console.log(err)
     throw new Error('Token Api error')
   }
 }
@@ -40,15 +41,14 @@ const createWallet = async (userId, email, add = {}) => {
 
 const tokenAction = async (userId, params) => {
   try {
-    console.log('before request', `http://api.bmml.ru/api/v1/account/${userId}/action`, params)
-    let data = await axios.post(`http://api.bmml.ru/api/v1/account/${userId}/action`, params, {
+    let { data } = await axios.post(`http://api.bmml.ru/api/v1/account/${userId}/action`, params, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + config.bmtoken.secret
       }
     })
-    console.log('after', data)
+
     return data
   } catch (error) {
     throw new Error('Token Api: ' + error)
@@ -72,18 +72,14 @@ const addTokensByAction = async (userTo, action, add = {}) => {
     additionalId: targetMeta.molodost_id,
     additionaldata: { source: 'bm-platform', model: add.model, item: add.item }
   }
-  console.log(data)
   //
   if (actionsTo.indexOf(action) !== -1) {
     if (!add.userFrom) throw new Error('no from user specified')
     let [ fromMeta ] = await models.UsersMeta.find({ userId: add.userFrom }).limit(1)
     if (!fromMeta || !fromMeta.molodost_id) throw new Error('no from user meta found')
-    console.log(fromMeta)
     if (!fromMeta.wallet) await fromMeta.getWallet()
 
-    console.log('make request')
     response = await tokenAction(fromMeta.molodost_id, data)
-    console.log('rrrr is', response)
   } else response = await tokenAction(targetMeta.molodost_id, data)
 
   console.log('response is', response)

@@ -32,14 +32,19 @@ module.exports = router => {
   router.get('/filters', async ctx => {
     let { type } = ctx.query
     try {
-      if ([ 'programs', 'platform' ].indexOf(type) === -1) throw new Error('wrong filter type')
+      if ([ 'program', 'platform' ].indexOf(type) === -1) throw new Error('wrong filter type')
 
       let filters = {}
-      if (type === 'programs') {}
+      console.log(type)
+      if (type === 'program') {
+        let programs = await models.Program.find({ _id: { $nin: [ 6 ] } }).sort({ _created: -1 }).select('_id title')
+        let classes = await models.ProgramClass.getGrouped({ programId: { $in: programs.map(el => el._id) } })
+        filters = { programs, classes }
+      }
 
       ctx.body = {
         status: 200,
-        data: { filters }
+        result: { filters }
       }
     } catch (e) {
       ctx.log.info(e)

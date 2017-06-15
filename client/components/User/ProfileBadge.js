@@ -37,7 +37,7 @@ export default ({ info = {}, user = {}, goal = {}, balance = null }) => {
         </div>
       )}
 
-      { balance && (<div>{balance} BMT</div>)}
+      { balance && (<div>{Number(balance).toFixed(2)} BMT</div>)}
     </div>
   )
 }

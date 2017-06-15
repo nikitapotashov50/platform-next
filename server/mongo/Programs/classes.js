@@ -58,6 +58,18 @@ model.methods.addNPS = async function (data, user) {
   return nps
 }
 
+model.statics.getGrouped = async function (params) {
+  let model = this
+  params.enabled = true
+  let data = await model.find(params).select('title _id programId')
+
+  return (data || []).reduce((obj, item) => {
+    if (!obj[item.programId]) obj[item.programId] = []
+    obj[item.programId].push(item)
+    return obj
+  }, {})
+}
+
 module.exports = mongoose.model('ProgramClass', model)
 
 // mongoose.models.ProgramClass.initDefaults(defaultClasses)

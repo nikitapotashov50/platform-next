@@ -1,5 +1,9 @@
-export default ({ data = {} }) => {
-  let { programs = [], classes = [] } = data
+const change = (field, next, e) => {
+  next(field, e.target.value)
+}
+
+export default ({ data = {}, selected = {}, onChange }) => {
+  let { programs = [], classes = {} } = data
 
   return (
     <div className=''>
@@ -7,18 +11,20 @@ export default ({ data = {} }) => {
         <div className=''>
           Программа
 
-          <select>
+          <select value={selected.program || ''} onChange={change.bind(this, 'program', onChange)}>
             { programs.map(el => <option value={el._id} key={el._id}>{el.title}</option>)}
           </select>
         </div>
       )}
 
-      { (classes.length > 0) && (
+      <br />
+
+      { (selected.program && classes[selected.program] && classes[selected.program].length > 0) && (
         <div className=''>
           Занятие
 
-          <select>
-            { classes.map(el => <option value={el._id} key={el._id}>{el.title}</option>)}
+          <select value={selected.class || ''} onChange={change.bind(this, 'class', onChange)}>
+            { classes[selected.program].map(el => <option value={el._id} key={el._id}>{el.title}</option>)}
           </select>
         </div>
       )}
