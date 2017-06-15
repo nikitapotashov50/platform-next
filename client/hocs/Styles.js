@@ -1417,11 +1417,11 @@ export default props => (
 
       &__block {
         display: block;
+        &_menu {
+          position: relative;
+          padding-left: 50px;
+        }
       }
-    }
-
-    .app-header:first-child {
-      
     }
 
     .menu {
@@ -2055,15 +2055,25 @@ export default props => (
         font-size: 16px;
         line-height: 140%;
       }
+
       .menu {
+        display: none;
         padding: 0 0 0 10px;
-        
-        &__item {
-          display: none;
+
+        &_expanded {
+          left: 0;
+          top: 50px;
+          z-index: 1001;
+          position: fixed;
+          display: block;
+
+          background: #fff;
         }
+
         &__item_no_padding-left {
           display: block;
         }
+        
       }
 
       .app-header {
