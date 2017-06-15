@@ -20,11 +20,11 @@ export const apiMiddleware = store => next => async ({ type, payload }) => {
       else result = await axios[method](prefix + url, params, options)
 
       if (result.data.status !== 200) {
-        store.dispatch(apiError({ message: `api call error`, ...result.data }))
+        store.dispatch(apiError({ message: `api call error`, ...result.data, initial: payload }))
         if (errorAction) next({ type: errorAction, payload: result.data })
       } else if (successAction) next({ type: successAction, payload: result.data.result })
     } catch (e) {
-      store.dispatch(apiError({ status: 500, message: e }))
+      store.dispatch(apiError({ status: 500, message: e, initial: payload }))
       if (errorAction) next({ type: errorAction, payload: { status: 500, message: e } })
     }
   } else next({ type, payload })

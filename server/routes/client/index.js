@@ -49,6 +49,18 @@ module.exports = router => {
   })
 
   router.bridge('/admin', router => {
+    router.get('/programs/:programId', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/admin/programs/program', Object.assign({}, ctx.params, ctx.query))
+    })
+
+    router.get('/programs/:programId/tasks', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/admin/programs/program/tasks', Object.assign({}, ctx.params, ctx.query))
+    })
+
+    router.get('/programs/:programId/classes', async ctx => {
+      await ctx.__next.render(ctx.req, ctx.res, '/admin/programs/program/classes', Object.assign({}, ctx.params, ctx.query))
+    })
+
     router.get('/users/:userId', async ctx => {
       await ctx.__next.render(ctx.req, ctx.res, '/admin/users', Object.assign({}, ctx.params, ctx.query))
     })

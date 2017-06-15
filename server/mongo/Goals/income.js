@@ -19,7 +19,6 @@ model.methods.confirm = async function (status) {
 
 model.statics.calculate = async function (params) {
   params.confirmed = true
-
   let data = await this.aggregate([
     { $match: params },
     { $group: {
