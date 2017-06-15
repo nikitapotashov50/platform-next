@@ -75,20 +75,40 @@ export default ({ task, link, completed = false, status = null }) => {
           height: 50px;
           float: left;
           border-radius: 25px;
-          background-color: #f0e034;
+          background-color: #ff4b7a;
           margin-right: 15px;
         }
 
         .task-preview__icon-knifeplan {
+          background-color: #a6da41;
+          background-image: url('/static/img/tasks/finish.png');
+          background-size: 27px 37px;
+          background-position: 10px 12px;
+          background-repeat: no-repeat;
+        }
+        .task-preview__icon-default {
+          background-color: #8671f4;
+          background-image: url('/static/img/tasks/general.png');
+          background-size: 21px 22px;
+          background-position: 16px 15px;
+          background-repeat: no-repeat;
+        }
+        .task-preview__icon-set-goal {
+          background-image: url('/static/img/tasks/ab.png');
+          background-size: 27px 15px;
+          background-position: 11px 17px;
+          background-repeat: no-repeat;
+          background-color: #f2d510;
+        }
+        .task-preview__icon-set-knife {
           background-image: url('/static/img/tasks/kinjal.png');
           background-size: 26px 25px;
           background-position: center center;
           background-repeat: no-repeat;
-        }
-        .task-preview__icon-default {
-          background-color: #444;
+
         }
 
+       
         .task-preview {
           display: flex;
         }
