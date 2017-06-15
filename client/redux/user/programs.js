@@ -23,7 +23,7 @@ export const add = createAction('user/programs/ADD_PROGRAMS', item => ({ [item.i
 
 // change current program
 export const changeCurrent = createAction('user/programs/CHANGE_PROGRAM', async programId => {
-  await axios.put('/api/me/program/changeCurrent', { programId }, { withCredentials: true })
+  await axios.put('/api/mongo/me/program/changeCurrent', { programId }, { withCredentials: true })
 
   return { id: programId }
 })

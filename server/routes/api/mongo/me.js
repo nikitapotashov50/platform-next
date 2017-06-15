@@ -81,12 +81,12 @@ module.exports = router => {
   })
 
   router.bridge('/program', router => {
-    router.put('/changeCurrent', ctx => {
+    router.put('/changeCurrent', async ctx => {
       try {
         let programId = ctx.request.body.programId
         if (!programId) throw new Error('No program id specified')
         programId = Number(programId)
-        let [ program ] = models.Program.find({ _id: programId }).limit(1)
+        let [ program ] = await models.Program.find({ _id: programId }).limit(1)
         if (!program) throw new Error('no such program exists')
 
         ctx.session.currentProgram = program._id
