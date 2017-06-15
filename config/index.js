@@ -6,6 +6,9 @@ module.exports = {
   db: {
     uri: process.env.DB_URI
   },
+  mongo: {
+    uri: process.env.MONGO_URI
+  },
   api: {
     version: process.env.API_VERSION || 'v1',
     session_key: process.env.SESSION_KEY

@@ -238,6 +238,7 @@ model.methods.editReply = async function (body, user) {
   let [ post ] = await mongoose.models.Post.find({ _id: reply.postId }).sort({ created: -1 }).limit(1)
   let specific = null
   let statusCode = 'approved'
+
   // обновить пост
   if (post) post = await post.updatePost(pick(body, [ 'content', 'attachments' ]))
 

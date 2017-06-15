@@ -32,11 +32,12 @@ let menu = [
 
 class FeedbackResults extends Component {
   static async getInitialProps (ctx) {
-    let type = ctx.query.type || 'programs'
+    let type = ctx.query.type || 'program'
     let headers = null
     if (ctx.isServer) headers = ctx.req.headers
 
     ctx.store.dispatch(updateQuery(omit(ctx.query, [ 'type' ])))
+
     await ctx.store.dispatch(getFilters(type, { headers }))
     await ctx.store.dispatch(getTotal(type, { headers }))
     await ctx.store.dispatch(getNpsEntries(type, omit(ctx.query, [ 'type' ]), { headers }))
@@ -48,10 +49,12 @@ class FeedbackResults extends Component {
     super(props)
 
     this.state = {
-      fetching: false
+      fetching: false,
+      query: {}
     }
 
     this.onNavigate = this.onNavigate.bind(this)
+    this.filterChanged = this.filterChanged.bind(this)
   }
 
   onNavigate (field) {
@@ -82,6 +85,12 @@ class FeedbackResults extends Component {
     }))
   }
 
+  filterChanged (field, value) {
+    this.setState(state => {
+      state.query[field] = value
+    })
+  }
+
   render () {
     let { type } = this.props
     let { fetching } = this.state
@@ -97,7 +106,11 @@ class FeedbackResults extends Component {
         <div className='feed'>
           <div className='feed__left'>
 
-            <Panel Header={<PanelTitle title='NPS' />} Menu={Menu} SubHeader={<SubHeader data={filters} />}>
+            <Panel
+              Header={<PanelTitle title='NPS' />}
+              Menu={Menu}
+              SubHeader={<SubHeader data={filters} onChange={this.filterChanged} selected={this.state.query} />}
+            >
               <NpsOverall labels={labels} data={total.result} />
             </Panel>
 

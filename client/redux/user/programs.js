@@ -38,7 +38,7 @@ const fillPrograms = (state, payload = {}) => {
 
   return {
     ...state,
-    current: state.current || current,
+    current: payload.program || state.current || current,
     items: {
       ...state.items,
       ...items

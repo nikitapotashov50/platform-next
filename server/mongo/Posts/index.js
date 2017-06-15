@@ -4,6 +4,8 @@ const { extend, isArray, pick } = require('lodash')
 const paginate = require('mongoose-paginate')
 const moment = require('moment')
 
+const { addTokensByAction } = require('../../controllers/tokenController')
+
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const visibilityTypes = [ 'self', 'all', 'selected', 'subscribers' ]
@@ -20,6 +22,7 @@ const model = new mongoose.Schema(extend({
   //
   programs: [ { type: Number, ref: 'Program' } ],
   type: { type: Number, ref: 'PostsTypes' },
+  weight: { type: Number, default: 0 },
   //
   visibility: { type: String, enum: visibilityTypes, default: 'all' }
 }, is))
@@ -45,11 +48,17 @@ model.statics.getList = async function (params = {}, query = {}) {
   limit = Number(limit)
   offset = Number(offset) + 1
 
+  let sort = { created: -1 }
+  if (query.sort) sort = query.sort
+  let cache = null
+  if (query.cache) cache = query.cache
+
   let options = {
     limit,
+    cache,
     lean: true,
     page: offset,
-    sort: { created: -1 },
+    sort: sort,
     select: '_id title created content userId comments attachments likes_count',
     populate: {
       path: 'attachments',
@@ -63,47 +72,24 @@ model.statics.getList = async function (params = {}, query = {}) {
 }
 
 model.statics.getActual = async function (params, query = {}) {
-  params.enabled = true
-
   let model = this
-  let { limit = 7, offset = 0, days = 2 } = query
 
-  limit = Number(limit)
-  offset = Number(offset)
+  let { days = 2 } = query
+  delete query.days
+
+  query.sort = { weight: -1 }
+  query.cache = 120
 
   params.created = { $gte: new Date(moment().subtract(days, 'days').format('YYYY-MM-DD')) }
 
-  return model.aggregate([
-    { $match: params },
-    { $project: {
-      title: 1,
-      _id: 1,
-      created: 1,
-      content: 1,
-      userId: 1,
-      comments: 1,
-      attachments: 1,
-      likes_count: 1,
-      comment_count: { $multiply: [ { $size: '$comments' }, 2 ] }
-    }},
-    { $lookup: {
-      from: 'attachments',
-      localField: 'attachments',
-      foreignField: '_id',
-      as: 'attachments'
-    }},
-    { $sort: {
-      likes_count: -1,
-      comment_count: -1
-    }},
-    { $skip: limit * offset },
-    { $limit: limit }
-  ])
-  .cache(200)
-  .exec((err, data) => {
-    if (err) console.log(err)
-    return data
-  })
+  return model.getList(params, query)
+}
+
+model.statics.addWeight = async function (postId, amount) {
+  let model = this
+  let [ post ] = await model.find({ _id: postId }).limit(1)
+  post.weight = post.weight + amount
+  await post.save()
 }
 
 model.statics.addPost = async function (data, { user, type = 'user' }) {
@@ -137,14 +123,20 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   if (tags && tags.length > 0) tags.map(async tag => { await post.addTag(tag, user) })
   if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
+  addTokensByAction(user._id, 'writePost', { model: 'Post', item: post._id })
+    .then(async res => {
+      if (res.success) {
+        post.weight = post.weight + res.data.amount
+        await post.save()
+      }
+    })
+
   return post
 }
 
 model.methods.updatePost = async function (data) {
-  if (!data.title && !data.content) throw new Error('no data specified')
-
   let post = this
-
+  console.log(data)
   post = extend(post, pick(data, [ 'title', 'content' ]))
 
   if (data.attachments) {
@@ -177,7 +169,7 @@ model.methods.addComment = async function (content, userId, add = {}) {
   let post = this
 
   let data = extend({ content, userId }, add)
-  let comment = await mongoose.models.Comment.addToPost(data, post._id)
+  let comment = await mongoose.models.Comment.addToPost(data, post._id, { authorId: post.userId })
 
   post.comments.addToSet(comment)
   await post.save()

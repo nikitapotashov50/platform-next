@@ -3,6 +3,8 @@ import qs from 'query-string'
 import { pick } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
 
+import { API_CONST } from '../middlewares/apiCall'
+
 // default state
 let defaultState = {
   items: [],
@@ -12,13 +14,20 @@ let defaultState = {
   query: { limit: 2, page: 1 }
 }
 
-// action creators
-export const getFilters = createAction('admin/nps/GET_FILTERS', async ({ type }, options = {}) => {
-  options.params = { type }
-  options.withCredentials = true
+const filterActions = {
+  start: 'admin/nps/FILTER_FETCH_START',
+  success: 'admin/nps/FILTER_FETCH_SUCCESS',
+  fail: 'admin/nps/FILTER_FETCH_FAIL'
+}
 
-  return {}
-})
+// action creators
+export const getFilters = createAction(API_CONST, async (type, options = {}) => ({
+  method: 'get',
+  params: { type },
+  url: `/api/mongo/nps/filters`,
+  options: { ...options, withCredentials: true },
+  actions: [ filterActions.start, filterActions.success, filterActions.fail ]
+}))
 
 export const updateQuery = createAction('admin/nps/GET_FILTERS', (query = {}, rewrite = false) => ({ query, rewrite }))
 
@@ -62,10 +71,6 @@ export default handleActions({
     cities: payload.items
   }),
   //
-  [getFilters]: (state, { payload }) => ({
-    ...state,
-    filters: payload
-  }),
   [getTotal]: (state, { payload }) => ({
     ...state,
     total: pick((payload.data || [])[0] || {}, [ 'result', 'byDate' ])
@@ -73,5 +78,9 @@ export default handleActions({
   [updateQuery]: (state, { payload }) => ({
     ...state,
     query: payload.rewrite ? payload.query : { ...state.query, ...payload.query }
+  }),
+  [filterActions.success]: (state, { payload }) => ({
+    ...state,
+    filters: payload.filters
   })
 }, defaultState)

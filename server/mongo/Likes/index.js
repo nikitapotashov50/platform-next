@@ -7,6 +7,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
   userId: { type: ObjectId, ref: 'Users', required: true },
+  weight: { type: Number, default: 0 },
   target: {
     model: { type: String },
     item: { type: ObjectId, refPath: 'target.model' }
@@ -27,7 +28,7 @@ model.statics.addToPost = async function (postId, userId, add = {}, postInfo = {
       target: { model: 'Post', item: postId }
     }, add))
 
-    if (postInfo.authorId) addTokensByAction(userId, postInfo.authorId, 'votePost')
+    if (postInfo.authorId && (postInfo.authorId !== userId)) like.addWeight(postInfo.authorId, userId, postId)
   } else if (!like.enabled) {
     like.enabled = true
     await like.save()
@@ -44,6 +45,22 @@ model.statics.removeFromPost = async function (postId, userId) {
   await like.save()
   // todo обработку ошибок
   return like
+}
+
+model.methods.addWeight = async function (authorId, userId, postId) {
+  let like = this
+  try {
+    let result = await addTokensByAction(authorId, 'votePost', { userFrom: userId, model: 'Post', item: postId })
+    if (!result.success) throw new Error('Token not successful')
+    like.weight = result.data.amount
+
+    await Promise.all([
+      like.save(),
+      mongoose.models.Post.addWeight(postId, result.data.amount)
+    ])
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 module.exports = mongoose.model('Like', model)

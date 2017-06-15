@@ -2,10 +2,13 @@ const mongoose = require('mongoose')
 const { extend, isArray } = require('lodash')
 const { is } = require('../utils/common')
 
+const { addTokensByAction } = require('../../controllers/tokenController')
+
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const model = new mongoose.Schema(extend({
   content: { type: String, default: '' },
+  weight: { type: Number, default: 0 },
   //
   userId: { type: ObjectId, ref: 'Users', required: true },
   //
@@ -15,7 +18,7 @@ const model = new mongoose.Schema(extend({
   }
 }, is))
 
-model.statics.getForPosts = async function (posts, { limit, reversed }) {
+model.statics.getForPosts = async function (posts = [], { limit, reversed }) {
   let model = this
   let structured = {}
 
@@ -53,10 +56,29 @@ model.statics.getForPost = async function (post, { limit, offset, reversed }) {
   return list
 }
 
-model.statics.addToPost = async function (data, postId) {
+model.statics.addToPost = async function (data, postId, postInfo = {}) {
   data.target = { model: 'Post', item: postId }
   let comment = await this.create(data)
+
+  if (postInfo.authorId && (postInfo.authorId !== data.userId)) comment.addWeight(postInfo.authorId, data.userId, postId)
+
   return comment
+}
+
+model.methods.addWeight = async function (authorId, userId, postId) {
+  let comment = this
+  try {
+    let result = await addTokensByAction(authorId, 'writeComment', { userFrom: userId, model: 'Post', item: postId })
+    if (!result.success) throw new Error('Token not successful')
+    comment.weight = result.data.amount
+
+    await Promise.all([
+      comment.save(),
+      mongoose.models.Post.addWeight(postId, result.data.amount)
+    ])
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 model.statics.getObjectById = async function (idArray) {
