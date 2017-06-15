@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-
+import NoSSR from 'react-no-ssr'
 import { isEqual } from 'lodash'
+
 import FeedLayout from '../client/layouts/feed'
 import Page from '../client/hocs/Page'
 import PostEditor from '../client/components/PostEditor/index'
@@ -64,7 +65,9 @@ class IndexPage extends Component {
 
         <Panel noBody noMargin noBorder menuStyles={{ noBorder: true }} Menu={() => <PanelMenu items={menuItems} selected={tab} />} />
 
-        <PostList params={params} pathname={pathname} />
+        <NoSSR onSSR={<div>Загрузка</div>}>
+          <PostList params={params} pathname={pathname} />
+        </NoSSR>
       </FeedLayout>
     )
   }
