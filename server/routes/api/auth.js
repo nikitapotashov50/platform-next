@@ -204,7 +204,7 @@ module.exports = router => {
       const userMeta = await user.getMeta()
 
       // проверка на присутствие программы
-      let res = await checkUserPrograms(userMeta, user, 94)
+      await checkUserPrograms(userMeta, user, 94)
 
       let programs = await user.getPrograms()
 
