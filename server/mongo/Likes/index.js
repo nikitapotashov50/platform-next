@@ -27,7 +27,14 @@ model.statics.addToPost = async function (postId, userId, add = {}, postInfo = {
       target: { model: 'Post', item: postId }
     }, add))
 
-    if (postInfo.authorId) addTokensByAction(userId, postInfo.authorId, 'votePost')
+    console.log(postInfo.authorId)
+    if (postInfo.authorId) {
+      addTokensByAction(postInfo.authorId, 'votePost', { userFrom: userId, model: 'Post', item: postId })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => console.log(err))
+    }
   } else if (!like.enabled) {
     like.enabled = true
     await like.save()
