@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { is } = require('../utils/common')
-const { extend, isArray } = require('lodash')
+const { extend, isArray, pick } = require('lodash')
 const paginate = require('mongoose-paginate')
 const moment = require('moment')
 
@@ -39,6 +39,7 @@ model.statics.PostTypes = require('./types')
 
 model.statics.getList = async function (params = {}, query = {}) {
   let model = this
+  params.enabled = true
 
   let { limit = 7, offset = 0 } = query
   limit = Number(limit)
@@ -62,6 +63,8 @@ model.statics.getList = async function (params = {}, query = {}) {
 }
 
 model.statics.getActual = async function (params, query = {}) {
+  params.enabled = true
+
   let model = this
   let { limit = 7, offset = 0, days = 2 } = query
 
@@ -106,9 +109,7 @@ model.statics.getActual = async function (params, query = {}) {
 model.statics.addPost = async function (data, { user, type = 'user' }) {
   let model = this
   let attachments = data.attachments || []
-  let tags = data.tags || []
 
-  if (data.tags) delete data.tags
   if (data.attachments) delete data.attachments
 
   if (data.program) {
@@ -123,6 +124,12 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
     delete data.program
   }
 
+  let tags = []
+  decodeURIComponent(data.content).replace(/(^|\W)(#[a-zа-я\d]+[\w-]*)/gi, function (i, k, j) {
+    tags.push(j)
+    return j
+  })
+
   data.type = 0
   data.userId = user
   let post = await model.create(data)
@@ -131,6 +138,39 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
   return post
+}
+
+model.methods.updatePost = async function (data) {
+  if (!data.title && !data.content) throw new Error('no data specified')
+
+  let post = this
+
+  post = extend(post, pick(data, [ 'title', 'content' ]))
+
+  if (data.attachments) {
+    // смотрим какие есть аттачменты уже у поста
+    let current = post.attachments
+    // шерстим пришедшие аттачменты на предмет новы и старых
+    let newly = []
+    let old = []
+    data.attachments.map(el => {
+      if (el._id) old.push(el._id)
+      else newly.push(el)
+    })
+    // теперь смотрим не ушбрались ли старые
+    current = current.filter(el => old.indexOf(el.toString()) === -1).map(el => {
+      // убираем их из поста
+      post.attachments.splice(post.attachments.indexOf(el), 1)
+      return el
+    })
+
+    await post.save()
+    await mongoose.models.Attachment.block(current || [])
+
+    if (newly && newly.length > 0) await Promise.all(newly.map(el => post.addAttachment(el)))
+  }
+
+  return post.save()
 }
 
 model.methods.addComment = async function (content, userId, add = {}) {
@@ -190,6 +230,11 @@ model.methods.removeLike = async function (userId) {
   await post.save()
 
   return post
+}
+
+model.methods.block = function (flag = true) {
+  this.enabled = !flag
+  return this.save()
 }
 
 model.methods.addAttachment = async function (data, add = {}) {

@@ -20,11 +20,12 @@ module.exports = router => {
   })
 
   router.get('/entries', async ctx => {
-    let data = await models.NPS.find()
+    let { limit, page } = ctx.query
+    let { total, docs } = await models.NPS.getList({}, { limit, page })
 
     ctx.body = {
       status: 200,
-      result: { data }
+      result: { total, items: docs }
     }
   })
 

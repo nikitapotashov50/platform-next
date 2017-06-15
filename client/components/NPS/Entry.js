@@ -5,28 +5,21 @@ import UserInline from '../User/Inline'
 export default ({ data, body, labels, User, ...props }) => {
   let Footer = (
     <div className='nps-result'>
-      <div className='nps-result__row'>
-        <div className='nps-result__row-title'>{labels['score_1']}</div>
-        <RatingBar className='nps-result__row-value' rate={data.score[0]} inline />
-      </div>
-      <div className='nps-result__row'>
-        <div className='nps-result__row-title'>{labels['score_2']}</div>
-        <RatingBar className='nps-result__row-value' rate={data.score[1]} inline />
-      </div>
-      <div className='nps-result__row'>
-        <div className='nps-result__row-title'>{labels['score_3']}</div>
-        <RatingBar className='nps-result__row-value' rate={data.score[2]} inline />
-      </div>
+      { (data.score || []).map((el, i) => (
+        <div className='nps-result__row' key={`nps-score-${i}`}>
+          <div className='nps-result__row-title'>{labels[`score_${i + 1}`]}</div>
+          <RatingBar className='nps-result__row-value' rate={data.score[i]} inline />
+        </div>
+      ))}
     </div>
   )
-  console.log(data)
 
   let headerStyles = {}
   if (!data.content) headerStyles.noBorder = true
 
   return (
-    <Panel Footer={() => Footer} Header={<UserInline date={data.created} user={User} />} noBody={!data.content} headerStyles={headerStyles}>
-      { body && (
+    <Panel Footer={Footer} Header={<UserInline date={data.created} user={User} />} noBody={!data.content} headerStyles={headerStyles}>
+      { data.content && (
         <div className='post-preview'>
           <a className='post-preview__body'>{data.content}</a>
         </div>

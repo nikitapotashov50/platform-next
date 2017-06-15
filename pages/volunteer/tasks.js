@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
+import isProgramRole from '../../client/components/Access/isProgramRole'
+
 import Panel from '../../client/elements/Panel'
 import RightMenu from '../../client/components/NPS/RightMenu'
 import PanelTitle from '../../client/elements/Panel/Title'
@@ -117,13 +119,8 @@ const mergeProps = (state, dispatch, props) => ({
   }
 })
 
-export default PageHoc(VolunteerPage, {
+export default PageHoc(isProgramRole('volunteer')(VolunteerPage), {
   title: 'Волонтерство',
-  accessRule: (user, props) => {
-    let { programs } = props.user
-    let flag = (programs.items[programs.current] && programs.items[programs.current].role === 'volunteer')
-    return !!user && flag
-  },
   mergeProps,
   mapStateToProps,
   mapDispatchToProps

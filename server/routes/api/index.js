@@ -13,7 +13,7 @@ const attachmentRoutes = require('./attachment')
 const chatRoutes = require('./chat')
 
 const mongoTest = require('./mongo')
-const mongoMigrate = require('./migrate')
+// const mongoMigrate = require('./migrate')
 
 // const mongoTest = require('./mongo')
 // const mongoMigrate = require('./migrate')
@@ -46,10 +46,10 @@ module.exports = router => {
   router.bridge('/chat', chatRoutes)
 
   router.bridge('/mongo', mongoTest)
-  router.bridge('/migrate', mongoMigrate)
+  // router.bridge('/migrate', mongoMigrate)
 
-  router.bridge('/mongo', mongoTest)
-  router.bridge('/migrate', mongoMigrate)
+  // router.bridge('/mongo', mongoTest)
+  // router.bridge('/migrate', mongoMigrate)
 
   // router.bridge('/field', fieldRouter)
   router.bridge('*', generalRouter)

@@ -7,9 +7,10 @@ const {
   getBMAccessTokenCredentialsOnly, getBMSignUp
 } = require('../../controllers/authController')
 // refreshToken
+// getBalance
 
 const getUser = async email => {
-  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name picture_small').lean()
+  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name name role picture_small').lean()
 
   if (!user) return null
 
@@ -175,11 +176,13 @@ module.exports = router => {
     try {
       let { userId } = ctx.request.body
       if (!userId) throw new Error('no user id specified')
-      let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions meta')
+      let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions role meta')
       if (!user) throw new Error('no user found')
 
       const userMeta = await user.getMeta()
       let programs = await user.getPrograms()
+
+      if (!userMeta.wallet) userMeta.getWallet()
 
       if (!programs.length) {
         await user.addProgram(3, {})
@@ -216,6 +219,7 @@ module.exports = router => {
         status: 200,
         result: {
           programs,
+          isAdmin: user.role === 3,
           subscriptions: user.subscriptions,
           radar_id: userMeta.radar_id,
           radar_access: !isNil(userMeta.radar_access_token)

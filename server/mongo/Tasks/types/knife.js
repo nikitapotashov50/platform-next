@@ -49,6 +49,17 @@ model.methods.closePlan = async function (data, user, programId) {
   return { report, plan }
 }
 
+model.methods.updateClose = async function (data) {
+  let plan = this
+  if (data.fact) plan.success = (Number(data.fact) >= plan.goal)
+  plan.save()
+
+  let [ report ] = await mongoose.models.TaskReport.find({ _id: plan.reportId }).limit(1)
+  report = await report.editReport(data)
+
+  return { report, plan }
+}
+
 model.methods.confirmPlan = async function (status) {
   let plan = this
 

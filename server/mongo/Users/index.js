@@ -74,6 +74,7 @@ model.statics.getShortInfo = async function (idArray) {
 model.methods.addProgram = async function (programId, options, roleId = 3) {
   let user = this
   if (!options.roleId) options.roleId = roleId
+  if (user.programs && user.programs.filter(el => el.programId === programId).length) return user
 
   let meta = await mongoose.models.ProgramUserMeta.makeMeta(programId, user._id, options)
 
@@ -243,9 +244,9 @@ model.methods.getTasks = async function (programId, params = {}, options = {}) {
       },
       params
     ))
-    .select('_id title content start_at finish_at')
+    .select('_id title content replyTypeId start_at finish_at type.model type.item')
+    .populate([ 'type.item' ])
     .sort({ created: -1 })
-    .lean()
     .limit(options.limit || null)
     // .cache(!options.noCache ? 60 : 1)
 }
@@ -276,7 +277,7 @@ model.methods.getRepliedByStatus = async function (programId, status) {
  * GET ACTIVE (NOT REPLIED) TASKS
  * get list of tasks in current program, where are no replies from current user exists
  */
-model.methods.getActiveTasks = async function (programId) {
+model.methods.getActiveTasks = async function (programId, options = {}) {
   let user = this
 
   let params = {
@@ -284,7 +285,7 @@ model.methods.getActiveTasks = async function (programId) {
     'type.model': { $ne: 'KnifePlan' }
   }
 
-  return user.getTasks(programId, params, {})
+  return user.getTasks(programId, params, options)
 }
 
 model.methods.getKnifePlans = async function (programId) {

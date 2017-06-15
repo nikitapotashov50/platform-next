@@ -6,12 +6,12 @@ const pickInfo = (obj, fields) => transform(pick(obj || {}, fields), (result, va
 }, []).filter(x => !!x.value)
 
 const getStatus = (status, gender = null) => {
-  if (status === 'single') return 'В поиске'
+  if (status === 'single') return gender ? (gender === 'male' ? 'Свободен' : 'Свободна') : 'Не в отношениях'
   if (status === 'couple') return 'В отношениях'
   if (status === 'married') return gender ? (gender === 'male' ? 'Женат' : 'Замужем') : 'Женат / Замужем'
 }
 
-export default ({ info = {}, user = {}, goal = {} }) => {
+export default ({ info = {}, user = {}, goal = {}, balance = null }) => {
   let badgeInfo = []
   if (info && info.birthday) badgeInfo.push(Math.floor(moment(new Date()).diff(moment(info.birthday), 'years', true)) + ' лет')
   if (info && info.social_status) badgeInfo.push(getStatus(info.social_status, info.gender))
@@ -29,10 +29,15 @@ export default ({ info = {}, user = {}, goal = {} }) => {
       { contacts.length > 0 && (
         <div>
           { contacts.map(el => (
-            <div key={el.type}>{el.type}: {el.value}</div>
+            el.type === 'vk' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-vk' key={el.type} />)
+            : el.type === 'facebook' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-facebook' key={el.type} />)
+            : el.type === 'instagram' ? (<a href={el.value} target='_blank' className='user-badge__info-link user-badge__info-instagram' key={el.type} />)
+            : el.type === 'website' ? (<a href={el.value} target='_blank' className='user-badge__info-website' key={el.type}>{el.value}</a>) : ''
           ))}
         </div>
       )}
+
+      { balance && (<div>{balance} BMT</div>)}
     </div>
   )
 }

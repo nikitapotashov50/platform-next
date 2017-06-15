@@ -1,3 +1,5 @@
+import { pick } from 'lodash'
+
 const changeValue = (field, cb, e) => {
   if ([ 'content' ].indexOf(field) < 0) return
 
@@ -17,6 +19,8 @@ const DefaultReply = ({ errors, affected, onChange }) => (
 )
 
 DefaultReply.title = 'Ответ на задание'
+
+DefaultReply.getData = specific => pick(specific, [ 'content' ])
 
 DefaultReply.validate = (data, errors = {}) => {
   if (!data.content || !data.content.length) errors.content = 'Напишите ответ на задание'

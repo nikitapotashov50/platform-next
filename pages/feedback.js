@@ -3,6 +3,8 @@ import { translate } from 'react-i18next'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
+import isLogged from '../client/components/Access/isLogged'
+
 import PanelMenu from '../client/components/PanelMenu'
 import PageHoc from '../client/hocs/Page'
 import Panel from '../client/elements/Panel'
@@ -12,12 +14,12 @@ import FeedLayout from '../client/layouts/feed'
 import FeedbackForm from '../client/components/Feedback/Form'
 import FeedbackReplies from '../client/components/Feedback/Replies'
 
-import { initFeedback, fetchEnd, fetchStart, submiFeedback } from '../client/redux/feedback' // eslint-disable-line
+import { initFeedback, submiFeedback } from '../client/redux/feedback'
 
 const menuItems = {
   class: { code: 'class', href: '/feedback?type=class', path: '/feedback/class', title: 'О занятии' },
   program: { code: 'program', href: '/feedback?type=program', path: '/feedback/program', title: 'О программе' },
-  platform: { code: 'platform', href: '/feedback', path: '/feedback', title: 'О платформе' }
+  platform: { code: 'platform', href: '/feedback?type=platform', path: '/feedback/platform', title: 'О платформе' }
 }
 
 class FeedbackPage extends Component {
@@ -44,6 +46,10 @@ class FeedbackPage extends Component {
     })
   }
 
+  async componentWillReceiveProps (nextProps) {
+    if (nextProps.program !== this.props.program) await nextProps.init(nextProps.type)
+  }
+
   async submit (e) {
     e.preventDefault()
     let { reply } = this.state
@@ -62,6 +68,7 @@ class FeedbackPage extends Component {
   render () {
     let { reply, errors } = this.state
     let { t, type, fetching, info } = this.props
+    type = this.props.types.indexOf(type) === -1 ? 'platform' : type
 
     let ReplyData = this.props.reply ? FeedbackReplies[type] : null
     let menu = pick(menuItems, this.props.types)
@@ -79,40 +86,38 @@ class FeedbackPage extends Component {
 
 FeedbackPage.getInitialProps = async (ctx) => {
   let headers = null
-  let type = ctx.query.type || 'platform'
+  let type = ctx.query.type
 
   if (ctx.req) headers = ctx.req.headers
   await ctx.store.dispatch(initFeedback(type, { headers }))
+
+  let { feedback } = ctx.store.getState()
+
+  if (!type && (feedback.types || []).indexOf('class') !== -1) {
+    type = 'class'
+    await ctx.store.dispatch(initFeedback(type, { headers }))
+  }
+
   return { type }
 }
 
-const mapStateToProps = ({ feedback }) => ({ ...feedback })
+const mapStateToProps = ({ feedback, user }) => ({
+  ...feedback,
+  program: user.programs.current || null
+})
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  initFeedback,
-  fetchEnd,
-  fetchStart,
-  submiFeedback
-}, dispatch)
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators({
+    init: initFeedback,
+    submit: submiFeedback
+  }, dispatch),
+  dispatch
+})
 
-const mergeProps = (state, dispatch, props) => {
-  const submit = async data => {
-    dispatch.fetchStart()
-    await dispatch.submiFeedback(props.type, data)
-    dispatch.fetchEnd()
-  }
-
-  return { submit, ...state, ...props }
-}
-
-const accessRule = user => !!user
-
-let translated = translate([ 'common' ])(FeedbackPage)
+let translated = isLogged(translate([ 'common' ])(FeedbackPage))
 
 export default PageHoc(translated, {
   title: 'Оставить отзыв',
-  accessRule,
   mapStateToProps,
-  mapDispatchToProps,
-  mergeProps
+  mapDispatchToProps
 })

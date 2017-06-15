@@ -3,6 +3,8 @@ import axios from 'axios'
 import Router from 'next/router'
 import { bindActionCreators } from 'redux'
 
+import isLogged from '../client/components/Access/isLogged'
+
 import DefaultLayout from '../client/layouts/default'
 import PageHoc from '../client/hocs/Page'
 import { notify, getChatList, getMessageList } from '../client/redux/chat'
@@ -144,7 +146,7 @@ class ChatPage extends Component {
   }
 }
 
-export default PageHoc(ChatPage, {
+export default PageHoc(isLogged(ChatPage), {
   title: 'Чаты',
   mapStateToProps: state => ({
     chats: state.chat.chats

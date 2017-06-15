@@ -1,43 +1,41 @@
 import axios from 'axios'
 import { handleActions, createAction } from 'redux-actions'
-import { generateFetchActions } from '../../utils/redux'
+
+import { API_CONST } from '../middlewares/apiCall'
 
 const defaultState = {
   active: [],
-  replied: [],
   knife: [],
   count: null,
   fetching: false
 }
 
+const FETCH_START = 'tasks/FETCH_START'
+const FETCH_SUCCESS = 'tasks/FETCH_SUCCESS'
+const FETCH_FAIL = 'tasks/FETCH_FAIL'
+
 //
-export const { fetchEnd, fetchStart } = generateFetchActions('tasks')
-
-export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
+export const tasksApiGet = createAction(API_CONST, (programId, type = 'current', options = {}) => {
+  let postfix = type !== 'current' ? type : ''
   options.withCredentials = true
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/count`, options)
 
-  return data.result
+  return {
+    options,
+    params: { programId },
+    url: `/api/mongo/tasks/${postfix}`,
+    method: 'get',
+    actions: [ FETCH_START, FETCH_SUCCESS, FETCH_FAIL ]
+  }
 })
 
-export const getTasks = createAction('tasks/GET_LIST', async (programId, type, options = {}) => {
-  let params = {
-    params: { programId },
-    withCredentials: true
-  }
+export const getActiveCount = createAction('tasks/GET_COUNT', async (options = {}) => {
+  let prefix = ''
+  options.withCredentials = true
+  if (options.headers) prefix = BACKEND_URL
 
-  let postfix = type !== 'current' ? type : ''
+  let { data } = await axios.get(`${prefix}/api/mongo/tasks/count`, options)
 
-  if (options.headers) params.headers = options.headers
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/tasks/${postfix}`, params)
-
-  if (data.result) {
-    return {
-      active: data.result.active || [],
-      replied: data.result.replied || [],
-      knife: data.result.knife || []
-    }
-  } else return data
+  return data.result
 })
 
 export default handleActions({
@@ -45,12 +43,17 @@ export default handleActions({
     ...state,
     count: payload.count
   }),
-  [getTasks]: (state, { payload }) => ({
+  [FETCH_SUCCESS]: (state, { payload }) => ({
     ...state,
     active: payload.active || [],
-    replied: payload.replied || [],
-    knife: payload.knife || []
+    knife: payload.knife || [],
+    fetching: false
   }),
-  [fetchEnd]: state => ({ ...state, fetching: false }),
-  [fetchStart]: state => ({ ...state, fetching: true })
+  [FETCH_FAIL]: state => ({
+    ...state,
+    knife: [],
+    active: [],
+    fetching: false
+  }),
+  [FETCH_START]: state => ({ ...state, fetching: true })
 }, defaultState)

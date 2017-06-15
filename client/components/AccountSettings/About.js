@@ -4,7 +4,7 @@ export default ({ user, t, affected, onChange }) => (
   <form className='panel-form'>
     <div className='panel-form__row'>
       <label className='panel-form__label'>{t('account.settings.about.fields.gender')}</label>
-      <select value={isUndefined(affected.gender) ? user.gender || '' : affected.gender} onChange={onChange.bind(this, 'gender')}>
+      <select value={isUndefined(affected.gender) ? user.gender || '' : affected.gender} onChange={onChange.bind(this, 'gender')} className='panel-form__select'>
         <option value={null}>Не указан</option>
         <option value={'male'}>Мужчина</option>
         <option value={'feemale'}>Женщина</option>
@@ -13,9 +13,9 @@ export default ({ user, t, affected, onChange }) => (
 
     <div className='panel-form__row'>
       <label className='panel-form__label'>{t('account.settings.about.fields.social_status')}</label>
-      <select value={isUndefined(affected.social_status) ? user.social_status || '' : affected.social_status} onChange={onChange.bind(this, 'social_status')}>
+      <select value={isUndefined(affected.social_status) ? user.social_status || '' : affected.social_status} onChange={onChange.bind(this, 'social_status')} className='panel-form__select'>
         <option value={null}>Не указано</option>
-        <option value={'single'}>В поиске</option>
+        <option value={'single'}>Не в отношениях</option>
         <option value={'couple'}>В отношениях</option>
         <option value={'married'}>Женат / Замужем</option>
       </select>

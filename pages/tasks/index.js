@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import isLogged from '../../client/components/Access/isLogged'
 
 import Panel from '../../client/elements/Panel'
 
 import PanelMenu from '../../client/components/PanelMenu'
 import PageHoc from '../../client/hocs/Page'
 import FeedLayout from '../../client/layouts/feed'
+import ErrorLayout from '../../client/layouts/error'
 import OverlayLoader from '../../client/components/OverlayLoader'
 
 import TaskList from '../../client/components/Tasks/List/index'
 
-import { getTasks, fetchEnd, fetchStart } from '../../client/redux/tasks/index'
+import { tasksApiGet } from '../../client/redux/tasks/index'
 
 const getLink = taskId => ({
   href: `/tasks/task?id=${taskId}`,
@@ -25,11 +27,26 @@ const filters = [
 ]
 
 class TasksIndex extends Component {
-  async componentWillReceiveProps (nextProps) {
-    if (this.props.program !== nextProps.program) await this.props.getTasks(nextProps.program, nextProps.type)
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      restrict: props.notFound || false
+    }
+  }
+
+  async componentWillReceiveProps (nextProps, nextState) {
+    if (this.props.program !== nextProps.program) {
+      if (nextProps.program !== 3) {
+        if (this.state.restrict) await this.setState({ restrict: false })
+        await this.props.tasksApiGet(nextProps.program, nextProps.type)
+      } else await this.setState({ restrict: true })
+    }
   }
 
   render () {
+    if (this.state.restrict) return <ErrorLayout />
+
     let { tasks, type } = this.props
     let List = TaskList[type]
 
@@ -38,7 +55,7 @@ class TasksIndex extends Component {
         <Panel noBody noMargin noBorder Menu={() => <PanelMenu items={filters} selected={type} />} />
 
         <OverlayLoader loading={tasks.fetching}>
-          <List tasks={tasks} getLink={getLink} />
+          { List && (<List tasks={tasks} getLink={getLink} />)}
         </OverlayLoader>
       </FeedLayout>
     )
@@ -47,15 +64,16 @@ class TasksIndex extends Component {
 
 TasksIndex.getInitialProps = async ctx => {
   let { user } = ctx.store.getState()
+  let type = ctx.query.type || 'current'
+
+  if (user.programs.current === 3) return { notFound: true, type }
 
   let headers = null
 
-  let type = ctx.query.type || 'current'
-
   if (ctx.req) headers = ctx.req.headers
-  await ctx.store.dispatch(getTasks(user.programs.current, type, { headers }))
+  await ctx.store.dispatch(tasksApiGet(user.programs.current, type, { headers }))
 
-  return { type: ctx.query.type || 'current' }
+  return { type }
 }
 
 const mapStateToProps = ({ tasks, user }) => ({
@@ -65,9 +83,7 @@ const mapStateToProps = ({ tasks, user }) => ({
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators({
-    getTasks,
-    fetchEnd,
-    fetchStart
+    tasksApiGet
   }, dispatch),
   dispatch
 })
@@ -75,17 +91,12 @@ const mapDispatchToProps = dispatch => ({
 const mergeProps = (state, dispatch, props) => ({
   ...state,
   ...props,
-  getTasks: async (programId, type) => {
-    dispatch.fetchStart()
-    await dispatch.getTasks(programId, type)
-    dispatch.fetchEnd()
-  },
+  tasksApiGet: dispatch.tasksApiGet,
   dispatch: dispatch.dispatch
 })
 
-export default PageHoc(TasksIndex, {
+export default PageHoc(isLogged(TasksIndex), {
   title: 'Задания',
-  accessRule: user => !!user,
   mapStateToProps,
   mapDispatchToProps,
   mergeProps

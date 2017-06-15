@@ -4,6 +4,8 @@ import Panel from '../../client/elements/Panel'
 import PanelMenu from '../../client/components/PanelMenu'
 import PanelTitle from '../../client/elements/Panel/Title'
 
+import isLogged from '../../client/components/Access/isLogged'
+
 const menuItems = [
   { href: '/support', path: '/support', title: 'FAQ', code: 'faq' },
   { href: '/support?tab=report', path: '/support/report', title: 'Обращение', code: 'report' }
@@ -20,6 +22,6 @@ const SupportPage = ({ tab }) => (
 
 SupportPage.getInitialProps = ctx => ({ tab: ctx.query.tab || 'faq' })
 
-export default PageHoc(SupportPage, {
+export default PageHoc(isLogged(SupportPage), {
   title: 'Поддержка'
 })

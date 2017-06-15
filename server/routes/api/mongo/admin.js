@@ -15,6 +15,23 @@ const initUser = async (ctx, next) => {
 }
 
 module.exports = router => {
+  router.post('/assign/program/', async ctx => {
+    try {
+      let { email, programId, roleId = 3 } = ctx.request.body
+      if (!email || !programId) throw new Error('no user or program specified')
+      let [ user ] = await models.Users.find({ email }).limit(1)
+      if (!user) throw new Error('no user found')
+      let [ program ] = await models.Program.find({ _id: programId }).limit(1)
+      if (!program) throw new Error('no program found')
+
+      await user.addProgram(program._id, {}, roleId)
+
+      ctx.body = { status: 200, result: true }
+    } catch (e) {
+      ctx.body = { status: 500, message: e }
+    }
+  })
+
   router.bridge('/users', router => {
     router.get('/list', async ctx => {
       let { limit = 20, userIds, searchString } = ctx.request.query

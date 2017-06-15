@@ -33,7 +33,7 @@ class UserLayout extends Component {
   }
 
   render () {
-    let { user, groups, showButtons, goal, info, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
+    let { user, groups, showButtons, goal, balance, info, subscribers, isSubscribed, subscriptions, toggleSubscription, fetching, children } = this.props
     // isBlocked, toggleBlock,
 
     let panelBodyStyles = { padding: 'small' }
@@ -53,7 +53,7 @@ class UserLayout extends Component {
                 <div className='up-header__buttons'>
                   {this.hasRadar() && <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '', 'up-header__send-msg' ].join(' ')} onClick={this.sendMessage}>Написать сообщение</button>}
                   {/* <button className={[ 'up-header__button', isBlocked ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleBlock}>Блокировать</button> */}
-                  <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleSubscription}>Подписаться</button>
+                  <button className={[ 'up-header__button', isSubscribed ? 'up-header__button_active' : '' ].join(' ')} onClick={toggleSubscription}>{ isSubscribed ? 'Отписаться' : 'Подписаться' }</button>
                 </div>
               ) }
             </div>
@@ -64,7 +64,7 @@ class UserLayout extends Component {
             <div className='user-page__content-block user-page__content-block_side'>
               {/* Информация */}
               <Panel bodyStyles={panelBodyStyles}>
-                <UserProfileBadge info={info} user={user} goal={goal} />
+                <UserProfileBadge info={info} user={user} goal={goal} balance={balance} />
               </Panel>
 
               {/* Цель */}

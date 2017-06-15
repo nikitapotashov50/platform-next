@@ -67,12 +67,6 @@ class PostEditor extends Component {
 
     const post = { title, content, attachments, program }
 
-    post.tags = []
-    post.content.replace(/(^|\W)(#[a-z\d][\w-]*)/gi, function (i, k, j) {
-      post.tags.push(j)
-      return j
-    })
-
     await this.setState({ fetching: true })
     await this.props.addPost(post)
     await this.setState({ fetching: false })

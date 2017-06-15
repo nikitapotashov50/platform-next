@@ -1,10 +1,10 @@
 import { isEmpty } from 'lodash'
 import Panel from '../../elements/Panel'
 import PanelTitle from '../../elements/Panel/Title'
-
+import PostBody from '../Post/Preview/Body'
 import Content from './replyContent/index'
 
-export default ({ reply, type, specific = null }) => {
+export default ({ reply, type, post = null, specific = null }) => {
   let ContentBlock = Content[type] || null
 
   return (
@@ -15,7 +15,7 @@ export default ({ reply, type, specific = null }) => {
         </div>
       )}
 
-      { reply.content && reply.content}
+      { post && <PostBody post={post} />}
     </Panel>
   )
 }

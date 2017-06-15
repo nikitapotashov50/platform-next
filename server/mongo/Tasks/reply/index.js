@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { extend, isArray } = require('lodash')
+const { extend, isArray, pick } = require('lodash')
 const { is } = require('../../utils/common')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -68,11 +68,11 @@ model.statics.getByPostIds = async function (postIds) {
       enabled: true,
       postId: { $in: postIds }
     })
-    .select('specific title postId taskId status replyTypeId')
+    .select('specific title postId taskId status replyTypeId created')
     .populate([
       'specific.item',
       'replyTypeId',
-      { path: 'taskId', select: 'title _id' },
+      { path: 'taskId', select: 'title _id finish_at' },
       {
         path: 'status',
         select: 'status',
@@ -209,6 +209,14 @@ model.methods.getStatus = async function () {
     .sort({ created: -1 })
 }
 
+model.methods.getPost = function () {
+  return mongoose.models.Post
+    .find({ _id: this.postId })
+    .populate([ 'attachments' ])
+    .sort({ created: -1 })
+    .limit(1)
+}
+
 model.methods.verify = async function (status, user) {
   let reply = this
 
@@ -222,6 +230,40 @@ model.methods.verify = async function (status, user) {
   }
 
   return reply.addStatus(status, { userId: user._id })
+}
+
+model.methods.editReply = async function (body, user) {
+  let reply = this
+  // достать пост
+  let [ post ] = await mongoose.models.Post.find({ _id: reply.postId }).sort({ created: -1 }).limit(1)
+  let specific = null
+  let statusCode = 'approved'
+  // обновить пост
+  if (post) post = await post.updatePost(pick(body, [ 'content', 'attachments' ]))
+
+  if (reply.specific && reply.specific.item) {
+    specific = await mongoose.models[reply.specific.model].find({ _id: reply.specific.item }).limit(1)
+    specific = specific.length ? specific[0] : null
+    if (reply.replyTypeId === 2) {
+      specific = extend(specific, pick(body, [ 'goal', 'price', 'action' ]))
+      specific = await specific.save()
+    }
+    if (reply.replyTypeId === 3) {
+      specific = extend(specific, pick(body, [ 'a', 'b', 'occupation' ]))
+      specific = await specific.save()
+    }
+    if (reply.replyTypeId === 4) {
+      statusCode = 'pending'
+      let [ task ] = await mongoose.models.Task.find({ _id: reply.taskId }).limit(1)
+      let [ knife ] = await mongoose.models.KnifePlan.find({ _id: task.type.item }).limit(1)
+      let result = await knife.updateClose(pick(body, [ 'fact', 'action' ]))
+      specific = result.report
+    }
+  }
+
+  await reply.addStatus(statusCode, { userId: user._id })
+
+  return { post, specific }
 }
 
 module.exports = mongoose.model('TaskReply', model)
