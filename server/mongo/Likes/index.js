@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { extend } = require('lodash')
 const { is } = require('../utils/common')
+const { addTokensByAction } = require('../../controllers/tokenController')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -17,7 +18,7 @@ model.statics.findPostLike = async function (postId, userId) {
   return like
 }
 
-model.statics.addToPost = async function (postId, userId, add = {}) {
+model.statics.addToPost = async function (postId, userId, add = {}, postInfo = {}) {
   let like = await this.findPostLike(postId, userId)
 
   if (!like) {
@@ -25,6 +26,8 @@ model.statics.addToPost = async function (postId, userId, add = {}) {
       userId,
       target: { model: 'Post', item: postId }
     }, add))
+
+    if (postInfo.authorId) addTokensByAction(userId, postInfo.authorId, 'votePost')
   } else if (!like.enabled) {
     like.enabled = true
     await like.save()

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 import DefaultLayout from './default'
 import Panel from '../elements/Panel'
-import PanelTitle from '../elements/Panel/Title'
 
 import Products from '../elements/Feed/SideProducts'
 import Beta from '../elements/Feed/SideBeta'

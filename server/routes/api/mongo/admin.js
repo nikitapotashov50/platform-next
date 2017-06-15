@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const parse = require('csv-parse')
 const { models } = require('mongoose')
 
@@ -42,7 +43,7 @@ module.exports = router => {
   router.get('/assign/csv', async ctx => {
     let res
     try {
-      let readSync = fs.readFileSync(__dirname + '/../../../ceh24.csv')
+      let readSync = fs.readFileSync(path.join('/../../../ceh24.csv')) // eslint disable-line
       readSync = readSync.toString()
       res = await new Promise((resolve, reject) => {
         parse(readSync.toString(), { autoParse: true }, (err, data) => {

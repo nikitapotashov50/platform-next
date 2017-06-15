@@ -3,7 +3,6 @@ const { is } = require('../utils/common')
 const { extend, isArray, pick } = require('lodash')
 const paginate = require('mongoose-paginate')
 const moment = require('moment')
-const { tokenAction } = require('../../controllers/tokenController')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -215,7 +214,7 @@ model.methods.removeComment = async function (commentId, user) {
 model.methods.addLike = async function (userId, add = {}) {
   let post = this
 
-  await mongoose.models.Like.addToPost(post._id, userId, add)
+  await mongoose.models.Like.addToPost(post._id, userId, add, { authorId: post.userId })
 
   post.likes_count = post.likes_count + 1
 
