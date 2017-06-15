@@ -205,7 +205,6 @@ module.exports = router => {
 
       // проверка на присутствие программы
       let res = await checkUserPrograms(userMeta, user, 94)
-      console.log(res)
 
       let programs = await user.getPrograms()
 
@@ -240,9 +239,7 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
-      if (!ctx.session.currentProgram) {
-        ctx.session.currentProgram = active.length > 0 ? active[0] : 3
-      }
+      if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
 
       ctx.body = {
         status: 200,

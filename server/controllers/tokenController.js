@@ -71,6 +71,7 @@ const addTokensByAction = async (userTo, action, add = {}) => {
     additionalId: targetMeta.molodost_id,
     additionaldata: { source: 'bm-platform', model: add.model, item: add.item }
   }
+
   //
   if (actionsTo.indexOf(action) !== -1) {
     if (!add.userFrom) throw new Error('no from user specified')
