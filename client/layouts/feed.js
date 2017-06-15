@@ -10,7 +10,7 @@ import Beta from '../elements/Feed/SideBeta'
 let today = moment()
 // TODO: сделать проверку на то, что за програма
 const FeedLayout = ({ children, menuItem = null, emptySide, Side = [], wide = false, program }) => {
-  let isWeekend = today.day() === 0 || today.day() === 4
+  let isWeekend = today.day() === 0 || today.day() === 6
 
   return (
     <DefaultLayout menuItem={menuItem}>
