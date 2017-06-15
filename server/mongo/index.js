@@ -1,9 +1,10 @@
 require('mongoose-keyobj')
 const mongoose = require('mongoose')
 const cachegoose = require('cachegoose')
+const config = require('../../config')
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/bm-platform')
+mongoose.connect(config.mongo.uri)
 
 cachegoose(mongoose, {
   engine: 'redis',
