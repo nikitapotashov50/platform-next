@@ -20,6 +20,7 @@ import { getReply } from '../../client/redux/task/reply'
 const checkDate = (date, target = null) => (moment(date) > moment())
 
 const getInitial = async (taskId, dispatch, headers = null) => {
+  console.log('12312312')
   return Promise.all([
     dispatch(getTask(taskId, { headers })),
     dispatch(getReply(taskId, { headers }))

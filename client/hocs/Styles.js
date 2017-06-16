@@ -2143,6 +2143,10 @@ export default props => (
         
       }
 
+      .rating-star {
+        width: 10%;
+      }
+
       .app-header {
 
         &__wrap {
@@ -2324,6 +2328,15 @@ export default props => (
 
       &__send-msg {
         display: none;
+      }
+    }
+
+    .panel-form {
+      &__input {
+        &_textarea {
+          font-size: 16px;
+          line-height: 140%;
+        }
       }
     }
 
