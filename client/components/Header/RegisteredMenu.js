@@ -1,8 +1,10 @@
+import Link from 'next/link'
 import axios from 'axios'
 import { isEmpty } from 'lodash'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import SearchIcon from 'react-icons/lib/fa/search'
 
 import Programs from './Programs'
 import UserImage from '../User/Image'
@@ -69,6 +71,10 @@ class HeaderRegisteredMenu extends Component {
 
     return (
       <div className={[ className ].join(' ')}>
+
+        <li className='user-menu__item user-menu__item_hoverable'>
+          <Link href='/search'><SearchIcon /></Link>
+        </li>
 
         <li className='user-menu__item user-menu__item_hoverable'>
           <ChatButton
