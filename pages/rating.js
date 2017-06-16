@@ -85,7 +85,7 @@ class NPSRatings extends Component {
 
             {this.state.users.map(user => (
               <div className='rating-list__item' key={user._id}>
-                <UserInline user={Object.assign({}, user, { occupation: 'lul' })} />
+                <UserInline user={user} />
                 <div className='nps'>{user.total}</div>
               </div>
             ))}
