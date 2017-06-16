@@ -17,7 +17,7 @@ const FeedLayout = ({ children, menuItem = null, emptySide, Side = [], wide = fa
       <div className='feed'>
         <div className={[ 'feed__left', wide ? 'feed__left_wide' : '' ].join(' ')}>
           <div className=''>
-            { (program && program !== 3 && isWeekend) && (
+            { (program && program === 7 && isWeekend) && (
               <Panel>
                 <Link href={'/feedback?type=class'} as={'/feedback/class'}>
                   <button className='myBtn'>Оставьте отзыв о занятии</button>
@@ -34,7 +34,7 @@ const FeedLayout = ({ children, menuItem = null, emptySide, Side = [], wide = fa
             <div key={Math.random()}>{el}</div>
           ))}
 
-          { (program && program !== 3 && isWeekend) && (
+          { (program && program === 7 && isWeekend) && (
             <Panel>
               <Link href={'/feedback?type=class'} as={'/feedback/class'}>
                 <button className='myBtn'>Оставьте отзыв о занятии</button>
