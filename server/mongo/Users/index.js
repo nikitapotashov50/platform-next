@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { extend, isArray, uniq, pick } = require('lodash')
 const { is } = require('../utils/common')
+const moment = require('moment')
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -242,6 +243,7 @@ model.methods.getGroups = async function (params = {}, select = null) {
 model.methods.getTasks = async function (programId, params = {}, options = {}) {
   let user = this
   let groups = await user.getGroups({}, '_id')
+  let today = moment()
 
   return mongoose.models.Task
     .find(extend(
@@ -251,7 +253,8 @@ model.methods.getTasks = async function (programId, params = {}, options = {}) {
           { targetProgram: Number(programId), 'target.model': 'Users', 'target.item': user._id },
           { targetProgram: Number(programId), 'target.model': 'Group', 'target.item': { $in: groups.map(el => el._id) } }
         ],
-        enabled: true
+        enabled: true,
+        start_at: { $lte: new Date(today.format('YYYY-MM-DD')) }
       },
       params
     ))
