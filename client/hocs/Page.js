@@ -9,6 +9,7 @@ import { I18nextProvider } from 'react-i18next'
 
 import Styles from './Styles'
 import { auth, refresh, cookieExists } from '../redux/auth'
+import { changeCurrent } from '../redux/user/programs'
 
 import initStore from '../redux/store'
 import starti18n, { getTranslations } from '../tools/start_i18n'
@@ -29,7 +30,8 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
       __service: {
         access: state.error,
         user: state.auth.user,
-        hash: state.auth.cookieExists
+        hash: state.auth.cookieExists,
+        program: state.user.programs.current
       }
     }
   }
@@ -48,10 +50,13 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
   )(
     class DefaultPage extends Component {
       static async getInitialProps (ctx) {
+        let program
         if (ctx.req && ctx.isServer) {
           if (ctx.req.session.uid) {
+            program = ctx.req.session.currentProgram
+
             ctx.store.dispatch(auth({ user: ctx.req.session.user, currentProgram: ctx.req.session.currentProgram, isRestored: ctx.req.session.isRestored }))
-            await ctx.store.dispatch(refresh(ctx.req.session.uid))
+            await ctx.store.dispatch(refresh(ctx.req.session.uid, { headers: ctx.req.headers }))
           } else if (ctx.req.cookies.get('molodost_user')) ctx.store.dispatch(cookieExists())
         }
 
@@ -60,7 +65,7 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
         let initialProps = {}
         if (Page.getInitialProps) initialProps = await Page.getInitialProps(ctx)
 
-        return { translations, ...initialProps }
+        return { translations, __program: program, ...initialProps }
       }
 
       constructor (props) {
@@ -70,13 +75,16 @@ export default (Page, { title, mapStateToProps, mapDispatchToProps, mergeProps }
       }
 
       async componentDidMount () {
+        let dispatch = this.props.dispatch || this.props.__dispatch
         if (this.props.__service.hash && !this.props.__service.user) {
           let { data } = await axios.get(`/api/auth/restore`, { withCredentials: true })
-          let dispatch = this.props.dispatch || this.props.__dispatch
           if (data.user && data.user._id) {
             dispatch(auth(data, true))
             await dispatch(refresh(data.user._id))
           } else dispatch(cookieExists(false))
+        }
+        if (this.props.__service.program && (!this.props.__program || this.props.__program !== this.props.__service.program)) {
+          dispatch(changeCurrent(this.props.__service.program))
         }
       }
 
