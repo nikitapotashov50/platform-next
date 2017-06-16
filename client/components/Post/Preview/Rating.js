@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { isUndefined, isNil } from 'lodash'
+import { isUndefined } from 'lodash'
 import { bindActionCreators } from 'redux'
 
 import RateBar from '../../Rating/Bar'
