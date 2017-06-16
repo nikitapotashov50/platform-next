@@ -15,6 +15,9 @@ import UserProfileBadge from '../components/User/ProfileBadge'
 import UserProfileGroups from '../components/User/ProfileGroups'
 import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
+import QRCode from 'qrcode.react'
+import moment from 'moment'
+
 class UserLayout extends Component {
   constructor (props) {
     super(props)
@@ -39,6 +42,10 @@ class UserLayout extends Component {
     let panelBodyStyles = { padding: 'small' }
 
     let bgImageStyles = {}
+
+    let today = moment()
+    let isWeekend = today.day() === 0 || today.day() === 6
+
     if (user.picture_large) bgImageStyles.backgroundImage = `url(${user.picture_large})`
 
     return (
@@ -48,6 +55,7 @@ class UserLayout extends Component {
 
             <div className='up-header' style={bgImageStyles}>
               <img className='up-header__image' src={user.picture_small} alt={user.first_name + ' ' + user.last_name} />
+              {isWeekend && <div className='up-header__qr'><QRCode value={'http://platform.molodost.bz/@' + (user && user.name)} /></div>}
 
               { showButtons && (
                 <div className='up-header__buttons'>

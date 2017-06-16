@@ -1165,6 +1165,10 @@ export default props => (
       }
     }
 
+    .up-header__qr {
+      display: none;
+    }
+
     .user-menu {
       margin: 0;
       padding: 0;
@@ -2180,6 +2184,15 @@ export default props => (
         width: 10%;
       }
 
+      .up-header__qr {
+        display: block;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        border: 3px solid #fff;
+        background: #fff;
+      }
+
       .app-header {
 
         &__wrap {
@@ -2282,6 +2295,7 @@ export default props => (
         }
 
     }
+
 
     .post-full {
 
