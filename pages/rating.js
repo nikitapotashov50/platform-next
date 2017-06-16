@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import SearchIcon from 'react-icons/lib/fa/search'
+import SortAscIcon from 'react-icons/lib/fa/sort-amount-asc'
+import SortDescIcon from 'react-icons/lib/fa/sort-amount-desc'
 
 import UserInline from '../client/components/User/Inline'
 import Page from '../client/hocs/Page'
 import Panel from '../client/elements/Panel'
 import FeedLayout from '../client/layouts/feed'
-import Pager from '../client/components/Pager'
 
 class NPSRatings extends Component {
   constructor (props) {
@@ -14,13 +15,18 @@ class NPSRatings extends Component {
     this.state = {
       searchQuery: '',
       users: [],
-      limit: 20,
-      offset: 0
+      limit: 100,
+      order: -1
     }
   }
 
-  async fetchUsers (searchQuery = '') {
-    const { data } = await axios(`/api/mongo/rating?searchString=${searchQuery}`)
+  async fetchUsers (searchQuery = '', order = -1) {
+    const { data } = await axios('/api/mongo/rating', {
+      params: {
+        searchString: this.state.searchQuery,
+        order: this.state.order
+      }
+    })
     return data.nps
   }
 
@@ -39,6 +45,17 @@ class NPSRatings extends Component {
           <div className='rating-list'>
 
             <div style={{ display: 'flex' }}>
+              <button className='sort-button' onClick={async () => {
+                const order = Number(this.state.order) * -1
+                const users = await this.fetchUsers(this.state.searchQuery, order)
+                this.setState({
+                  users,
+                  order
+                })
+              }}>
+                {this.state.order === 1 ? <SortAscIcon /> : <SortDescIcon />}
+              </button>
+
               <input
                 type='text'
                 placeholder='Поиск по имени или e-mail'
@@ -67,6 +84,15 @@ class NPSRatings extends Component {
             </div>
 
             <style jsx>{`
+              .sort-button {
+                background: #196aff;
+                color: #fff;
+                border-radius: 3px;
+                padding: 10px 20px;
+                cursor: pointer;
+                margin-right: 3px;
+              }
+
               .search {
                 background: #f5f7fa;
                 border-radius: 3px;
@@ -102,8 +128,6 @@ class NPSRatings extends Component {
                 font-weight: bold;
               }
             `}</style>
-
-            <Pager total={100} current={6} limit={20} onNavigate={x => { console.log('to', x) }} />
           </div>
         </Panel>
 

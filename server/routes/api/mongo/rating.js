@@ -4,10 +4,10 @@ const { models } = require('mongoose')
 
 module.exports = router => {
   router.get('/', async ctx => {
-    let { limit = 20, offset = 0, searchString } = ctx.request.query
+    let { limit = 100, order = -1, searchString = '' } = ctx.request.query
 
     limit = Number(limit)
-    offset = Number(offset)
+    order = Number(order)
 
     let query = {}
 
@@ -72,9 +72,8 @@ module.exports = router => {
         picture_small: '$_id.picture_small',
         total: { $divide: [ { $multiply: [ '$total', 100 ] }, '$count' ] }
       }},
-      { $sort: { total: -1 } },
-      { $limit: limit },
-      { $skip: offset }
+      { $sort: { total: order } },
+      { $limit: limit }
       // { $lookup: {
       //   from: 'goals',
       //   localField: '_id',
