@@ -106,7 +106,7 @@ class AccountSettings extends Component {
     let Footer = (
       <div>
         <button className='myBtn' disabled={fetching} onClick={this.submit}>{t('common.save')}</button>
-        <button className='myBtn myBtn_hollow' disabled={fetching} onClick={this.clear}>{t('common.clear')}</button>
+        {tab !== 'avatar' && <button className='myBtn myBtn_hollow' disabled={fetching} onClick={this.clear}>{t('common.clear')}</button>}
       </div>
     )
 
