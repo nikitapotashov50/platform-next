@@ -1186,8 +1186,17 @@ export default props => (
         display: inline-block;
 
         border-left: 1px solid #f0f1f1;
-
-
+        
+        &_search-icon {
+          padding: 0 15px;
+          color: #c6cacb;
+          font-size: 17px;
+          height: 59px;
+          display: block;
+        }
+        &_search-icon:hover {
+          color: #7d8487;
+        }
 
         &_hoverable {
           transition: background .3s;
