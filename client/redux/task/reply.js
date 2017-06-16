@@ -40,15 +40,13 @@ export const fetchEnd = createAction('task/reply/FETCH_END')
 
 /** --------------------- */
 
-const getReducer = (state, payload = {}) => {
-  return {
-    ...state,
-    info: payload.reply || null,
-    status: payload.status || null,
-    specific: payload.specific || null,
-    post: payload.post || null
-  }
-}
+const getReducer = (state, payload = {}) => ({
+  ...state,
+  info: payload.reply || null,
+  status: payload.status || null,
+  specific: payload.specific || null,
+  post: payload.post || null
+})
 
 export default handleActions({
   [getReply]: (state, { payload }) => getReducer(state, payload),
