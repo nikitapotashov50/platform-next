@@ -8,7 +8,8 @@ const {
 } = require('../../controllers/authController')
 
 const getUser = async email => {
-  let [ user ] = await mongoose.models.Users.find({ email }).limit(1).select('_id last_name first_name programs name role picture_small')
+  const emailRegexp = new RegExp(email, 'i') // case insensitive
+  let [ user ] = await mongoose.models.Users.find({ email: emailRegexp }).limit(1).select('_id last_name first_name programs name role picture_small')
 
   if (!user) return null
 
