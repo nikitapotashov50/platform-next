@@ -1461,7 +1461,6 @@ export default props => (
         border-bottom: 2px solid transparent;
 
         &_active {
-          color: #196aff;
           border-bottom-color: #196aff;
         }
 
@@ -2057,17 +2056,54 @@ export default props => (
       }
 
       .menu {
+        padding: 0;
         display: none;
-        padding: 0 0 0 10px;
 
         &_expanded {
           left: 0;
-          top: 50px;
+          top: 59px;
           z-index: 1001;
           position: fixed;
           display: block;
 
           background: #fff;
+          border-bottom: 1px solid #efefef;
+          box-shadow: 0 1px 3px 0 #efefef;
+
+          &:before {
+            left: 0;
+            top: 59px;
+            z-index: 999;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            display: block;
+
+            background: rgba(0, 0, 0, .15);
+            content: '';
+          }
+        }
+
+        &__item {
+          z-index: 1001;
+          position: relative;
+          padding: 0;
+
+          background: #fff;
+          text-align: center;
+
+          &:last-of-type {
+            padding-bottom: 10px;
+          }
+        }
+
+        &__link {
+          height: 40px !important;
+          line-height: 40px !important;
+          border-bottom: none;
+          &_active {
+            color: #196aff;
+          }
         }
 
         &__item_no_padding-left {
