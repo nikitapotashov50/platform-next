@@ -34,17 +34,23 @@ module.exports = router => {
   // })
 
   router.get('/list', async ctx => {
-    let { limit = 20, userIds, searchString } = ctx.request.query
+    let { limit = 20, searchString } = ctx.request.query
+    let regexStr
 
     let query = {}
-    if (userIds) query._id = { $in: userIds.split(',') }
+
     if (searchString !== '') {
       searchString = toLower(decodeURIComponent(searchString))
+
+      regexStr = searchString.split(/ /).join('|')
+
+      console.log('regexStr', regexStr)
+
       query['$or'] = [
-        { name: { $regex: searchString } },
-        { first_name: { $regex: searchString, $options: 'i' } },
-        { last_name: { $regex: searchString } },
-        { email: { $regex: searchString } }
+        { first_name: { '$regex': regexStr, $options: 'i' } },
+        { last_name: { '$regex': regexStr, $options: 'i' } },
+        { name: { $regex: searchString, $options: 'i' } },
+        { email: { $regex: searchString, $options: 'i' } }
       ]
     }
 
