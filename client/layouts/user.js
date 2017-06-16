@@ -17,6 +17,7 @@ import UserProfileSubscribers from '../components/User/ProfileSubscribers'
 
 import QRCode from 'qrcode.react'
 import moment from 'moment'
+import NoSSR from 'react-no-ssr'
 
 class UserLayout extends Component {
   constructor (props) {
@@ -55,7 +56,7 @@ class UserLayout extends Component {
 
             <div className='up-header' style={bgImageStyles}>
               <img className='up-header__image' src={user.picture_small} alt={user.first_name + ' ' + user.last_name} />
-              {isWeekend && <div className='up-header__qr'><QRCode value={'http://platform.molodost.bz/@' + (user && user.name)} /></div>}
+              <NoSSR>{isWeekend && <div className='up-header__qr'><QRCode value={'http://platform.molodost.bz/@' + (user && user.name)} /></div>}</NoSSR>
 
               { showButtons && (
                 <div className='up-header__buttons'>
