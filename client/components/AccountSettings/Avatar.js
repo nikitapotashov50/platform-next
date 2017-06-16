@@ -32,9 +32,6 @@ class AvatarSettings extends Component {
           onChange('picture_small', data.url)
         }}
       >
-        {this.state.uploading && (
-          <div>Загрузка...</div>
-        )}
         {isUndefined(affected.picture_small) ? (
           <div>
             {user.picture_small === '' ? (
@@ -49,15 +46,35 @@ class AvatarSettings extends Component {
           </div>
         )}
 
-        <button onClick={() => { this.dropzoneRef.open() }}>Выбрать файл</button>
+        <button onClick={() => { this.dropzoneRef.open() }} className='avatar__choose'>{this.state.uploading ? 'Загрузка..' : 'Выбрать файл'}
+        </button>
 
         <style jsx>{`
           img {
             width: 300px;
+            margin: 20px 0 0 0;
           }
           button {
             cursor: pointer;
           }
+          .avatar__choose {
+            border: 1px solid #196aff;
+            border-radius: 3px;
+            padding: 7px 10px;
+            margin: 10px 0;
+            color:#196aff;
+          }
+          .avatar__choose:hover {
+            background: #196aff;
+            color:#fff;
+          }
+
+          /*  Мобильные стили */
+          @media screen and (max-width: 39.9375em) {
+            img{width: 90%;}
+            
+          }
+
         `}</style>
       </Dropzone>
     )

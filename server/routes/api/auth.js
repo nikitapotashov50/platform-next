@@ -1,6 +1,6 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
-const { isNil, extend, omit } = require('lodash')
+const { isNil, extend, omit, pick } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
@@ -92,7 +92,7 @@ const getSessionUser = async (email, access) => {
     })
   }
 
-  return extend(res.user, add)
+  return extend({}, pick(res.user, [ 'name', '_id', 'role', 'programs', 'picture_small', 'last_name', 'first_name' ]), add)
 }
 
 module.exports = router => {
@@ -239,14 +239,14 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
-      if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
+      let activeProgram = active.length > 0 ? active[0] : 3
 
       ctx.body = {
         status: 200,
         result: {
           programs,
           isAdmin: user.role === 3,
-          program: ctx.session.currentProgram,
+          program: activeProgram,
           subscriptions: user.subscriptions,
           radar_id: userMeta.radar_id,
           radar_access: !isNil(userMeta.radar_access_token)

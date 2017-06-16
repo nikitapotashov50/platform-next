@@ -6,6 +6,7 @@ const defaultState = {
 }
 
 export const getTask = createAction('task/GET_TASK', async (taskId, options) => {
+  console.log('12312312312')
   let prefix = ''
   let params = { withCredentials: true }
   if (options.headers) {
@@ -14,6 +15,7 @@ export const getTask = createAction('task/GET_TASK', async (taskId, options) => 
   }
 
   let { data } = await axios.get(`${prefix}/api/mongo/tasks/${taskId}`, params)
+  console.log(data)
   return data.status === 200 ? data.result : data
 })
 

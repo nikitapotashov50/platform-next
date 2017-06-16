@@ -20,6 +20,7 @@ import { getReply } from '../../client/redux/task/reply'
 const checkDate = (date, target = null) => (moment(date) > moment())
 
 const getInitial = async (taskId, dispatch, headers = null) => {
+  console.log('12312312')
   return Promise.all([
     dispatch(getTask(taskId, { headers })),
     dispatch(getReply(taskId, { headers }))
@@ -58,7 +59,7 @@ class TaskPage extends Component {
   }
 
   render () {
-    if (this.state.restrict || !this.props.task) return <ErrorLayout />
+    if (this.state.restrict || !this.props.task || (this.props.task && this.props.task.targetProgram !== this.props.program)) return <ErrorLayout />
 
     let { edit } = this.props.url.query
     let { task, post, reply, specific = null, replyStatus, isReplied } = this.props

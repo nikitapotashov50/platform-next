@@ -35,10 +35,10 @@ const fillPrograms = (state, payload = {}) => {
     if (item.alias === 'default') current = item._id
     return acc
   }, {})
-
+  console.log(payload)
   return {
     ...state,
-    current: payload.program || state.current || current,
+    current: payload.program || current,
     items: {
       ...state.items,
       ...items

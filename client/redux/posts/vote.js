@@ -20,10 +20,10 @@ export const ratePost = createAction(API_CONST, (data, postId) => ({
   options: { withCredentials: true },
   url: `/api/mongo/posts/${postId}/rate`,
   method: 'post',
-  actions: [ actions.start, actions.success, actions.fail ]
+  actions: [ actions.start, actions.success ]
 }))
 
-export const changeValue = createAction('posts/voting/ON_CHANGE', (field, value) => ({ field, value }))
+export const changeValue = createAction('posts/voting/ON_CHANGE', (field, value, postId) => ({ field, value, postId }))
 
 export const closeVoting = createAction('posts/voting/CLOSE')
 
@@ -37,20 +37,21 @@ export default handleActions({
     ...state,
     data: {
       ...state.data,
-      [payload.field]: payload.value
+      [payload.postId]: {
+        ...state.data[payload.postId],
+        [payload.field]: payload.value
+      }
     }
   }),
   //
   [actions.start]: state => ({ ...state, fetching: true }),
   [actions.success]: (state, { payload }) => ({
     ...state,
-    result: payload,
-    success: true,
-    fetching: false
-  }),
-  [actions.fail]: state => ({
-    ...state,
-    success: false,
+    result: {
+      ...state.result,
+      [payload.postId]: payload
+    },
+    success: payload.postId,
     fetching: false
   })
 }, initialState)
