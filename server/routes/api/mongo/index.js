@@ -8,6 +8,7 @@ const volunteerRoutes = require('./volunteer')
 const feedbackRoutes = require('./feedback')
 const chatRoutes = require('./chat')
 const groupRoutes = require('./groups')
+const ratingRoutes = require('./rating')
 
 const { checkAccess, initMeRoutes, getSessionProgram } = require('../../../controllers/middlewares')
 
@@ -20,6 +21,7 @@ module.exports = router => {
   router.bridge('/admin', [ initMeRoutes, checkAccess('admin') ], adminRoutes)
   router.bridge('/nps', [ initMeRoutes ], npsRoutes)
   router.bridge('/groups', groupRoutes)
+  router.bridge('/rating', ratingRoutes)
   // , checkAccess('admin')
   //
   router.bridge('/feedback', [ initMeRoutes, getSessionProgram ], feedbackRoutes)
