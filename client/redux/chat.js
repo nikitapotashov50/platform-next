@@ -99,8 +99,13 @@ export const listen = () => async dispatch => {
   try {
     const { data } = await axios.get('/api/mongo/chat/access_token')
     const token = data
+    let socket
 
-    const socket = new WebSocket(`ws://bmchat.maximumsoft.ru/notify/?accessToken=${token}`)
+    if (token) {
+      socket = new WebSocket(`ws://bmchat.maximumsoft.ru/notify/?accessToken=${token}`)
+    } else {
+      throw new Error('no radar token')
+    }
 
     socket.onopen = () => {
       dispatch({
@@ -128,7 +133,7 @@ export const listen = () => async dispatch => {
       dispatch(action)
     }
   } catch (e) {
-    console.error(e)
+    console.log(e)
   }
 }
 
