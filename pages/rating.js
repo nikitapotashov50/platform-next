@@ -6,13 +6,16 @@ import UserInline from '../client/components/User/Inline'
 import Page from '../client/hocs/Page'
 import Panel from '../client/elements/Panel'
 import FeedLayout from '../client/layouts/feed'
+import Pager from '../client/components/Pager'
 
 class NPSRatings extends Component {
   constructor (props) {
     super(props)
     this.state = {
       searchQuery: '',
-      users: []
+      users: [],
+      limit: 20,
+      offset: 0
     }
   }
 
@@ -83,9 +86,24 @@ class NPSRatings extends Component {
             {this.state.users.map(user => (
               <div className='rating-list__item' key={user._id}>
                 <UserInline user={Object.assign({}, user, { occupation: 'lul' })} />
-                <div>{user.total}</div>
+                <div className='nps'>{user.total}</div>
               </div>
             ))}
+
+            <style jsx>{`
+              .rating-list__item {
+                margin: 20px 0;
+                display: flex;
+                justify-content: space-between;
+              }
+
+              .nps {
+                font-size: 20px;
+                font-weight: bold;
+              }
+            `}</style>
+
+            <Pager total={100} current={6} limit={20} onNavigate={x => { console.log('to', x) }} />
           </div>
         </Panel>
 
@@ -95,5 +113,5 @@ class NPSRatings extends Component {
 }
 
 export default Page(NPSRatings, {
-  title: 'Рейтинг NPS'
+  title: 'Рейтинг'
 })
