@@ -44,7 +44,6 @@ export const clearUserInfo = createAction('admin/user/CLEAR_INFO')
 export const updateUserInf = createAction('admin/user/UPDATE_INFO', async (type, params, options = {}) => {
   options.withCredentials = true
   let { data } = await axios.put(`${BACKEND_URL}/api/mongo/admin/users/${params.userId}`, options)
-  console.log(data)
   if (data.status === 200) {
     return {}
   }

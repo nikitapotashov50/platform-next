@@ -25,8 +25,12 @@ export const logout = createAction('auth/LOGOUT')
 export const cookieExists = createAction('auth/cookieExists')
 
 //
-export const refresh = createAction('auth/REFRESH', async (userId, serverPath = '') => {
-  let { data } = await axios.post(`${BACKEND_URL}/api/auth/refresh`, { userId })
+export const refresh = createAction('auth/REFRESH', async (userId, options = {}) => {
+  let prefix = ''
+  if (options.headers) prefix = BACKEND_URL
+  options.withCredentials = true
+
+  let { data } = await axios.post(`${prefix}/api/auth/refresh`, { userId }, options)
   return data.result
 })
 
