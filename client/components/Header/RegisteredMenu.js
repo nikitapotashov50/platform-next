@@ -73,7 +73,7 @@ class HeaderRegisteredMenu extends Component {
       <div className={[ className ].join(' ')}>
 
         <li className='user-menu__item user-menu__item_hoverable'>
-          <Link href='/search'><SearchIcon /></Link>
+          <Link href='/search'><a className='user-menu__item_search-icon'><SearchIcon /></a></Link>
         </li>
 
         <li className='user-menu__item user-menu__item_hoverable'>

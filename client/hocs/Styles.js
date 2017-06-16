@@ -1165,6 +1165,10 @@ export default props => (
       }
     }
 
+    .up-header__qr {
+      display: none;
+    }
+
     .user-menu {
       margin: 0;
       padding: 0;
@@ -1186,8 +1190,17 @@ export default props => (
         display: inline-block;
 
         border-left: 1px solid #f0f1f1;
-
-
+        
+        &_search-icon {
+          padding: 0 15px;
+          color: #c6cacb;
+          font-size: 17px;
+          height: 59px;
+          display: block;
+        }
+        &_search-icon:hover {
+          color: #7d8487;
+        }
 
         &_hoverable {
           transition: background .3s;
@@ -2171,6 +2184,15 @@ export default props => (
         width: 10%;
       }
 
+      .up-header__qr {
+        display: block;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        border: 3px solid #fff;
+        background: #fff;
+      }
+
       .app-header {
 
         &__wrap {
@@ -2273,6 +2295,7 @@ export default props => (
         }
 
     }
+
 
     .post-full {
 
