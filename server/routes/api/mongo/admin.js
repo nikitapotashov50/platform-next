@@ -43,7 +43,7 @@ module.exports = router => {
   router.get('/assign/csv', async ctx => {
     let res
     try {
-      let readSync = fs.readFileSync(path.join('/../../../ceh24.csv')) // eslint disable-line
+      let readSync = fs.readFileSync(__dirname + '/../../../ceh24.csv') // eslint-disable-line
       readSync = readSync.toString()
       res = await new Promise((resolve, reject) => {
         parse(readSync.toString(), { autoParse: true }, (err, data) => {
@@ -57,14 +57,36 @@ module.exports = router => {
     }
 
     let result
+    let cities
     if (res.length) {
       res.shift()
-      // проходимся по юзерам в базе
-      result = await Promise.all(res.map(([ email ]) => new Promise(async (resolve, reject) => {
-        email = email.slice(0, -1)
+      cities = await Promise.all(res.map(([ data ], i) => new Promise(async (resolve, reject) => {
+        data = data.split(';')
+        let city
+        if (data[1]) {
+          city = await models.City.find({ name: data[1] }).limit(1)
+          city = city[0]
+          if (!city) city = await models.City.create({ name: data[1] })
+        }
+        console.log(i)
+        resolve(city)
+      })))
+
+      result = await Promise.all(res.map(([ data ]) => new Promise(async (resolve, reject) => {
+        let [ email, cityName ] = data.split(';')
+
+        let [ city ] = await models.City.find({ name: cityName }).limit(1)
         let [ user ] = await models.Users.find({ email }).sort({ created: -1 }).limit(1).populate('meta')
+        if (!city) city = await models.City.getNullCity()
+
         if (user) {
-          await user.addProgram(4, {})
+          let [ programMeta ] = await models.ProgramUserMeta.find({ userId: user._id, programId: 4 }).limit(1)
+          console.log(city.name)
+          if (programMeta) {
+            console.log('change meta')
+            programMeta.cityId = city._id
+            await programMeta.save()
+          } else await user.addProgram(4, { cityId: city._id })
           resolve(user)
         } else resolve()
       })))
@@ -72,7 +94,7 @@ module.exports = router => {
 
     ctx.body = {
       status: 200,
-      result: { result }
+      result: { result, cities }
     }
   })
 

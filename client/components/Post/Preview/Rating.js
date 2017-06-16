@@ -8,9 +8,9 @@ import OverlayLoader from '../../OverlayLoader'
 
 import { ratePost, changeValue, closeVoting } from '../../../redux/posts/vote'
 
-const PostRate = ({ rating = null, loggedUser, voted = false, data, fetching = false, success = null, submit, change, result = {} }) => {
+const PostRate = ({ rating = null, postId, loggedUser, voted = false, data, fetching = false, success = null, submit, change, result = {} }) => {
   let isVoted = result.total || voted
-  let total = voted ? (rating ? rating.total : 0) : (result.total || data.score || 0)
+  let total = voted ? (rating ? rating.total : 0) : (result.total || (data.score || 0))
   let nps = result.total_nps || (rating ? rating.total_nps : 0)
 
   return (
@@ -22,10 +22,9 @@ const PostRate = ({ rating = null, loggedUser, voted = false, data, fetching = f
             <RateBar noValues rate={total.toFixed(0)} onChange={change} clickable={!voted} big />
           </div>
           <div className='post-rating__value'>
-            { (isNil(success) && isVoted) && `NPS: ${(result.total_nps || nps).toFixed(2)}`}
-            { (isNil(success) && !isVoted) && <Button onClick={submit} disabled={isUndefined(data.score) || fetching || success}>Оценить</Button> }
-            { (!isNil(success) && !success) && <div>Ошибка отправки</div> }
-            { (!isNil(success) && success) && <div>Спасибо за отзыв!</div> }
+            { (!success && isVoted) && `NPS: ${(result.total_nps || nps).toFixed(2)}`}
+            { (!success && !isVoted) && <Button onClick={submit} disabled={isUndefined(data.score) || fetching || success}>Оценить</Button> }
+            { success && <div>Спасибо за отзыв!</div> }
           </div>
         </div>
 
@@ -89,12 +88,15 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 const mergeProps = (state, dispatch, props) => ({
   ...state,
   ...props,
+  success: state.success === props.postId,
+  data: state.data[props.postId] || {},
+  result: state.result[props.postId] || {},
   change: rate => {
-    dispatch.changeValue('score', rate)
+    dispatch.changeValue('score', rate, props.postId)
   },
   submit: () => {
     let { data } = state
-    dispatch.ratePost(data, props.postId)
+    dispatch.ratePost(data[props.postId], props.postId)
     setTimeout(() => {
       dispatch.closeVoting()
     }, 2000)
