@@ -10,6 +10,7 @@ let menu = [
 const Header = ({ dispatch, current, isLogged, role, selected, taskCount }) => {
   let addMenu = []
   if (isLogged && current !== 3) addMenu.push({ url: '/tasks', as: '/tasks', title: 'Задания', notify: taskCount || false, code: 'tasks' })
+  addMenu.push({ url: '/rating', as: '/rating', title: 'Рейтинг', code: 'rating' })
   if (role === 'volunteer') addMenu.push({ url: '/volunteer', as: '/volunteer', title: 'Волонтерство', code: 'volunteer' })
 
   return (
