@@ -86,7 +86,7 @@ class NPSRatings extends Component {
             {this.state.users.map(user => (
               <div className='rating-list__item' key={user._id}>
                 <UserInline user={user} />
-                <div className='nps'>{user.total}</div>
+                <div className='nps'>{user.total && Math.round(user.total * 100) / 100}</div>
               </div>
             ))}
 
