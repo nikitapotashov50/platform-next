@@ -42,7 +42,7 @@ class SearchPage extends Component {
           <div className='search-container'>
             <input
               type='text'
-              placeholder='Поиск по имени или email'
+              placeholder='Поиск по имени и email'
               value={this.state.query}
               onChange={e => { this.setState({ query: e.target.value }) }}
               onKeyPress={e => {
@@ -70,7 +70,8 @@ class SearchPage extends Component {
 
             .search-container > input {
               border-radius: 3px;
-              padding-right: 30px;
+              padding-right: 20px;
+              font-size: 16px;
             }
 
             .search-button{
