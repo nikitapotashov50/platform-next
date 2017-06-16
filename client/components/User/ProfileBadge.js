@@ -21,7 +21,7 @@ export default ({ info = {}, user = {}, goal = {}, balance = null }) => {
   return (
     <div className='user-badge'>
       <h2 className='user-badge__name'>{user.first_name} {user.last_name}</h2>
-      {user.name && user.name}
+      {/* user && user.name */}
       <div className='user-badge__info'>
         { (badgeInfo.length > 0) && badgeInfo.join(', ')}
       </div>
