@@ -4,21 +4,20 @@ const formatMoney = value => numeral(value || 0).format('0,0')
 
 export default ({ data }) => (
   <div>
-    <h2>Привет, Цех!</h2>
-    <div><strong>Моя ниша:</strong> {data.occupation}</div>
-    <div><strong>Моя точка Бx10:</strong> {formatMoney(data.x10)} ₽</div>
-    <div><strong>Моя мечта:</strong> {data.dream}</div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя ниша:</strong> <p className='post-preview__greetings_body'>{data.occupation}</p></div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Ax10:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.x10)} ₽</p></div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя мечта:</strong> <p className='post-preview__greetings_body'>{data.dream}</p></div>
 
-    <div><strong>Моя точка А:</strong> {formatMoney(data.a)} ₽</div>
-    <div><strong>Моя точка Б:</strong> {formatMoney(data.b)} ₽</div>
-    <div><strong>Декомпозиция точки Б:</strong> {data.pq}</div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя точка А:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.a)} ₽</p></div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя точка Б:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.b)} ₽</p></div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>PxQ:</strong> {data.pq}</div>
 
-    <div><strong>Пирожок:</strong>
-      <p>{data.pie}</p>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Пирожок:</strong>
+      <p className='post-preview__greetings_body'>{data.pie}</p>
     </div>
 
-    <div><strong>Что мне нужно и как ты можешь помочь мне?</strong>
-      <p>{data.need}</p>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Что мне нужно?</strong>
+      <p className='post-preview__greetings_body'>{data.need}</p>
     </div>
   </div>
 )

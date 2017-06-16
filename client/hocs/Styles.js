@@ -855,6 +855,30 @@ export default props => (
         color: #1f1f1f;
         &:hover { color: #1f1f1f; }
       }
+
+      &__greetings {
+        &_title {
+          font-size:10px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #9f9f9f;
+          font-weight: 700;
+          display: block;
+          width: 130px;
+          float: left;
+        }
+
+        &_body {
+          margin-left: 131px;
+          display: block;
+        }
+
+        &_wrap {
+          display: block;
+          overflow: hidden;
+          margin-top: 8px;
+        }
+      }
     }
 
     .post-summary {
@@ -2336,6 +2360,28 @@ export default props => (
         &_textarea {
           font-size: 16px;
           line-height: 140%;
+        }
+      }
+    }
+
+    .post-preview {
+      &__greetings {
+        &_title {
+          width: 100%;
+          display: block;
+
+        }
+
+        &_body {
+          margin-left: 0;
+          display: block;
+          width: 100%;
+        }
+
+        &_wrap {
+          display: block;
+          overflow: hidden;
+          margin-top: 8px;
         }
       }
     }
