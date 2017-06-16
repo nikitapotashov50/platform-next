@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import SearchIcon from 'react-icons/lib/fa/search'
 
 import UserInline from '../client/components/User/Inline'
 import Page from '../client/hocs/Page'
@@ -34,22 +35,50 @@ class NPSRatings extends Component {
         <Panel>
           <div className='rating-list'>
 
-            <input
-              type='text'
-              placeholder='Поиск по имени или e-mail'
-              onChange={e => {
-                this.setState({
-                  searchQuery: e.target.value
-                })
-              }}
-              onKeyPress={async e => {
-                if (e.key === 'Enter') {
-                  const users = await this.fetchUsers(this.state.searchQuery)
+            <div style={{ display: 'flex' }}>
+              <input
+                type='text'
+                placeholder='Поиск по имени или e-mail'
+                onChange={e => {
                   this.setState({
-                    users
+                    searchQuery: e.target.value
                   })
-                }
-              }} />
+                }}
+                onKeyPress={async e => {
+                  if (e.key === 'Enter') {
+                    const users = await this.fetchUsers(this.state.searchQuery)
+                    this.setState({
+                      users
+                    })
+                  }
+                }} />
+
+              <button className='search' onClick={async () => {
+                const users = await this.fetchUsers(this.state.searchQuery)
+                this.setState({
+                  users
+                })
+              }}>
+                <SearchIcon className='icon' />
+              </button>
+            </div>
+
+            <style jsx>{`
+              .search {
+                background: #f5f7fa;
+                border-radius: 3px;
+                padding: 10px 20px;
+                cursor: pointer;
+                margin-left: 3px;
+                color: #9a9a9a;
+                transition: all 0.2s ease;
+              }
+
+              .search:hover {
+                background: #196aff;
+                color: #fff;
+              }
+            `}</style>
 
             {this.state.users.map(user => (
               <div className='rating-list__item' key={user._id}>
@@ -59,6 +88,7 @@ class NPSRatings extends Component {
             ))}
           </div>
         </Panel>
+
       </FeedLayout>
     )
   }
