@@ -26,6 +26,8 @@ const getAdditionalData = data => {
 model.statics.getOrCreate = async function (name, data) {
   let model = this
   let [ city ] = await model.find({ name }).limit(1)
+  if (!city) console.log(city, name)
+
   if (!city) city = await model.create(extend({ name }, getAdditionalData(data)))
   else if (!city.molodost_id || (data.city_id && city.molodost_id !== data.city_id)) {
     city.molodost_id = data.city_id

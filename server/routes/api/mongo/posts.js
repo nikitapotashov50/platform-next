@@ -216,6 +216,7 @@ module.exports = router => {
         ctx.body = {
           status: 200,
           result: {
+            postId: ctx.__.post._id,
             total_nps: total.total_nps,
             total: total.total
           }
