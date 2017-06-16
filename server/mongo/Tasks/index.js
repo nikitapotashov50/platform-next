@@ -35,6 +35,7 @@ const model = new mongoose.Schema(extend({
     start_at: { type: Date },
     finish_at: { type: Date }
   },
+  votable: { type: Boolean, default: false },
   tokens: { type: Number, default: null }
 }, is, startFinish))
 
@@ -59,6 +60,18 @@ let defaultTasks = [
     finish_at: new Date('2017-07-01'),
     replyMeta: {
       title: 'Моя цель на 2 месяца'
+    }
+  },
+  {
+    tokens: 50,
+    title: 'Знакомство',
+    content: `6 шагов к успеху`,
+    replyTypeId: 5,
+    targetProgram: 4,
+    start_at: new Date('2017-06-16 10:00'),
+    finish_at: new Date('2017-06-16 22:00'),
+    replyMeta: {
+      title: '6 шагов к успеху'
     }
   },
   {
@@ -221,6 +234,11 @@ model.methods.addReply = async function (user, body) {
     let [ knifePlan ] = await mongoose.models.KnifePlan.find({ _id: task.type.item }).limit(1).sort({ created: -1 })
     let { report } = await knifePlan.closePlan(body, user, task.targetProgram)
     additional.specific = { model: 'TaskReport', item: report }
+  } else if (task.replyTypeId === 5) {
+    let entry = await mongoose.models.GretingReply.make(body)
+    additional.votable = true
+    additional.specific = { model: 'GretingReply', item: entry }
+    postInfo.votable = true
   } else {}
 
   let post = await mongoose.models.Post.addPost(postInfo, { user })

@@ -1,10 +1,12 @@
 import { connect } from 'react-redux'
+import { isObject } from 'lodash'
 
 const InlineError = ({ error = null }) => {
   if (!error) return null
+
   return (
     <div className='fixed-error'>
-      {error.message}
+      {isObject(error.message) ? error.message.toString() : error.message}
 
       <style jsx>{`
         .fixed-error {

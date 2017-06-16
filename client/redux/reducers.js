@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import posts from './posts/index'
 import comments from './posts/comments'
+import vote from './posts/vote'
 
 import likes from './likes'
 
@@ -39,7 +40,8 @@ export default asyncReducers => combineReducers({
   // posts & comments
   posts: combineReducers({
     posts,
-    comments
+    comments,
+    vote
   }),
   // session user data
   user: combineReducers({

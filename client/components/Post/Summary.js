@@ -1,7 +1,7 @@
-import LikeButton from './LikeButton'
-import CommentButton from './CommentButton'
+import LikeButton from './Buttons/Like'
+import CommentButton from './Buttons/Comment'
 
-export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked = false }) => {
+export default ({ isLogged, onLike, onComment, withShare, onVote, likes = 0, liked = false }) => {
   const onLikeClicked = e => {
     e.preventDefault()
     if (!isLogged) return
@@ -10,13 +10,13 @@ export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked = fal
 
   return (
     <div className='post-summary'>
-      <div className='post-summary__block_left'>
+      <div className='post-summary__block post-summary__block_left'>
         <LikeButton count={likes} handleClick={onLikeClicked} liked={liked} />
         {isLogged && <CommentButton handleClick={onComment} />}
       </div>
 
       { withShare && (
-        <div className='post-summary__block_right'>
+        <div className='post-summary__block post-summary__block_right'>
           { isLogged && <a className='post-summary__link' href='#'>Ответить</a> }
           <div className='share'>
             <div className='share__label'>Поделиться: </div>
@@ -26,14 +26,6 @@ export default ({ isLogged, onLike, onComment, withShare, likes = 0, liked = fal
           </div>
         </div>
       ) }
-
-      <style jsx>{`
-        .post-summary__block_left {
-          float: none;
-          display: flex;
-          align-items: center;
-        }
-      `}</style>
     </div>
   )
 }

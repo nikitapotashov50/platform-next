@@ -5,9 +5,11 @@ import { handleActions, createAction } from 'redux-actions'
 /** default state  */
 export const defaultState = {
   posts: [],
+  votes: {},
   replies: {},
   query: {},
   total: 0,
+  voted: [],
   fething: false
 }
 
@@ -77,6 +79,14 @@ export default handleActions({
       ...(payload.offset ? state.replies : {}),
       ...(payload.replies || {})
     },
+    votes: {
+      ...(payload.votes ? state.votes : {}),
+      ...(payload.votes || {})
+    },
+    voted: [
+      ...(payload.voted ? state.voted : []),
+      ...(payload.voted || [])
+    ],
     total: payload.total,
     offset: payload.offset
   }),

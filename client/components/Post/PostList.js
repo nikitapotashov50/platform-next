@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 
 import Post from './Post'
 import Panel from '../../elements/Panel'
+import PostVoting from './Vote/Modal'
 import PostFull from './Full'
 import PostModal from './Modal'
 import OverlayLoader from '../OverlayLoader'
@@ -15,6 +16,7 @@ import Comments from '../Comment/List'
 import { getInitialProps, mapStateToProps, mapDispatchToProps, mergeProps } from '../../utils/Post/list'
 
 const isLiked = (likes, id) => (likes || []).indexOf(id) > -1
+const isVoted = (votes, id) => (votes || []).indexOf(id) > -1
 
 class PostList extends Component {
   static async getInitial (dispatch, params, options = {}) {
@@ -72,16 +74,31 @@ class PostList extends Component {
   }
 
   render () {
-    const { posts = [], users = {}, replies = {}, fetching, removePost, onComment, toggleLike, loggedUser, likes, total } = this.props
+    const { posts = [], users = {}, replies = {}, fetching, removePost, onComment, toggleLike, loggedUser, likes, voted, votes, total } = this.props
     const { expanded } = this.state
 
     let postCount = posts.length
 
     return (
       <OverlayLoader loading={fetching} noLoader>
+        {/* Модалка с голосованием */}
+        <PostVoting />
+
         { postCount > 0 && posts.map((post, index) => (
           <div key={post._id}>
-            <Post post={post} loggedUser={loggedUser} reply={replies[post._id]} user={users[post.userId]} onComment={onComment(post._id)} isLiked={isLiked(likes, post._id)} onLike={toggleLike(post._id)} onRemove={removePost(post._id)} onExpand={this.onPostExpand(post, index)} />
+            <Post
+              post={post}
+              loggedUser={loggedUser}
+              reply={replies[post._id]}
+              user={users[post.userId]}
+              onComment={onComment(post._id)}
+              isLiked={isLiked(likes, post._id)}
+              onLike={toggleLike(post._id)}
+              onRemove={removePost(post._id)}
+              onExpand={this.onPostExpand(post, index)}
+              isVoted={isVoted(voted, post._id)}
+              votes={votes[post._id] || null}
+            />
             <Panel noPadding bodyStyles={{ noPadding: true }} margin='top-negative'>
               <Comments postId={post._id} ids={post.comments} />
             </Panel>

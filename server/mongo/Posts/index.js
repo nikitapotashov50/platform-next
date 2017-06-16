@@ -23,7 +23,9 @@ const model = new mongoose.Schema(extend({
   programs: [ { type: Number, ref: 'Program' } ],
   type: { type: Number, ref: 'PostsTypes' },
   weight: { type: Number, default: 0 },
+  pinned: { type: Boolean, default: false },
   //
+  votable: { type: Boolean, default: false },
   visibility: { type: String, enum: visibilityTypes, default: 'all' }
 }, is))
 
@@ -48,7 +50,7 @@ model.statics.getList = async function (params = {}, query = {}) {
   limit = Number(limit)
   offset = Number(offset) + 1
 
-  let sort = { created: -1 }
+  let sort = { pinned: -1, created: -1 }
   if (query.sort) sort = query.sort
   let cache = null
   if (query.cache) cache = query.cache
@@ -59,7 +61,7 @@ model.statics.getList = async function (params = {}, query = {}) {
     lean: true,
     page: offset,
     sort: sort,
-    select: '_id title created content userId comments attachments likes_count',
+    select: '_id title created content userId comments attachments pinned likes_count votable',
     populate: {
       path: 'attachments',
       select: '_id path name mime'
@@ -244,6 +246,89 @@ model.methods.getComments = async function (offset = 0, limit = null, reversed =
   let data = await mongoose.models.Comment.getForPost(post, { offset, limit, reversed })
 
   return data
+}
+
+// NPS
+model.methods.addNPS = function (data, user, programId) {
+  return mongoose.models.NPS.addToPost(data, user, this._id, programId)
+}
+
+model.statics.getNPS = function (postIds = [], programId) {
+  return mongoose.models.NPS.aggregate([
+    { $match: {
+      programId: { $in: [ programId ] },
+      'target.model': 'Post',
+      'target.item': { $in: postIds }
+    }},
+    { $project: {
+      _id: 1,
+      target: 1,
+      cityId: 1,
+      programId: 1,
+      created: 1,
+      total: 1,
+      nps: {
+        $switch: {
+          branches: [
+            { case: { $gte: [ '$total', 9 ] }, then: 1 },
+            { case: { $lte: [ '$total', 6 ] }, then: -1 }
+          ],
+          default: 0
+        }
+      }
+    }},
+    { $group: {
+      _id: '$target.item',
+      count: { $sum: 1 },
+      total: { $sum: '$total' },
+      total_nps: { $sum: '$nps' }
+    }},
+    { $project: {
+      _id: 1,
+      total: { $divide: [ '$total', '$count' ] },
+      total_nps: { $divide: [ { $multiply: [ '$total_nps', 100 ] }, '$count' ] }
+    }}
+  ])
+}
+
+model.methods.getNPS = function (programId = null) {
+  let post = this
+
+  return mongoose.models.NPS.aggregate([
+    { $match: {
+      programId: { $in: programId ? [ programId ] : post.programs },
+      'target.model': 'Post',
+      'target.item': post._id
+    }},
+    { $project: {
+      _id: 1,
+      target: 1,
+      cityId: 1,
+      programId: 1,
+      created: 1,
+      total: 1,
+      nps: {
+        $switch: {
+          branches: [
+            { case: { $gte: [ '$total', 9 ] }, then: 1 },
+            { case: { $lte: [ '$total', 6 ] }, then: -1 }
+          ],
+          default: 0
+        }
+      }
+    }},
+    { $group: {
+      _id: null,
+      count: { $sum: 1 },
+      total: { $sum: '$total' },
+      total_nps: { $sum: '$nps' }
+    }},
+    { $project: {
+      _id: 0,
+      total: { $divide: [ '$total', '$count' ] },
+      total_nps: { $divide: [ { $multiply: [ '$total_nps', 100 ] }, '$count' ] }
+    }}
+  ])
 }
 
 module.exports = mongoose.model('Post', model)

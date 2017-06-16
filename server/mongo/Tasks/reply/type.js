@@ -15,14 +15,16 @@ model.statics.populateFieldsByType = {
   default: [],
   task: [],
   goal: [ 'a', 'b', 'occupation', '_id' ],
-  report: []
+  report: [],
+  greeting: []
 }
 
 const defaultTypes = {
   default: { _id: 1, title: 'Выполнить задание', enabled: true },
   knife: { _id: 2, title: 'Поставить план-кинжал', enabled: true },
   goal: { _id: 3, title: 'Поставить цель', enabled: true },
-  report: { _id: 4, title: 'Написать отчет', enabled: true }
+  report: { _id: 4, title: 'Написать отчет', enabled: true },
+  greeting: { _id: 5, title: 'Знакомство', enabled: true }
 }
 
 module.exports = mongoose.model('TaskReplyType', model)

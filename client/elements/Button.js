@@ -7,8 +7,10 @@ export default ({ children, disabled, onClick, type }) => (
         box-sizing: border-box;
         position: relative;
 
+        height: 39px;
+        line-height: 29px;
         margin-right: 10px;
-        padding: 10px 20px;
+        padding: 5px 20px;
         border-radius: 3px;
         cursor: pointer;
         font-size: 0.9rem;
@@ -19,7 +21,8 @@ export default ({ children, disabled, onClick, type }) => (
         transition: background-color 0.25s ease-out, border-color .25s;
       }
 
-      .btn, .btn:disabled:hover { background: #196aff; }
+      .btn { background: #196aff; }
+      .btn:disabled, .btn:disabled:hover { background: #eee; }
       .btn:hover { background: #0a00d9; }
 
       .btn_reject {

@@ -24,7 +24,23 @@ const getLiked = (postIds, userId) => {
         enabled: true,
         'target.model': 'Post',
         'target.item': { $in: postIds }
-      }).lean()
+      }).select('_id target').lean()
+
+      resolve(liked)
+    }
+  })
+}
+
+const getVoted = (postIds, userId) => {
+  return new Promise(async (resolve, reject) => {
+    if (!userId) resolve([])
+    else {
+      let liked = await models.NPS.find({
+        userId: userId,
+        enabled: true,
+        'target.model': 'Post',
+        'target.item': { $in: postIds }
+      }).distinct('target.item').lean()
 
       resolve(liked)
     }
@@ -58,9 +74,11 @@ module.exports = router => {
 
     let userIds = []
     let postIds = []
+    let votable = []
 
     // вытаскиваем пользователя из поста
     posts.map(post => {
+      if (post.votable) votable.push(post._id)
       postIds.push(post._id)
       userIds.push(post.userId)
     })
@@ -70,10 +88,12 @@ module.exports = router => {
       pComments.map(comment => { userIds.push(comment.userId) })
     })
 
-    let [ replies, liked, users ] = await Promise.all([
+    let [ replies, liked, users, votes, voted ] = await Promise.all([
       models.TaskReply.getByPostIds(postIds),
       getLiked(postIds, userId),
-      models.Users.getShortInfo(userIds)
+      models.Users.getShortInfo(userIds),
+      models.Post.getNPS(votable, Number(programId)),
+      getVoted(votable, userId)
     ])
 
     let replyStatuses = models.TaskVerificationStatus.getIdObject()
@@ -91,14 +111,21 @@ module.exports = router => {
       return obj
     }, {})
 
+    votes = votes.reduce((obj, item) => {
+      obj[item._id] = item
+      return obj
+    }, {})
+
     ctx.body = {
       status: 200,
       result: {
         replies,
         posts,
         total,
+        votes,
         comments,
         users: keyObj(users),
+        voted: voted,
         liked: liked.map(el => el.target.item)
       }
     }
@@ -160,6 +187,42 @@ module.exports = router => {
       } catch (e) {
         ctx.log.info(e)
         ctx.body = { status: 403, message: e }
+      }
+    })
+
+    router.get('/rate', async ctx => {
+      try {
+        let total = await ctx.__.post.getNPS(ctx.session.currentProgram || null)
+        ctx.body = { status: 200, result: { total } }
+      } catch (e) {
+        ctx.body = { status: 500, message: e }
+      }
+    })
+
+    router.post('/rate', async ctx => {
+      try {
+        if (!ctx.session.uid) throw new Error('Access denied')
+        // if (ctx.__.post._doc.userId.toString() === ctx.session.uid) throw new Error('Access denied')
+        if (!ctx.session.currentProgram) throw new Error('no program defined')
+        let { score } = ctx.request.body
+        if (!score) throw new Error('no score defined')
+
+        // у поста одна оценка
+        let [ user ] = await models.Users.find({ _id: ctx.session.uid }).limit(1)
+
+        await ctx.__.post.addNPS({ score: [ score ] }, user, ctx.session.currentProgram)
+        let [ total ] = await ctx.__.post.getNPS()
+
+        ctx.body = {
+          status: 200,
+          result: {
+            total_nps: total.total_nps,
+            total: total.total
+          }
+        }
+      } catch (e) {
+        ctx.log.info(e)
+        ctx.body = { status: 500, message: e }
       }
     })
 

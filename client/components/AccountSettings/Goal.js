@@ -8,7 +8,6 @@ const changeValue = (field, cb, e) => {
 
   let value = e.target.value.replace(/(<([^>]+)>)/ig, '')
   if ([ 'a', 'b' ].indexOf(field) > -1) value = value.replace(/[^0-9]+/g, '')
-  if (field === 'occupation') value = value.replace(/(<([^>]+)>)/ig, '')
 
   return cb(field, value)
 }

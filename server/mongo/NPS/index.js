@@ -8,8 +8,8 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const model = new mongoose.Schema(extend({
   total: { type: Number, required: true },
   score: {
-    type: [ { type: Number } ],
-    validate: [ arrayLimit, '{PATH} exceeds the limit of 3' ]
+    type: [ { type: Number } ]
+    // validate: [ arrayLimit, '{PATH} exceeds the limit of 3' ]
   },
   //
   content: { type: String, defaukt: '' },
@@ -19,12 +19,12 @@ const model = new mongoose.Schema(extend({
   //
   programId: { type: Number, ref: 'Program' },
   target: {
-    model: { type: String, enum: [ 'ProgramClass', 'Platform', 'CoachGroup', 'Users' ] },
+    model: { type: String, enum: [ 'ProgramClass', 'Platform', 'Post', 'CoachGroup', 'Users', 'TaskReply', 'User' ] },
     item: { type: ObjectId, refPath: 'target.model' }
   }
 }, is))
 
-function arrayLimit (val) { return val.length <= 3 }
+// function arrayLimit (val) { return val.length <= 3 }
 model.plugin(paginate)
 
 /** ----------------- GET LIST ----------------------- */
@@ -61,7 +61,19 @@ model.statics.addNps = async function (data, user, programId, add = {}) {
   return this.create(data)
 }
 
-model.statics.addToClass = async function (data, user, classId, programId) {
+model.statics.addToPost = async function (data, user, postId, programId) {
+  let model = this
+  let add = {
+    target: {
+      model: 'Post',
+      item: postId
+    }
+  }
+
+  return model.addNps(data, user, programId, add)
+}
+
+model.statics.addToClass = function (data, user, classId, programId) {
   let model = this
   let add = {
     target: {

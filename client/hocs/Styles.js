@@ -719,7 +719,9 @@ export default props => (
       box-sizing: border-box;
 
       margin: 0 !important;
-      padding: 10px 20px;
+      height: 39px;
+      line-height: 29px;
+      padding: 5px 20px;
       display: inline-block;
 
       color: #fff;
@@ -856,6 +858,8 @@ export default props => (
     }
 
     .post-summary {
+      display: flex;
+      justify-content: space-between;
       box-sizing: border-box;
       min-height: 25px;
 
@@ -866,10 +870,8 @@ export default props => (
           content: '';
         }
         &_left {
-          float: left;
-        }
-        &_right {
-          float: right;
+          display: flex;
+          align-items: center;
         }
       }
 
@@ -915,6 +917,31 @@ export default props => (
         &:before {
           content: attr(data-prefix);
         }
+      }
+    }
+
+    .post-interact-btn {
+      align-items: center;
+      box-sizing: border-box;
+
+      border-radius: 3px;
+
+      padding: 5px;
+      display: flex;
+      margin-right: 10px;
+      
+      color: #9da5ab;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      user-select: none;
+
+      &:hover {
+        background: #f5f7fa;
+      }
+
+      &__text {
+        padding-left: 5px;
       }
     }
 
@@ -1996,13 +2023,17 @@ export default props => (
     }
 
     .rating-star {
-      font-size: 21px;
-      line-height: 28px;
-
+      width: 30px;
+      height: 33px;
+      line-height: 33px;
       display: inline-block;
       
       color: #f5be00;
-      padding: 0 6px 5px 0;
+      font-size: 24px;
+
+      &_clickable {
+        cursor: pointer;
+      }
     }
 
     .pager {

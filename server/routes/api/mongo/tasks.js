@@ -5,7 +5,9 @@ const initTask = async (ctx, next) => {
     let params = { _id: ctx.params.taskId }
     if (!ctx.session.uid) throw { status: 403, message: 'Access denied' } // eslint-disable-line no-throw-literal
     params.targetProgram = ctx.session.currentProgram || null
+
     let [ task ] = await models.Task.find(params).limit(1).populate([ 'type.item' ])
+
     if (!task) throw { status: 404, message: 'Task not found' } // eslint-disable-line no-throw-literal
 
     ctx.__.task = task

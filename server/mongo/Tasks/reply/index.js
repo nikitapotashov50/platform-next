@@ -15,7 +15,7 @@ const model = new mongoose.Schema(extend({
   //
   status: [ { type: ObjectId, ref: 'TaskVerification' } ],
   specific: {
-    model: { type: String, enum: [ 'Goal', 'KnifePlan', 'TaskReport' ] },
+    model: { type: String, enum: [ 'Goal', 'KnifePlan', 'TaskReport', 'GretingReply' ] },
     item: { type: ObjectId, refPath: 'specific.model', index: true }
   }
 }, is))
@@ -27,6 +27,8 @@ model.virtual('verification', {
 })
 
 model.statics.ReplyTypes = require('./type')
+//
+model.statics.GreetingReply = require('./types/greeting')
 
 /** ----------------------- MODEL STATICS ----------------------- */
 
@@ -259,6 +261,10 @@ model.methods.editReply = async function (body, user) {
       let [ knife ] = await mongoose.models.KnifePlan.find({ _id: task.type.item }).limit(1)
       let result = await knife.updateClose(pick(body, [ 'fact', 'action' ]))
       specific = result.report
+    }
+    if (reply.replyTypeId === 5) {
+      specific = extend(specific, pick(body, [ 'a', 'b', 'occupation', 'x10', 'dream', 'pie', 'pq', 'need' ]))
+      specific = await specific.save()
     }
   }
 
