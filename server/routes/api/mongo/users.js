@@ -35,31 +35,45 @@ module.exports = router => {
 
   router.get('/list', async ctx => {
     let { limit = 20, searchString } = ctx.request.query
-    let regexStr
 
-    let query = {}
+    let match = {}
 
     if (searchString !== '') {
       searchString = toLower(decodeURIComponent(searchString))
 
-      regexStr = searchString.split(/ /).join('|')
+      let regexStr = new RegExp(searchString, 'i')
 
-      console.log('regexStr', regexStr)
-
-      query['$or'] = [
-        { first_name: { '$regex': regexStr, $options: 'i' } },
-        { last_name: { '$regex': regexStr, $options: 'i' } },
-        { name: { $regex: searchString, $options: 'i' } },
-        { email: { $regex: searchString, $options: 'i' } }
+      match['$or'] = [
+        { fullname_1: regexStr },
+        { fullname_2: regexStr },
+        { name: regexStr },
+        { email: regexStr }
       ]
     }
 
     try {
       let users = await models.Users
-        .find(query)
-        .select('_id name first_name last_name picture_small')
-        .lean()
-        .limit(Number(limit))
+        .aggregate([
+          {
+            $project: {
+              name: true,
+              first_name: true,
+              last_name: true,
+              picture_small: true,
+              email: true,
+              fullname_1: {
+                $concat: ['$first_name', ' ', '$last_name']
+              },
+              fullname_2: {
+                $concat: ['$last_name', ' ', '$first_name']
+              }
+            }
+          }, {
+            $match: match
+          }, {
+            $limit: Number(limit)
+          }
+        ])
 
       ctx.body = {
         status: 200,
