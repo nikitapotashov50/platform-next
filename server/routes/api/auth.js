@@ -1,6 +1,6 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
-const { isNil, extend, omit } = require('lodash')
+const { isNil, extend, omit, pick } = require('lodash')
 
 const {
   getBMAccessToken, getMyInfo, isUserAuthOnBM, getBMRecovery,
@@ -92,7 +92,7 @@ const getSessionUser = async (email, access) => {
     })
   }
 
-  return extend(res.user, add)
+  return extend({}, pick(res.user, [ 'name', '_id', 'role', 'programs', 'picture_small', 'last_name', 'first_name' ]), add)
 }
 
 module.exports = router => {
