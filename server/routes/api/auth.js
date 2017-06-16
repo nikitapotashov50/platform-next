@@ -239,12 +239,12 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
+      let activeProgram = active.length > 0 ? active[0] : 3
       if (!user.currentProgram) {
-        let activeProgram = active.length > 0 ? active[0] : 3
         user.currentProgram = activeProgram
-        ctx.session.currentProgram = activeProgram
         await user.save()
       }
+      ctx.session.currentProgram = activeProgram
 
       ctx.body = {
         status: 200,
