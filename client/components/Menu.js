@@ -40,7 +40,7 @@ class Menu extends Component {
           @media screen and (max-width: 39.9375em) {
             .menu-burger {
               height: 59px;
-              padding: 0 10px;
+              padding: 0 16px;
               line-height: 59px;
               display: block;
 
