@@ -9,6 +9,7 @@ import isLogged from '../../client/components/Access/isLogged'
 import MainSettings from '../../client/components/AccountSettings/Main'
 import AboutSettings from '../../client/components/AccountSettings/About'
 import ContactsSettings from '../../client/components/AccountSettings/Contacts'
+import AvatarSettings from '../../client/components/AccountSettings/Avatar'
 
 import SettingsLayout from '../../client/components/AccountSettings/Layout'
 
@@ -38,6 +39,13 @@ class AccountSettings extends Component {
   }
 
   handleChange (field, e) {
+    if (field === 'picture_small') {
+      this.setState(state => {
+        state.affected[field] = e
+      })
+      return
+    }
+
     let value = e.target.value.replace(/(<([^>]+)>)/ig, '')
     this.setState(state => {
       state.affected[field] = value
@@ -109,6 +117,7 @@ class AccountSettings extends Component {
             { (tab === 'main') && <MainSettings onChange={this.handleChange} errors={errors} affected={affected} user={user} t={t} /> }
             { (tab === 'contacts') && <ContactsSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
             { (tab === 'about') && <AboutSettings onChange={this.handleChange} affected={affected} user={user} t={t} /> }
+            { (tab === 'avatar') && <AvatarSettings onChange={this.handleChange} affected={affected} user={user} /> }
           </Panel>
         </OverlayLoader>
       </SettingsLayout>
