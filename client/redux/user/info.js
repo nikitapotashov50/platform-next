@@ -17,10 +17,10 @@ export const updateInfo = createAction('auth/UPDATE_INFO', async affectedData =>
 
 export default handleActions({
   [loadInfo]: (state, { payload }) => ({
-    ...(payload.info || {})
+    ...(payload ? payload.info : {})
   }),
   [updateInfo]: (state, { payload }) => ({
     ...state,
-    ...(payload.info || {})
+    ...(payload ? payload.info : {})
   })
 }, defaultState)

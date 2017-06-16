@@ -60,7 +60,7 @@ model.methods.getWallet = async function () {
   let wallet, response
 
   response = await getBalance(meta.molodost_id)
-
+  console.log(response)
   if (!response.success) {
     let [ user ] = await mongoose.models.Users.find({ _id: meta.userId }).limit(1)
     response = await createWallet(meta.molodost_id, user.email, {})
