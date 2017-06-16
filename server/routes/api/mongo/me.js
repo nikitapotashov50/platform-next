@@ -59,7 +59,7 @@ module.exports = router => {
     let body = ctx.request.body
 
     let userInfo = pick(body, [ 'vk', 'website', 'phone', 'facebook', 'instagram', 'about', 'hobbies', 'birthday', 'gender', 'social_status' ])
-    let userMain = pick(body, [ 'first_name', 'last_name', 'locale' ])
+    let userMain = pick(body, [ 'first_name', 'last_name', 'locale', 'picture_small' ])
 
     if (userInfo.birthday) userInfo.birthday = new Date(moment(userInfo.birthday, 'DD-MM-YYYY').format('YYYY-MM-DD'))
 
