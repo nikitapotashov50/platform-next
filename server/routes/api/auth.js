@@ -242,6 +242,7 @@ module.exports = router => {
       if (!user.currentProgram) {
         let activeProgram = active.length > 0 ? active[0] : 3
         user.currentProgram = activeProgram
+        ctx.session.currentProgram = activeProgram
         await user.save()
       }
 
