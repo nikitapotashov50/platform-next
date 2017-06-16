@@ -58,7 +58,8 @@ class TaskPage extends Component {
   }
 
   render () {
-    if (this.state.restrict || !this.props.task) return <ErrorLayout />
+    console.log(this.props.task)
+    if (this.state.restrict || !this.props.task || (this.props.task && this.props.task.targetProgram !== this.props.program)) return <ErrorLayout />
 
     let { edit } = this.props.url.query
     let { task, post, reply, specific = null, replyStatus, isReplied } = this.props

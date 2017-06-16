@@ -239,14 +239,14 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
-      if (!ctx.session.currentProgram) ctx.session.currentProgram = active.length > 0 ? active[0] : 3
+      let activeProgram = active.length > 0 ? active[0] : 3
 
       ctx.body = {
         status: 200,
         result: {
           programs,
           isAdmin: user.role === 3,
-          program: ctx.session.currentProgram,
+          program: activeProgram,
           subscriptions: user.subscriptions,
           radar_id: userMeta.radar_id,
           radar_access: !isNil(userMeta.radar_access_token)
