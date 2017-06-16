@@ -16,8 +16,8 @@ class NPSRatings extends Component {
   }
 
   async fetchUsers (searchQuery = '') {
-    const { data } = await axios(`/api/mongo/users/list?searchString=${searchQuery}`)
-    return data.result.users
+    const { data } = await axios(`/api/mongo/rating?searchString=${searchQuery}`)
+    return data.nps
   }
 
   async componentDidMount () {
@@ -53,7 +53,8 @@ class NPSRatings extends Component {
 
             {this.state.users.map(user => (
               <div className='rating-list__item' key={user._id}>
-                <UserInline user={user} />
+                <UserInline user={Object.assign({}, user, { occupation: 'lul' })} />
+                <div>{user.total}</div>
               </div>
             ))}
           </div>
