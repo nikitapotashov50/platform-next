@@ -2,7 +2,7 @@ const { models } = require('mongoose')
 
 module.exports = router => {
   router.get('/', async ctx => {
-    let { limit = 20, searchString } = ctx.request.query
+    let { limit = 20, offset = 0, searchString } = ctx.request.query
 
     let query = {}
 
@@ -67,6 +67,7 @@ module.exports = router => {
       }},
       { $sort: { total: -1 } },
       { $limit: limit },
+      { $skip: offset },
       { $lookup: {
         from: 'goals',
         localField: '_id',
