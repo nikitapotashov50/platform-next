@@ -88,6 +88,8 @@ module.exports = router => {
         programId = Number(programId)
         let [ program ] = await models.Program.find({ _id: programId }).limit(1)
         if (!program) throw new Error('no such program exists')
+        ctx.__.me.currentProgram = program._id
+        await ctx.__.me.save()
 
         ctx.session.currentProgram = program._id
         ctx.body = { status: 200 }

@@ -198,7 +198,7 @@ module.exports = router => {
     try {
       let { userId } = ctx.request.body
       if (!userId) throw new Error('no user id specified')
-      let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions role meta')
+      let [ user ] = await mongoose.models.Users.find({ _id: userId }).limit(1).select('programs subscriptions role meta currentProgram')
       if (!user) throw new Error('no user found')
 
       const userMeta = await user.getMeta()
@@ -239,14 +239,18 @@ module.exports = router => {
         }
       }).filter(x => ((x._id !== 3) || (!active.length || volunteer)))
 
-      let activeProgram = active.length > 0 ? active[0] : 3
+      if (!user.currentProgram) {
+        let activeProgram = active.length > 0 ? active[0] : 3
+        user.currentProgram = activeProgram
+        await user.save()
+      }
 
       ctx.body = {
         status: 200,
         result: {
           programs,
           isAdmin: user.role === 3,
-          program: activeProgram,
+          program: user.currentProgram,
           subscriptions: user.subscriptions,
           radar_id: userMeta.radar_id,
           radar_access: !isNil(userMeta.radar_access_token)

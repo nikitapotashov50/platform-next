@@ -25,7 +25,9 @@ const model = new mongoose.Schema(extend({
     programId: { type: Number, ref: 'Program' }
   } ],
   goals: [ { type: ObjectId, ref: 'Goal' } ],
-  subscriptions: [ { type: ObjectId, ref: 'Users' } ]
+  subscriptions: [ { type: ObjectId, ref: 'Users' } ],
+  //
+  currentProgram: { type: Number, default: null, ref: 'Program' }
 }, is))
 
 model.index({ 'name': 1, 'email': 1 }, { unique: true })
