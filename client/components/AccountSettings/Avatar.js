@@ -68,6 +68,13 @@ class AvatarSettings extends Component {
             background: #196aff;
             color:#fff;
           }
+
+          /*  Мобильные стили */
+          @media screen and (max-width: 39.9375em) {
+            img{width: 90%;}
+            
+          }
+
         `}</style>
       </Dropzone>
     )
