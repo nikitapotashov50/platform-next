@@ -18,7 +18,7 @@ export default ({ data, body, labels, User, ...props }) => {
   if (!data.content) headerStyles.noBorder = true
 
   return (
-    <Panel Footer={Footer} Header={<UserInline date={data.created} user={User} />} noBody={!data.content} headerStyles={headerStyles}>
+    <Panel Footer={Footer} Header={<UserInline date={data.created} user={data.userId} />} noBody={!data.content} headerStyles={headerStyles}>
       { data.content && (
         <div className='post-preview'>
           <a className='post-preview__body'>{data.content}</a>
