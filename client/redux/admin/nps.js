@@ -35,9 +35,9 @@ export const getTotal = createAction('admin/nps/GET_TOTAL', async ({ type }, opt
   options.params = { type }
   options.withCredentials = true
   let prefix = ''
-  if (options.headers)
+  if (options.headers) prefix = BACKEND_URL
 
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/nps/stats`, options)
+  let { data } = await axios.get(`${prefix}/api/mongo/nps/stats`, options)
   return data.result
 })
 
