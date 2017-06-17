@@ -14,7 +14,7 @@ const changeValue = (field, cb, e) => {
   if (fields.indexOf(field) === -1) return
 
   let value = e.target.value.replace(/(<([^>]+)>)/ig, '')
-  if ([ 'a', 'b', 'x10' ].indexOf(field) > -1) value = value.replace(/[^0-9]+/g, '')
+  if ([ 'a', 'b', 'x10', 'week_money' ].indexOf(field) > -1) value = value.replace(/[^0-9]+/g, '')
 
   return cb(field, value)
 }
