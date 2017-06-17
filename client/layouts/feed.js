@@ -17,10 +17,10 @@ const FeedLayout = ({ children, menuItem = null, emptySide, Side = [], wide = fa
       <div className='feed'>
         <div className={[ 'feed__left', wide ? 'feed__left_wide' : '' ].join(' ')}>
           <div className=''>
-            { (program && program === 7 && isWeekend) && (
+            { (program && program === 4 && isWeekend) && (
               <Panel>
                 <Link href={'/feedback?type=class'} as={'/feedback/class'}>
-                  <button className='myBtn'>Оставьте отзыв о занятии</button>
+                  <button className='myBtn'>Оставить отзыв о занятии</button>
                 </Link>
               </Panel>
             )}
