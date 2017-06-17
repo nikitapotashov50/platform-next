@@ -10,6 +10,7 @@ import UserInline from '../User/Inline'
 import PostBody from './Preview/Body'
 import PostEdit from './Preview/Edit'
 import PostRating from './Preview/Rating'
+import PostChart from './Preview/Chart'
 
 class Post extends Component {
   constructor (props) {
@@ -43,7 +44,10 @@ class Post extends Component {
     const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment, votes, isVoted } = this.props
 
     let Footer = [ <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} /> ]
-    if (post.votable) Footer.unshift(<PostRating postId={post._id} voted={isVoted} rating={votes} postAuthor={post.userId} loggedUser={loggedUser} />)
+    if (post.votable) {
+      if (votes && votes.total_arr && votes.total_arr.length > 2) Footer.unshift(<PostChart data={votes.total_arr} />)
+      Footer.unshift(<PostRating postId={post._id} voted={isVoted} rating={votes} postAuthor={post.userId} loggedUser={loggedUser} />)
+    }
 
     let myPost = user ? loggedUser === user._id : false
 

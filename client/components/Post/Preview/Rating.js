@@ -10,7 +10,7 @@ import { ratePost, changeValue, closeVoting } from '../../../redux/posts/vote'
 
 const PostRate = ({ rating = null, postId, loggedUser, voted = false, data, fetching = false, success = null, submit, change, result = {}, postAuthor = null }) => {
   let isVoted = result.total || voted || (loggedUser === postAuthor)
-  let total = voted ? (rating ? rating.total : 0) : (result.total || (data.score || 0))
+  let total = isVoted ? (rating ? rating.total : 0) : (result.total || (data.score || 0))
   let nps = result.total_nps || (rating ? rating.total_nps : 0)
 
   return (

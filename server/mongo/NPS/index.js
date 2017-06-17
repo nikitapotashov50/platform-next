@@ -164,7 +164,7 @@ model.statics.getTotal = async function ({ params = {}, group = {} }) {
     { $group: {
       // _id: group,
       _id: extend(group, {
-        date: { $dateToString: { format: '%Y-%m-%d', date: '$created' } }
+        date: { $dateToString: { format: '%Y-%m-%d %H:00', date: '$created' } }
       }),
       count: { $sum: 1 },
       score_1: { $sum: '$score_1' },
@@ -180,6 +180,7 @@ model.statics.getTotal = async function ({ params = {}, group = {} }) {
       score_3: { $divide: [ { $multiply: [ '$score_3', 100 ] }, '$count' ] },
       total: { $divide: [ { $multiply: [ '$total', 100 ] }, '$count' ] }
     }},
+    { $sort: { '_id.date': 1 } },
     { $group: {
       _id: null,
       count: { $sum: 1 },

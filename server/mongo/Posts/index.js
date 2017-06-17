@@ -280,11 +280,13 @@ model.statics.getNPS = function (postIds = [], programId) {
     { $group: {
       _id: '$target.item',
       count: { $sum: 1 },
+      total_arr: { $push: '$total' },
       total: { $sum: '$total' },
       total_nps: { $sum: '$nps' }
     }},
     { $project: {
       _id: 1,
+      total_arr: 1,
       total: { $divide: [ '$total', '$count' ] },
       total_nps: { $divide: [ { $multiply: [ '$total_nps', 100 ] }, '$count' ] }
     }}

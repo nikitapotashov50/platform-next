@@ -8,6 +8,7 @@ import NpsOverall from '../../client/components/NPS/Overall'
 import OverlayLoader from '../../client/components/OverlayLoader'
 import Pager from '../../client/components/Pager'
 import NpsList from '../../client/components/NPS/List'
+import NpsChart from '../../client/components/NPS/Graph'
 
 import Page from '../../client/hocs/Page'
 import Panel from '../../client/elements/Panel'
@@ -121,6 +122,7 @@ class FeedbackResults extends Component {
               SubHeader={<SubHeader data={filters} onChange={this.filterChanged} selected={this.state.query} />}
             >
               <NpsOverall labels={labels} data={total.result} />
+              <NpsChart data={total.byDate} />
             </Panel>
 
             { (count > 0) && Pagination }
@@ -161,7 +163,7 @@ const mergeProps = (state, dispatch, props) => ({
   getList: async query => {
     query = { ...(state.nps.query || {}), ...query }
     dispatch.updateQuery(query)
-    return dispatch.getNpsEntries({ type: props.type }, query)
+    return dispatch.getNpsEntries(props.type, query)
   }
 })
 

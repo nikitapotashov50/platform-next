@@ -7,7 +7,6 @@ module.exports = router => {
 
   router.get('/stats', async ctx => {
     let { type } = ctx.query
-    console.log(ctx.query, ctx.request.query)
 
     try {
       let params
@@ -17,6 +16,17 @@ module.exports = router => {
         params = {
           programId: 4,
           'target.model': 'ProgramClass'
+        }
+
+        group = {
+          programId: '$programId',
+          target: '$target.model'
+        }
+      }
+      if (type === 'platform') {
+        params = {
+          programId: 4,
+          'target.model': 'Platform'
         }
 
         group = {
@@ -48,6 +58,12 @@ module.exports = router => {
         // $or: [
         //   { 'target.model': null }
         // ]
+      }
+    }
+    if (type === 'platform') {
+      params = {
+        programId: 4,
+        'target.model': 'Platform'
       }
     }
 

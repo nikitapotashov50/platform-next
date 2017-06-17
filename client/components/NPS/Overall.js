@@ -1,4 +1,4 @@
-export default ({ data, labels = {} }) => {
+export default ({ data, labels = {}, chart = [] }) => {
   let items = []
   for (var i in data) {
     items.push(
