@@ -263,7 +263,7 @@ model.methods.editReply = async function (body, user) {
       specific = result.report
     }
     if (reply.replyTypeId === 5) {
-      specific = extend(specific, pick(body, [ 'a', 'b', 'occupation', 'x10', 'dream_artifact', 'dream', 'pie', 'pq', 'need' ]))
+      specific = extend(specific, pick(body, [ 'a', 'b', 'occupation', 'x10', 'dream_artifact', 'dream', 'week_action', 'pq', 'week_money' ]))
       specific = await specific.save()
     }
   }

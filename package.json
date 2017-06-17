@@ -96,6 +96,7 @@
     "react-string-replace": "^0.4.0",
     "react-timeago": "^3.3.0",
     "react-waypoint": "^7.0.0",
+    "recharts": "^1.0.0-alpha.1",
     "recompose": "^0.23.1",
     "redis": "^2.7.1",
     "reduce-reducers": "^0.1.2",

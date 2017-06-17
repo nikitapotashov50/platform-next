@@ -14,12 +14,11 @@ export default ({ data }) => (
 
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>PxQ:</strong> <p className='post-preview__greetings_body'>{data.pq}</p></div>
 
-    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Пирожок:</strong>
-      <p className='post-preview__greetings_body'>{data.pie}</p>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Деньги на неделю:</strong>
+      <p className='post-preview__greetings_body'>{formatMoney(data.week_money)} ₽</p>
     </div>
-
-    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Что мне нужно?</strong>
-      <p className='post-preview__greetings_body'>{data.need}</p>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Действие на неделю</strong>
+      <p className='post-preview__greetings_body'>{data.week_action}</p>
     </div>
   </div>
 )

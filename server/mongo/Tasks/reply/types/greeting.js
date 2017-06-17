@@ -12,13 +12,13 @@ const model = new mongoose.Schema(extend({
   b: { type: Number, required: true },
   pq: { type: String, default: '' },
   //
-  pie: { type: String, default: '' },
-  need: { type: String, default: '' }
+  week_money: { type: Number, requried: true },
+  week_action: { type: String, default: '' }
 }, is))
 
 model.statics.make = function (data = {}) {
   let model = this
-  return model.create(pick(data, [ 'occupation', 'x10', 'dream', 'dream_artifact', 'a', 'b', 'pq', 'pie', 'need' ]))
+  return model.create(pick(data, [ 'occupation', 'x10', 'dream', 'dream_artifact', 'a', 'b', 'pq', 'week_money', 'week_action' ]))
 }
 
 module.exports = mongoose.model('GretingReply', model)

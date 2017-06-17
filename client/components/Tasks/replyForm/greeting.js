@@ -7,7 +7,7 @@ import Form from '../../../elements/PanelForm/index'
  * цена слова
  * целевое действие на неделю
  */
-const fields = [ 'a', 'b', 'occupation', 'x10', 'dream', 'pq', 'pie', 'need', 'dream_artifact' ]
+const fields = [ 'a', 'b', 'occupation', 'x10', 'dream', 'pq', 'pie', 'need', 'dream_artifact', 'week_action', 'week_money' ]
 const isUndef = value => (typeof value === 'undefined')
 
 const changeValue = (field, cb, e) => {
@@ -23,6 +23,7 @@ const TaskReportForm = ({ errors, affected, onChange }) => {
   let x10 = isUndef(affected.x10) ? 0 : affected.x10
   let a = isUndef(affected.a) ? 0 : affected.a
   let b = isUndef(affected.b) ? 0 : affected.b
+  let weekMoney = isUndef(affected.week_money) ? 0 : affected.week_money
 
   return (
     <form className='panel-form'>
@@ -36,8 +37,8 @@ const TaskReportForm = ({ errors, affected, onChange }) => {
 
       <Form.Block label='Декомпозиция P x Q' id='greet-pq' error={errors.pq} value={affected.pq || ''} onChange={changeValue.bind(this, 'pq', onChange)} textarea />
 
-      <Form.Block label='Пирожок – то вы можете бесплатно полезного для других' id='greet-pie' error={errors.pie} value={affected.pie || ''} onChange={changeValue.bind(this, 'pie', onChange)} textarea />
-      <Form.Block label='Что мне нужно' id='greet-need' error={errors.need} value={affected.need || ''} onChange={changeValue.bind(this, 'need', onChange)} textarea />
+      <Form.Block label='Денги на неделю' id='greet-week_money' error={errors.week_money} value={numeral(weekMoney || 0).format('0,0')} numeric onChange={changeValue.bind(this, 'week_money', onChange)} />
+      <Form.Block label='Действия на неделю' id='greet-week_action' error={errors.week_action} value={affected.week_action || ''} onChange={changeValue.bind(this, 'week_action', onChange)} textarea />
     </form>
   )
 }
@@ -57,8 +58,9 @@ TaskReportForm.validate = (data = {}, errors = {}) => {
   if (data.a && data.b && parseInt(data.a) > parseInt(data.b)) errors.a = 'Точка A не может быть больше точки Б'
 
   if (!data.pq || !data.pq.length) errors.pq = 'Укажите декомпозицию точки Б'
-  if (!data.pie || !data.pie.length) errors.pie = 'Укажите технику пирожок'
-  if (!data.need || !data.need.length) errors.need = 'Укажите декомпозицию точки Б'
+
+  if (!data.week_money) errors.week_money = 'Укажите план в денгах на неделю'
+  if (!data.week_action) errors.week_action = 'Укажите свои планируемые действия на неделю'
 
   return errors
 }
