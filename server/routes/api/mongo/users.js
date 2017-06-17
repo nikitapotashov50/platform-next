@@ -1,6 +1,6 @@
 const { models } = require('mongoose')
 const { extend, pick, toLower } = require('lodash')
-const { getBalance } = require('../../../controllers/tokenController')
+// const { getBalance } = require('../../../controllers/tokenController')
 
 module.exports = router => {
   // router.bridge('/list', router => {
