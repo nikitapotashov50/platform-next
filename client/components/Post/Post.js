@@ -43,7 +43,7 @@ class Post extends Component {
     const { post, user, added, onExpand, reply, onLike, isLiked, loggedUser, onRemove, onComment, votes, isVoted } = this.props
 
     let Footer = [ <PostFooter onLike={onLike} isLiked={isLiked} likes={likes} loggedUser={loggedUser} onComment={onComment} /> ]
-    if (post.votable) Footer.unshift(<PostRating postId={post._id} voted={isVoted} rating={votes} loggedUser={loggedUser} />)
+    if (post.votable) Footer.unshift(<PostRating postId={post._id} voted={isVoted} rating={votes} postAuthor={post.userId} loggedUser={loggedUser} />)
 
     let myPost = user ? loggedUser === user._id : false
 

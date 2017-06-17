@@ -8,8 +8,8 @@ import OverlayLoader from '../../OverlayLoader'
 
 import { ratePost, changeValue, closeVoting } from '../../../redux/posts/vote'
 
-const PostRate = ({ rating = null, postId, loggedUser, voted = false, data, fetching = false, success = null, submit, change, result = {} }) => {
-  let isVoted = result.total || voted
+const PostRate = ({ rating = null, postId, loggedUser, voted = false, data, fetching = false, success = null, submit, change, result = {}, postAuthor = null }) => {
+  let isVoted = result.total || voted || (loggedUser === postAuthor)
   let total = voted ? (rating ? rating.total : 0) : (result.total || (data.score || 0))
   let nps = result.total_nps || (rating ? rating.total_nps : 0)
 
@@ -19,7 +19,7 @@ const PostRate = ({ rating = null, postId, loggedUser, voted = false, data, fetc
         <div className={[ 'post-rating__title', isVoted ? 'post-rating__title_voted' : '' ].join(' ')}>{ isVoted ? 'Оценка поста' : 'Оцените пост' }</div>
         <div className='post-rating__body'>
           <div className='post-rating__bar'>
-            <RateBar noValues rate={total.toFixed(0)} onChange={change} clickable={!voted} big />
+            <RateBar noValues rate={total.toFixed(0)} onChange={change} clickable={!isVoted} big />
           </div>
           <div className='post-rating__value'>
             { (!success && isVoted) && `NPS: ${(result.total_nps || nps).toFixed(2)}`}
