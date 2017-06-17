@@ -139,6 +139,10 @@ export default props => (
         display: inline-block;
       }
 
+      &__alert_btn {
+        display: none;
+      }
+
       &__left {
         width: 66%;
         &_wide { width: 80%; }
@@ -2261,6 +2265,10 @@ export default props => (
       .feed {
 
         margin: 0;
+        
+        &__alert_btn {
+          display: block;
+        }
 
         &__left {
           width: 100%;
