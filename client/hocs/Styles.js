@@ -2155,6 +2155,19 @@ export default props => (
       animation-name: fadeIn;
     }
 
+    .presentation {
+        &__wrap {
+          display: block;
+          padding-bottom: 10px;
+        }
+        &__title {
+          font-size: 18px;
+        }
+        &__link {
+          
+        }
+      }
+
   /*  Мобильные стили */
   @media screen and (max-width: 39.9375em) {
 
