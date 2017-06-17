@@ -2416,6 +2416,8 @@ export default props => (
 
     .panel-form {
       &__input {
+        font-size: 16px;
+        line-height: 140%;
         &_textarea {
           font-size: 16px;
           line-height: 140%;
