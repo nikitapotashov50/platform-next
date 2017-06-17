@@ -10,6 +10,8 @@ export default ({ data }) => (
 
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя точка А:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.a)} ₽</p></div>
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя точка Б:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.b)} ₽</p></div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Мой артефакт точки Б:</strong> <p className='post-preview__greetings_body'>{data.dream_artifact}</p></div>
+
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>PxQ:</strong> {data.pq}</div>
 
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Пирожок:</strong>

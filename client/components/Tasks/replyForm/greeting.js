@@ -7,7 +7,7 @@ import Form from '../../../elements/PanelForm/index'
  * цена слова
  * целевое действие на неделю
  */
-const fields = [ 'a', 'b', 'occupation', 'x10', 'dream', 'pq', 'pie', 'need' ]
+const fields = [ 'a', 'b', 'occupation', 'x10', 'dream', 'pq', 'pie', 'need', 'dream_artifact' ]
 const isUndef = value => (typeof value === 'undefined')
 
 const changeValue = (field, cb, e) => {
@@ -32,6 +32,8 @@ const TaskReportForm = ({ errors, affected, onChange }) => {
 
       <Form.Block label='Ваша точка А' id='greet-a' error={errors.a} value={numeral(a || 0).format('0,0')} onChange={changeValue.bind(this, 'a', onChange)} />
       <Form.Block label='Ваша точка Б' id='greet-b' error={errors.b} value={numeral(b || 0).format('0,0')} onChange={changeValue.bind(this, 'b', onChange)} />
+      <Form.Block label='Артефакт точки Б' id='greet-dream-artifact' error={errors.dream_artifact} value={affected.dream_artifact || ''} onChange={changeValue.bind(this, 'dream_artifact', onChange)} textarea />
+
       <Form.Block label='Декомпозиция P x Q' id='greet-pq' error={errors.pq} value={affected.pq || ''} onChange={changeValue.bind(this, 'pq', onChange)} textarea />
 
       <Form.Block label='Пирожок – то вы можете бесплатно полезного для других' id='greet-pie' error={errors.pie} value={affected.pie || ''} onChange={changeValue.bind(this, 'pie', onChange)} textarea />
@@ -48,6 +50,7 @@ TaskReportForm.validate = (data = {}, errors = {}) => {
   if (!data.occupation || !data.occupation.length) errors.occupation = 'Укажите свою нишу'
   if (!data.x10) errors.x10 = 'Укажите свою точку Б x10'
   if (!data.dream) errors.dream = 'Расскажите о своей мечте'
+  if (!data.dream_artifact) errors.dream_artifact = 'Расскажите об артефакте мечты'
 
   if (!data.a) errors.a = 'Укажите точку А'
   if (!data.b) errors.b = 'Укажите точку Б'

@@ -6,6 +6,7 @@ const model = new mongoose.Schema(extend({
   occupation: { type: String, default: '' },
   x10: { type: Number, required: true },
   dream: { type: String, default: '' },
+  dream_artifact: { type: String, default: '' },
   //
   a: { type: Number, required: true },
   b: { type: Number, required: true },
@@ -17,7 +18,7 @@ const model = new mongoose.Schema(extend({
 
 model.statics.make = function (data = {}) {
   let model = this
-  return model.create(pick(data, [ 'occupation', 'x10', 'dream', 'a', 'b', 'pq', 'pie', 'need' ]))
+  return model.create(pick(data, [ 'occupation', 'x10', 'dream', 'dream_artifact', 'a', 'b', 'pq', 'pie', 'need' ]))
 }
 
 module.exports = mongoose.model('GretingReply', model)

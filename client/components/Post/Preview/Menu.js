@@ -6,7 +6,9 @@ let today = moment()
 const checkTime = (created, target) => Math.abs(moment(created).diff(target, 'minutes')) < 60 * 24
 
 const PostMenu = ({ onEdit, onDelete, post, reply = {} }) => {
-  let editReply = reply._id && (moment(reply.created) <= moment(reply.finish_at))
+  // && (moment(reply.created) <= moment(reply.finish_at))
+  // TODO: вернуть проверку по времени
+  let editReply = reply._id
   let editPost = checkTime(post.created, today)
 
   return (

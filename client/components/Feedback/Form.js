@@ -24,7 +24,7 @@ const feedbackForm = ({ fetching, errors, data, type, t, onChange, onSubmit }) =
           { data.score.map((el, i) => (
             <div className='nps-result__row' key={`score-${i}`}>
               <div className='nps-result__row-title'>{t(`feedback.labels.${type}.score_${i + 1}`)}</div>
-              <RatingBar className='nps-result__row-value' rate={el} inline noValues onChange={changeScore(i, onChange)} />
+              <RatingBar className='nps-result__row-value' rate={el} inline noValues clickable onChange={changeScore(i, onChange)} />
             </div>
           ))}
         </div>
