@@ -1,4 +1,5 @@
-import { LineChart, XAxis, Line, Tooltip } from 'recharts'
+import { LineChart, Line, Tooltip } from 'recharts'
+// XAxis
 
 export default ({ data }) => {
   return (
