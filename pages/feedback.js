@@ -22,15 +22,17 @@ const menuItems = {
   platform: { code: 'platform', href: '/feedback?type=platform', path: '/feedback/platform', title: 'О платформе' }
 }
 
+const defaultReply = {
+  content: '',
+  score: [ 0, 0, 0 ]
+}
+
 class FeedbackPage extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      reply: {
-        content: '',
-        score: [ 0, 0, 0 ]
-      },
+      reply: { ...defaultReply },
       errors: {},
       submitted: false
     }
@@ -63,6 +65,7 @@ class FeedbackPage extends Component {
 
     await this.setState(state => { state.errors = {} })
     await this.props.submit(this.props.type, reply)
+    await this.setState(state => { state.reply = { ...defaultReply } })
   }
 
   render () {

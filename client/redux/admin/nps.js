@@ -11,14 +11,12 @@ let defaultState = {
   count: null,
   filters: {},
   total: {},
-  query: { limit: 2, page: 1 }
+  query: { limit: 20, page: 1 }
 }
 
-const filterActions = {
-  start: 'admin/nps/FILTER_FETCH_START',
-  success: 'admin/nps/FILTER_FETCH_SUCCESS',
-  fail: 'admin/nps/FILTER_FETCH_FAIL'
-}
+const filterActions = [ 'admin/nps/FILTER_FETCH_START', 'admin/nps/FILTER_FETCH_SUCCESS', 'admin/nps/FILTER_FETCH_FAIL' ]
+const totalActions = [ 'admin/nps/TOTAL_FETCH_START', 'admin/nps/TOTAL_FETCH_SUCCESS', 'admin/nps/TOTAL_FETCH_FAIL' ]
+const entriesActions = [ 'admin/nps/ENTRIES_FETCH_START', 'admin/nps/ENTRIES_FETCH_SUCCESS', 'admin/nps/ENTRIES_FETCH_FAIL' ]
 
 // action creators
 export const getFilters = createAction(API_CONST, async (type, options = {}) => ({
@@ -26,32 +24,26 @@ export const getFilters = createAction(API_CONST, async (type, options = {}) => 
   params: { type },
   url: `/api/mongo/nps/filters`,
   options: { ...options, withCredentials: true },
-  actions: [ filterActions.start, filterActions.success, filterActions.fail ]
+  actions: filterActions
 }))
 
 export const updateQuery = createAction('admin/nps/GET_FILTERS', (query = {}, rewrite = false) => ({ query, rewrite }))
 
-export const getTotal = createAction('admin/nps/GET_TOTAL', async ({ type }, options = {}) => {
-  options.params = { type }
-  options.withCredentials = true
-  let prefix = ''
-  if (options.headers) prefix = BACKEND_URL
+export const getTotal = createAction(API_CONST, async (type, options = {}) => ({
+  method: 'get',
+  params: { type },
+  url: `/api/mongo/nps/stats`,
+  options: { ...options, withCredentials: true },
+  actions: totalActions
+}))
 
-  let { data } = await axios.get(`${prefix}/api/mongo/nps/stats`, options)
-  return data.result
-})
-
-export const getNpsEntries = createAction('admin/nps/GET_ENTRIES', async ({ type }, { limit, page }, options = {}) => {
-  options.params = { page, limit, type }
-  options.withCredentials = true
-
-  let { data } = await axios.get(`${BACKEND_URL}/api/mongo/nps/entries`, options)
-
-  // let normal = normalize(data.result.items, npsList)
-  // console.log(normal)
-
-  return { count: data.result.total, items: data.result.items }
-})
+export const getNpsEntries = createAction(API_CONST, async (type, { limit, page }, options = {}) => ({
+  method: 'get',
+  params: { page, limit, type },
+  url: `/api/mongo/nps/entries`,
+  options: { ...options, withCredentials: true },
+  actions: entriesActions
+}))
 
 export const getNpsCities = createAction('admin/nps/GET_CITIES', async ({ type }) => {
   let { data } = await axios.get(`${BACKEND_URL}/api/feedback/cities?${qs.stringify({ type })}`)
@@ -63,17 +55,12 @@ export const getNpsCities = createAction('admin/nps/GET_CITIES', async ({ type }
 
 // reducer
 export default handleActions({
-  [getNpsEntries]: (state, { payload }) => ({
+  [entriesActions[1]]: (state, { payload }) => ({
     ...state,
     items: payload.items || [],
-    count: payload.count || 0
+    count: payload.total || 0
   }),
-  [getNpsCities]: (state, { payload }) => ({
-    ...state,
-    cities: payload.items
-  }),
-  //
-  [getTotal]: (state, { payload }) => ({
+  [totalActions[1]]: (state, { payload }) => ({
     ...state,
     total: pick((payload.data || [])[0] || {}, [ 'result', 'byDate' ])
   }),
@@ -81,7 +68,7 @@ export default handleActions({
     ...state,
     query: payload.rewrite ? payload.query : { ...state.query, ...payload.query }
   }),
-  [filterActions.success]: (state, { payload }) => ({
+  [filterActions[1]]: (state, { payload }) => ({
     ...state,
     filters: payload.filters
   })

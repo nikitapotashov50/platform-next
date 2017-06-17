@@ -1,5 +1,5 @@
 import Router from 'next/router'
-import { omit } from 'lodash'
+import { omit, isEqual } from 'lodash'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 
@@ -40,7 +40,7 @@ class FeedbackResults extends Component {
 
     await ctx.store.dispatch(getFilters(type, { headers }))
     await ctx.store.dispatch(getTotal(type, { headers }))
-    await ctx.store.dispatch(getNpsEntries(type, omit(ctx.query, [ 'type' ]), { headers }))
+    await ctx.store.dispatch(getNpsEntries(type, omit(ctx.query, [ 'type', 0 ]), { headers }))
 
     return { type }
   }
@@ -91,6 +91,15 @@ class FeedbackResults extends Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    let typeFlag = nextProps.type !== this.props.type
+    let query_ = !isEqual(nextProps.nps.query, this.props.nps.query)
+    let count_ = !isEqual(nextProps.nps.count, this.props.nps.count)
+    let total_ = !isEqual(nextProps.nps.total, this.props.nps.total)
+
+    return typeFlag || query_ || count_ || total_ || nextState.fetching !== this.state.fetching
+  }
+
   render () {
     let { type } = this.props
     let { fetching } = this.state
@@ -99,7 +108,7 @@ class FeedbackResults extends Component {
     let SubHeader = NpsFilters[type] || (() => (<div />))
     let Menu = () => <PanelMenu items={menu} selected={type} />
     let Pagination = null
-    if (count) Pagination = <Pager total={count} current={query.page} limit={query.limit} onNavigate={this.onNavigate('page')} />
+    if (count) Pagination = <Pager total={count} current={query.page || 1} limit={query.limit} onNavigate={this.onNavigate('page')} />
 
     return (
       <DefaultLayout>

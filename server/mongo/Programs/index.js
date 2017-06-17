@@ -68,7 +68,8 @@ const defaultPrograms = {
   default: { noClasses: true, _id: 3, title: 'Общая лента', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') },
   'ceh-24': { _id: 4, molodost_id: 94, title: 'ЦЕХ 24', is_enabled: true, start_at: moment('2017-06-08').toISOString(), finish_at: moment('2017-08-12').toISOString() },
   'mzs-18': { _id: 5, title: 'МЗС 18', is_enabled: true, start_at: moment('2017-06-27').toISOString(), finish_at: moment('2017-08-22').toISOString() },
-  secret: { _id: 6, title: 'Для избранных', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') }
+  secret: { _id: 6, title: 'Для избранных', is_enabled: true, start_at: moment('2015-01-01').format('YYYY-DD-MM'), finish_at: moment('2115-01-01').format('YYYY-DD-MM') },
+  'startups-1': { _id: 7, title: '300 стартапов', is_enabled: true, start_at: moment('2017-06-19').toISOString(), finish_at: moment('2017-09-22').toISOString() }
 }
 
 mongoose.models.Program.defaults(defaultPrograms, 'alias')

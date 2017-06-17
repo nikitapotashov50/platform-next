@@ -7,6 +7,7 @@ module.exports = router => {
 
   router.get('/stats', async ctx => {
     let { type } = ctx.query
+    console.log(ctx.query, ctx.request.query)
 
     try {
       let params
@@ -23,7 +24,6 @@ module.exports = router => {
           target: '$target.model'
         }
       }
-      console.log(type, params, group)
 
       let data = await models.NPS.getTotal({ params, group })
 
@@ -38,8 +38,20 @@ module.exports = router => {
   })
 
   router.get('/entries', async ctx => {
-    let { limit, page } = ctx.query
-    let { total, docs } = await models.NPS.getList({}, { limit, page })
+    let { limit, page, type } = ctx.query
+    let params = {}
+
+    if (type === 'program') {
+      params = {
+        programId: 4,
+        'target.model': 'ProgramClass'
+        // $or: [
+        //   { 'target.model': null }
+        // ]
+      }
+    }
+
+    let { total, docs } = await models.NPS.getList(params, { limit, page })
 
     ctx.body = {
       status: 200,

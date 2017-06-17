@@ -52,12 +52,10 @@ export default handleActions({
   }),
   [FETCH_START]: state => ({ ...state, fetching: true }),
   [FETCH_FAIL]: state => ({ ...defaultState }),
-  [SUBMIT_SUCCESS]: (state, { payload }) => {
-    console.log(payload)
-    return ({
-      ...state,
-      reply: !!payload.reply || false,
-      info: payload.info || {}
-    })
-  }
+  [SUBMIT_SUCCESS]: (state, { payload }) => ({
+    ...state,
+    fetching: false,
+    info: payload.info || {},
+    reply: !!payload.reply || false
+  })
 }, defaultState)
