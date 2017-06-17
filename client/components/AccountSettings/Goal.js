@@ -19,8 +19,8 @@ const GoalSettings = ({ t, errors, data, affected, onChange }) => {
   return (
     <form className='panel-form'>
       <Form.Block id={'goal-occupation'} error={errors.occupation} value={isUndef(affected.occupation) ? data.occupation || '' : affected.occupation} onChange={changeValue.bind(this, 'occupation', onChange)} label={t('account.settings.goal.fields.occupation')} textarea />
-      <Form.Block id={'goal-a'} error={errors.a} value={numeral(a || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'a', onChange)} label={t('account.settings.goal.fields.a')} />
-      <Form.Block id={'goal-b'} error={errors.b} value={numeral(b || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'b', onChange)} label={t('account.settings.goal.fields.b')} />
+      <Form.Block id={'goal-a'} error={errors.a} value={numeral(a || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'a', onChange)} label={t('account.settings.goal.fields.a')} numeric />
+      <Form.Block id={'goal-b'} error={errors.b} value={numeral(b || 0).format('0,0')} type='text' onChange={changeValue.bind(this, 'b', onChange)} label={t('account.settings.goal.fields.b')} numeric />
     </form>
   )
 }

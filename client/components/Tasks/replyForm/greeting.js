@@ -27,11 +27,11 @@ const TaskReportForm = ({ errors, affected, onChange }) => {
   return (
     <form className='panel-form'>
       <Form.Block label='Ниша' id='greet-occupation' error={errors.occupation} value={affected.occupation || ''} onChange={changeValue.bind(this, 'occupation', onChange)} />
-      <Form.Block label='Ваша точка А умноженная на 10' id='greet-x10' error={errors.x10} value={numeral(x10 || 0).format('0,0')} onChange={changeValue.bind(this, 'x10', onChange)} />
+      <Form.Block label='Ваша точка А умноженная на 10' id='greet-x10' error={errors.x10} value={numeral(x10 || 0).format('0,0')} numeric onChange={changeValue.bind(this, 'x10', onChange)} />
       <Form.Block label='Ваша мечта' id='greet-dream' error={errors.dream} value={affected.dream || ''} onChange={changeValue.bind(this, 'dream', onChange)} textarea />
 
-      <Form.Block label='Ваша точка А' id='greet-a' error={errors.a} value={numeral(a || 0).format('0,0')} onChange={changeValue.bind(this, 'a', onChange)} />
-      <Form.Block label='Ваша точка Б' id='greet-b' error={errors.b} value={numeral(b || 0).format('0,0')} onChange={changeValue.bind(this, 'b', onChange)} />
+      <Form.Block label='Ваша точка А' id='greet-a' error={errors.a} value={numeral(a || 0).format('0,0')} numeric onChange={changeValue.bind(this, 'a', onChange)} />
+      <Form.Block label='Ваша точка Б' id='greet-b' error={errors.b} value={numeral(b || 0).format('0,0')} numeric onChange={changeValue.bind(this, 'b', onChange)} />
       <Form.Block label='Артефакт точки Б' id='greet-dream-artifact' error={errors.dream_artifact} value={affected.dream_artifact || ''} onChange={changeValue.bind(this, 'dream_artifact', onChange)} textarea />
 
       <Form.Block label='Декомпозиция P x Q' id='greet-pq' error={errors.pq} value={affected.pq || ''} onChange={changeValue.bind(this, 'pq', onChange)} textarea />
