@@ -2216,6 +2216,28 @@ export default props => (
         
       }
 
+      .nps-overall {
+        margin-left: -10px;
+      
+
+      &__item {
+        padding: 0 5px;
+        text-align: center;
+      }
+
+      &__title {
+        font-size: 9px;
+        line-height: 14px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      &__value {
+        font-size: 16px;
+        line-height: 28px;
+        font-weight: 700;
+      }
+      }
+
       .rating-star {
         width: 10%;
       }
