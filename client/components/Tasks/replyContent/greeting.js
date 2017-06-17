@@ -12,7 +12,7 @@ export default ({ data }) => (
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Моя точка Б:</strong> <p className='post-preview__greetings_body'>{formatMoney(data.b)} ₽</p></div>
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Артефакт Б:</strong> <p className='post-preview__greetings_body'>{data.dream_artifact}</p></div>
 
-    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>PxQ:</strong> {data.pq}</div>
+    <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>PxQ:</strong> <p className='post-preview__greetings_body'>{data.pq}</p></div>
 
     <div className='post-preview__greetings_wrap'><strong className='post-preview__greetings_title'>Пирожок:</strong>
       <p className='post-preview__greetings_body'>{data.pie}</p>
