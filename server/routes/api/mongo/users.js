@@ -102,14 +102,14 @@ module.exports = router => {
       let subscribers = await user.getSubscribers(6)
       let balance = null
 
-      if (user.meta.wallet && user.meta.molodost_id) {
-        try {
-          let tokenResponse = await getBalance(user.meta.molodost_id)
-          if (tokenResponse.success) balance = tokenResponse.data.user.balance
-        } catch (e) {
-          ctx.log.info(e)
-        }
-      }
+      // if (user.meta.wallet && user.meta.molodost_id) {
+      //   try {
+      //     let tokenResponse = await getBalance(user.meta.molodost_id)
+      //     if (tokenResponse.success) balance = tokenResponse.data.user.balance
+      //   } catch (e) {
+      //     ctx.log.info(e)
+      //   }
+      // }
 
       ctx.body = {
         status: 200,
