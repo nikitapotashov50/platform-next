@@ -34,6 +34,8 @@ export const updateQuery = createAction('admin/nps/GET_FILTERS', (query = {}, re
 export const getTotal = createAction('admin/nps/GET_TOTAL', async ({ type }, options = {}) => {
   options.params = { type }
   options.withCredentials = true
+  let prefix = ''
+  if (options.headers)
 
   let { data } = await axios.get(`${BACKEND_URL}/api/mongo/nps/stats`, options)
   return data.result

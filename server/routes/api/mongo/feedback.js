@@ -46,6 +46,7 @@ module.exports = router => {
 
     try {
       let reply = null
+
       if (type === 'class') {
         // потом узнать были ли занятий и достать последнее прошедшее
         let lastClass = await ctx.__.currentProgram.getLastClass()
@@ -63,7 +64,7 @@ module.exports = router => {
 
       ctx.body = {
         status: 200,
-        result: { reply, info: 'МОлодец' }
+        result: { reply, info: '' }
       }
     } catch (e) {
       ctx.log.info(e)

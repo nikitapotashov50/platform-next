@@ -113,17 +113,8 @@ model.statics.addToPlatform = async function (data, user, programId) {
 
 /** ----------------- AGGREGATION ----------------------- */
 
-model.statics.getTotal = async function () {
+model.statics.getTotal = async function ({ params = {}, group = {} }) {
   let model = this
-  let params = { programId: 3 }
-  //   'target.model': 'ProgramClass'
-  // }
-  let group = {
-    // programId: '$programId'
-  //   cityId: '$cityId',
-  //   target: '$target.model',
-  //   item: '$target.item'
-  }
 
   let data = await model.aggregate([
     { $match: params },

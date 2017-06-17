@@ -6,8 +6,26 @@ module.exports = router => {
   })
 
   router.get('/stats', async ctx => {
+    let { type } = ctx.query
+
     try {
-      let data = await models.NPS.getTotal()
+      let params
+      let group
+
+      if (type === 'program') {
+        params = {
+          programId: 4,
+          'target.model': 'ProgramClass'
+        }
+
+        group = {
+          programId: '$programId',
+          target: '$target.model'
+        }
+      }
+      console.log(type, params, group)
+
+      let data = await models.NPS.getTotal({ params, group })
 
       ctx.body = {
         status: 200,
@@ -35,7 +53,7 @@ module.exports = router => {
       if ([ 'program', 'platform' ].indexOf(type) === -1) throw new Error('wrong filter type')
 
       let filters = {}
-      console.log(type)
+
       if (type === 'program') {
         let programs = await models.Program.find({ _id: { $nin: [ 6 ] } }).sort({ _created: -1 }).select('_id title')
         let classes = await models.ProgramClass.getGrouped({ programId: { $in: programs.map(el => el._id) } })

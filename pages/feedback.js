@@ -62,7 +62,7 @@ class FeedbackPage extends Component {
     }
 
     await this.setState(state => { state.errors = {} })
-    await this.props.submit(reply)
+    await this.props.submit(this.props.type, reply)
   }
 
   render () {
