@@ -118,7 +118,7 @@ class NPSRatings extends Component {
 
             <style jsx>{`
               .rating-list__item {
-                margin: 20px 0;
+                margin: 20px 0 0;
                 display: flex;
                 justify-content: space-between;
               }

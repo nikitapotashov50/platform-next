@@ -879,6 +879,43 @@ export default props => (
           margin-top: 8px;
         }
       }
+
+      &__ab {
+        display: block;
+        overflow: hidden;
+        &_a {
+          float: left;
+          width: 50%;
+        }
+        &_a strong {
+          font-size:10px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #9f9f9f;
+          font-weight: 700;
+          display: block;
+          margin-bottom: 5px;
+        }
+        &_a p{
+          font-size:28px;
+        }
+        &_b {
+          float: left;
+          width: 50%;
+        }
+        &_b strong {
+          font-size:10px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #9f9f9f;
+          font-weight: 700;
+          display: block;
+          margin-bottom: 5px;
+        }
+        &_b p{
+          font-size:28px;
+        }
+      }
     }
 
     .post-summary {
@@ -971,7 +1008,6 @@ export default props => (
 
     .rating-list {
       &__item {
-        padding-bottom: 10px;
       }
     }
 
@@ -2405,6 +2441,17 @@ export default props => (
           display: block;
           overflow: hidden;
           margin-top: 8px;
+        }
+      }
+
+      &__ab {
+        
+        &_a p{
+          font-size:19px;
+        }
+        
+        &_b p{
+          font-size:19px;
         }
       }
     }
