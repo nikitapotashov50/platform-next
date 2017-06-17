@@ -209,7 +209,7 @@ module.exports = router => {
 
       let programs = await user.getPrograms()
 
-      if (!userMeta.wallet) await userMeta.getWallet()
+      // if (!userMeta.wallet) await userMeta.getWallet()
 
       if (!programs.length) {
         await user.addProgram(3, {})

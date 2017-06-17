@@ -125,13 +125,13 @@ model.statics.addPost = async function (data, { user, type = 'user' }) {
   if (tags && tags.length > 0) tags.map(async tag => { await post.addTag(tag, user) })
   if (attachments && attachments.length > 0) await Promise.all(attachments.map(el => post.addAttachment(el)))
 
-  addTokensByAction(user._id, 'writePost', { model: 'Post', item: post._id })
-    .then(async res => {
-      if (res.success) {
-        post.weight = post.weight + res.data.amount
-        await post.save()
-      }
-    })
+  // addTokensByAction(user._id, 'writePost', { model: 'Post', item: post._id })
+  //   .then(async res => {
+  //     if (res.success) {
+  //       post.weight = post.weight + res.data.amount
+  //       await post.save()
+  //     }
+  //   })
 
   return post
 }
