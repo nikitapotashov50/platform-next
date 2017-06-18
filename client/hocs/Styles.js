@@ -920,6 +920,27 @@ export default props => (
           font-size:28px;
         }
       }
+
+      &__knife {
+        display: block;
+        overflow: hidden;
+        margin-bottom: 10px;
+       
+        & strong {
+          font-size:10px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #9f9f9f;
+          font-weight: 700;
+          display: block;
+          margin-bottom: 5px;
+        }
+        & p{
+          font-size:28px;
+        }
+        
+      }
+
     }
 
     .post-summary {
