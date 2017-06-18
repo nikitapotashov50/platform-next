@@ -32,7 +32,7 @@ model.plugin(paginate)
 model.statics.getList = function (params = {}, query = {}) {
   let model = this
 
-  let { limit = 20, page = 1 } = query
+  let { limit = 40, page = 1 } = query
   limit = Number(limit)
   page = Number(page)
 

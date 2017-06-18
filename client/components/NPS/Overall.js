@@ -1,10 +1,10 @@
-export default ({ data, labels = {}, chart = [] }) => {
+const NpsOverall = ({ data, t, chart = [] }) => {
   let items = []
   for (var i in data) {
     items.push(
       <div className='nps-overall__item' key={'nps-overall' + i}>
         <div className='nps-overall__value'>{data[i].toFixed(2)}</div>
-        <span className='nps-overall__title'>{labels[i] || 'noname'}</span>
+        <span className='nps-overall__title'>{t(i)}</span>
       </div>
     )
   }
@@ -15,3 +15,5 @@ export default ({ data, labels = {}, chart = [] }) => {
     </div>
   )
 }
+
+export default NpsOverall

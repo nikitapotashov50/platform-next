@@ -20,6 +20,7 @@ import subscriptions from './user/subscriptions'
 
 import taskItems from './tasks'
 import task from './task'
+import goal from './user/goal'
 
 import admin from './admin'
 import users from './users'
@@ -46,6 +47,7 @@ export default asyncReducers => combineReducers({
   // session user data
   user: combineReducers({
     info,
+    goal,
     programs,
     subscriptions
   }),

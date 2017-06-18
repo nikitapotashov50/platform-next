@@ -2,6 +2,7 @@ import Router from 'next/router'
 import { omit, isEqual } from 'lodash'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import { translate } from 'react-i18next'
 
 import PanelMenu from '../../client/components/PanelMenu'
 import NpsOverall from '../../client/components/NPS/Overall'
@@ -18,13 +19,6 @@ import DefaultLayout from '../../client/layouts/default'
 import NpsFilters from '../../client/components/Feedback/adminFilters/index'
 
 import { getNpsEntries, getNpsCities, getFilters, getTotal, updateQuery } from '../../client/redux/admin/nps'
-
-let labels = {
-  score_1: 'Контент',
-  score_2: 'Эмоции',
-  score_3: 'Организация',
-  total: 'Общий'
-}
 
 let menu = [
   { href: '/admin/nps?type=program', path: '/admin/nps/program', code: 'program', title: 'Программы' },
@@ -54,6 +48,7 @@ class FeedbackResults extends Component {
       query: {}
     }
 
+    this.getTranslate = this.getTranslate.bind(this)
     this.onNavigate = this.onNavigate.bind(this)
     this.filterChanged = this.filterChanged.bind(this)
   }
@@ -101,6 +96,10 @@ class FeedbackResults extends Component {
     return typeFlag || query_ || count_ || total_ || nextState.fetching !== this.state.fetching
   }
 
+  getTranslate () {
+    return (item) => this.props.t(`feedback.labels.${this.props.type}.${item}`)
+  }
+
   render () {
     let { type } = this.props
     let { fetching } = this.state
@@ -121,14 +120,14 @@ class FeedbackResults extends Component {
               Menu={Menu}
               SubHeader={<SubHeader data={filters} onChange={this.filterChanged} selected={this.state.query} />}
             >
-              <NpsOverall labels={labels} data={total.result} />
-              <NpsChart data={total.byDate} />
+              <NpsOverall data={total.result} t={this.getTranslate()} />
+              <NpsChart data={total.byDate} t={this.getTranslate()} />
             </Panel>
 
             { (count > 0) && Pagination }
 
             <OverlayLoader loading={fetching}>
-              <NpsList data={items} labels={labels} />
+              <NpsList data={items} t={this.getTranslate()} />
             </OverlayLoader>
 
             { (count > 0) && Pagination }
@@ -167,7 +166,9 @@ const mergeProps = (state, dispatch, props) => ({
   }
 })
 
-export default Page(FeedbackResults, {
+let translated = translate([ 'common' ])(FeedbackResults)
+
+export default Page(translated, {
   title: 'NPS',
   mergeProps,
   mapStateToProps,

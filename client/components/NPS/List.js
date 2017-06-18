@@ -1,9 +1,9 @@
 import NpsEntry from './Entry'
 
-export default ({ data, labels }) => (
+export default ({ data, t }) => (
   <div>
     { data && data.map(el => (
-      <NpsEntry data={el} labels={labels} key={'nps-entry-' + el._id} />
+      <NpsEntry data={el} t={t} key={'nps-entry-' + el._id} />
     )) }
   </div>
 )

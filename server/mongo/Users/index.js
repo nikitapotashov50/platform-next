@@ -343,6 +343,8 @@ model.methods.addIncome = async function (amount, programId) {
  */
 model.methods.addGoal = async function (data, add) {
   let user = this
+
+  if (user.currentProgram) data.programId = user.currentProgram
   let goal = await mongoose.models.Goal.addToUser(user._id, data, add)
 
   user.goals.addToSet(goal)

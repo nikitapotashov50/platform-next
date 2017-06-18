@@ -11,7 +11,7 @@ let defaultState = {
   count: null,
   filters: {},
   total: {},
-  query: { limit: 20, page: 1 }
+  query: { limit: 40, page: 1 }
 }
 
 const filterActions = [ 'admin/nps/FILTER_FETCH_START', 'admin/nps/FILTER_FETCH_SUCCESS', 'admin/nps/FILTER_FETCH_FAIL' ]

@@ -26,7 +26,7 @@ const initGoal = async (ctx, next) => {
       })
       .sort({ created: -1 })
 
-    if (!goal) goal = await models.Goal.create({ userId: ctx.__.me._id, a: 0, b: 0 })
+    if (!goal) goal = await ctx.__.me.addGoal({ a: 0, b: 0 })
 
     ctx.__.goal = goal
 

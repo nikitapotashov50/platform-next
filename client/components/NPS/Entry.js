@@ -2,12 +2,12 @@ import Panel from '../../elements/Panel'
 import RatingBar from '../Rating/Bar'
 import UserInline from '../User/Inline'
 
-export default ({ data, body, labels, User, ...props }) => {
+export default ({ data, body, t, User, ...props }) => {
   let Footer = (
     <div className='nps-result'>
       { (data.score || []).map((el, i) => (
         <div className='nps-result__row' key={`nps-score-${i}`}>
-          <div className='nps-result__row-title'>{labels[`score_${i + 1}`]}</div>
+          <div className='nps-result__row-title'>{t(`score_${i + 1}`)}</div>
           <RatingBar className='nps-result__row-value' rate={data.score[i]} inline />
         </div>
       ))}

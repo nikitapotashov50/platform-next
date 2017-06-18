@@ -12,7 +12,9 @@ const model = new mongoose.Schema(extend({
   //
   closed: { type: Boolean, default: false },
   //
+  programId: { type: Number, ref: 'Program' },
   userId: { type: ObjectId, ref: 'Users', required: true },
+  //
   incomes: [{ type: ObjectId, ref: 'Incomes' }]
 }, created, startFinish))
 
@@ -34,7 +36,7 @@ model.statics.addToUser = async function (userId, data, add) {
   // then close it if there is one
   if (previousGoal) await previousGoal.close()
 
-  data = pick(extend(data, add), [ 'a', 'b', 'occupation', 'category', 'created', 'closed' ])
+  data = pick(extend(data, add), [ 'a', 'b', 'occupation', 'category', 'created', 'closed', 'programId' ])
   let goal = await this.create(extend(data, { userId }))
   return goal
 }

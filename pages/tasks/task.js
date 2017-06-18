@@ -1,3 +1,4 @@
+import axios from 'axios'
 import moment from 'moment'
 import { isUndefined } from 'lodash'
 import Router from 'next/router'
@@ -31,6 +32,8 @@ class TaskPage extends Component {
     super(props)
 
     this.state = {
+      noGoal: false,
+      loading: false,
       restrict: props.notFound || false
     }
   }
@@ -61,7 +64,7 @@ class TaskPage extends Component {
     if (this.state.restrict || !this.props.task || (this.props.task && this.props.task.targetProgram !== this.props.program)) return <ErrorLayout />
 
     let { edit } = this.props.url.query
-    let { task, post, reply, specific = null, replyStatus, isReplied } = this.props
+    let { task, post, reply, specific = null, replyStatus, isReplied, noGoal } = this.props
 
     let canEdit = checkDate(task.finish_at) && reply
 
@@ -79,7 +82,10 @@ class TaskPage extends Component {
           </div>
         ) }
 
-        { (!isReplied || !reply || edit) && <TaskReply task={task} reply={reply} attachments={post ? post.attachments : []} opened edit={edit} cancelEdit={this.toggleEdit.bind(this, false)} /> }
+        { noGoal
+          ? <div>На это задание нельзя ответить, пока вы не поставили себе цель.</div>
+          : (!isReplied || !reply || edit) && <TaskReply task={task} reply={reply} attachments={post ? post.attachments : []} opened edit={edit} cancelEdit={this.toggleEdit.bind(this, false)} />
+        }
 
         { (reply && !edit) && <ReplyContent type={task.replyType} post={post} reply={reply} specific={specific} /> }
         { (canEdit && !edit) && (
@@ -131,8 +137,19 @@ TaskPage.getInitialProps = async ctx => {
 
   try {
     await getInitial(taskId, ctx.store.dispatch, headers)
+    let { info, reply } = ctx.store.getState().task
+    let noGoal = false
 
-    return { taskId }
+    if (info.replyTypeId === 2 && reply) {
+      console.log('i am here')
+      let prefix = ''
+      if (headers) prefix = BACKEND_URL
+      let { data } = await axios.get(`${prefix}/api/mongo/me/goal`, { headers, withCredentials: true })
+      console.log(data.result.goal)
+      if (!data.result || !data.result.goal) noGoal = true
+    }
+
+    return { taskId, noGoal }
   } catch (e) {
     return { notFound: true, taskId }
   }
