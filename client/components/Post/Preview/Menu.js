@@ -22,7 +22,7 @@ const PostMenu = ({ onEdit, onDelete, post, reply = {} }) => {
             </Link>
           </li>
         )}
-        <li onClick={onDelete}>Удалить</li>
+        { !editReply && <li onClick={onDelete}>Удалить</li> }
       </ul>
 
       <style jsx>{`
